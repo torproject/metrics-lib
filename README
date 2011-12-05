@@ -1,8 +1,10 @@
 DescripTor -- A Tor Descriptor API for Java
 ===========================================
 
-DescripTor is a Java API that makes various Tor descriptor types available
-for statistical analysis and for building services and applications.
+DescripTor is a Java API that fetches Tor descriptors from a variety of
+sources like cached descriptors and directory authorities/mirrors.
+The DescripTor API is useful to support statistical analysis of the Tor
+network data and for building services and applications.
 
 The descriptor types supported by DescripTor include relay and bridge
 descriptors which are part of Tor's directory protocol as well as Torperf
