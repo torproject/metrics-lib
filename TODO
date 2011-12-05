@@ -1,0 +1,30 @@
+- New data sources
+  - Add Tor's control port as another data source for relay descriptors.
+    In theory, the descriptors that can be parsed from a local Tor data
+    directory should be similar to what we can learn via Tor's control
+    port, though maybe not as up-to-date.  In order to fit the data store
+    model, we should query the list of all available descriptors and make
+    them available to the application.
+  - Add a Tor descriptor database as another data source for relay and
+    maybe bridge descriptors.  There is no good database schema around for
+    descriptors, so that should come first.  In order to fit the data
+    store model, the descriptor source should allow the program to define
+    which descriptors to include, and it may be useful to exclude
+    descriptors by publication date.
+
+- New example applications
+  - The metrics-web data importer could make use of this API, too.  It
+    would read relay descriptors, bridge descriptors, Torperf data files,
+    and GetTor stats files from disk.
+  - Another example application could be a relay descriptor database
+    application to support searching for relays or looking up relay
+    descriptors in general.  This application might read daily rsync'ed
+    relay descriptors and import them into a database.
+  - Another example application might be the Java version of ExoneraTor.
+    This application would index locally extracted relay descriptor
+    tarballs and parse only the relevant files.  This version of
+    ExoneraTor could also read exit lists to provide more accurate
+    results.
+  - Another example application might be the Java version of VisiTor which
+    reads locally extracted exit list tarballs.
+
