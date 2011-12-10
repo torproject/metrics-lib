@@ -2,10 +2,11 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor;
 
+import java.util.Iterator;
 import java.util.Set;
 
 /* Download relay descriptors from directory mirrors or authorities. */
-public interface RelayDescriptorDownloader extends DescriptorSource {
+public interface RelayDescriptorDownloader {
 
   /* Add a directory authority to download descriptors from.  A directory
    * authority is only required for downloading network status vote and
@@ -84,5 +85,12 @@ public interface RelayDescriptorDownloader extends DescriptorSource {
    * Setting this value to 0 disables the global timeout.  Default is 1
    * hour (60 * 60 * 1000). */
   public void setGlobalTimeout(long globalTimeoutMillis);
+
+  /* Download the previously configured relay descriptors and make them
+   * available via the returned blocking iterator.  Whenever the
+   * downloader runs out of descriptors and expects to provide more
+   * shortly after, it blocks the caller.  This method can only be run
+   * once. */
+  public Iterator<DescriptorRequest> downloadDescriptors();
 }
 

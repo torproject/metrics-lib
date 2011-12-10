@@ -3,11 +3,12 @@
 package org.torproject.descriptor;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 /* Read bridge descriptors from one or more local directories. */
-public interface BridgeDescriptorReader extends DescriptorSource {
+public interface BridgeDescriptorReader {
 
   /* Add a local directory to read bridge descriptors from. */
   public void addDirectory(File directory);
@@ -18,11 +19,10 @@ public interface BridgeDescriptorReader extends DescriptorSource {
   /* Exclude the given files from the results. */
   public void setExcludeFiles(Set<File> filesToExclude);
 
-  /* Define a limit in bytes up to which files are kept in memory, before
-   * switching to storing file references and reading and parsing
-   * descriptors on demand.  Setting this value to 0 disables caching and
-   * leads to all descriptors being read and parsed on demand.  Default is
-   * 50 MiB (50 * 1024 * 1024). */
-  public void setInitialCacheLimit(long cacheLimitBytes);
+  /* Read the previously configured bridge descriptors and make them
+   * available via the returned blocking iterator.  Whenever the reader
+   * runs out of descriptors and expects to provide more shortly after, it
+   * blocks the caller.  This method can only be run once. */
+  public Iterator<DescriptorFile> readDescriptors();
 }
 

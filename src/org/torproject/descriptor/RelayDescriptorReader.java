@@ -3,11 +3,12 @@
 package org.torproject.descriptor;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 /* Read relay descriptors from one or more local directories. */
-public interface RelayDescriptorReader extends DescriptorSource {
+public interface RelayDescriptorReader {
 
   /* Add a local directory to read relay descriptors from. */
   public void addDirectory(File directory);
@@ -27,11 +28,11 @@ public interface RelayDescriptorReader extends DescriptorSource {
    * values are last modified timestamps. */
   public void setExcludeFiles(Map<File, Long> filesToExclude);
 
-  /* Define a limit in bytes up to which files are kept in memory, before
-   * switching to storing file references and reading and parsing
-   * descriptors on demand.  Setting this value to 0 disables caching and
-   * leads to all descriptors being read and parsed on demand.  Default is
-   * 50 MiB (50 * 1024 * 1024). */
-  public void setInitialCacheLimit(long cacheLimitBytes);
+  /* Read the previously configured relay descriptors and make them
+   * available via the returned blocking iterator.  Whenever the reader
+   * runs out of descriptors and expects to provide more shortly after, it
+   * blocks the caller.  This method can only be run once. */
+  public Iterator<DescriptorFile> readDescriptors();
+
 }
 

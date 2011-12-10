@@ -2,9 +2,10 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.example;
 
+import java.util.Iterator;
+import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorRequest;
 import org.torproject.descriptor.DescriptorSourceFactory;
-import org.torproject.descriptor.DescriptorStore;
 import org.torproject.descriptor.RelayDescriptorDownloader;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 import org.torproject.descriptor.RelayNetworkStatusVote;
@@ -42,48 +43,44 @@ public class ConsensusHealthChecker {
     downloader.setRequestTimeout(60L * 1000L);
     downloader.setGlobalTimeout(10L * 60L * 1000L);
 
-    /* Run the previously configured downloads.  This method call blocks
-     * the main thread until all downloads have finished or the global
-     * timeout has expired.  The result is a descriptor store with all
-     * received descriptors. */
-    DescriptorStore store = downloader.initialize();
-
-    /* Check if all downloads have finished. */
-    if (store.globalTimeoutHasExpired()) {
-      System.err.println("The global timeout for downloading descriptors "
-          + "has expired.  That means we're missing one or more "
-          + "consensuses and/or votes and cannot make a good statement "
-          + "about the consensus health.  Exiting.");
-      return;
-    }
-
-    /* Go through the list of (completed and aborted) requests and tell
-     * the user which of them timed out. */
-    for (DescriptorRequest request : store.getDescriptorRequests()) {
-      if (request.requestTimeoutHasExpired()) {
+    /* Run the previously configured downloads and iterate over the
+     * received descriptors.  Don't process them right now, but add them
+     * to the checker class one by one and do the checking once all
+     * downloads are complete. */
+    Iterator<DescriptorRequest> descriptorRequests =
+        downloader.downloadDescriptors();
+    while (descriptorRequests.hasNext()) {
+      DescriptorRequest request = descriptorRequests.next();
+      String authority = request.getDirectoryNickname();
+      long fetchTime = request.getRequestEnd()
+          - request.getRequestStart();
+      if (request.globalTimeoutHasExpired()) {
+        System.err.println("The global timeout for downloading "
+            + "descriptors has expired.  That means we're missing one or "
+            + "more consensuses and/or votes and cannot make a good "
+            + "statement about the consensus health.  Exiting.");
+        return;
+      } else if (request.requestTimeoutHasExpired()) {
         System.out.println("The request to directory authority "
             + request.getDirectoryNickname() + " to download the "
             + "descriptor(s) at " + request.getRequestUrl() + " has "
             + "timed out.");
+      } else {
+        for (Descriptor downloadedDescriptor : request.getDescriptors()) {
+          if (downloadedDescriptor instanceof
+              RelayNetworkStatusConsensus) {
+            /* Remember that we downloaded a consensus from authority and
+             * took fetchTime millis to do so. */
+          } else if (downloadedDescriptor instanceof
+              RelayNetworkStatusVote) {
+            /* Remember that we downloaded a vote. */
+          } else {
+            System.err.println("Did not expect a descriptor of type "
+                + downloadedDescriptor.getClass() + ".  Ignoring.");
+          }
+        }
       }
     }
-
-    /* Go through the list of returned consensuses.  The code to compare
-     * the consensuses to each other would go here.  (In theory, we could
-     * have learned about the consensuses in the request loop above, but
-     * the following approach is more convenient.) */
-    for (RelayNetworkStatusConsensus consensus :
-        store.getAllRelayNetworkStatusConsensuses()) {
-      /* Do somthing with each downloaded consensus. */
-    }
-
-    /* Also go through the list of returned votes. */
-    for (RelayNetworkStatusVote vote :
-        store.getAllRelayNetworkStatusVotes()) {
-      /* Do somthing with each downloaded vote. */
-    }
-
-    /* That's it. */
   }
 }
 

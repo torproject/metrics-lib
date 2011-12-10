@@ -3,10 +3,11 @@
 package org.torproject.descriptor.impl;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.torproject.descriptor.DescriptorFile;
 import org.torproject.descriptor.BridgeDescriptorReader;
-import org.torproject.descriptor.DescriptorStore;
 
 public class BridgeDescriptorReaderImpl implements BridgeDescriptorReader {
 
@@ -26,9 +27,9 @@ public class BridgeDescriptorReaderImpl implements BridgeDescriptorReader {
     /* TODO Implement me. */
   }
 
-  public DescriptorStore initialize() {
+  public Iterator<DescriptorFile> readDescriptors() {
     /* TODO Implement me. */
-    return new DescriptorStoreImpl();
+    return new BlockingIteratorImpl<DescriptorFile>();
   }
 }
 

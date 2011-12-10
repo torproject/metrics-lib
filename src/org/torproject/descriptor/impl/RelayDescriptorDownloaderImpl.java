@@ -2,10 +2,10 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import java.util.Iterator;
 import java.util.Set;
-import org.torproject.descriptor.DescriptorStore;
+import org.torproject.descriptor.DescriptorRequest;
 import org.torproject.descriptor.RelayDescriptorDownloader;
-import org.torproject.descriptor.impl.DescriptorStoreImpl;
 
 public class RelayDescriptorDownloaderImpl
     implements RelayDescriptorDownloader {
@@ -72,9 +72,9 @@ public class RelayDescriptorDownloaderImpl
     /* TODO Implement me. */
   }
 
-  public DescriptorStore initialize() {
+  public Iterator<DescriptorRequest> downloadDescriptors() {
     /* TODO Implement me. */
-    return new DescriptorStoreImpl();
+    return new BlockingIteratorImpl<DescriptorRequest>();
   }
 }
 

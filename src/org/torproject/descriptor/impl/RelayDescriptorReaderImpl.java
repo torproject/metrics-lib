@@ -3,9 +3,10 @@
 package org.torproject.descriptor.impl;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.torproject.descriptor.DescriptorStore;
+import org.torproject.descriptor.DescriptorFile;
 import org.torproject.descriptor.RelayDescriptorReader;
 
 public class RelayDescriptorReaderImpl implements RelayDescriptorReader {
@@ -30,13 +31,9 @@ public class RelayDescriptorReaderImpl implements RelayDescriptorReader {
     /* TODO Implement me. */
   }
 
-  public void setInitialCacheLimit(long cacheLimitBytes) {
+  public Iterator<DescriptorFile> readDescriptors() {
     /* TODO Implement me. */
-  }
-
-  public DescriptorStore initialize() {
-    /* TODO Implement me. */
-    return new DescriptorStoreImpl();
+    return new BlockingIteratorImpl<DescriptorFile>();
   }
 }
 

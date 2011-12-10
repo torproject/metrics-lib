@@ -3,9 +3,10 @@
 package org.torproject.descriptor.example;
 
 import java.io.File;
+import java.util.Iterator;
+import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorFile;
 import org.torproject.descriptor.DescriptorSourceFactory;
-import org.torproject.descriptor.DescriptorStore;
 import org.torproject.descriptor.RelayDescriptorReader;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 import org.torproject.descriptor.RelayNetworkStatusVote;
@@ -37,32 +38,19 @@ public class TorStatusDatabaseUpdater {
     reader.setExcludeFile(new File("tor-data-dir/cached-descriptors"),
         1234567890000L);
 
-    /* Let the reader index all files in the given directory and parse
-     * descriptors until a default limit of 50 MiB.  If the directory
-     * contains more than 50 MiB of descriptor files, the reader will only
-     * index files and store file references, and descriptors will be
-     * parsed once they are used by the application.  The result is a
-     * descriptor store with all found descriptors. */
-    DescriptorStore store = reader.initialize();
-
-    /* Go through the lists of consensuses, server descriptors, and
-     * extra-info descriptors to update a TorStatus-specific database.
-     * For this example, we only print out how many such descriptors were
-     * read. */
-    int consensuses = store.getAllRelayNetworkStatusConsensuses().size();
-    int serverDescriptors = store.getAllRelayServerDescriptors().size();
-    int extraInfoDescriptors = store.getAllRelayExtraInfoDescriptors().
-        size();
-    System.out.println("We read " + consensuses + " consensuses, "
-        + serverDescriptors + " server descriptors, and "
-        + extraInfoDescriptors + " extra-info descriptors.");
-
-    /* Also go through the list of parsed files and store their last
-     * modification times, so that we can exclude them the next time if
-     * they haven't changed. */
-    for (DescriptorFile descriptorFile : store.getDescriptorFiles()) {
-      File file = descriptorFile.getFile();
+    /* Read all descriptors in the given directory and import them into
+     * the database.  Also go through the list of parsed files and store
+     * their last modification times, so that we can exclude them the next
+     * time if they haven't changed. */
+    Iterator<DescriptorFile> descriptorFiles = reader.readDescriptors();
+    while (descriptorFiles.hasNext()) {
+      DescriptorFile descriptorFile = descriptorFiles.next();
+      for (Descriptor readDescriptor : descriptorFile.getDescriptors()) {
+        /* Do something with the parsed descriptor. */
+      }
+      String fileName = descriptorFile.getFile().getName();
       long lastModified = descriptorFile.getLastModified();
+      /* Do something with the file name and last modification time. */
     }
   }
 }

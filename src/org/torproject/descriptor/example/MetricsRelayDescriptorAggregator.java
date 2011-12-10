@@ -4,10 +4,12 @@ package org.torproject.descriptor.example;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorFile;
+import org.torproject.descriptor.DescriptorRequest;
 import org.torproject.descriptor.DescriptorSourceFactory;
-import org.torproject.descriptor.DescriptorStore;
 import org.torproject.descriptor.RelayDescriptorDownloader;
 import org.torproject.descriptor.RelayDescriptorReader;
 
@@ -53,38 +55,16 @@ public class MetricsRelayDescriptorAggregator {
     reader.setExcludeFile(new File("tor-data-dir/cached-descriptors"),
         1234567890000L);
 
-    /* Let the reader index all files in the given directory.  The result
-     * is a descriptor store with all found descriptors. */
-    DescriptorStore store = reader.initialize();
-
-    /* Go through the lists of consensuses, server descriptors, and
-     * extra-info descriptors to update a TorStatus-specific database.
-     * For this example, we only print out how many such descriptors were
-     * read. */
-    int consensuses = store.getAllRelayNetworkStatusConsensuses().size();
-    int votes = store.getAllRelayNetworkStatusVotes().size();
-    int serverDescriptors = store.getAllRelayServerDescriptors().size();
-    int extraInfoDescriptors = store.getAllRelayExtraInfoDescriptors().
-        size();
-    System.out.println("We read " + consensuses + " consensuses, " + votes
-        + " votes, " + serverDescriptors + " server descriptors, and "
-        + extraInfoDescriptors + " extra-info descriptors.");
-
-    /* Drop the descriptor store reference.  This may be a good time to
-     * run garbage collection if we're low on memory. */
-    store = null;
+    /* Read descriptors and process them. */
+    Iterator<DescriptorFile> descriptorFiles = reader.readDescriptors();
+    while (descriptorFiles.hasNext()) {
+      DescriptorFile descriptorFile = descriptorFiles.next();
+      /* Do something with the read descriptors. */
+    }
 
     /* Remember which descriptors we just processed to exclude them from
      * the download.  This code is independent of the API and therefore
      * not shown here. */
-
-    /* Go through the list of parsed files and store their last
-     * modification times, so that we can exclude them the next time if
-     * they haven't changed. */
-    for (DescriptorFile descriptorFile : store.getDescriptorFiles()) {
-      File file = descriptorFile.getFile();
-      long lastModified = descriptorFile.getLastModified();
-    }
 
     /* Do the same operations as shown above for other local directories
      * containing relay descriptors.  For example, metrics-db rsyncs the
@@ -125,11 +105,13 @@ public class MetricsRelayDescriptorAggregator {
     downloader.setRequestTimeout(2L * 60L * 1000L);
     downloader.setGlobalTimeout(60L * 60L * 1000L);
 
-    /* Run the previously configured downloads.  This method call blocks
-     * the main thread until all downloads have finished or the global
-     * timeout has expired.  The result is a descriptor store with all
-     * received descriptors. */
-    store = downloader.initialize();
+    /* Download descriptors and process them. */
+    Iterator<DescriptorRequest> descriptorRequests =
+        downloader.downloadDescriptors();
+    while (descriptorRequests.hasNext()) {
+      DescriptorRequest descriptorRequest = descriptorRequests.next();
+      /* Do something with the requests. */
+    }
 
     /* Write the list of processed descriptors to disk, so that we don't
      * download them in the next execution.  This code is independent of
