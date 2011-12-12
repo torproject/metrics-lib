@@ -30,9 +30,13 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
 
   /* Add an object to the queue. */
   protected void add(T object) {
+    /* TODO This check is invalid.  But should we make sure that no
+     * objects get added after sending the end-of-stream object somehow?
     if (this.outOfDescriptors) {
-      throw new IllegalStateException();
-    }
+      throw new IllegalStateException("Internal erorr: Adding results to "
+          + "descriptor queue not allowed after sending end-of-stream "
+          + "object.");
+    }*/
     QueueElement<T> element = new QueueElement<T>();
     element.object = object;
     this.queue.add(element);

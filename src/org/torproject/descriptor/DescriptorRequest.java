@@ -15,9 +15,9 @@ public interface DescriptorRequest {
    * previously configured. */
   public String getDirectoryNickname();
 
-  /* Return the status code that the directory mirror or authority
+  /* Return the response code that the directory mirror or authority
    * returned. */
-  public int getStatusCode();
+  public int getResponseCode();
 
   /* Return the time in millis when this request was started. */
   public long getRequestStart();
