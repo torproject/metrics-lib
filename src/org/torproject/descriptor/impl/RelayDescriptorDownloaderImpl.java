@@ -260,12 +260,12 @@ public class RelayDescriptorDownloaderImpl
       this.globalTimerThread.start();
       for (DirectoryDownloader directoryMirror :
           this.directoryMirrors.values()) {
-        directoryMirror.downloadCoordinator = this;
+        directoryMirror.setRequestTimeout(this.requestTimeoutMillis);
         new Thread(directoryMirror).start();
       }
       for (DirectoryDownloader directoryAuthority :
           this.directoryAuthorities.values()) {
-        directoryAuthority.downloadCoordinator = this;
+        directoryAuthority.setRequestTimeout(this.requestTimeoutMillis);
         new Thread(directoryAuthority).start();
       }
     }
