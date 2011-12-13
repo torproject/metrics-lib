@@ -2,11 +2,87 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor;
 
+import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
 
-/* Contains the unparsed string and parsed fields from a network status
- * vote. */
+/* Contains a network status vote. */
 public interface RelayNetworkStatusVote extends Descriptor {
+
+  /* Return the network status version. */
+  public int getNetworkStatusVersion();
+
+  /* Return the consensus method. */
+  public List<Integer> getConsensusMethods();
+
+  /* Return the publication time in milliseconds. */
+  public long getPublishedMillis();
+
+  /* Return the valid-after time in milliseconds. */
+  public long getValidAfterMillis();
+
+  /* Return the fresh-until time in milliseconds. */
+  public long getFreshUntilMillis();
+
+  /* Return the valid-until time in milliseconds. */
+  public long getValidUntilMillis();
+
+  /* Return a list of the voting-delay times in seconds. */
+  public List<Long> getVotingDelay();
+
+  /* Return cecommended server versions. */
+  public SortedSet<String> getRecommendedServerVersions();
+
+  /* Return recommended client versions. */
+  public SortedSet<String> getRecommendedClientVersions();
+
+  /* Return known relay flags. */
+  public SortedSet<String> getKnownFlags();
+
+  /* Return consensus parameters. */
+  public SortedMap<String, String> getConsensusParams();
+
+  /* Return the directory nickname. */
+  public String getNickname();
+
+  /* Return the directory identity. */
+  public String getIdentity();
+
+  /* Return the IP address. */
+  public String getAddress();
+
+  /* Return the DiRPort. */
+  public int getDirport();
+
+  /* Return the ORPort. */
+  public int getOrport();
+
+  /* Return the contact line. */
+  public String getContactLine();
+
+  /* Return the directory key certificate version. */
+  public int getDirKeyCertificateVersion();
+
+  /* Return the directory key publication timestamp. */
+  public long getDirKeyPublishedMillis();
+
+  /* Return the directory key expiration timestamp. */
+  public long getDirKeyExpiresMillis();
+
+  /* Return the signing key digest. */
+  public String getSigningKeyDigest();
+
+  /* Return status entries, one for each contained relay. */
+  public SortedMap<String, NetworkStatusEntry> getStatusEntries();
+
+  /* Return whether a status entry with the given fingerprint exists. */
+  public boolean containsStatusEntry(String fingerprint);
+
+  /* Return a status entry by fingerprint or null if no such status entry
+   * exists. */
+  public NetworkStatusEntry getStatusEntry(String fingerprint);
+
+  /* Return directory signatures. */
+  public SortedMap<String, String> getDirectorySignatures();
 }
 

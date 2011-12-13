@@ -291,6 +291,12 @@ public class RelayNetworkStatusConsensusImpl
   public SortedMap<String, NetworkStatusEntry> getStatusEntries() {
     return new TreeMap<String, NetworkStatusEntry>(this.statusEntries);
   }
+  public boolean containsStatusEntry(String fingerprint) {
+    return this.statusEntries.containsKey(fingerprint);
+  }
+  public NetworkStatusEntry getStatusEntry(String fingerprint) {
+    return this.statusEntries.get(fingerprint);
+  }
 
   private SortedMap<String, String> directorySignatures =
       new TreeMap<String, String>();

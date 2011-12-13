@@ -46,6 +46,13 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   /* Return status entries, one for each contained relay. */
   public SortedMap<String, NetworkStatusEntry> getStatusEntries();
 
+  /* Return whether a status entry with the given fingerprint exists. */
+  public boolean containsStatusEntry(String fingerprint);
+
+  /* Return a status entry by fingerprint or null if no such status entry
+   * exists. */
+  public NetworkStatusEntry getStatusEntry(String fingerprint);
+
   /* Return directory signatures. */
   public SortedMap<String, String> getDirectorySignatures();
 

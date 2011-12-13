@@ -57,12 +57,15 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
         } else if (line.startsWith("s ")) {
           this.flags.addAll(Arrays.asList(line.substring("s ".length()).
               split(" ")));
-        } else if (line.startsWith("v ")) {
-          this.version = line.substring("v ".length());
+        } else if (line.startsWith("v ") || line.startsWith("opt v")) {
+          this.version = line.substring(
+              line.startsWith("v ") ? "v ".length() : "opt v".length());
         } else if (line.startsWith("w ")) {
           this.bandwidth = line.substring("w ".length());
         } else if (line.startsWith("p ")) {
           this.ports = line.substring(2);
+        } else if (line.startsWith("m ")) {
+          /* TODO Parse m lines in votes. */
         } else {
           throw new RuntimeException("Unknown line '" + line + "' in "
               + "status entry.");
