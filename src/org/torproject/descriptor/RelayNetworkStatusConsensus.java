@@ -27,10 +27,12 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   /* Return a list of the voting-delay times in seconds. */
   public List<Long> getVotingDelay();
 
-  /* Return cecommended server versions. */
+  /* Return recommended server versions or null if the consensus doesn't
+   * contain recommended server versions. */
   public SortedSet<String> getRecommendedServerVersions();
 
-  /* Return recommended client versions. */
+  /* Return recommended client versions or null if the consensus doesn't
+   * contain recommended client versions. */
   public SortedSet<String> getRecommendedClientVersions();
 
   /* Return known relay flags. */
