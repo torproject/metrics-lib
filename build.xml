@@ -1,10 +1,12 @@
 <project default="run" name="descriptor" basedir=".">
   <property name="sources" value="src"/>
   <property name="classes" value="classes"/>
+  <property name="tests" value="test"/>
   <property name="libs" value="lib"/>
   <path id="classpath">
     <pathelement path="${classes}"/>
     <pathelement location="lib/commons-codec-1.4.jar"/>
+    <pathelement location="lib/junit-4.8.2.jar"/>
   </path>
   <target name="init">
     <mkdir dir="${classes}"/>
@@ -28,6 +30,29 @@
   <target name="jar" depends="compile">
     <jar destfile="descriptor.jar"
          basedir="${classes}"/>
+  </target>
+  <target name="test" depends="compile">
+    <javac destdir="${classes}"
+           srcdir="${tests}"
+           source="1.5"
+           target="1.5"
+           debug="true"
+           deprecation="true"
+           optimize="false"
+           failonerror="true"
+           includeantruntime="false">
+      <classpath>
+        <fileset dir="${libs}"/>
+      </classpath>
+    </javac>
+    <junit haltonfailure="true" printsummary="off">
+      <classpath refid="classpath"/>
+      <formatter type="plain" usefile="false"/>
+      <batchtest>
+        <fileset dir="${classes}"
+                 includes="**/*Test.class"/>
+      </batchtest>
+    </junit>
   </target>
 </project>
 
