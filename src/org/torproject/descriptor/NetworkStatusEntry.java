@@ -30,16 +30,29 @@ public interface NetworkStatusEntry {
   /* Return the DirPort. */
   public int getDirPort();
 
-  /* Return the relay flags. */
+  /* Return the relay flags or null if the status entry didn't contain any
+   * relay flags. */
   public SortedSet<String> getFlags();
 
-  /* Return the Tor software version. */
+  /* Return the Tor software version or null if the status entry didn't
+   * contain a version line. */
   public String getVersion();
 
-  /* Return the bandwidth weight line. */
-  public String getBandwidth();
+  /* Return the bandwidth weight or -1L if the status entry didn't
+   * contain a bandwidth line. */
+  public long getBandwidth();
 
-  /* Return the port summary line. */
-  public String getPorts();
+  /* Return the measured bandwidth or -1L if the status entry didn't
+   * contain a bandwidth line or didn't contain a Measured= keyword in its
+   * bandwidth line. */
+  public long getMeasured();
+
+  /* Return the default policy of the port summary or null if the status
+   * entry didn't contain a port summary line. */
+  public String getDefaultPolicy();
+
+  /* Return the port list of the port summary or null if the status entry
+   * didn't contain a port summary line. */
+  public String getPortList();
 }
 

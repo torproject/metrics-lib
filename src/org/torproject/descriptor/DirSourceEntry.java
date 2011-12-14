@@ -22,6 +22,9 @@ public interface DirSourceEntry {
   /* Return the ORPort. */
   public int getOrPort();
 
+  /* Return whether the dir-source was created using a legacy key. */
+  public boolean isLegacy();
+
   /* Return the contact line. */
   public String getContactLine();
 

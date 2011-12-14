@@ -13,8 +13,6 @@ import java.util.SortedSet;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DirSourceEntry;
 import org.torproject.descriptor.NetworkStatusEntry;
@@ -41,185 +39,322 @@ public class RelayNetworkStatusConsensusImpl
       }
       byte[] descBytes = new byte[end - start];
       System.arraycopy(consensusBytes, start, descBytes, 0, end - start);
-      RelayNetworkStatusConsensus parsedConsensus =
-          new RelayNetworkStatusConsensusImpl(descBytes);
-      parsedConsensuses.add(parsedConsensus);
       start = end;
+      try {
+        RelayNetworkStatusConsensus parsedConsensus =
+            new RelayNetworkStatusConsensusImpl(descBytes);
+        parsedConsensuses.add(parsedConsensus);
+      } catch (DescriptorParseException e) {
+        /* TODO Handle this error somehow. */
+        System.err.println("Failed to parse consensus.  Skipping.");
+        e.printStackTrace();
+      }
     }
     return parsedConsensuses;
   }
 
-  protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes) {
+  protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes)
+      throws DescriptorParseException {
     this.consensusBytes = consensusBytes;
+    this.initializeKeywords();
     this.parseConsensusBytes();
-    this.checkConsistency();
-    /* TODO Find a way to handle parse and consistency-check problems. */
+    this.checkKeywords();
   }
 
-  private void parseConsensusBytes() {
+  private SortedSet<String> exactlyOnceKeywords, atMostOnceKeywords;
+  private void initializeKeywords() {
+    this.exactlyOnceKeywords = new TreeSet<String>();
+    this.exactlyOnceKeywords.add("vote-status");
+    this.exactlyOnceKeywords.add("consensus-method");
+    this.exactlyOnceKeywords.add("valid-after");
+    this.exactlyOnceKeywords.add("fresh-until");
+    this.exactlyOnceKeywords.add("valid-until");
+    this.exactlyOnceKeywords.add("voting-delay");
+    this.exactlyOnceKeywords.add("known-flags");
+    this.exactlyOnceKeywords.add("directory-footer");
+    this.atMostOnceKeywords = new TreeSet<String>();
+    this.atMostOnceKeywords.add("client-versions");
+    this.atMostOnceKeywords.add("server-versions");
+    this.atMostOnceKeywords.add("params");
+    this.atMostOnceKeywords.add("bandwidth-weights");
+  }
+
+  private void parsedExactlyOnceKeyword(String keyword)
+      throws DescriptorParseException {
+    if (!this.exactlyOnceKeywords.contains(keyword)) {
+      throw new DescriptorParseException("Duplicate '" + keyword
+          + "' line in consensus.");
+    }
+    this.exactlyOnceKeywords.remove(keyword);
+  }
+
+  private void parsedAtMostOnceKeyword(String keyword)
+      throws DescriptorParseException {
+    if (!this.atMostOnceKeywords.contains(keyword)) {
+      throw new DescriptorParseException("Duplicate " + keyword + "line "
+          + "in consensus.");
+    }
+    this.atMostOnceKeywords.remove(keyword);
+  }
+
+  private void checkKeywords() throws DescriptorParseException {
+    if (!this.exactlyOnceKeywords.isEmpty()) {
+      throw new DescriptorParseException("Consensus does not contain a '"
+          + this.exactlyOnceKeywords.first() + "' line.");
+    }
+  }
+
+  private void parseConsensusBytes() throws DescriptorParseException {
     try {
       BufferedReader br = new BufferedReader(new StringReader(
           new String(this.consensusBytes)));
-      String line;
-      SimpleDateFormat dateTimeFormat = new SimpleDateFormat(
-          "yyyy-MM-dd HH:mm:ss");
-      dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+      String line = br.readLine();
+      if (line == null || !line.equals("network-status-version 3")) {
+        throw new DescriptorParseException("Consensus must start with "
+            + "line 'network-status-version 3'.");
+      }
+      this.networkStatusVersion = 3;
       StringBuilder dirSourceEntryLines = null, statusEntryLines = null;
       boolean skipSignature = false;
       while ((line = br.readLine()) != null) {
-        if (line.startsWith("network-status-version ")) {
-          this.networkStatusVersion = Integer.parseInt(line.substring(
-              "network-status-version ".length()));
-        } else if (line.startsWith("vote-status ")) {
-          if (!line.equals("vote-status consensus")) {
-            throw new RuntimeException("Line '" + line + "' indicates "
-                + "that this string is not a consensus.  Aborting "
-                + "parsing.");
-          }
-        } else if (line.startsWith("consensus-method ")) {
-          this.consensusMethod = Integer.parseInt(line.substring(
-              "consensus-method ".length()));
-        } else if (line.startsWith("valid-after ")) {
-          this.validAfterMillis = dateTimeFormat.parse(
-              line.substring("valid-after ".length())).getTime();
-        } else if (line.startsWith("fresh-until ")) {
-          this.freshUntilMillis = dateTimeFormat.parse(
-              line.substring("fresh-until ".length())).getTime();
-        } else if (line.startsWith("valid-until ")) {
-          this.validUntilMillis = dateTimeFormat.parse(
-              line.substring("valid-until ".length())).getTime();
-        } else if (line.startsWith("voting-delay ")) {
-          for (String votingDelayString : line.substring(
-              "voting-delay ".length()).split(" ")) {
-            this.votingDelay.add(Long.parseLong(votingDelayString));
-          }
-        } else if (line.startsWith("client-versions ")) {
-          this.recommendedClientVersions = new TreeSet<String>(
-              Arrays.asList(line.split(" ")[1].split(",")));
-        } else if (line.startsWith("server-versions ")) {
-          this.recommendedServerVersions = new TreeSet<String>(
-              Arrays.asList(line.split(" ")[1].split(",")));
-        } else if (line.startsWith("known-flags ")) {
-          for (String flag : line.substring("known-flags ".length()).
-              split(" ")) {
-            this.knownFlags.add(flag);
-          }
-        } else if (line.startsWith("params ")) {
-          if (line.length() > "params ".length()) {
-            for (String param :
-                line.substring("params ".length()).split(" ")) {
-              String paramName = param.split("=")[0];
-              String paramValue = param.split("=")[1];
-              this.consensusParams.put(paramName, paramValue);
-            }
-          }
-        } else if (line.startsWith("dir-source ") ||
-            line.startsWith("r ") || line.equals("directory-footer")) {
-          /* TODO Add code for parsing legacy dir sources. */
+        if (line.length() < 1) {
+          throw new DescriptorParseException("Empty lines are not "
+              + "allowed in a consensus.");
+        }
+        String[] parts = line.split(" ");
+        if (parts.length < 1) {
+          throw new DescriptorParseException("No keyword found in line '"
+              + line + "'.");
+        }
+        String keyword = parts[0];
+        if (keyword.length() < 1) {
+          throw new DescriptorParseException("Empty keyword in line '"
+              + line + "'.");
+        }
+        if (keyword.equals("vote-status")) {
+          this.parseVoteStatusLine(line, parts);
+        } else if (keyword.equals("consensus-method")) {
+          this.parseConsensusMethodLine(line, parts);
+        } else if (keyword.equals("valid-after")) {
+          this.parseValidAfterLine(line, parts);
+        } else if (keyword.equals("fresh-until")) {
+          this.parseFreshUntilLine(line, parts);
+        } else if (keyword.equals("valid-until")) {
+          this.parseValidUntilLine(line, parts);
+        } else if (keyword.equals("voting-delay")) {
+          this.parseVotingDelayLine(line, parts);
+        } else if (keyword.equals("client-versions")) {
+          this.parseClientVersionsLine(line, parts);
+        } else if (keyword.equals("server-versions")) {
+          this.parseServerVersionsLine(line, parts);
+        } else if (keyword.equals("known-flags")) {
+          this.parseKnownFlagsLine(line, parts);
+        } else if (keyword.equals("params")) {
+          this.parseParamsLine(line, parts);
+        } else if (keyword.equals("dir-source") || keyword.equals("r") ||
+            keyword.equals("directory-footer")) {
           if (dirSourceEntryLines != null) {
-            DirSourceEntry dirSourceEntry = new DirSourceEntryImpl(
-                dirSourceEntryLines.toString().getBytes());
-            this.dirSourceEntries.put(dirSourceEntry.getIdentity(),
-                dirSourceEntry);
+            this.parseDirSourceEntryLines(dirSourceEntryLines.toString());
             dirSourceEntryLines = null;
           }
           if (statusEntryLines != null) {
-            NetworkStatusEntryImpl statusEntry =
-                new NetworkStatusEntryImpl(
-                statusEntryLines.toString().getBytes());
-            this.statusEntries.put(statusEntry.getFingerprint(),
-                statusEntry);
+            this.parseStatusEntryLines(statusEntryLines.toString());
             statusEntryLines = null;
           }
-          if (line.startsWith("dir-source ")) {
-            dirSourceEntryLines = new StringBuilder();
-            dirSourceEntryLines.append(line + "\n");
-          } else if (line.startsWith("r ")) {
-            statusEntryLines = new StringBuilder();
-            statusEntryLines.append(line + "\n");
+          if (keyword.equals("dir-source")) {
+            dirSourceEntryLines = new StringBuilder(line + "\n");
+          } else if (keyword.equals("r")) {
+            statusEntryLines = new StringBuilder(line + "\n");
+          } else if (keyword.equals("directory-footer")) {
+            this.parsedExactlyOnceKeyword("directory-footer");
           }
-        } else if (line.startsWith("contact ") ||
-            line.startsWith("vote-digest ")) {
+        } else if (keyword.equals("contact") ||
+            keyword.equals("vote-digest")) {
+          if (dirSourceEntryLines == null) {
+            throw new DescriptorParseException(keyword + " line with no "
+                + "preceding dir-source line.");
+          }
           dirSourceEntryLines.append(line + "\n");
-        } else if (line.startsWith("s ") || line.equals("s") ||
-            line.startsWith("v ") || line.startsWith("w ") ||
-            line.startsWith("p ")) {
-          statusEntryLines.append(line + "\n");
-        } else if (line.startsWith("bandwidth-weights ")) {
-          if (line.length() > "bandwidth-weights ".length()) {
-            for (String weight : line.substring("bandwidth-weights ".
-                length()).split(" ")) {
-              String weightName = weight.split("=")[0];
-              String weightValue = weight.split("=")[1];
-              this.bandwidthWeights.put(weightName, weightValue);
-            }
+        } else if (keyword.equals("s") || keyword.equals("v") ||
+            keyword.equals("w") || keyword.equals("p")) {
+          if (statusEntryLines == null) {
+            throw new DescriptorParseException(keyword + " line with no "
+                + "preceding r line.");
           }
-          
-        } else if (line.startsWith("directory-signature ")) {
-          String[] parts = line.split(" ");
-          String identity = parts[1];
-          String signingKeyDigest = parts[2];
-          this.directorySignatures.put(identity, signingKeyDigest);
+          statusEntryLines.append(line + "\n");
+        } else if (keyword.equals("bandwidth-weights")) {
+          this.parseBandwidthWeightsLine(line, parts);
+        } else if (keyword.equals("directory-signature")) {
+          this.parseDirectorySignatureLine(line, parts);
         } else if (line.equals("-----BEGIN SIGNATURE-----")) {
           skipSignature = true;
         } else if (line.equals("-----END SIGNATURE-----")) {
           skipSignature = false;
         } else if (!skipSignature) {
-          throw new RuntimeException("Unrecognized line '" + line + "'.");
+          /* TODO Is throwing an exception the right thing to do here?
+           * This is probably fine for development, but once the library
+           * is in production use, this seems annoying. */
+          throw new DescriptorParseException("Unrecognized line '" + line
+              + "'.");
         }
       }
     } catch (IOException e) {
       throw new RuntimeException("Internal error: Ran into an "
           + "IOException while parsing a String in memory.  Something's "
           + "really wrong.", e);
-    } catch (ParseException e) {
-      /* TODO Handle me. */
-    } catch (NumberFormatException e) {
-      /* TODO Handle me.  In theory, we shouldn't catch runtime
-       * exceptions, but in this case it keeps the parsing code small. */
-    } catch (ArrayIndexOutOfBoundsException e) {
-      /* TODO Handle me.  In theory, we shouldn't catch runtime
-       * exceptions, but in this case it keeps the parsing code small. */
     }
   }
 
-  private void checkConsistency() {
-    if (this.networkStatusVersion == 0) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'network-status-version' line.");
+  private void parseVoteStatusLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedExactlyOnceKeyword("vote-status");
+    if (parts.length != 2 || !parts[1].equals("consensus")) {
+      throw new DescriptorParseException("Line '" + line + "' indicates "
+          + "that this is not a consensus.");
     }
-    if (this.consensusMethod == 0) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'consensus-method' line.");
+  }
+
+  private void parseConsensusMethodLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedExactlyOnceKeyword("consensus-method");
+    if (parts.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in consensus.");
     }
-    if (this.validAfterMillis == 0L) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'valid-after' line.");
+    try {
+      this.consensusMethod = Integer.parseInt(parts[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal consensus method "
+          + "number in line '" + line + "'.");
     }
-    if (this.freshUntilMillis == 0L) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'fresh-until' line.");
+    if (this.consensusMethod < 1) {
+      throw new DescriptorParseException("Illegal consensus method "
+          + "number in line '" + line + "'.");
     }
-    if (this.validUntilMillis == 0L) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'valid-until' line.");
+  }
+
+  private void parseValidAfterLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedExactlyOnceKeyword("valid-after");
+    this.validAfterMillis = ParseHelper.parseTimestampAtIndex(line, parts,
+        1, 2);
+  }
+
+  private void parseFreshUntilLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedExactlyOnceKeyword("fresh-until");
+    this.freshUntilMillis = ParseHelper.parseTimestampAtIndex(line, parts,
+        1, 2);
+  }
+
+  private void parseValidUntilLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedExactlyOnceKeyword("valid-until");
+    this.validUntilMillis = ParseHelper.parseTimestampAtIndex(line, parts,
+        1, 2);
+  }
+
+  private void parseVotingDelayLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedExactlyOnceKeyword("voting-delay");
+    if (parts.length != 3) {
+      throw new DescriptorParseException("Wrong number of values in line "
+          + "'" + line + "'.");
     }
-    if (this.votingDelay.isEmpty()) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'voting-delay' line.");
+    try {
+      this.voteSeconds = Long.parseLong(parts[1]);
+      this.distSeconds = Long.parseLong(parts[2]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal values in line '" + line
+          + "'.");
     }
-    if (this.knownFlags.isEmpty()) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'known-flags' line.");
+  }
+
+  private void parseClientVersionsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedAtMostOnceKeyword("client-versions");
+    this.recommendedClientVersions = this.parseClientOrServerVersions(
+        line, parts);
+  }
+
+  private void parseServerVersionsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedAtMostOnceKeyword("server-versions");
+    this.recommendedServerVersions = this.parseClientOrServerVersions(
+        line, parts);
+  }
+
+  private SortedSet<String> parseClientOrServerVersions(String line,
+      String[] parts) throws DescriptorParseException {
+    SortedSet<String> result = new TreeSet<String>();
+    if (parts.length == 1) {
+      return result;
+    } else if (parts.length > 2) {
+      throw new DescriptorParseException("Illegal versions line '" + line
+          + "'.");
     }
-    if (this.dirSourceEntries.isEmpty()) {
-      throw new RuntimeException("Consensus doesn't contain any "
-          + "'dir-source' lines.");
+    String[] versions = parts[1].split(",", -1);
+    for (int i = 0; i < versions.length; i++) {
+      String version = versions[i];
+      if (version.length() < 1) {
+        throw new DescriptorParseException("Illegal versions line '"
+            + line + "'.");
+      }
+      result.add(version);
     }
-    if (this.statusEntries.isEmpty()) {
-      throw new RuntimeException("Consensus doesn't contain any 'r' "
-          + "lines.");
+    return result;
+  }
+
+  private void parseKnownFlagsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedExactlyOnceKeyword("known-flags");
+    if (parts.length < 2) {
+      throw new DescriptorParseException("No known flags in line '" + line
+          + "'.");
     }
+    for (int i = 1; i < parts.length; i++) {
+      this.knownFlags.add(parts[i]);
+    }
+  }
+
+  private void parseParamsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedAtMostOnceKeyword("params");
+    this.consensusParams = ParseHelper.parseKeyValuePairs(line, parts, 1);
+  }
+
+  private void parseDirSourceEntryLines(String string)
+      throws DescriptorParseException {
+    DirSourceEntry dirSourceEntry = new DirSourceEntryImpl(
+        string.getBytes());
+    this.dirSourceEntries.put(dirSourceEntry.getIdentity(),
+        dirSourceEntry);
+  }
+
+  private void parseStatusEntryLines(String string)
+      throws DescriptorParseException {
+    NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
+        string.getBytes());
+    this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
+  }
+
+  private void parseBandwidthWeightsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedAtMostOnceKeyword("bandwidth-weights");
+    this.bandwidthWeights = ParseHelper.parseKeyValuePairs(line, parts,
+        1);
+  }
+
+  private void parseDirectorySignatureLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 3) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    String identity = ParseHelper.parseTwentyByteHexString(line,
+        parts[1]);
+    String signingKeyDigest = ParseHelper.parseTwentyByteHexString(line,
+        parts[2]);
+    this.directorySignatures.put(identity, signingKeyDigest);
   }
 
   private byte[] consensusBytes;
@@ -252,9 +387,14 @@ public class RelayNetworkStatusConsensusImpl
     return this.validUntilMillis;
   }
 
-  private List<Long> votingDelay = new ArrayList<Long>();
-  public List<Long> getVotingDelay() {
-    return new ArrayList<Long>(this.votingDelay);
+  private long voteSeconds;
+  public long getVoteSeconds() {
+    return this.voteSeconds;
+  }
+
+  private long distSeconds;
+  public long getDistSeconds() {
+    return this.distSeconds;
   }
 
   private SortedSet<String> recommendedClientVersions;
@@ -274,10 +414,10 @@ public class RelayNetworkStatusConsensusImpl
     return new TreeSet<String>(this.knownFlags);
   }
 
-  private SortedMap<String, String> consensusParams =
-      new TreeMap<String, String>();
-  public SortedMap<String, String> getConsensusParams() {
-    return new TreeMap<String, String>(this.consensusParams);
+  private SortedMap<String, Integer> consensusParams;
+  public SortedMap<String, Integer> getConsensusParams() {
+    return this.consensusParams == null ? null:
+        new TreeMap<String, Integer>(this.consensusParams);
   }
 
   private SortedMap<String, DirSourceEntry> dirSourceEntries =
@@ -304,10 +444,10 @@ public class RelayNetworkStatusConsensusImpl
     return new TreeMap<String, String>(this.directorySignatures);
   }
 
-  private SortedMap<String, String> bandwidthWeights =
-      new TreeMap<String, String>();
-  public SortedMap<String, String> getBandwidthWeights() {
-    return new TreeMap<String, String>(this.bandwidthWeights);
+  private SortedMap<String, Integer> bandwidthWeights;
+  public SortedMap<String, Integer> getBandwidthWeights() {
+    return this.bandwidthWeights == null ? null :
+        new TreeMap<String, Integer>(this.bandwidthWeights);
   }
 }
 

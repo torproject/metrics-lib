@@ -149,11 +149,16 @@ public class RelayNetworkStatusVoteImpl
         } else if (line.startsWith("r ") ||
             line.equals("directory-footer")) {
           if (statusEntryLines != null) {
-            NetworkStatusEntryImpl statusEntry =
-                new NetworkStatusEntryImpl(
-                statusEntryLines.toString().getBytes());
-            this.statusEntries.put(statusEntry.getFingerprint(),
-                statusEntry);
+            try {
+              NetworkStatusEntryImpl statusEntry =
+                  new NetworkStatusEntryImpl(
+                  statusEntryLines.toString().getBytes());
+              this.statusEntries.put(statusEntry.getFingerprint(),
+                  statusEntry);
+            } catch (DescriptorParseException e) {
+              System.err.println("Could not parse status entry in vote.  "
+                  + "Skipping.");
+            }
             statusEntryLines = null;
           }
           if (line.startsWith("r ")) {

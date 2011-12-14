@@ -24,8 +24,11 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   /* Return the valid-until time in milliseconds. */
   public long getValidUntilMillis();
 
-  /* Return a list of the voting-delay times in seconds. */
-  public List<Long> getVotingDelay();
+  /* Return the VoteSeconds time in seconds. */
+  public long getVoteSeconds();
+
+  /* Return the DistSeconds time in seconds. */
+  public long getDistSeconds();
 
   /* Return recommended server versions or null if the consensus doesn't
    * contain recommended server versions. */
@@ -38,8 +41,9 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   /* Return known relay flags. */
   public SortedSet<String> getKnownFlags();
 
-  /* Return consensus parameters. */
-  public SortedMap<String, String> getConsensusParams();
+  /* Return consensus parameters or null if the consensus doesn't contain
+   * consensus parameters. */
+  public SortedMap<String, Integer> getConsensusParams();
 
   /* Return dir-source entries representing the directories of which
    * votes are contained in this consensus. */
@@ -58,7 +62,8 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   /* Return directory signatures. */
   public SortedMap<String, String> getDirectorySignatures();
 
-  /* Return bandwidth weights. */
-  public SortedMap<String, String> getBandwidthWeights();
+  /* Return bandwidth weights or null if the consensus doesn't contain
+   * bandwidth weights. */
+  public SortedMap<String, Integer> getBandwidthWeights();
 }
 

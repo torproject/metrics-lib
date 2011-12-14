@@ -21,94 +21,120 @@ public class RelayNetworkStatusConsensusImplTest {
    * modifications requested by test methods. */
   private static class ConsensusBuilder {
     private String networkStatusVersionLine = "network-status-version 3";
-    private static void createWithNetworkStatusVersionLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithNetworkStatusVersionLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.networkStatusVersionLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String voteStatusLine = "vote-status consensus";
-    private static void createWithVoteStatusLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithVoteStatusLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.voteStatusLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String consensusMethodLine = "consensus-method 11";
-    private static void createWithConsensusMethodLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithConsensusMethodLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.consensusMethodLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String validAfterLine = "valid-after 2011-11-30 09:00:00";
-    private static void createWithValidAfterLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithValidAfterLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.validAfterLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String freshUntilLine = "fresh-until 2011-11-30 10:00:00";
-    private static void createWithFreshUntilLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithFreshUntilLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.freshUntilLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String validUntilLine = "valid-until 2011-11-30 12:00:00";
-    private static void createWithValidUntilLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithValidUntilLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.validUntilLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String votingDelayLine = "voting-delay 300 300";
-    private static void createWithVotingDelayLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithVotingDelayLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.votingDelayLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String clientVersionsLine = "client-versions 0.2.1.31,"
         + "0.2.2.34,0.2.3.6-alpha,0.2.3.7-alpha,0.2.3.8-alpha";
-    private static void createWithClientVersionsLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithClientVersionsLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.clientVersionsLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String serverVersionsLine = "server-versions 0.2.1.31,"
         + "0.2.2.34,0.2.3.6-alpha,0.2.3.7-alpha,0.2.3.8-alpha";
-    private static void createWithServerVersionsLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithServerVersionsLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.serverVersionsLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String knownFlagsLine = "known-flags Authority BadExit Exit "
         + "Fast Guard HSDir Named Running Stable Unnamed V2Dir Valid";
-    private static void createWithKnownFlagsLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithKnownFlagsLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.knownFlagsLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String paramsLine = "params "
         + "CircuitPriorityHalflifeMsec=30000 bwauthbestratio=1 "
         + "bwauthcircs=1 bwauthdescbw=0 bwauthkp=10000 bwauthpid=1 "
         + "bwauthtd=5000 bwauthti=50000 bwauthtidecay=5000 cbtnummodes=3 "
         + "cbtquantile=80 circwindow=1000 refuseunknownexits=1";
-    private static void createWithParamsLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithParamsLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.paramsLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private List<String> dirSources = new ArrayList<String>();
     private List<String> statusEntries = new ArrayList<String>();
     private String directoryFooterLine = "directory-footer";
-    private static void createWithDirectoryFooterLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithDirectoryFooterLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.directoryFooterLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String bandwidthWeightsLine = "bandwidth-weights Wbd=285 "
         + "Wbe=0 Wbg=0 Wbm=10000 Wdb=10000 Web=10000 Wed=1021 Wee=10000 "
         + "Weg=1021 Wem=10000 Wgb=10000 Wgd=8694 Wgg=10000 Wgm=10000 "
         + "Wmb=10000 Wmd=285 Wme=0 Wmg=0 Wmm=10000";
-    private static void createWithBandwidthWeightsLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithBandwidthWeightsLine(String line)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.bandwidthWeightsLine = line;
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private List<String> directorySignatures = new ArrayList<String>();
     private ConsensusBuilder() {
@@ -217,60 +243,78 @@ public class RelayNetworkStatusConsensusImplTest {
   /* Helper class to build a directory source based on default data and
    * modifications requested by test methods. */
   private static class DirSourceBuilder {
-    private static void createWithDirSource(String dirSourceString) {
+    private static RelayNetworkStatusConsensus
+        createWithDirSource(String dirSourceString)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.dirSources.add(dirSourceString);
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String nickname = "gabelmoo";
-    private static void createWithNickname(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithNickname(String string)
+        throws DescriptorParseException {
       DirSourceBuilder dsb = new DirSourceBuilder();
       dsb.nickname = string;
-      createWithDirSource(dsb.buildDirSource());
+      return createWithDirSource(dsb.buildDirSource());
     }
     private String identity = "ED03BB616EB2F60BEC80151114BB25CEF515B226";
-    private static void createWithIdentity(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithIdentity(String string)
+        throws DescriptorParseException {
       DirSourceBuilder dsb = new DirSourceBuilder();
       dsb.identity = string;
-      createWithDirSource(dsb.buildDirSource());
+      return createWithDirSource(dsb.buildDirSource());
     }
     private String hostName = "212.112.245.170";
-    private static void createWithHostName(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithHostName(String string)
+        throws DescriptorParseException {
       DirSourceBuilder dsb = new DirSourceBuilder();
       dsb.hostName = string;
-      createWithDirSource(dsb.buildDirSource());
+      return createWithDirSource(dsb.buildDirSource());
     }
     private String address = "212.112.245.170";
-    private static void createWithAddress(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithAddress(String string)
+        throws DescriptorParseException {
       DirSourceBuilder dsb = new DirSourceBuilder();
       dsb.address = string;
-      createWithDirSource(dsb.buildDirSource());
+      return createWithDirSource(dsb.buildDirSource());
     }
     private String dirPort = "80";
-    private static void createWithDirPort(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithDirPort(String string)
+        throws DescriptorParseException {
       DirSourceBuilder dsb = new DirSourceBuilder();
       dsb.dirPort = string;
-      createWithDirSource(dsb.buildDirSource());
+      return createWithDirSource(dsb.buildDirSource());
     }
     private String orPort = "443";
-    private static void createWithOrPort(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithOrPort(String string)
+        throws DescriptorParseException {
       DirSourceBuilder dsb = new DirSourceBuilder();
       dsb.orPort = string;
-      createWithDirSource(dsb.buildDirSource());
+      return createWithDirSource(dsb.buildDirSource());
     }
     private String contactLine = "contact 4096R/C5AA446D Sebastian Hahn "
         + "<tor@sebastianhahn.net>";
-    private static void createWithContactLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithContactLine(String line)
+        throws DescriptorParseException {
       DirSourceBuilder dsb = new DirSourceBuilder();
       dsb.contactLine = line;
-      createWithDirSource(dsb.buildDirSource());
+      return createWithDirSource(dsb.buildDirSource());
     }
     private String voteDigestLine =
         "vote-digest 0F398A5834D2C139E1D92310B09F814F243354D1";
-    private static void createWithVoteDigestLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithVoteDigestLine(String line)
+        throws DescriptorParseException {
       DirSourceBuilder dsb = new DirSourceBuilder();
       dsb.voteDigestLine = line;
-      createWithDirSource(dsb.buildDirSource());
+      return createWithDirSource(dsb.buildDirSource());
     }
     private String buildDirSource() {
       StringBuilder sb = new StringBuilder();
@@ -294,76 +338,93 @@ public class RelayNetworkStatusConsensusImplTest {
   /* Helper class to build a status entry based on default data and
    * modifications requested by test methods. */
   private static class StatusEntryBuilder {
-    private static void createWithStatusEntry(String statusEntryString) {
+    private static RelayNetworkStatusConsensus
+        createWithStatusEntry(String statusEntryString)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.statusEntries.add(statusEntryString);
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String nickname = "right2privassy3";
-    private static void createWithNickname(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithNickname(String string)
+        throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.nickname = string;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String fingerprintBase64 = "ADQ6gCT3DiFHKPDFr3rODBUI8HM";
-    private static void createWithFingerprintBase64(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithFingerprintBase64(String string)
+        throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.fingerprintBase64 = string;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String descriptorBase64 = "Yiti+nayuT2Efe2X1+M4nslwVuU";
-    private static void createWithDescriptorBase64(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithDescriptorBase64(String string)
+        throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.descriptorBase64 = string;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String publishedString = "2011-11-29 21:34:27";
-    private static void createWithPublishedString(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithPublishedString(String string)
+        throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.publishedString = string;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String address = "50.63.8.215";
-    private static void createWithAddress(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithAddress(String string) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.address = string;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String orPort = "9023";
-    private static void createWithOrPort(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithOrPort(String string) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.orPort = string;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String dirPort = "0";
-    private static void createWithDirPort(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithDirPort(String string) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.dirPort = string;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String sLine = "s Exit Fast Named Running Stable Valid";
-    private static void createWithSLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithSLine(String line) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.sLine = line;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String vLine = "v Tor 0.2.1.29 (r8e9b25e6c7a2e70c)";
-    private static void createWithVLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithVLine(String line) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.vLine = line;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String wLine = "w Bandwidth=1";
-    private static void createWithWLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithWLine(String line) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.wLine = line;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String pLine = "p accept 80,1194,1220,1293";
-    private static void createWithPLine(String line) {
+    private static RelayNetworkStatusConsensus
+        createWithPLine(String line) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.pLine = line;
-      createWithStatusEntry(seb.buildStatusEntry());
+      return createWithStatusEntry(seb.buildStatusEntry());
     }
     private String buildStatusEntry() {
       StringBuilder sb = new StringBuilder();
@@ -393,24 +454,29 @@ public class RelayNetworkStatusConsensusImplTest {
   /* Helper class to build a directory signature based on default data and
    * modifications requested by test methods. */
   private static class DirectorySignatureBuilder {
-    private static void createWithDirectorySignature(
-        String directorySignatureString) {
+    private static RelayNetworkStatusConsensus
+        createWithDirectorySignature(String directorySignatureString)
+        throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.directorySignatures.add(directorySignatureString);
-      new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
     }
     private String identity = "ED03BB616EB2F60BEC80151114BB25CEF515B226";
-    private static void createWithIdentity(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithIdentity(String string)
+        throws DescriptorParseException {
       DirectorySignatureBuilder dsb = new DirectorySignatureBuilder();
       dsb.identity = string;
-      createWithDirectorySignature(dsb.buildDirectorySignature());
+      return createWithDirectorySignature(dsb.buildDirectorySignature());
     }
     private String signingKey =
         "845CF1D0B370CA443A8579D18E7987E7E532F639";
-    private static void createWithSigningKey(String string) {
+    private static RelayNetworkStatusConsensus
+        createWithSigningKey(String string)
+        throws DescriptorParseException {
       DirectorySignatureBuilder dsb = new DirectorySignatureBuilder();
       dsb.signingKey = string;
-      createWithDirectorySignature(dsb.buildDirectorySignature());
+      return createWithDirectorySignature(dsb.buildDirectorySignature());
     }
     private String buildDirectorySignature() {
       String directorySignature = "directory-signature " + identity + " "
@@ -426,505 +492,622 @@ public class RelayNetworkStatusConsensusImplTest {
     }
   }
 
-  /* TODO We should check this. */
   @Test()
-  public void testSampleConsensus() {
+  public void testSampleConsensus() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
-    new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    RelayNetworkStatusConsensus consensus =
+        new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    assertEquals(3, consensus.getNetworkStatusVersion());
+    assertEquals(11, consensus.getConsensusMethod());
+    assertEquals(1322643600000L, consensus.getValidAfterMillis());
+    assertEquals(1322647200000L, consensus.getFreshUntilMillis());
+    assertEquals(1322654400000L, consensus.getValidUntilMillis());
+    assertEquals(300L, consensus.getVoteSeconds());
+    assertEquals(300L, consensus.getDistSeconds());
+    assertTrue(consensus.getRecommendedClientVersions().contains(
+        "0.2.3.8-alpha"));
+    assertTrue(consensus.getRecommendedServerVersions().contains(
+        "0.2.3.8-alpha"));
+    assertTrue(consensus.getKnownFlags().contains("Running"));
+    assertEquals(30000, (int) consensus.getConsensusParams().get(
+        "CircuitPriorityHalflifeMsec"));
+    assertEquals("86.59.21.38", consensus.getDirSourceEntries().get(
+        "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4").getIp());
+    assertTrue(consensus.containsStatusEntry(
+        "00795A6E8D91C270FC23B30F388A495553E01894"));
+    assertEquals("188.177.149.216", consensus.getStatusEntry(
+        "00795A6E8D91C270FC23B30F388A495553E01894").getAddress());
+    assertEquals("3509BA5A624403A905C74DA5C8A0CEC9E0D3AF86",
+        consensus.getDirectorySignatures().get(
+        "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4"));
+    assertEquals(285, (int) consensus.getBandwidthWeights().get("Wbd"));
   }
 
-  /* TODO Throwing a RuntimeException here (and in most places below) is
-   * bad.  Maybe we should define a DescriptorParseException. */
-  @Test(expected = RuntimeException.class)
-  public void testNetworkStatusVersionNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionNoLine()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testNetworkStatusVersionPrefixLineAtChar() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionNewLine()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithNetworkStatusVersionLine(
+        "network-status-version 3\n");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionPrefixLineAtChar()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "@consensus\nnetwork-status-version 3");
   }
 
-  /* TODO This doesn't break.  Should it? */
-  @Test()
-  public void testNetworkStatusVersionPrefixDirectoryFooter() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionPrefixLine()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "directory-footer\nnetwork-status-version 3");
   }
-  
-  @Test(expected = RuntimeException.class)
-  public void testNetworkStatusVersionPrefixLinePoundChar() {
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionPrefixLinePoundChar()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "#consensus\nnetwork-status-version 3");
   }
-  
-  @Test(expected = RuntimeException.class)
-  public void testNetworkStatusVersionNoSpace() {
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionNoSpace()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testNetworkStatusVersionOneSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionOneSpace()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version ");
   }
 
-  /* TODO The parser should only accept version 3 and throw an Exception
-   * here. */
-  @Test()
-  public void testNetworkStatusVersion42() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersion42()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version 42");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testNetworkStatusVersionFourtyTwo() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionFourtyTwo()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version FourtyTwo");
   }
 
-  /* TODO Shouldn't this throw an exception? */
-  @Test()
-  public void testVoteStatusNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVoteStatusNoLine() throws DescriptorParseException {
     ConsensusBuilder.createWithVoteStatusLine(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testVoteStatusNoSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionSpaceBefore()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithNetworkStatusVersionLine(
+        " network-status-version 3");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testVoteStatusSpaceBefore() throws DescriptorParseException {
+    ConsensusBuilder.createWithVoteStatusLine(" vote-status consensus");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testVoteStatusNoSpace() throws DescriptorParseException {
     ConsensusBuilder.createWithVoteStatusLine("vote-status");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testVoteStatusOneSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVoteStatusOneSpace() throws DescriptorParseException {
     ConsensusBuilder.createWithVoteStatusLine("vote-status ");
   }
 
-  /* TODO Should this be accepted or not? */
-  @Test(expected = RuntimeException.class)
-  public void testVoteStatusConsensusOneSpace() {
+  @Test()
+  public void testVoteStatusConsensusOneSpace()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithVoteStatusLine("vote-status consensus ");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testVoteStatusVote() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVoteStatusVote() throws DescriptorParseException {
     ConsensusBuilder.createWithVoteStatusLine("vote-status vote");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testVoteStatusTheMagicVoteStatus() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVoteStatusTheMagicVoteStatus()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithVoteStatusLine(
         "vote-status TheMagicVoteStatus");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testConsensusMethodNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testConsensusMethodNoLine()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithConsensusMethodLine(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testConsensusMethodNoSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testConsensusMethodNoSpace()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithConsensusMethodLine("consensus-method");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testConsensusMethodOneSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testConsensusMethodOneSpace()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithConsensusMethodLine("consensus-method ");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testConsensusMethodEleven() {
+  @Test(expected = DescriptorParseException.class)
+  public void testConsensusMethodEleven()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithConsensusMethodLine(
         "consensus-method eleven");
   }
 
-  /* TODO We shouldn't allow negative values here. */
-  @Test()
-  public void testConsensusMethodMinusOne() {
+  @Test(expected = DescriptorParseException.class)
+  public void testConsensusMethodMinusOne()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithConsensusMethodLine("consensus-method -1");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testConsensusMethodNinePeriod() {
+  @Test(expected = DescriptorParseException.class)
+  public void testConsensusMethodNinePeriod()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithConsensusMethodLine("consensus-method "
         + "999999999999999999999999999999999999999999999999999999999999");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testValidAfterNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testConsensusMethodTwoLines()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithConsensusMethodLine(
+        "consensus-method 1\nconsensus-method 1");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testValidAfterNoLine() throws DescriptorParseException {
     ConsensusBuilder.createWithValidAfterLine(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testValidAfterNoSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testValidAfterNoSpace() throws DescriptorParseException {
     ConsensusBuilder.createWithValidAfterLine("valid-after");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testValidAfterOneSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testValidAfterOneSpace() throws DescriptorParseException {
     ConsensusBuilder.createWithValidAfterLine("valid-after ");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testValidAfterLongAgo() {
+  @Test(expected = DescriptorParseException.class)
+  public void testValidAfterLongAgo() throws DescriptorParseException {
     ConsensusBuilder.createWithValidAfterLine("valid-after long ago");
   }
 
-  /* TODO Wow, this should really throw an exception! */
-  @Test()
-  public void testValidAfterFeb30() {
+  @Test(expected = DescriptorParseException.class)
+  public void testValidAfterFeb30() throws DescriptorParseException {
     ConsensusBuilder.createWithValidAfterLine(
         "valid-after 2011-02-30 09:00:00");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testFreshUntilNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testFreshUntilNoLine() throws DescriptorParseException {
     ConsensusBuilder.createWithFreshUntilLine(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testFreshUntilAroundTen() {
+  @Test(expected = DescriptorParseException.class)
+  public void testFreshUntilAroundTen() throws DescriptorParseException {
     ConsensusBuilder.createWithFreshUntilLine(
         "fresh-until 2011-11-30 around ten");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testValidUntilTomorrowMorning() {
+  @Test(expected = DescriptorParseException.class)
+  public void testValidUntilTomorrowMorning()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithValidUntilLine(
         "valid-until tomorrow morning");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testVotingDelayNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVotingDelayNoLine() throws DescriptorParseException {
     ConsensusBuilder.createWithVotingDelayLine(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testVotingDelayNoSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVotingDelayNoSpace() throws DescriptorParseException {
     ConsensusBuilder.createWithVotingDelayLine("voting-delay");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testVotingDelayOneSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVotingDelayOneSpace() throws DescriptorParseException {
     ConsensusBuilder.createWithVotingDelayLine("voting-delay ");
   }
 
-  /* TODO This should throw an exception. */
-  @Test()
-  public void testVotingDelayTriple() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVotingDelayTriple() throws DescriptorParseException {
     ConsensusBuilder.createWithVotingDelayLine(
         "voting-delay 300 300 300");
   }
 
-  /* TODO This should throw an exception. */
-  @Test()
-  public void testVotingDelaySingle() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVotingDelaySingle() throws DescriptorParseException {
     ConsensusBuilder.createWithVotingDelayLine("voting-delay 300");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testVotingDelayOneTwo() {
+  @Test(expected = DescriptorParseException.class)
+  public void testVotingDelayOneTwo() throws DescriptorParseException {
     ConsensusBuilder.createWithVotingDelayLine("voting-delay one two");
   }
 
-  /* TODO Should this be forbidden? */
   @Test()
-  public void testClientVersionsNoLineServerVersionsNoLine() {
+  public void testClientServerVersionsNoLine()
+      throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.clientVersionsLine = null;
     cb.serverVersionsLine = null;
-    new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    RelayNetworkStatusConsensus consensus =
+        new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    assertNull(consensus.getRecommendedClientVersions());
+    assertNull(consensus.getRecommendedServerVersions());
   }
 
-  /* TODO Should this be forbidden? */
   @Test()
-  public void testServerVersionsNoLine() {
-    ConsensusBuilder.createWithServerVersionsLine(null);
+  public void testServerVersionsNoLine() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithServerVersionsLine(null);
+    assertNotNull(consensus.getRecommendedClientVersions());
+    assertNull(consensus.getRecommendedServerVersions());
   }
 
-  /* TODO Should this be forbidden? */
   @Test()
-  public void testClientVersionsNoLine() {
-    ConsensusBuilder.createWithClientVersionsLine(null);
+  public void testClientVersionsNoLine() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithClientVersionsLine(null);
+    assertNull(consensus.getRecommendedClientVersions());
+    assertNotNull(consensus.getRecommendedServerVersions());
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testClientVersionsNoSpace() {
-    ConsensusBuilder.createWithClientVersionsLine("client-versions");
-  }
-
-  @Test(expected = RuntimeException.class)
-  public void testClientVersionsOneSpace() {
-    ConsensusBuilder.createWithClientVersionsLine("client-versions ");
-  }
-
-  /* TODO This should be caught. */
   @Test()
-  public void testClientVersionsComma() {
+  public void testClientVersionsNoSpace()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithClientVersionsLine("client-versions");
+    assertNotNull(consensus.getRecommendedClientVersions());
+    assertTrue(consensus.getRecommendedClientVersions().isEmpty());
+  }
+
+  @Test()
+  public void testClientVersionsOneSpace()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithClientVersionsLine("client-versions ");
+    assertNotNull(consensus.getRecommendedClientVersions());
+    assertTrue(consensus.getRecommendedClientVersions().isEmpty());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testClientVersionsComma() throws DescriptorParseException {
     ConsensusBuilder.createWithClientVersionsLine("client-versions ,");
   }
 
-  /* TODO This should be caught. */
-  @Test()
-  public void testClientVersionsCommaVersion() {
+  @Test(expected = DescriptorParseException.class)
+  public void testClientVersionsCommaVersion()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithClientVersionsLine(
         "client-versions ,0.2.2.34");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testKnownFlagsNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testKnownFlagsNoLine() throws DescriptorParseException {
     ConsensusBuilder.createWithKnownFlagsLine(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testKnownFlagsNoSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testKnownFlagsNoSpace() throws DescriptorParseException {
     ConsensusBuilder.createWithKnownFlagsLine("known-flags");
   }
 
-  /* TODO Looks like this okay, right? */
-  @Test()
-  public void testKnownFlagsOneSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testKnownFlagsOneSpace() throws DescriptorParseException {
     ConsensusBuilder.createWithKnownFlagsLine("known-flags ");
   }
 
-  /* TODO Make sure that the params line is optional. */
   @Test()
-  public void testParamsNoLine() {
-    ConsensusBuilder.createWithParamsLine(null);
+  public void testParamsNoLine() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithParamsLine(null);
+    assertNull(consensus.getConsensusParams());
   }
 
-  /* TODO If it's okay to provide an empty params line, this one should be
-   * accepted, too. */
-  @Test(expected = RuntimeException.class)
-  public void testParamsNoSpace() {
-    ConsensusBuilder.createWithParamsLine("params");
-  }
-
-  /* TODO Is this okay? */
   @Test()
-  public void testParamsOneSpace() {
-    ConsensusBuilder.createWithParamsLine("params ");
+  public void testParamsNoSpace() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithParamsLine("params");
+    assertNotNull(consensus.getConsensusParams());
+    assertTrue(consensus.getConsensusParams().isEmpty());
   }
 
-  /* TODO Hmm, and this is okay? */
   @Test()
-  public void testParamsThreeSpaces() {
-    ConsensusBuilder.createWithParamsLine("params   ");
+  public void testParamsOneSpace() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithParamsLine("params ");
+    assertNotNull(consensus.getConsensusParams());
+    assertTrue(consensus.getConsensusParams().isEmpty());
   }
 
-  /* TODO The error message here looked strange.  Investigate. */
-  @Test(expected = RuntimeException.class)
-  public void testParamsNoEqualSign() {
+  @Test()
+  public void testParamsThreeSpaces() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithParamsLine("params   ");
+    assertNotNull(consensus.getConsensusParams());
+    assertTrue(consensus.getConsensusParams().isEmpty());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testParamsNoEqualSign() throws DescriptorParseException {
     ConsensusBuilder.createWithParamsLine("params key-value");
   }
 
-  /* TODO We should check this. */
+  @Test(expected = DescriptorParseException.class)
+  public void testParamsOneTooLargeNegative()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithParamsLine("params min=-2147483649");
+  }
+
   @Test()
-  public void testDirSourceIdentityTooShort() {
+  public void testParamsLargestNegative()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithParamsLine("params min=-2147483648");
+    assertEquals(1, consensus.getConsensusParams().size());
+    assertEquals(-2147483648,
+        (int) consensus.getConsensusParams().get("min"));
+  }
+
+  @Test()
+  public void testParamsLargestPositive()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithParamsLine("params max=2147483647");
+    assertEquals(1, consensus.getConsensusParams().size());
+    assertEquals(2147483647,
+        (int) consensus.getConsensusParams().get("max"));
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testParamsOneTooLargePositive()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithParamsLine("params max=2147483648");
+  }
+
+  @Test()
+  public void testDirSourceLegacyNickname()
+      throws DescriptorParseException {
+    DirSourceBuilder dsb = new DirSourceBuilder();
+    dsb.nickname = "gabelmoo-legacy";
+    dsb.identity = "81349FC1F2DBA2C2C11B45CB9706637D480AB913";
+    dsb.contactLine = null;
+    dsb.voteDigestLine = null;
+    RelayNetworkStatusConsensus consensus =
+        DirSourceBuilder.createWithDirSource(dsb.buildDirSource());
+    assertEquals(3, consensus.getDirSourceEntries().size());
+    assertTrue(consensus.getDirSourceEntries().get(
+        "81349FC1F2DBA2C2C11B45CB9706637D480AB913").isLegacy());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceIdentityTooShort()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithIdentity("ED03BB616EB2F60BEC8015111");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirSourceIdentityTooLong() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceIdentityTooLong()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithIdentity("ED03BB616EB2F60BEC8015111"
         + "4BB25CEF515B226ED03BB616EB2F60BEC8");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirSourceAddress24() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceAddress24() throws DescriptorParseException {
     DirSourceBuilder.createWithAddress("212.112.245");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirSourceAddress40() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceAddress40() throws DescriptorParseException {
     DirSourceBuilder.createWithAddress("212.112.245.170.123");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirSourceDirPortMinusOne() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceDirPortMinusOne()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithDirPort("-1");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirSourceDirPort66666() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceDirPort66666()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithDirPort("66666");
   }
 
-  /* TODO We should check this. */
-  @Test(expected = RuntimeException.class)
-  public void testDirSourceDirPortOnions() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceDirPortOnions()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithDirPort("onions");
   }
 
-  /* TODO We should check this. */
-  @Test(expected = RuntimeException.class)
-  public void testDirSourceOrPortOnions() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceOrPortOnions()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithOrPort("onions");
   }
 
-  /* TODO We should check this. */
   @Test()
-  public void testDirSourceContactNoLine() {
-    DirSourceBuilder.createWithContactLine(null);
+  public void testDirSourceContactNoLine()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        DirSourceBuilder.createWithContactLine(null);
+    assertNull(consensus.getDirSourceEntries().get(
+        "ED03BB616EB2F60BEC80151114BB25CEF515B226").getContactLine());
   }
 
-  /* TODO We should check this. */
-  @Test(expected = RuntimeException.class)
-  public void testDirSourceContactLineNoSpace() {
-    DirSourceBuilder.createWithContactLine("contact");
+  @Test()
+  public void testDirSourceContactLineNoSpace()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        DirSourceBuilder.createWithContactLine("contact");
+    assertNotNull(consensus.getDirSourceEntries().get(
+        "ED03BB616EB2F60BEC80151114BB25CEF515B226").getContactLine());
   }
 
-  /* TODO We should check this. */
   @Test()
-  public void testDirSourceContactLineOneSpace() {
-    DirSourceBuilder.createWithContactLine("contact ");
+  public void testDirSourceContactLineOneSpace()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        DirSourceBuilder.createWithContactLine("contact ");
+    assertNotNull(consensus.getDirSourceEntries().get(
+        "ED03BB616EB2F60BEC80151114BB25CEF515B226").getContactLine());
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirSourceVoteDigestNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceVoteDigestNoLine()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithVoteDigestLine(null);
   }
 
-  /* TODO We should check this. */
-  @Test(expected = RuntimeException.class)
-  public void testDirSourceVoteDigestLineNoSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceVoteDigestLineNoSpace()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithVoteDigestLine("vote-digest");
   }
 
-  /* TODO We should check this. */
-  @Test(expected = RuntimeException.class)
-  public void testDirSourceVoteDigestLineOneSpace() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceVoteDigestLineOneSpace()
+      throws DescriptorParseException {
     DirSourceBuilder.createWithVoteDigestLine("vote-digest ");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testNicknameNotAllowedChars() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNicknameNotAllowedChars()
+      throws DescriptorParseException {
     StatusEntryBuilder.createWithNickname("notAll()wed");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testNicknameTooLong() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNicknameTooLong() throws DescriptorParseException {
     StatusEntryBuilder.createWithNickname("1234567890123456789tooLong");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testFingerprintTooShort() {
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintTooShort() throws DescriptorParseException {
     StatusEntryBuilder.createWithFingerprintBase64("TooShort");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testFingerprintEndsWithEqualSign() {
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintEndsWithEqualSign()
+      throws DescriptorParseException {
     StatusEntryBuilder.createWithFingerprintBase64(
         "ADQ6gCT3DiFHKPDFr3rODBUI8H=");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testFingerprintTooLong() {
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintTooLong() throws DescriptorParseException {
     StatusEntryBuilder.createWithFingerprintBase64(
         "ADQ6gCT3DiFHKPDFr3rODBUI8HMAAAA");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDescriptorTooShort() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDescriptorTooShort() throws DescriptorParseException {
     StatusEntryBuilder.createWithDescriptorBase64("TooShort");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDescriptorEndsWithEqualSign() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDescriptorEndsWithEqualSign()
+      throws DescriptorParseException {
     StatusEntryBuilder.createWithDescriptorBase64(
         "ADQ6gCT3DiFHKPDFr3rODBUI8H=");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDescriptorTooLong() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDescriptorTooLong() throws DescriptorParseException {
     StatusEntryBuilder.createWithDescriptorBase64(
         "Yiti+nayuT2Efe2X1+M4nslwVuUAAAA");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testPublished1960() {
+  @Test(expected = DescriptorParseException.class)
+  public void testPublished1960() throws DescriptorParseException {
     StatusEntryBuilder.createWithPublishedString("1960-11-29 21:34:27");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testPublished9999() {
+  @Test(expected = DescriptorParseException.class)
+  public void testPublished9999() throws DescriptorParseException {
     StatusEntryBuilder.createWithPublishedString("9999-11-29 21:34:27");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testAddress256() {
+  @Test(expected = DescriptorParseException.class)
+  public void testAddress256() throws DescriptorParseException {
     StatusEntryBuilder.createWithAddress("256.63.8.215");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testAddress24() {
+  @Test(expected = DescriptorParseException.class)
+  public void testAddress24() throws DescriptorParseException {
     StatusEntryBuilder.createWithAddress("50.63.8/24");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testAddressV6() {
+  @Test(expected = DescriptorParseException.class)
+  public void testAddressV6() throws DescriptorParseException {
     StatusEntryBuilder.createWithAddress("::1");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testOrPort66666() {
+  @Test(expected = DescriptorParseException.class)
+  public void testOrPort66666() throws DescriptorParseException {
     StatusEntryBuilder.createWithOrPort("66666");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testOrPortEighty() {
+  @Test(expected = DescriptorParseException.class)
+  public void testOrPortEighty() throws DescriptorParseException {
     StatusEntryBuilder.createWithOrPort("eighty");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirPortMinusOne() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirPortMinusOne() throws DescriptorParseException {
     StatusEntryBuilder.createWithDirPort("-1");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirPortZero() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirPortZero() throws DescriptorParseException {
     StatusEntryBuilder.createWithDirPort("zero");
   }
 
-  /* TODO We should check this. */
   @Test()
-  public void testSLineNoSpace() {
-    StatusEntryBuilder.createWithSLine("s");
+  public void testSLineNoSpace() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        StatusEntryBuilder.createWithSLine("s");
+    assertTrue(consensus.getStatusEntry(
+        "00343A8024F70E214728F0C5AF7ACE0C1508F073").getFlags().isEmpty());
   }
 
-  /* TODO We should check this. */
   @Test()
-  public void testSLineOneSpace() {
-    StatusEntryBuilder.createWithSLine("s ");
+  public void testSLineOneSpace() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        StatusEntryBuilder.createWithSLine("s ");
+    assertTrue(consensus.getStatusEntry(
+        "00343A8024F70E214728F0C5AF7ACE0C1508F073").getFlags().isEmpty());
   }
 
-  /* TODO We should detect this. */
-  @Test()
-  public void testTwoSLines() {
+  @Test(expected = DescriptorParseException.class)
+  public void testTwoSLines() throws DescriptorParseException {
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.sLine = sb.sLine + "\n" + sb.sLine;
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -932,27 +1115,23 @@ public class RelayNetworkStatusConsensusImplTest {
     new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
   }
 
-  /* TODO This is not allowed, right? */
-  @Test(expected = RuntimeException.class)
-  public void testWLineNoSpace() {
-    StatusEntryBuilder.createWithSLine("w");
+  @Test(expected = DescriptorParseException.class)
+  public void testWLineNoSpace() throws DescriptorParseException {
+    StatusEntryBuilder.createWithWLine("w");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testWLineOneSpace() {
-    StatusEntryBuilder.createWithSLine("w ");
+  @Test(expected = DescriptorParseException.class)
+  public void testWLineOneSpace() throws DescriptorParseException {
+    StatusEntryBuilder.createWithWLine("w ");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testWLineWarpSeven() {
+  @Test(expected = DescriptorParseException.class)
+  public void testWLineWarpSeven() throws DescriptorParseException {
     StatusEntryBuilder.createWithWLine("w Warp=7");
   }
 
-  /* TODO We should detect this. */
-  @Test()
-  public void testTwoWLines() {
+  @Test(expected = DescriptorParseException.class)
+  public void testTwoWLines() throws DescriptorParseException {
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.wLine = sb.wLine + "\n" + sb.wLine;
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -960,33 +1139,28 @@ public class RelayNetworkStatusConsensusImplTest {
     new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testPLineNoPolicy() {
+  @Test(expected = DescriptorParseException.class)
+  public void testPLineNoPolicy() throws DescriptorParseException {
     StatusEntryBuilder.createWithPLine("p 80");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testPLineNoPorts() {
+  @Test(expected = DescriptorParseException.class)
+  public void testPLineNoPorts() throws DescriptorParseException {
     StatusEntryBuilder.createWithPLine("p accept");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testPLineNoPolicyNoPorts() {
+  @Test(expected = DescriptorParseException.class)
+  public void testPLineNoPolicyNoPorts() throws DescriptorParseException {
     StatusEntryBuilder.createWithPLine("p ");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testPLineProject() {
+  @Test(expected = DescriptorParseException.class)
+  public void testPLineProject() throws DescriptorParseException {
     StatusEntryBuilder.createWithPLine("p project 80");
   }
 
-  /* TODO We should detect this. */
-  @Test()
-  public void testTwoPLines() {
+  @Test(expected = DescriptorParseException.class)
+  public void testTwoPLines() throws DescriptorParseException {
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.pLine = sb.pLine + "\n" + sb.pLine;
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -994,86 +1168,96 @@ public class RelayNetworkStatusConsensusImplTest {
     new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
   }
 
-  /* TODO Should we allow this? */
-  @Test(expected = RuntimeException.class)
-  public void testNoStatusEntries() {
+  @Test()
+  public void testNoStatusEntries() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.clear();
-    new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    RelayNetworkStatusConsensus consensus =
+        new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    assertFalse(consensus.containsStatusEntry(
+        "00795A6E8D91C270FC23B30F388A495553E01894"));
   }
 
-  /* TODO Why does this not break?  Ah, maybe it just leaves out one
-   * status entry.  Ugh.  It should break! */
-  @Test()
-  public void testDirectoryFooterNoLine() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirectoryFooterNoLine()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithDirectoryFooterLine(null);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testDirectoryFooterLineSpace() {
+  @Test()
+  public void testDirectoryFooterLineSpace()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithDirectoryFooterLine("directory-footer ");
   }
 
- /* TODO Make sure that this is really okay in the code. */
   @Test()
-  public void testBandwidthWeightsNoLine() {
-    ConsensusBuilder.createWithBandwidthWeightsLine(null);
+  public void testBandwidthWeightsNoLine()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithBandwidthWeightsLine(null);
+    assertNull(consensus.getBandwidthWeights());
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testBandwidthWeightsLineNoSpace() {
-    ConsensusBuilder.createWithBandwidthWeightsLine("bandwidth-weights");
+  @Test()
+  public void testBandwidthWeightsLineNoSpace()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
+        createWithBandwidthWeightsLine("bandwidth-weights");
+    assertNotNull(consensus.getBandwidthWeights());
   }
 
-  /* TODO We should check this. */
   @Test()
-  public void testBandwidthWeightsLineOneSpace() {
-    ConsensusBuilder.createWithBandwidthWeightsLine("bandwidth-weights ");
+  public void testBandwidthWeightsLineOneSpace()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
+        createWithBandwidthWeightsLine("bandwidth-weights ");
+    assertNotNull(consensus.getBandwidthWeights());
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testBandwidthWeightsLineNoEqualSign() {
+  @Test(expected = DescriptorParseException.class)
+  public void testBandwidthWeightsLineNoEqualSign()
+      throws DescriptorParseException {
     ConsensusBuilder.createWithBandwidthWeightsLine(
         "bandwidth-weights Wbd-285");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirectorySignatureIdentityTooShort() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirectorySignatureIdentityTooShort()
+      throws DescriptorParseException {
     DirectorySignatureBuilder.createWithIdentity("ED03BB616EB2F60");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirectorySignatureIdentityTooLong() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirectorySignatureIdentityTooLong()
+      throws DescriptorParseException {
     DirectorySignatureBuilder.createWithIdentity(
         "ED03BB616EB2F60BEC80151114BB25CEF515B226ED03BB616EB2F60BEC");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirectorySignatureSigningKeyTooShort() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirectorySignatureSigningKeyTooShort()
+      throws DescriptorParseException {
     DirectorySignatureBuilder.createWithSigningKey("845CF1D0B370CA4");
   }
 
-  /* TODO We should check this. */
-  @Test()
-  public void testDirectorySignatureSigningKeyTooLong() {
+  @Test(expected = DescriptorParseException.class)
+  public void testDirectorySignatureSigningKeyTooLong()
+      throws DescriptorParseException {
     DirectorySignatureBuilder.createWithSigningKey(
         "845CF1D0B370CA443A8579D18E7987E7E532F639845CF1D0B370CA443A");
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testNonAsciiByte20() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNonAsciiByte20() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     byte[] consensusBytes = cb.buildConsensus();
     consensusBytes[20] = (byte) 200;
     new RelayNetworkStatusConsensusImpl(consensusBytes);
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testNonAsciiByteMinusOne() {
+  @Test(expected = DescriptorParseException.class)
+  public void testNonAsciiByteMinusOne()
+      throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.networkStatusVersionLine = "Xnetwork-status-version 3";
     byte[] consensusBytes = cb.buildConsensus();
