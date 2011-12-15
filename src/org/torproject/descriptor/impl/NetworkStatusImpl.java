@@ -272,9 +272,9 @@ public abstract class NetworkStatusImpl {
       String line;
       boolean skipCrypto = false;
       while ((line = br.readLine()) != null) {
-        if (line.startsWith("-----BEGIN SIGNATURE-----")) {
+        if (line.startsWith("-----BEGIN")) {
           skipCrypto = true;
-        } else if (line.equals("-----END SIGNATURE-----")) {
+        } else if (line.equals("-----END")) {
           skipCrypto = false;
         } else if (!skipCrypto) {
           String keyword = line.split(" ", -1)[0];
