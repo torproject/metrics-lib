@@ -267,7 +267,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
             keyword.equals("dir-key-certification")) {
         } else if (line.startsWith("-----BEGIN")) {
           skipCrypto = true;
-        } else if (line.equals("-----END")) {
+        } else if (line.startsWith("-----END")) {
           skipCrypto = false;
         } else if (!skipCrypto) {
           /* TODO Is throwing an exception the right thing to do here?
