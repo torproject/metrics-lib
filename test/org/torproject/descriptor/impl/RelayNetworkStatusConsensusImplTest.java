@@ -537,6 +537,13 @@ public class RelayNetworkStatusConsensusImplTest {
   }
 
   @Test(expected = DescriptorParseException.class)
+  public void testNetworkStatusVersionNewLineSpace()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithNetworkStatusVersionLine(
+        "network-status-version 3\n ");
+  }
+
+  @Test(expected = DescriptorParseException.class)
   public void testNetworkStatusVersionPrefixLineAtChar()
       throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
