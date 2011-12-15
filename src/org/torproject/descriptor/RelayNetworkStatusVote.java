@@ -32,11 +32,11 @@ public interface RelayNetworkStatusVote extends Descriptor {
 
   /* Return recommended server versions or null if the authority doesn't
    * recommend server versions. */
-  public SortedSet<String> getRecommendedServerVersions();
+  public List<String> getRecommendedServerVersions();
 
   /* Return recommended client versions or null if the authority doesn't
    * recommend server versions. */
-  public SortedSet<String> getRecommendedClientVersions();
+  public List<String> getRecommendedClientVersions();
 
   /* Return known relay flags. */
   public SortedSet<String> getKnownFlags();

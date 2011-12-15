@@ -284,9 +284,9 @@ public class RelayNetworkStatusConsensusImpl
         line, parts);
   }
 
-  private SortedSet<String> parseClientOrServerVersions(String line,
+  private List<String> parseClientOrServerVersions(String line,
       String[] parts) throws DescriptorParseException {
-    SortedSet<String> result = new TreeSet<String>();
+    List<String> result = new ArrayList<String>();
     if (parts.length == 1) {
       return result;
     } else if (parts.length > 2) {
@@ -397,16 +397,16 @@ public class RelayNetworkStatusConsensusImpl
     return this.distSeconds;
   }
 
-  private SortedSet<String> recommendedClientVersions;
-  public SortedSet<String> getRecommendedClientVersions() {
+  private List<String> recommendedClientVersions;
+  public List<String> getRecommendedClientVersions() {
     return this.recommendedClientVersions == null ? null :
-        new TreeSet<String>(this.recommendedClientVersions);
+        new ArrayList<String>(this.recommendedClientVersions);
   }
 
-  private SortedSet<String> recommendedServerVersions;
-  public SortedSet<String> getRecommendedServerVersions() {
+  private List<String> recommendedServerVersions;
+  public List<String> getRecommendedServerVersions() {
     return this.recommendedServerVersions == null ? null :
-        new TreeSet<String>(this.recommendedServerVersions);
+        new ArrayList<String>(this.recommendedServerVersions);
   }
 
   private SortedSet<String> knownFlags = new TreeSet<String>();

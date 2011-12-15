@@ -32,11 +32,11 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
 
   /* Return recommended server versions or null if the consensus doesn't
    * contain recommended server versions. */
-  public SortedSet<String> getRecommendedServerVersions();
+  public List<String> getRecommendedServerVersions();
 
   /* Return recommended client versions or null if the consensus doesn't
    * contain recommended client versions. */
-  public SortedSet<String> getRecommendedClientVersions();
+  public List<String> getRecommendedClientVersions();
 
   /* Return known relay flags. */
   public SortedSet<String> getKnownFlags();

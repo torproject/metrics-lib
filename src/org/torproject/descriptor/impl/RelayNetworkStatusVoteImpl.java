@@ -100,11 +100,11 @@ public class RelayNetworkStatusVoteImpl
             this.votingDelay.add(Long.parseLong(votingDelayString));
           }
         } else if (line.startsWith("client-versions ")) {
-          this.recommendedClientVersions = new TreeSet<String>(
-              Arrays.asList(line.split(" ")[1].split(",")));
+          this.recommendedClientVersions =
+              Arrays.asList(line.split(" ")[1].split(","));
         } else if (line.startsWith("server-versions ")) {
-          this.recommendedServerVersions = new TreeSet<String>(
-              Arrays.asList(line.split(" ")[1].split(",")));
+          this.recommendedServerVersions =
+              Arrays.asList(line.split(" ")[1].split(","));
         } else if (line.startsWith("known-flags ")) {
           for (String flag : line.substring("known-flags ".length()).
               split(" ")) {
@@ -238,16 +238,16 @@ public class RelayNetworkStatusVoteImpl
     return new ArrayList<Long>(this.votingDelay);
   }
 
-  private SortedSet<String> recommendedClientVersions;
-  public SortedSet<String> getRecommendedClientVersions() {
+  private List<String> recommendedClientVersions;
+  public List<String> getRecommendedClientVersions() {
     return this.recommendedClientVersions == null ? null :
-        new TreeSet<String>(this.recommendedClientVersions);
+        new ArrayList<String>(this.recommendedClientVersions);
   }
 
-  private SortedSet<String> recommendedServerVersions;
-  public SortedSet<String> getRecommendedServerVersions() {
+  private List<String> recommendedServerVersions;
+  public List<String> getRecommendedServerVersions() {
     return this.recommendedServerVersions == null ? null :
-        new TreeSet<String>(this.recommendedServerVersions);
+        new ArrayList<String>(this.recommendedServerVersions);
   }
 
   private SortedSet<String> knownFlags = new TreeSet<String>();
