@@ -42,7 +42,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
   public SortedSet<String> getKnownFlags();
 
   /* Return consensus parameters. */
-  public SortedMap<String, String> getConsensusParams();
+  public SortedMap<String, Integer> getConsensusParams();
 
   /* Return the directory nickname. */
   public String getNickname();

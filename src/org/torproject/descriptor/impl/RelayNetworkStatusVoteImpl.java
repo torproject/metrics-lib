@@ -115,7 +115,7 @@ public class RelayNetworkStatusVoteImpl
             for (String param :
                 line.substring("params ".length()).split(" ")) {
               String paramName = param.split("=")[0];
-              String paramValue = param.split("=")[1];
+              int paramValue = Integer.parseInt(param.split("=")[1]);
               this.consensusParams.put(paramName, paramValue);
             }
           }
@@ -255,10 +255,10 @@ public class RelayNetworkStatusVoteImpl
     return new TreeSet<String>(this.knownFlags);
   }
 
-  private SortedMap<String, String> consensusParams =
-      new TreeMap<String, String>();
-  public SortedMap<String, String> getConsensusParams() {
-    return new TreeMap<String, String>(this.consensusParams);
+  private SortedMap<String, Integer> consensusParams =
+      new TreeMap<String, Integer>();
+  public SortedMap<String, Integer> getConsensusParams() {
+    return new TreeMap<String, Integer>(this.consensusParams);
   }
 
   private String nickname;
