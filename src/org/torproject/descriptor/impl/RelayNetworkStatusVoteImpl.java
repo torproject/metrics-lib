@@ -7,258 +7,341 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import org.torproject.descriptor.Descriptor;
-import org.torproject.descriptor.NetworkStatusEntry;
 import org.torproject.descriptor.RelayNetworkStatusVote;
 
+/* TODO Find out if all keywords in the dir-source section are required.
+ * They are not all mentioned in dir-spec.txt. */
+
 /* Contains a network status vote. */
-/* TODO This class is sharing a lot of parsing code with the consensus
- * class.  Should there be an abstract super class for the two? */
-public class RelayNetworkStatusVoteImpl
+public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     implements RelayNetworkStatusVote {
 
   protected static List<RelayNetworkStatusVote> parseVotes(
-      byte[] voteBytes) {
+      byte[] votesBytes) {
     List<RelayNetworkStatusVote> parsedVotes =
         new ArrayList<RelayNetworkStatusVote>();
-    String startToken = "network-status-version 3";
-    String splitToken = "\n" + startToken;
-    String ascii = new String(voteBytes);
-    int length = voteBytes.length, start = ascii.indexOf(startToken);
-    while (start < length) {
-      int end = ascii.indexOf(splitToken, start);
-      if (end < 0) {
-        end = length;
-      } else {
-        end += 1;
+    List<byte[]> splitVotesBytes =
+        NetworkStatusImpl.splitRawDescriptorBytes(votesBytes,
+        "network-status-version 3");
+    try {
+      for (byte[] voteBytes : splitVotesBytes) {
+        RelayNetworkStatusVote parsedVote =
+            new RelayNetworkStatusVoteImpl(voteBytes);
+        parsedVotes.add(parsedVote);
       }
-      byte[] descBytes = new byte[end - start];
-      System.arraycopy(voteBytes, start, descBytes, 0, end - start);
-      RelayNetworkStatusVote parsedVote =
-          new RelayNetworkStatusVoteImpl(descBytes);
-      parsedVotes.add(parsedVote);
-      start = end;
+    } catch (DescriptorParseException e) {
+      /* TODO Handle this error somehow. */
+      System.err.println("Failed to parse vote.  Skipping.");
+      e.printStackTrace();
     }
     return parsedVotes;
   }
 
-  protected RelayNetworkStatusVoteImpl(byte[] voteBytes) {
-    this.voteBytes = voteBytes;
-    this.parseVoteBytes();
-    this.checkConsistency();
-    /* TODO Find a way to handle parse and consistency-check problems. */
+  protected RelayNetworkStatusVoteImpl(byte[] voteBytes)
+      throws DescriptorParseException {
+    super(voteBytes);
+    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
+        "vote-status,consensus-methods,published,valid-after,fresh-until,"
+        + "valid-until,voting-delay,known-flags,dir-source,"
+        + "dir-key-certificate-version,fingerprint,dir-key-published,"
+        + "dir-key-expires,directory-footer").split(",")));
+    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
+    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
+        "client-versions,server-versions,params,contact,legacy-key").
+        split(",")));
+    this.checkAtMostOnceKeywords(atMostOnceKeywords);
+    this.checkFirstKeyword("network-status-version");
   }
 
-  private void parseVoteBytes() {
-    String line = null;
+  protected void parseHeader(byte[] headerBytes)
+      throws DescriptorParseException {
     try {
       BufferedReader br = new BufferedReader(new StringReader(
-          new String(this.voteBytes)));
-      SimpleDateFormat dateTimeFormat = new SimpleDateFormat(
-          "yyyy-MM-dd HH:mm:ss");
-      dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-      StringBuilder dirSourceEntryLines = null, statusEntryLines = null;
-      boolean skipCrypto = false;
+          new String(headerBytes)));
+      String line;
       while ((line = br.readLine()) != null) {
-        if (line.startsWith("network-status-version ")) {
-          this.networkStatusVersion = Integer.parseInt(line.substring(
-              "network-status-version ".length()));
-        } else if (line.startsWith("vote-status ")) {
-          if (!line.equals("vote-status vote")) {
-            throw new RuntimeException("Line '" + line + "' indicates "
-                + "that this string is not a vote.  Aborting parsing.");
-          }
-        } else if (line.startsWith("consensus-methods ")) {
-          for (String consensusMethodString : line.substring(
-              "consensus-methods ".length()).split(" ")) {
-            this.consensusMethods.add(Integer.parseInt(
-            consensusMethodString));
-          }
-        } else if (line.startsWith("published ")) {
-          this.publishedMillis = dateTimeFormat.parse(
-              line.substring("published ".length())).getTime();
-        } else if (line.startsWith("valid-after ")) {
-          this.validAfterMillis = dateTimeFormat.parse(
-              line.substring("valid-after ".length())).getTime();
-        } else if (line.startsWith("fresh-until ")) {
-          this.freshUntilMillis = dateTimeFormat.parse(
-              line.substring("fresh-until ".length())).getTime();
-        } else if (line.startsWith("valid-until ")) {
-          this.validUntilMillis = dateTimeFormat.parse(
-              line.substring("valid-until ".length())).getTime();
-        } else if (line.startsWith("voting-delay ")) {
-          for (String votingDelayString : line.substring(
-              "voting-delay ".length()).split(" ")) {
-            this.votingDelay.add(Long.parseLong(votingDelayString));
-          }
-        } else if (line.startsWith("client-versions ")) {
-          this.recommendedClientVersions =
-              Arrays.asList(line.split(" ")[1].split(","));
-        } else if (line.startsWith("server-versions ")) {
-          this.recommendedServerVersions =
-              Arrays.asList(line.split(" ")[1].split(","));
-        } else if (line.startsWith("known-flags ")) {
-          for (String flag : line.substring("known-flags ".length()).
-              split(" ")) {
-            this.knownFlags.add(flag);
-          }
-        } else if (line.startsWith("params ")) {
-          if (line.length() > "params ".length()) {
-            for (String param :
-                line.substring("params ".length()).split(" ")) {
-              String paramName = param.split("=")[0];
-              int paramValue = Integer.parseInt(param.split("=")[1]);
-              this.consensusParams.put(paramName, paramValue);
-            }
-          }
-        } else if (line.startsWith("dir-source ")) {
-          String[] parts = line.split(" ");
-          this.nickname = parts[1];
-          this.identity = parts[2];
-          this.address = parts[4];
-          this.dirPort = Integer.parseInt(parts[5]);
-          this.orPort = Integer.parseInt(parts[6]);
-          /* TODO Add code for parsing legacy dir sources. */
-        } else if (line.startsWith("contact ")) {
-          this.contactLine = line.substring("contact ".length());
-        } else if (line.startsWith("dir-key-certificate-version ")) {
-          this.dirKeyCertificateVersion = Integer.parseInt(line.substring(
-              "dir-key-certificate-version ".length()));
-        } else if (line.startsWith("fingerprint ")) {
-          /* Nothing new to learn here.  We already know the fingerprint
-           * from the dir-source line. */
-        } else if (line.startsWith("dir-key-published ")) {
-          this.dirKeyPublishedMillis = dateTimeFormat.parse(
-              line.substring("dir-key-published ".length())).getTime();
-        } else if (line.startsWith("dir-key-expires ")) {
-          this.dirKeyExpiresMillis = dateTimeFormat.parse(
-              line.substring("dir-key-expires ".length())).getTime();
-        } else if (line.equals("dir-identity-key") ||
-            line.equals("dir-signing-key") ||
-            line.equals("dir-key-crosscert") ||
-            line.equals("dir-key-certification")) {
-          /* Ignore crypto parts for now. */
-        } else if (line.startsWith("r ") ||
-            line.equals("directory-footer")) {
-          if (statusEntryLines != null) {
-            try {
-              NetworkStatusEntryImpl statusEntry =
-                  new NetworkStatusEntryImpl(
-                  statusEntryLines.toString().getBytes());
-              this.statusEntries.put(statusEntry.getFingerprint(),
-                  statusEntry);
-            } catch (DescriptorParseException e) {
-              System.err.println("Could not parse status entry in vote.  "
-                  + "Skipping.");
-            }
-            statusEntryLines = null;
-          }
-          if (line.startsWith("r ")) {
-            statusEntryLines = new StringBuilder();
-            statusEntryLines.append(line + "\n");
-          }
-        } else if (line.startsWith("s ") || line.equals("s") ||
-            line.startsWith("opt v ") || line.startsWith("w ") ||
-            line.startsWith("p ") || line.startsWith("m ")) {
-          statusEntryLines.append(line + "\n");
-        } else if (line.startsWith("directory-signature ")) {
-          String[] parts = line.split(" ");
-          String identity = parts[1];
-          String signingKeyDigest = parts[2];
-          this.directorySignatures.put(identity, signingKeyDigest);
-        } else if (line.startsWith("-----BEGIN")) {
-          skipCrypto = true;
-        } else if (line.startsWith("-----END")) {
-          skipCrypto = false;
-        } else if (!skipCrypto) {
-          throw new RuntimeException("Unrecognized line '" + line + "'.");
+        String[] parts = line.split(" ");
+        String keyword = parts[0];
+        if (keyword.equals("network-status-version")) {
+          this.parseNetworkStatusVersionLine(line, parts);
+        } else if (keyword.equals("vote-status")) {
+          this.parseVoteStatusLine(line, parts);
+        } else if (keyword.equals("consensus-methods")) {
+          this.parseConsensusMethodsLine(line, parts);
+        } else if (keyword.equals("published")) {
+          this.parsePublishedLine(line, parts);
+        } else if (keyword.equals("valid-after")) {
+          this.parseValidAfterLine(line, parts);
+        } else if (keyword.equals("fresh-until")) {
+          this.parseFreshUntilLine(line, parts);
+        } else if (keyword.equals("valid-until")) {
+          this.parseValidUntilLine(line, parts);
+        } else if (keyword.equals("voting-delay")) {
+          this.parseVotingDelayLine(line, parts);
+        } else if (keyword.equals("client-versions")) {
+          this.parseClientVersionsLine(line, parts);
+        } else if (keyword.equals("server-versions")) {
+          this.parseServerVersionsLine(line, parts);
+        } else if (keyword.equals("known-flags")) {
+          this.parseKnownFlagsLine(line, parts);
+        } else if (keyword.equals("params")) {
+          this.parseParamsLine(line, parts);
+        } else {
+          /* TODO Is throwing an exception the right thing to do here?
+           * This is probably fine for development, but once the library
+           * is in production use, this seems annoying. */
+          throw new DescriptorParseException("Unrecognized line '" + line
+              + "'.");
         }
       }
     } catch (IOException e) {
       throw new RuntimeException("Internal error: Ran into an "
           + "IOException while parsing a String in memory.  Something's "
           + "really wrong.", e);
-    } catch (ParseException e) {
-      /* TODO Handle me correctly. */
-      throw new RuntimeException("Parse error in line '" + line + "'.");
-    } catch (NumberFormatException e) {
-      /* TODO Handle me.  In theory, we shouldn't catch runtime
-       * exceptions, but in this case it keeps the parsing code small. */
-    } catch (ArrayIndexOutOfBoundsException e) {
-      /* TODO Handle me.  In theory, we shouldn't catch runtime
-       * exceptions, but in this case it keeps the parsing code small. */
     }
   }
 
-  private byte[] voteBytes;
-  public byte[] getRawDescriptorBytes() {
-    return this.voteBytes;
+  private void parseNetworkStatusVersionLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (!line.equals("network-status-version 3")) {
+      throw new DescriptorParseException("Illegal network status version "
+          + "number in line '" + line + "'.");
+    }
+    this.networkStatusVersion = 3;
   }
 
-  private int networkStatusVersion;
-  public int getNetworkStatusVersion() {
-    return this.networkStatusVersion;
+  private void parseVoteStatusLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 2 || !parts[1].equals("vote")) {
+      throw new DescriptorParseException("Line '" + line + "' indicates "
+          + "that this is not a vote.");
+    }
   }
 
-  private List<Integer> consensusMethods = new ArrayList<Integer>();
-  public List<Integer> getConsensusMethods() {
-    return this.consensusMethods;
+  private void parseConsensusMethodsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length < 2) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
+    this.consensusMethods = new ArrayList<Integer>();
+    for (int i = 1; i < parts.length; i++) {
+      int consensusMethod = -1;
+      try {
+        consensusMethod = Integer.parseInt(parts[i]);
+      } catch (NumberFormatException e) {
+        /* We'll notice below that consensusMethod is still -1. */
+      }
+      if (consensusMethod < 1) {
+        throw new DescriptorParseException("Illegal consensus method "
+            + "number in line '" + line + "'.");
+      }
+      this.consensusMethods.add(Integer.parseInt(parts[i]));
+    }
   }
 
-  private long publishedMillis;
-  public long getPublishedMillis() {
-    return this.publishedMillis;
+  private void parsePublishedLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.publishedMillis = ParseHelper.parseTimestampAtIndex(line, parts,
+        1, 2);
   }
 
-  private long validAfterMillis;
-  public long getValidAfterMillis() {
-    return this.validAfterMillis;
+  private void parseValidAfterLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.validAfterMillis = ParseHelper.parseTimestampAtIndex(line, parts,
+        1, 2);
   }
 
-  private long freshUntilMillis;
-  public long getFreshUntilMillis() {
-    return this.freshUntilMillis;
+  private void parseFreshUntilLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.freshUntilMillis = ParseHelper.parseTimestampAtIndex(line, parts,
+        1, 2);
   }
 
-  private long validUntilMillis;
-  public long getValidUntilMillis() {
-    return this.validUntilMillis;
+  private void parseValidUntilLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.validUntilMillis = ParseHelper.parseTimestampAtIndex(line, parts,
+        1, 2);
   }
 
-  private List<Long> votingDelay = new ArrayList<Long>();
-  public List<Long> getVotingDelay() {
-    return new ArrayList<Long>(this.votingDelay);
+  private void parseVotingDelayLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 3) {
+      throw new DescriptorParseException("Wrong number of values in line "
+          + "'" + line + "'.");
+    }
+    try {
+      this.voteSeconds = Long.parseLong(parts[1]);
+      this.distSeconds = Long.parseLong(parts[2]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal values in line '" + line
+          + "'.");
+    }
   }
 
-  private List<String> recommendedClientVersions;
-  public List<String> getRecommendedClientVersions() {
-    return this.recommendedClientVersions == null ? null :
-        new ArrayList<String>(this.recommendedClientVersions);
+  private void parseClientVersionsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.recommendedClientVersions = this.parseClientOrServerVersions(
+        line, parts);
   }
 
-  private List<String> recommendedServerVersions;
-  public List<String> getRecommendedServerVersions() {
-    return this.recommendedServerVersions == null ? null :
-        new ArrayList<String>(this.recommendedServerVersions);
+  private void parseServerVersionsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.recommendedServerVersions = this.parseClientOrServerVersions(
+        line, parts);
   }
 
-  private SortedSet<String> knownFlags = new TreeSet<String>();
-  public SortedSet<String> getKnownFlags() {
-    return new TreeSet<String>(this.knownFlags);
+  private List<String> parseClientOrServerVersions(String line,
+      String[] parts) throws DescriptorParseException {
+    List<String> result = new ArrayList<String>();
+    if (parts.length == 1) {
+      return result;
+    } else if (parts.length > 2) {
+      throw new DescriptorParseException("Illegal versions line '" + line
+          + "'.");
+    }
+    String[] versions = parts[1].split(",", -1);
+    for (int i = 0; i < versions.length; i++) {
+      String version = versions[i];
+      if (version.length() < 1) {
+        throw new DescriptorParseException("Illegal versions line '"
+            + line + "'.");
+      }
+      result.add(version);
+    }
+    return result;
   }
 
-  private SortedMap<String, Integer> consensusParams =
-      new TreeMap<String, Integer>();
-  public SortedMap<String, Integer> getConsensusParams() {
-    return new TreeMap<String, Integer>(this.consensusParams);
+  private void parseKnownFlagsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length < 2) {
+      throw new DescriptorParseException("No known flags in line '" + line
+          + "'.");
+    }
+    this.knownFlags = new TreeSet<String>();
+    for (int i = 1; i < parts.length; i++) {
+      this.knownFlags.add(parts[i]);
+    }
+  }
+
+  private void parseParamsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.consensusParams = ParseHelper.parseKeyValuePairs(line, parts, 1);
+  }
+
+  protected void parseDirSource(byte[] dirSourceBytes)
+      throws DescriptorParseException {
+    try {
+      BufferedReader br = new BufferedReader(new StringReader(
+          new String(dirSourceBytes)));
+      String line;
+      boolean skipCrypto = false;
+      while ((line = br.readLine()) != null) {
+        String[] parts = line.split(" ");
+        String keyword = parts[0];
+        if (keyword.equals("dir-source")) {
+          this.parseDirSourceLine(line, parts);
+        } else if (keyword.equals("contact")) {
+          this.parseContactLine(line, parts);
+        } else if (keyword.equals("dir-key-certificate-version")) {
+          this.parseDirKeyCertificateVersionLine(line, parts);
+        } else if (keyword.equals("fingerprint")) {
+          /* Nothing new to learn here.  We already know the fingerprint
+           * from the dir-source line. */
+        } else if (keyword.equals("legacy-key")) {
+          this.parseLegacyKeyLine(line, parts);
+        } else if (keyword.equals("dir-key-published")) {
+          this.parseDirKeyPublished(line, parts);
+        } else if (keyword.equals("dir-key-expires")) {
+          this.parseDirKeyExpiresLine(line, parts);
+        } else if (keyword.equals("dir-identity-key") ||
+            keyword.equals("dir-signing-key") ||
+            keyword.equals("dir-key-crosscert") ||
+            keyword.equals("dir-key-certification")) {
+        } else if (line.startsWith("-----BEGIN")) {
+          skipCrypto = true;
+        } else if (line.equals("-----END")) {
+          skipCrypto = false;
+        } else if (!skipCrypto) {
+          /* TODO Is throwing an exception the right thing to do here?
+           * This is probably fine for development, but once the library
+           * is in production use, this seems annoying. */
+          throw new DescriptorParseException("Unrecognized line '" + line
+              + "'.");
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("Internal error: Ran into an "
+          + "IOException while parsing a String in memory.  Something's "
+          + "really wrong.", e);
+    }
+  }
+
+  private void parseDirSourceLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.nickname = ParseHelper.parseNickname(line, parts[1]);
+    this.identity = ParseHelper.parseTwentyByteHexString(line, parts[2]);
+    this.address = ParseHelper.parseIpv4Address(line, parts[4]);
+    this.dirPort = ParseHelper.parsePort(line, parts[5]);
+    this.orPort = ParseHelper.parsePort(line, parts[6]);
+  }
+
+  private void parseContactLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (line.length() > "contact ".length()) {
+      this.contactLine = line.substring("contact ".length());
+    } else {
+      this.contactLine = "";
+    }
+  }
+
+  private void parseDirKeyCertificateVersionLine(String line,
+      String[] parts) throws DescriptorParseException {
+    if (parts.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
+    try {
+      this.dirKeyCertificateVersion = Integer.parseInt(parts[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal dir key certificate "
+          + "version in line '" + line + "'.");
+    }
+    if (this.dirKeyCertificateVersion < 1) {
+      throw new DescriptorParseException("Illegal dir key certificate "
+          + "version in line '" + line + "'.");
+    }
+  }
+
+  private void parseLegacyKeyLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.legacyKey = ParseHelper.parseTwentyByteHexString(line, parts[2]);
+  }
+
+  private void parseDirKeyPublished(String line, String[] parts)
+      throws DescriptorParseException {
+    this.dirKeyPublishedMillis = ParseHelper.parseTimestampAtIndex(line,
+        parts, 1, 2);
+  }
+
+  private void parseDirKeyExpiresLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.dirKeyExpiresMillis = ParseHelper.parseTimestampAtIndex(line,
+        parts, 1, 2);
+  }
+
+  protected void parseFooter(byte[] footerBytes) {
+    /* There is nothing in the footer that we'd want to parse. */
   }
 
   private String nickname;
@@ -296,6 +379,11 @@ public class RelayNetworkStatusVoteImpl
     return this.dirKeyCertificateVersion;
   }
 
+  private String legacyKey;
+  public String getLegacyKey() {
+    return this.legacyKey;
+  }
+
   private long dirKeyPublishedMillis;
   public long getDirKeyPublishedMillis() {
     return this.dirKeyPublishedMillis;
@@ -311,54 +399,67 @@ public class RelayNetworkStatusVoteImpl
     return this.signingKeyDigest;
   }
 
-  private SortedMap<String, NetworkStatusEntry> statusEntries =
-      new TreeMap<String, NetworkStatusEntry>();
-  public SortedMap<String, NetworkStatusEntry> getStatusEntries() {
-    return new TreeMap<String, NetworkStatusEntry>(this.statusEntries);
-  }
-  public boolean containsStatusEntry(String fingerprint) {
-    return this.statusEntries.containsKey(fingerprint);
-  }
-  public NetworkStatusEntry getStatusEntry(String fingerprint) {
-    return this.statusEntries.get(fingerprint);
+  private int networkStatusVersion;
+  public int getNetworkStatusVersion() {
+    return this.networkStatusVersion;
   }
 
-
-  private SortedMap<String, String> directorySignatures =
-      new TreeMap<String, String>();
-  public SortedMap<String, String> getDirectorySignatures() {
-    return new TreeMap<String, String>(this.directorySignatures);
+  private List<Integer> consensusMethods;
+  public List<Integer> getConsensusMethods() {
+    return new ArrayList<Integer>(this.consensusMethods);
   }
 
-  private void checkConsistency() {
-    if (this.networkStatusVersion == 0) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'network-status-version' line.");
-    }
-    if (this.validAfterMillis == 0L) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'valid-after' line.");
-    }
-    if (this.freshUntilMillis == 0L) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'fresh-until' line.");
-    }
-    if (this.validUntilMillis == 0L) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'valid-until' line.");
-    }
-    if (this.votingDelay.isEmpty()) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'voting-delay' line.");
-    }
-    if (this.knownFlags.isEmpty()) {
-      throw new RuntimeException("Consensus doesn't contain a "
-          + "'known-flags' line.");
-    }
-    if (this.statusEntries.isEmpty()) {
-      throw new RuntimeException("Consensus doesn't contain any 'r' "
-          + "lines.");
-    }
+  private long publishedMillis;
+  public long getPublishedMillis() {
+    return this.publishedMillis;
+  }
+
+  private long validAfterMillis;
+  public long getValidAfterMillis() {
+    return this.validAfterMillis;
+  }
+
+  private long freshUntilMillis;
+  public long getFreshUntilMillis() {
+    return this.freshUntilMillis;
+  }
+
+  private long validUntilMillis;
+  public long getValidUntilMillis() {
+    return this.validUntilMillis;
+  }
+
+  private long voteSeconds;
+  public long getVoteSeconds() {
+    return this.voteSeconds;
+  }
+
+  private long distSeconds;
+  public long getDistSeconds() {
+    return this.distSeconds;
+  }
+
+  private List<String> recommendedClientVersions;
+  public List<String> getRecommendedClientVersions() {
+    return this.recommendedClientVersions == null ? null :
+        new ArrayList<String>(this.recommendedClientVersions);
+  }
+
+  private List<String> recommendedServerVersions;
+  public List<String> getRecommendedServerVersions() {
+    return this.recommendedServerVersions == null ? null :
+        new ArrayList<String>(this.recommendedServerVersions);
+  }
+
+  private SortedSet<String> knownFlags;
+  public SortedSet<String> getKnownFlags() {
+    return new TreeSet<String>(this.knownFlags);
+  }
+
+  private SortedMap<String, Integer> consensusParams;
+  public SortedMap<String, Integer> getConsensusParams() {
+    return this.consensusParams == null ? null:
+        new TreeMap<String, Integer>(this.consensusParams);
   }
 }
 

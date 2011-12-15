@@ -27,8 +27,11 @@ public interface RelayNetworkStatusVote extends Descriptor {
   /* Return the valid-until time in milliseconds. */
   public long getValidUntilMillis();
 
-  /* Return a list of the voting-delay times in seconds. */
-  public List<Long> getVotingDelay();
+  /* Return the VoteSeconds time in seconds. */
+  public long getVoteSeconds();
+
+  /* Return the DistSeconds time in seconds. */
+  public long getDistSeconds();
 
   /* Return recommended server versions or null if the authority doesn't
    * recommend server versions. */
@@ -64,6 +67,10 @@ public interface RelayNetworkStatusVote extends Descriptor {
 
   /* Return the directory key certificate version. */
   public int getDirKeyCertificateVersion();
+
+  /* Return the legacy key or null if the directory authority does not use
+   * a legacy key. */
+  public String getLegacyKey();
 
   /* Return the directory key publication timestamp. */
   public long getDirKeyPublishedMillis();

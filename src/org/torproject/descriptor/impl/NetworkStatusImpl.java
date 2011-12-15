@@ -51,6 +51,7 @@ public abstract class NetworkStatusImpl {
   protected NetworkStatusImpl(byte[] rawDescriptorBytes)
       throws DescriptorParseException {
     this.rawDescriptorBytes = rawDescriptorBytes;
+    this.countKeywords(rawDescriptorBytes);
     this.splitAndParseParts(rawDescriptorBytes);
   }
 
@@ -126,7 +127,6 @@ public abstract class NetworkStatusImpl {
     System.arraycopy(this.rawDescriptorBytes, start,
         headerBytes, 0, end - start);
     this.rememberFirstKeyword(headerBytes);
-    this.countKeywords(headerBytes);
     this.parseHeader(headerBytes);
   }
 
@@ -153,7 +153,6 @@ public abstract class NetworkStatusImpl {
     byte[] directoryFooterBytes = new byte[end - start];
     System.arraycopy(this.rawDescriptorBytes, start,
         directoryFooterBytes, 0, end - start);
-    this.countKeywords(directoryFooterBytes);
     this.parseFooter(directoryFooterBytes);
   }
 
@@ -264,17 +263,17 @@ public abstract class NetworkStatusImpl {
    * subclasses. */
   private Map<String, Integer> parsedKeywords =
       new HashMap<String, Integer>();
-  protected void countKeywords(byte[] headerOrFooterBytes)
+  protected void countKeywords(byte[] rawDescriptorBytes)
       throws DescriptorParseException {
     try {
       BufferedReader br = new BufferedReader(new StringReader(
-          new String(headerOrFooterBytes)));
+          new String(rawDescriptorBytes)));
       String line;
       boolean skipCrypto = false;
       while ((line = br.readLine()) != null) {
         if (line.startsWith("-----BEGIN")) {
           skipCrypto = true;
-        } else if (line.equals("-----END")) {
+        } else if (line.startsWith("-----END")) {
           skipCrypto = false;
         } else if (!skipCrypto) {
           String keyword = line.split(" ", -1)[0];
@@ -299,11 +298,14 @@ public abstract class NetworkStatusImpl {
   protected void checkExactlyOnceKeywords(Set<String> keywords)
       throws DescriptorParseException {
     for (String keyword : keywords) {
-      if (!this.parsedKeywords.containsKey(keyword) ||
-          this.parsedKeywords.get(keyword) != 1) {
+      int contained = 0;
+      if (this.parsedKeywords.containsKey(keyword)) {
+        contained = this.parsedKeywords.get(keyword);
+      }
+      if (contained != 1) {
         throw new DescriptorParseException("Keyword '" + keyword + "' is "
-            + "contained " + this.parsedKeywords.get(keyword) + " times, "
-            + "but must be contained exactly once.");
+            + "contained " + contained + " times, but must be contained "
+            + "exactly once.");
       }
     }
   }
