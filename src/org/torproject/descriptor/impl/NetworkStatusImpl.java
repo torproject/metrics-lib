@@ -170,11 +170,11 @@ public abstract class NetworkStatusImpl {
     List<byte[]> splitParts = new ArrayList<byte[]>();
     int from = start;
     while (from < end) {
-      int to = descriptorString.indexOf("\n" + keyword, from);
-      /* Searching for "\nkeyword" instead of "\nkeyword " or
-       * "\nkeyword\n" seems fragile.  Workaround is to check for
-       * to > end, but that's really a hack. */
-      if (to > end || to < 0) {
+      int to = descriptorString.indexOf("\n" + keyword + " ", from);
+      if (to < 0) {
+        to = descriptorString.indexOf("\n" + keyword + "\n", from);
+      }
+      if (to < 0) {
         to = end;
       } else {
         to += 1;
