@@ -209,13 +209,14 @@ public class RelayNetworkStatusVoteImplTest {
           + "4643,5050,5190,5222-5223,5228,5900,6660-6669,6679,6697,8000,"
           + "8008,8074,8080,8087-8088,8443,8888,9418,9999-10000,19294,"
           + "19638\n"
-          + "m 8,9,10,11 sha256=9ciEx9t0McXk9A06I7qwN7pxuNOdpCP64RV/6cx2Zkc");
+          + "m 8,9,10,11 "
+          + "sha256=9ciEx9t0McXk9A06I7qwN7pxuNOdpCP64RV/6cx2Zkc");
       this.directorySignatures.add("directory-signature "
           + "80550987E1D626E3EBA5E5E75A458DE0626D088C "
           + "EEB9299D295C1C815E289FBF2F2BBEA5F52FDD19\n"
           + "-----BEGIN SIGNATURE-----\n"
           + "iHEU3Iidya5RIrjyYgv8tlU0R+rF56/3/MmaaZi0a67e7ZkISfQ4dghScHxn"
-          + "F3Yh\nqXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40Oi"
+          + "F3Yh\nrXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40Oi"
           + "kfOIwEj+Ny\n+zBRQssP3hPhTPOj/A7o3mZZwtL6x1sxpeu/nME1l5E=\n"
           + "-----END SIGNATURE-----");
     }

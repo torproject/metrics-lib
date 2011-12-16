@@ -161,20 +161,16 @@ public class RelayNetworkStatusConsensusImplTest {
           + "3509BA5A624403A905C74DA5C8A0CEC9E0D3AF86\n"
           + "-----BEGIN SIGNATURE-----\n"
           + "NYRcTWAMRiYYiGW0hIbzeZKU6sefg98AwwXrQUCudO8wfA1cfgttTDoscB9I"
-          + "TbOY\n"
-          + "x+c30jV/qQCMamTAEDGgJTw8KghI32vytupKallI1EjCOF8UvL1UnALgpaR7"
-          + "sZ3W\n"
-          + "7WQZVVrWDtnYaULOEKfwnGnRC7WwE+YRSysbzwwCVs0=\n"
+          + "TbOY\nr+c30jV/qQCMamTAEDGgJTw8KghI32vytupKallI1EjCOF8UvL1UnA"
+          + "LgpaR7sZ3W\n7WQZVVrWDtnYaULOEKfwnGnRC7WwE+YRSysbzwwCVs0=\n"
           + "-----END SIGNATURE-----");
       this.directorySignatures.add("directory-signature "
           + "27B6B5996C426270A5C95488AA5BCEB6BCC86956 "
           + "D5C30C15BB3F1DA27669C2D88439939E8F418FCF\n"
           + "-----BEGIN SIGNATURE-----\n"
           + "DzFPj3vyYrCv0W3r8qDPJPlmeLnadY+drjWkdOqO66Ih/hAWBb9KcBJAX1sX"
-          + "aDA7\n"
-          + "/iSaDhduBXuJdcu8lbmMP8d6uYBdRjHXqWDXySUZAkSfPB4JJPNGvfoQA/qe"
-          + "by7E\n"
-          + "5374pPPL6WwCLJHkKtk21S9oHDmFBdlZq7JWQelWlVM=\n"
+          + "aDA7\n/iSaDhduBXuJdcu8lbmMP8d6uYBdRjHXqWDXySUZAkSfPB4JJPNGvf"
+          + "oQA/qeby7E\n5374pPPL6WwCLJHkKtk21S9oHDmFBdlZq7JWQelWlVM=\n"
           + "-----END SIGNATURE-----");
     }
     private byte[] buildConsensus() {
