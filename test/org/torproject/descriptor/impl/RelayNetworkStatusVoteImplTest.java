@@ -11,21 +11,6 @@ import org.junit.*;
 import org.junit.rules.*;
 import static org.junit.Assert.*;
 
-/* TODO Add tests (and possibly a DirSourceLineBuilder) to test the
- * following methods:
- * - String getNickname();
- * - String getIdentity();
- * - String getAddress();
- * - int getDirport();
- * - int getOrport();
- * - String getContactLine();
- * - int getDirKeyCertificateVersion();
- * - String getLegacyKey();
- * - long getDirKeyPublishedMillis();
- * - long getDirKeyExpiresMillis();
- * - String getSigningKeyDigest();
- */
-
 /* Test parsing of network status votes.  Some of the vote-parsing code is
  * already tested in the consensus-parsing tests.  The tests in this class
  * focus on the differences between votes and consensuses that are mostly
@@ -139,7 +124,126 @@ public class RelayNetworkStatusVoteImplTest {
       vb.paramsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote());
     }
-    private List<String> dirSources = new ArrayList<String>();
+    private String dirSourceLine = "dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 443 80";
+    private static RelayNetworkStatusVote
+        createWithDirSourceLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.dirSourceLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String contactLine = "contact 4096R/E012B42D Jacob Appelbaum "
+        + "<jacob@appelbaum.net>";
+    private static RelayNetworkStatusVote
+        createWithContactLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.contactLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String dirKeyCertificateVersionLine =
+        "dir-key-certificate-version 3";
+    private static RelayNetworkStatusVote
+        createWithDirKeyCertificateVersionLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.dirKeyCertificateVersionLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String fingerprintLine = "fingerprint "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C";
+    private static RelayNetworkStatusVote
+        createWithFingerprintLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.fingerprintLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String dirKeyPublishedLine = "dir-key-published 2011-04-27 "
+        + "05:34:37";
+    private static RelayNetworkStatusVote
+        createWithDirKeyPublishedLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.dirKeyPublishedLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String dirKeyExpiresLine = "dir-key-expires 2012-04-27 "
+        + "05:34:37";
+    private static RelayNetworkStatusVote
+        createWithDirKeyExpiresLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.dirKeyExpiresLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String dirIdentityKeyLines = "dir-identity-key\n"
+        + "-----BEGIN RSA PUBLIC KEY-----\n"
+        + "MIIBigKCAYEAtKpuLgVK25sfScjsxfVU1ljofrDygt9GP7bNJl/rghX42KUT97"
+        + "5W\nrGp/fbhF7p+FcKCzNOhJFINQbRf/5E3lN8mzoamIU43QqQ9RRVf94688Us"
+        + "azVsAN\nNVT0v9J0cr387WePjenRuIE1MmiP0nmw/XdvbPTayqax7VYlcUMXGH"
+        + "l8DnWix1EN\nRwmeig+JBte0JS12oo2HG9zcSfjLJVjY6ZmvRrVycXiRxGc/Jg"
+        + "NlSrV4cxUNykaB\nJ6pO6J499OZfQu7m1vAPTENrVJ4yEfRGRwFIY+d/s8BkKc"
+        + "aiWtXAfTe31uBI6GEH\nmS3HNu1JVSuoaUiQIvVYDLMfBvMcNyAx97UT1l6E0T"
+        + "n6a7pgChrquGwXai1xGzk8\n58aXwdSFoFBSTCkyemopq5H20p/nkPAO0pHL1k"
+        + "TvcaKz9CEj4XcKm+kOmzejYmIa\nkbWNcRpXPiUZ+xmwGtsq30xrzqiONmERkx"
+        + "qlmf7bVQPFvh3Kz6hGcmTBhTbHSe9h\nzDgmdaTNn3EHAgMBAAE=\n"
+        + "-----END RSA PUBLIC KEY-----";
+    private static RelayNetworkStatusVote
+        createWithDirIdentityKeyLines(String lines)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.dirIdentityKeyLines = lines;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String dirSigningKeyLines = "dir-signing-key\n"
+        + "-----BEGIN RSA PUBLIC KEY-----\n"
+        + "MIGJAoGBAN05qyHFQlTqykMP8yLuD4G2UuYulD4Xs8iSX5uqF+WGsUA1E4zZh4"
+        + "8h\nDFj8+drFiCu3EqhMEmVG4ACtJK2uz6D1XohUsbPWTR6LSnWJ8q6/zfTSLu"
+        + "mBGsN7\nPUXyMNjwRKL6UvrcbYk1d2mRBLO7SAP/sFW5fHhIBVeLIWrzQ19rAg"
+        + "MBAAE=\n"
+        + "-----END RSA PUBLIC KEY-----";
+    private static RelayNetworkStatusVote
+        createWithDirSigningKeyLines(String lines)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.dirSigningKeyLines = lines;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String dirKeyCrosscertLines = "dir-key-crosscert\n"
+        + "-----BEGIN ID SIGNATURE-----\n"
+        + "rPBFn6IJ6TvAHj4pSwlg+RTn1fP89JGSVa08wuyJr5dAvZsdakQXvRjamT9oJU"
+        + "aZ\nnY5Rl/tRlGuSQ0BglTPPKoXdKERK0FUr9f0EKrQy7NDUgE2j9losiRuyKz"
+        + "hA3neZ\nK4yF8bhqAwM51u7fzAhIjNeRif9c04rhFJJCseco84w=\n"
+        + "-----END ID SIGNATURE-----";
+    private static RelayNetworkStatusVote
+        createWithDirKeyCrosscertLines(String lines)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.dirKeyCrosscertLines = lines;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private String dirKeyCertificationLines = "dir-key-certification\n"
+        + "-----BEGIN SIGNATURE-----\n"
+        + "hPSh6FuohNF5ccjiMbkvr8cZJwGFuL11cNtwN9k0X3pUdFZVATIEkqBe7z+rE2"
+        + "PX\nPw+BGyC6wYAieoTVIhLpwKqd7DXLYjuhPZ28+7MQaDL01AqYeRp5PT01Px"
+        + "rFY0Um\nlVf95uqUitgvDT76Ne4ExWk6UvGlYB9OBgBySZz8VWe9znoMqb0uHn"
+        + "/p8IzqTApT\nAxRWXBHClntMeRqtGxaj8DcdJFn8yMxQiZG7MfDg2sq2ySPJyG"
+        + "lN+neoVDVhZiDI\n9LTNmw60gWlUp2erFeam8Mo1ZBC4DPNjQEm6QeHZFZMkhD"
+        + "uO6SwS/FL712A42+Co\nYtMaVot/p5FG2ZSBXbgl2XP5/z8ELnpmXqMbPAoWRo"
+        + "3BPNSJkIQQNog8Q5ZrK+av\nZDw5eGPltGKsXOkvuzIMM8nBeAnDPDgYvzrIFO"
+        + "bEGbvY/P8mzVAZxp3Yz+sRtNel\nC1SWz/Fx+Saex5oI7DJ3xtSD4XqKb/wYwZ"
+        + "FT8IxDYq1t2tFXdHxd4QPRVcvc0zYC\n"
+        + "-----END SIGNATURE-----";
+    private static RelayNetworkStatusVote
+        createWithDirKeyCertificationLines(String lines)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.dirKeyCertificationLines = lines;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
     private List<String> statusEntries = new ArrayList<String>();
     private String directoryFooterLine = "directory-footer";
     private static RelayNetworkStatusVote
@@ -149,55 +253,22 @@ public class RelayNetworkStatusVoteImplTest {
       vb.directoryFooterLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote());
     }
-    private List<String> directorySignatures = new ArrayList<String>();
-    private VoteBuilder() {
-      this.dirSources.add("dir-source urras "
-          + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
-          + "208.83.223.34 443 80\n"
-          + "contact 4096R/E012B42D Jacob Appelbaum "
-          + "<jacob@appelbaum.net>\n"
-          + "dir-key-certificate-version 3\n"
-          + "fingerprint 80550987E1D626E3EBA5E5E75A458DE0626D088C\n"
-          + "dir-key-published 2011-04-27 05:34:37\n"
-          + "dir-key-expires 2012-04-27 05:34:37\n"
-          + "dir-identity-key\n"
-          + "-----BEGIN RSA PUBLIC KEY-----\n"
-          + "MIIBigKCAYEAtKpuLgVK25sfScjsxfVU1ljofrDygt9GP7bNJl/rghX42KUT"
-          + "975W\nrGp/fbhF7p+FcKCzNOhJFINQbRf/5E3lN8mzoamIU43QqQ9RRVf946"
-          + "88UsazVsAN\nNVT0v9J0cr387WePjenRuIE1MmiP0nmw/XdvbPTayqax7VYl"
-          + "cUMXGHl8DnWix1EN\nRwmeig+JBte0JS12oo2HG9zcSfjLJVjY6ZmvRrVycX"
-          + "iRxGc/JgNlSrV4cxUNykaB\nJ6pO6J499OZfQu7m1vAPTENrVJ4yEfRGRwFI"
-          + "Y+d/s8BkKcaiWtXAfTe31uBI6GEH\nmS3HNu1JVSuoaUiQIvVYDLMfBvMcNy"
-          + "Ax97UT1l6E0Tn6a7pgChrquGwXai1xGzk8\n58aXwdSFoFBSTCkyemopq5H2"
-          + "0p/nkPAO0pHL1kTvcaKz9CEj4XcKm+kOmzejYmIa\nkbWNcRpXPiUZ+xmwGt"
-          + "sq30xrzqiONmERkxqlmf7bVQPFvh3Kz6hGcmTBhTbHSe9h\nzDgmdaTNn3EH"
-          + "AgMBAAE=\n"
-          + "-----END RSA PUBLIC KEY-----\n"
-          + "dir-signing-key\n"
-          + "-----BEGIN RSA PUBLIC KEY-----\n"
-          + "MIGJAoGBAN05qyHFQlTqykMP8yLuD4G2UuYulD4Xs8iSX5uqF+WGsUA1E4zZ"
-          + "h48h\nDFj8+drFiCu3EqhMEmVG4ACtJK2uz6D1XohUsbPWTR6LSnWJ8q6/zf"
-          + "TSLumBGsN7\nPUXyMNjwRKL6UvrcbYk1d2mRBLO7SAP/sFW5fHhIBVeLIWrz"
-          + "Q19rAgMBAAE=\n"
-          + "-----END RSA PUBLIC KEY-----\n"
-          + "dir-key-crosscert\n"
-          + "-----BEGIN ID SIGNATURE-----\n"
-          + "rPBFn6IJ6TvAHj4pSwlg+RTn1fP89JGSVa08wuyJr5dAvZsdakQXvRjamT9o"
-          + "JUaZ\nnY5Rl/tRlGuSQ0BglTPPKoXdKERK0FUr9f0EKrQy7NDUgE2j9losiR"
-          + "uyKzhA3neZ\nK4yF8bhqAwM51u7fzAhIjNeRif9c04rhFJJCseco84w=\n"
-          + "-----END ID SIGNATURE-----\n"
-          + "dir-key-certification\n"
+    private String directorySignatureLines = "directory-signature "
+          + "80550987E1D626E3EBA5E5E75A458DE0626D088C "
+          + "EEB9299D295C1C815E289FBF2F2BBEA5F52FDD19\n"
           + "-----BEGIN SIGNATURE-----\n"
-          + "hPSh6FuohNF5ccjiMbkvr8cZJwGFuL11cNtwN9k0X3pUdFZVATIEkqBe7z+r"
-          + "E2PX\nPw+BGyC6wYAieoTVIhLpwKqd7DXLYjuhPZ28+7MQaDL01AqYeRp5PT"
-          + "01PxrFY0Um\nlVf95uqUitgvDT76Ne4ExWk6UvGlYB9OBgBySZz8VWe9znoM"
-          + "qb0uHn/p8IzqTApT\nAxRWXBHClntMeRqtGxaj8DcdJFn8yMxQiZG7MfDg2s"
-          + "q2ySPJyGlN+neoVDVhZiDI\n9LTNmw60gWlUp2erFeam8Mo1ZBC4DPNjQEm6"
-          + "QeHZFZMkhDuO6SwS/FL712A42+Co\nYtMaVot/p5FG2ZSBXbgl2XP5/z8ELn"
-          + "pmXqMbPAoWRo3BPNSJkIQQNog8Q5ZrK+av\nZDw5eGPltGKsXOkvuzIMM8nB"
-          + "eAnDPDgYvzrIFObEGbvY/P8mzVAZxp3Yz+sRtNel\nC1SWz/Fx+Saex5oI7D"
-          + "J3xtSD4XqKb/wYwZFT8IxDYq1t2tFXdHxd4QPRVcvc0zYC\n"
-          + "-----END SIGNATURE-----");
+          + "iHEU3Iidya5RIrjyYgv8tlU0R+rF56/3/MmaaZi0a67e7ZkISfQ4dghScHxn"
+          + "F3Yh\nrXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40Oi"
+          + "kfOIwEj+Ny\n+zBRQssP3hPhTPOj/A7o3mZZwtL6x1sxpeu/nME1l5E=\n"
+          + "-----END SIGNATURE-----";
+    private static RelayNetworkStatusVote
+        createWithDirectorySignatureLines(String lines)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.directorySignatureLines = lines;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote());
+    }
+    private VoteBuilder() {
       this.statusEntries.add("r right2privassy3 "
           + "ADQ6gCT3DiFHKPDFr3rODBUI8HM lJY5Vf7kXec+VdkGW2flEsfkFC8 "
           + "2011-11-12 00:03:40 50.63.8.215 9023 0\n"
@@ -211,14 +282,6 @@ public class RelayNetworkStatusVoteImplTest {
           + "19638\n"
           + "m 8,9,10,11 "
           + "sha256=9ciEx9t0McXk9A06I7qwN7pxuNOdpCP64RV/6cx2Zkc");
-      this.directorySignatures.add("directory-signature "
-          + "80550987E1D626E3EBA5E5E75A458DE0626D088C "
-          + "EEB9299D295C1C815E289FBF2F2BBEA5F52FDD19\n"
-          + "-----BEGIN SIGNATURE-----\n"
-          + "iHEU3Iidya5RIrjyYgv8tlU0R+rF56/3/MmaaZi0a67e7ZkISfQ4dghScHxn"
-          + "F3Yh\nrXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40Oi"
-          + "kfOIwEj+Ny\n+zBRQssP3hPhTPOj/A7o3mZZwtL6x1sxpeu/nME1l5E=\n"
-          + "-----END SIGNATURE-----");
     }
     private byte[] buildVote() {
       StringBuilder sb = new StringBuilder();
@@ -264,8 +327,35 @@ public class RelayNetworkStatusVoteImplTest {
       if (this.paramsLine != null) {
         sb.append(this.paramsLine + "\n");
       }
-      for (String dirSource : this.dirSources) {
-        sb.append(dirSource + "\n");
+      if (this.dirSourceLine != null) {
+        sb.append(this.dirSourceLine + "\n");
+      }
+      if (this.contactLine != null) {
+        sb.append(this.contactLine + "\n");
+      }
+      if (this.dirKeyCertificateVersionLine != null) {
+        sb.append(this.dirKeyCertificateVersionLine + "\n");
+      }
+      if (this.fingerprintLine != null) {
+        sb.append(this.fingerprintLine + "\n");
+      }
+      if (this.dirKeyPublishedLine != null) {
+        sb.append(this.dirKeyPublishedLine + "\n");
+      }
+      if (this.dirKeyExpiresLine != null) {
+        sb.append(this.dirKeyExpiresLine + "\n");
+      }
+      if (this.dirIdentityKeyLines != null) {
+        sb.append(this.dirIdentityKeyLines + "\n");
+      }
+      if (this.dirSigningKeyLines != null) {
+        sb.append(this.dirSigningKeyLines + "\n");
+      }
+      if (this.dirKeyCrosscertLines != null) {
+        sb.append(this.dirKeyCrosscertLines + "\n");
+      }
+      if (this.dirKeyCertificationLines != null) {
+        sb.append(this.dirKeyCertificationLines + "\n");
       }
     }
     private void appendBody(StringBuilder sb) {
@@ -277,8 +367,8 @@ public class RelayNetworkStatusVoteImplTest {
       if (this.directoryFooterLine != null) {
         sb.append(this.directoryFooterLine + "\n");
       }
-      for (String directorySignature : this.directorySignatures) {
-        sb.append(directorySignature + "\n");
+      if (this.directorySignatureLines != null) {
+        sb.append(directorySignatureLines + "\n");
       }
     }
   }
@@ -570,6 +660,288 @@ public class RelayNetworkStatusVoteImplTest {
   @Test(expected = DescriptorParseException.class)
   public void testKnownFlagsOneSpace() throws DescriptorParseException {
     VoteBuilder.createWithKnownFlagsLine("known-flags ");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNicknameMissing() throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source  "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNicknameTooLong() throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source "
+        + "urrassssssssssssssssssssssssssssssssssssssssssssssss "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNicknameIllegalCharacters()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urra$ "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintLowerCase() throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987e1d626e3eba5e5e75a458de0626d088c 208.83.223.34 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintTooShort() throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D 208.83.223.34 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintTooLong() throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C8055 208.83.223.34 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintIllegalCharacters()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "ABCDEFGHIJKLM6E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + " 208.83.223.34 208.83.223.34 443 80");
+  }
+
+  @Test()
+  public void testHostname256()
+      throws DescriptorParseException {
+    /* This test doesn't fail, because we're not parsing the hostname. */
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 256.256.256.256 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testHostnameMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C  208.83.223.34 443 "
+        + "80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testAddress256()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "256.256.256.256 443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testAddressMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34  443 "
+        + "80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirPortMinus443()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 -443 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirPortFourFourThree()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 four-four-three 80");
+  }
+
+  @Test()
+  public void testDirPort0() throws DescriptorParseException {
+    /* This test doesn't fail, because we're accepting DirPort 0, even
+     * though it doesn't make sense from Tor's view. */
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 0 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testOrPortMissing() throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 443 ");
+  }
+
+  @Test()
+  public void testDirPortOrPortIdentical()
+      throws DescriptorParseException {
+    /* This test doesn't fail, even though identical OR and Dir port don't
+     * make much sense from Tor's view. */
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 80 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceLineMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceLineDuplicate()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSourceLine("dir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 443 80\ndir-source urras "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
+        + "208.83.223.34 443 80");
+  }
+
+  @Test()
+  public void testContactLineMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithContactLine(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testContactLineDuplicate()
+      throws DescriptorParseException {
+    VoteBuilder.createWithContactLine("contact 4096R/E012B42D Jacob "
+        + "Appelbaum <jacob@appelbaum.net>\ncontact 4096R/E012B42D Jacob "
+        + "Appelbaum <jacob@appelbaum.net>");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyCertificateVersionLineMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyCertificateVersionLine(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyCertificateVersionLineDuplicate()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyCertificateVersionLine(
+        "dir-key-certificate-version 3\ndir-key-certificate-version 3");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintLineMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithFingerprintLine(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintLineDuplicate()
+      throws DescriptorParseException {
+    VoteBuilder.createWithFingerprintLine("fingerprint "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C\nfingerprint "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintLineTooLong()
+      throws DescriptorParseException {
+    VoteBuilder.createWithFingerprintLine("fingerprint "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D088C8055");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFingerprintLineTooShort()
+      throws DescriptorParseException {
+    VoteBuilder.createWithFingerprintLine("fingerprint "
+        + "80550987E1D626E3EBA5E5E75A458DE0626D");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyPublished3011()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyPublishedLine("dir-key-published "
+        + "3011-04-27 05:34:37");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyPublishedRecentlyAtNoon()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyPublishedLine("dir-key-published "
+        + "recently 12:00:00");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyPublishedRecentlyNoTime()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyPublishedLine("dir-key-published "
+        + "recently");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyExpiresSoonAtNoon()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyExpiresLine("dir-key-expires "
+        + "soon 12:00:00");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyExpiresLineMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyExpiresLine(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyExpiresLineDuplicate()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyExpiresLine("dir-key-expires 2012-04-27 "
+        + "05:34:37\ndir-key-expires 2012-04-27 05:34:37");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirIdentityKeyLinesMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirIdentityKeyLines(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSigningKeyLinesMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirSigningKeyLines(null);
+  }
+
+  @Test()
+  public void testDirKeyCrosscertLinesMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyCrosscertLines(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirKeyCertificationLinesMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirKeyCertificationLines(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirectoryFooterLineMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirectoryFooterLine(null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirectorySignaturesLinesMissing()
+      throws DescriptorParseException {
+    VoteBuilder.createWithDirectorySignatureLines(null);
   }
 }
 

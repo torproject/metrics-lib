@@ -16,9 +16,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import org.torproject.descriptor.RelayNetworkStatusVote;
 
-/* TODO Find out if all keywords in the dir-source section are required.
- * They are not all mentioned in dir-spec.txt. */
-
 /* Contains a network status vote. */
 public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     implements RelayNetworkStatusVote {
@@ -51,11 +48,13 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         "vote-status,consensus-methods,published,valid-after,fresh-until,"
         + "valid-until,voting-delay,known-flags,dir-source,"
         + "dir-key-certificate-version,fingerprint,dir-key-published,"
-        + "dir-key-expires,directory-footer").split(",")));
+        + "dir-key-expires,dir-identity-key,dir-signing-key,"
+        + "dir-key-certification,directory-footer,directory-signature").
+        split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
-        "client-versions,server-versions,params,contact,legacy-key").
-        split(",")));
+        "client-versions,server-versions,params,contact,legacy-key,"
+        + "dir-key-crosscert,dir-address").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
   }
@@ -252,9 +251,10 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           this.parseContactLine(line, parts);
         } else if (keyword.equals("dir-key-certificate-version")) {
           this.parseDirKeyCertificateVersionLine(line, parts);
+        } else if (keyword.equals("dir-address")) {
+          this.parseDirAddressLine(line, parts);
         } else if (keyword.equals("fingerprint")) {
-          /* Nothing new to learn here.  We already know the fingerprint
-           * from the dir-source line. */
+          this.parseFingerprintLine(line, parts);
         } else if (keyword.equals("legacy-key")) {
           this.parseLegacyKeyLine(line, parts);
         } else if (keyword.equals("dir-key-published")) {
@@ -286,8 +286,16 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   private void parseDirSourceLine(String line, String[] parts)
       throws DescriptorParseException {
+    if (parts.length != 7) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
     this.nickname = ParseHelper.parseNickname(line, parts[1]);
     this.identity = ParseHelper.parseTwentyByteHexString(line, parts[2]);
+    if (parts[3].length() < 1) {
+      throw new DescriptorParseException("Illegal hostname in '" + line
+          + "'.");
+    }
     this.address = ParseHelper.parseIpv4Address(line, parts[4]);
     this.dirPort = ParseHelper.parsePort(line, parts[5]);
     this.orPort = ParseHelper.parsePort(line, parts[6]);
@@ -318,6 +326,23 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       throw new DescriptorParseException("Illegal dir key certificate "
           + "version in line '" + line + "'.");
     }
+  }
+
+  private void parseDirAddressLine(String line, String[] parts) {
+    /* Nothing new to learn here.  Also, this line hasn't been observed
+     * "in the wild" yet.  Maybe it's just an urban legend. */
+  }
+
+  private void parseFingerprintLine(String line, String[] parts)
+      throws DescriptorParseException {
+    /* Nothing new to learn here.  We already know the fingerprint from
+     * the dir-source line.  But we should at least check that there's a
+     * valid fingerprint in this line. */
+    if (parts.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
+    ParseHelper.parseTwentyByteHexString(line, parts[1]);
   }
 
   private void parseLegacyKeyLine(String line, String[] parts)
