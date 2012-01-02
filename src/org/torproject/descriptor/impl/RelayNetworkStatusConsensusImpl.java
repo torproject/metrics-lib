@@ -29,7 +29,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     List<RelayNetworkStatusConsensus> parsedConsensuses =
         new ArrayList<RelayNetworkStatusConsensus>();
     List<byte[]> splitConsensusBytes =
-        NetworkStatusImpl.splitRawDescriptorBytes(consensusesBytes,
+        DescriptorImpl.splitRawDescriptorBytes(consensusesBytes,
         "network-status-version 3");
     try {
       for (byte[] consensusBytes : splitConsensusBytes) {

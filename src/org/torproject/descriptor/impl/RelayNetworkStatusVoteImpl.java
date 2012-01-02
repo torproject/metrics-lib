@@ -25,7 +25,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     List<RelayNetworkStatusVote> parsedVotes =
         new ArrayList<RelayNetworkStatusVote>();
     List<byte[]> splitVotesBytes =
-        NetworkStatusImpl.splitRawDescriptorBytes(votesBytes,
+        DescriptorImpl.splitRawDescriptorBytes(votesBytes,
         "network-status-version 3");
     try {
       for (byte[] voteBytes : splitVotesBytes) {

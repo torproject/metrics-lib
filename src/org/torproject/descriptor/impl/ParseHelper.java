@@ -61,6 +61,51 @@ public class ParseHelper {
     return port;
   }
 
+  public static String parseExitPattern(String line, String exitPattern)
+      throws DescriptorParseException {
+    if (!exitPattern.contains(":")) {
+      throw new DescriptorParseException("'" + exitPattern + "' in line '"
+          + line + "' must contain address and port.");
+    }
+    String[] parts = exitPattern.split(":");
+    String addressPart = parts[0];
+    /* TODO Extend to IPv6. */
+    if (addressPart.equals("*")) {
+      /* Nothing to check. */
+    } else if (addressPart.contains("/")) {
+      String[] addressParts = addressPart.split("/");
+      String address = addressParts[0];
+      ParseHelper.parseIpv4Address(line, address);
+      String mask = addressParts[1];
+      int maskValue = -1;
+      try {
+        maskValue = Integer.parseInt(addressPart.substring(
+            addressPart.indexOf("/") + 1));
+      } catch (NumberFormatException e) {
+        /* Handle below. */
+      }
+      if (addressParts.length != 2 || maskValue < 0 || maskValue > 32) {
+        throw new DescriptorParseException("'" + addressPart + "' in "
+            + "line '" + line + "' is not a valid address part.");
+      }
+    } else {
+      ParseHelper.parseIpv4Address(line, addressPart);
+    }
+    String portPart = parts[1];
+    if (portPart.equals("*")) {
+      /* Nothing to check. */
+    } else if (portPart.contains("-")) {
+      String[] portParts = portPart.split("-");
+      String fromPort = portParts[0];
+      ParseHelper.parsePort(line, fromPort);
+      String toPort = portParts[1];
+      ParseHelper.parsePort(line, toPort);
+    } else {
+      ParseHelper.parsePort(line, portPart);
+    }
+    return exitPattern;
+  }
+
   private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat(
       "yyyy-MM-dd HH:mm:ss");
   static {

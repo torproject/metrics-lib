@@ -11,6 +11,8 @@ import org.junit.*;
 import org.junit.rules.*;
 import static org.junit.Assert.*;
 
+/* TODO Add test cases for all lines starting with "opt ". */
+
 /* Test parsing of network status votes.  Some of the vote-parsing code is
  * already tested in the consensus-parsing tests.  The tests in this class
  * focus on the differences between votes and consensuses that are mostly

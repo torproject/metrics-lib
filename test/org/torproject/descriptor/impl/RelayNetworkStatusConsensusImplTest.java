@@ -11,6 +11,8 @@ import org.junit.*;
 import org.junit.rules.*;
 import static org.junit.Assert.*;
 
+/* TODO Add test cases for all lines starting with "opt ". */
+
 /* Test parsing of network status consensuses.  The main focus is on
  * making sure that the parser is as robust as possible and doesn't break,
  * no matter what gets fed into it.  A secondary focus is to ensure that
