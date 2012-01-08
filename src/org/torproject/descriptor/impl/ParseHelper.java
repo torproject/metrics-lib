@@ -133,14 +133,14 @@ public class ParseHelper {
   }
 
   private static Pattern twentyByteHexPattern =
-      Pattern.compile("^[0-9A-F]{40}$");
+      Pattern.compile("^[0-9a-fA-F]{40}$");
   public static String parseTwentyByteHexString(String line,
       String hexString) throws DescriptorParseException {
     if (!twentyByteHexPattern.matcher(hexString).matches()) {
       throw new DescriptorParseException("Illegal hex string in line '"
           + line + "'.");
     }
-    return hexString;
+    return hexString.toUpperCase();
   }
 
   public static SortedMap<String, Integer> parseKeyValuePairs(String line,
