@@ -26,7 +26,7 @@ public class RelayExtraInfoDescriptorImpl extends DescriptorImpl
         new ArrayList<RelayExtraInfoDescriptor>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        "router ");
+        "extra-info ");
     try {
       for (byte[] descriptorBytes : splitDescriptorsBytes) {
         RelayExtraInfoDescriptor parsedDescriptor =
