@@ -316,7 +316,7 @@ public class RelayServerDescriptorImplTest {
   @Test(expected = DescriptorParseException.class)
   public void testRouterLinePrecedingHibernatingLine()
       throws DescriptorParseException {
-    DescriptorBuilder.createWithRouterLine("hibernating true\nrouter "
+    DescriptorBuilder.createWithRouterLine("hibernating 1\nrouter "
         + "saberrider2008 94.134.192.243 9001 0 0");
   }
 
@@ -779,21 +779,21 @@ public class RelayServerDescriptorImplTest {
   @Test()
   public void testHibernatingOpt() throws DescriptorParseException {
     RelayServerDescriptor descriptor = DescriptorBuilder.
-        createWithHibernatingLine("opt hibernating true");
+        createWithHibernatingLine("opt hibernating 1");
     assertTrue(descriptor.isHibernating());
   }
 
   @Test()
   public void testHibernatingFalse() throws DescriptorParseException {
     RelayServerDescriptor descriptor = DescriptorBuilder.
-        createWithHibernatingLine("hibernating false");
+        createWithHibernatingLine("hibernating 0");
     assertFalse(descriptor.isHibernating());
   }
 
   @Test()
   public void testHibernatingTrue() throws DescriptorParseException {
     RelayServerDescriptor descriptor = DescriptorBuilder.
-        createWithHibernatingLine("hibernating true");
+        createWithHibernatingLine("hibernating 1");
     assertTrue(descriptor.isHibernating());
   }
 

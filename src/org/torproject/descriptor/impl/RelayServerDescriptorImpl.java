@@ -204,9 +204,9 @@ public class RelayServerDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    if (partsNoOpt[1].equals("true")) {
+    if (partsNoOpt[1].equals("1")) {
       this.hibernating = true;
-    } else if (partsNoOpt[1].equals("false")) {
+    } else if (partsNoOpt[1].equals("0")) {
       this.hibernating = false;
     } else {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
