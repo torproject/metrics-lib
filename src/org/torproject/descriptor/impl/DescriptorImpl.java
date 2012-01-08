@@ -14,6 +14,43 @@ import org.torproject.descriptor.Descriptor;
 
 public abstract class DescriptorImpl implements Descriptor {
 
+  protected static List<Descriptor> parseRelayDescriptors(
+      byte[] rawDescriptorBytes) throws DescriptorParseException {
+    List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
+    byte[] first100Chars = new byte[Math.min(100,
+        rawDescriptorBytes.length)];
+    System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,
+        first100Chars.length);
+    String firstLines = new String(first100Chars);
+    if (firstLines.startsWith("network-status-version 3\n") ||
+        firstLines.contains("\nnetwork-status-version 3\n")) {
+      if (firstLines.contains("\nvote-status consensus\n")) {
+        parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl.
+            parseConsensuses(rawDescriptorBytes));
+      } else if (firstLines.contains("\nvote-status consensus\n")) {
+        parsedDescriptors.addAll(RelayNetworkStatusVoteImpl.
+            parseVotes(rawDescriptorBytes));
+      } else {
+        throw new DescriptorParseException("Could not detect relay "
+            + "network status type in descriptor starting with '"
+            + firstLines + "'.");
+      }
+    } else if (firstLines.startsWith("router ") ||
+        firstLines.contains("\nrouter ")) {
+      parsedDescriptors.addAll(RelayServerDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes));
+    } else if (firstLines.startsWith("extra-info ") ||
+        firstLines.contains("\nextra-info ")) {
+      parsedDescriptors.addAll(RelayExtraInfoDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes));
+    } else {
+      throw new DescriptorParseException("Could not detect relay "
+          + "descriptor type in descriptor starting with '" + firstLines
+          + "'.");
+    }
+    return parsedDescriptors;
+  }
+
   protected static List<byte[]> splitRawDescriptorBytes(
       byte[] rawDescriptorBytes, String startToken) {
     List<byte[]> rawDescriptors = new ArrayList<byte[]>();

@@ -110,31 +110,7 @@ public class RelayDescriptorReaderImpl implements RelayDescriptorReader {
       }
       bis.close();
       byte[] rawDescriptorBytes = baos.toByteArray();
-      /* TODO This consensus/vote detection is a hack. */
-      boolean isConsensus = false;
-      if (file.getName().contains("consensus")) {
-        isConsensus = true;
-      } else if (file.getName().contains("vote")) {
-      } else {
-        throw new RuntimeException("Unknown descriptor type in '"
-            + file.getAbsolutePath() + ".");
-      }
-      return this.parseDescriptors(rawDescriptorBytes, isConsensus);
-    }
-    private List<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
-        boolean isConsensus) throws DescriptorParseException {
-      List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
-      if (isConsensus) {
-        List<RelayNetworkStatusConsensus> parsedConsensuses =
-            RelayNetworkStatusConsensusImpl.parseConsensuses(
-            rawDescriptorBytes);
-        parsedDescriptors.addAll(parsedConsensuses);
-      } else {
-        List<RelayNetworkStatusVote> parsedVotes =
-            RelayNetworkStatusVoteImpl.parseVotes(rawDescriptorBytes);
-        parsedDescriptors.addAll(parsedVotes);
-      }
-      return parsedDescriptors;
+      return DescriptorImpl.parseRelayDescriptors(rawDescriptorBytes);
     }
   }
 }
