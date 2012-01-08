@@ -72,7 +72,7 @@ public abstract class DescriptorImpl implements Descriptor {
           skipCrypto = true;
         } else if (line.startsWith("-----END")) {
           skipCrypto = false;
-        } else if (!skipCrypto) {
+        } else if (!line.startsWith("@") && !skipCrypto) {
           String lineNoOpt = line.startsWith("opt ") ?
               line.substring("opt ".length()) : line;
           String keyword = lineNoOpt.split(" ", -1)[0];

@@ -69,6 +69,9 @@ public class RelayServerDescriptorImpl extends DescriptorImpl
       String line;
       boolean skipCrypto = false;
       while ((line = br.readLine()) != null) {
+        if (line.startsWith("@")) {
+          continue;
+        }
         String lineNoOpt = line.startsWith("opt ") ?
             line.substring("opt ".length()) : line;
         String[] partsNoOpt = lineNoOpt.split(" ");
