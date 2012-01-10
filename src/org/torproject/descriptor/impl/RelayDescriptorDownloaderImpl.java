@@ -430,13 +430,18 @@ public class RelayDescriptorDownloaderImpl
         this.missingVotes.add(requestedVote);
       }
     }
-    this.descriptorQueue.add(response);
+    if (response.getRequestEnd() != 0L) {
+      this.descriptorQueue.add(response);
+    }
     if ((!this.missingConsensus ||
         (this.downloadConsensusFromAllAuthorities &&
         this.requestedConsensuses.containsAll(
         this.directoryAuthorities.keySet()))) &&
         this.missingVotes.isEmpty() &&
         this.requestingVotes.isEmpty()) {
+      /* TODO This logic may be somewhat broken.  We don't wait for all
+       * consensus requests to complete or fail, which results in adding
+       * (failed) requests to the queue when we think we're done. */
       this.hasFinishedDownloading = true;
       this.globalTimerThread.interrupt();
       this.descriptorQueue.setOutOfDescriptors();
@@ -470,9 +475,10 @@ public class RelayDescriptorDownloaderImpl
       this.requestTimeout = requestTimeout;
     }
     public void run() {
-      DescriptorRequestImpl request = null;
+      boolean keepRunning = true;
       do {
-        request = this.downloadCoordinator.createRequest(this.nickname);
+        DescriptorRequestImpl request =
+            this.downloadCoordinator.createRequest(this.nickname);
         if (request != null) {
           String url = "http://" + this.ipPort
               + request.getRequestedResource();
@@ -503,16 +509,18 @@ public class RelayDescriptorDownloaderImpl
               request.setRequestEnd(System.currentTimeMillis());
             }
           } catch (IOException e) {
-            /* TODO Should we print out a warning or something? */
-            e.printStackTrace();
-            break;
+            /* Stop downloading from this directory if there are any
+             * problems, e.g., refused connections. */
+            keepRunning = false;
           }
           /* TODO How do we find out if we were interrupted, and by who?
            * Set the request or global timeout flag in the response. */
           timeoutThread.interrupt();
           this.downloadCoordinator.deliverResponse(request);
+        } else {
+          keepRunning = false;
         }
-      } while (request != null);
+      } while (keepRunning);
     }
   }
 
