@@ -15,7 +15,7 @@ import org.apache.commons.codec.binary.Hex;
 public class ParseHelper {
 
   private static Pattern ipv4Pattern =
-     Pattern.compile("^[0-9\\.]{7,15}$");
+      Pattern.compile("^[0-9\\.]{7,15}$");
   public static String parseIpv4Address(String line, String address)
       throws DescriptorParseException {
     boolean isValid = true;
