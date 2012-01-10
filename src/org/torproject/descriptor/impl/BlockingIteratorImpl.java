@@ -22,7 +22,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
   /* Add an object to the queue. */
   protected synchronized void add(T object) {
     if (this.outOfDescriptors) {
-      throw new IllegalStateException("Internal erorr: Adding results to "
+      throw new IllegalStateException("Internal error: Adding results to "
           + "descriptor queue not allowed after sending end-of-stream "
           + "object.");
     }
@@ -34,7 +34,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
   private boolean outOfDescriptors = false;
   protected synchronized void setOutOfDescriptors() {
     if (this.outOfDescriptors) {
-      throw new IllegalStateException("Internal erorr: Sending "
+      throw new IllegalStateException("Internal error: Sending "
           + "end-of-stream object only permitted once.");
     }
     this.outOfDescriptors = true;
