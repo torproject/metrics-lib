@@ -687,7 +687,7 @@ public class RelayNetworkStatusVoteImplTest {
         + "208.83.223.34 443 80");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testFingerprintLowerCase() throws DescriptorParseException {
     VoteBuilder.createWithDirSourceLine("dir-source urras "
         + "80550987e1d626e3eba5e5e75a458de0626d088c 208.83.223.34 "

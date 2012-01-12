@@ -65,14 +65,12 @@ public abstract class DescriptorImpl implements Descriptor {
           rawDescriptorBytes, fileName));
     } else if (firstLines.startsWith("router ") ||
         firstLines.contains("\nrouter ")) {
-      /* TODO Implement me.
-      parsedDescriptors.addAll(BridgeServerDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes)); */
+      parsedDescriptors.addAll(ServerDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes));
     } else if (firstLines.startsWith("extra-info ") ||
         firstLines.contains("\nextra-info ")) {
-      /* TODO Implement me.
-      parsedDescriptors.addAll(BridgeExtraInfoDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes)); */
+      parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes));
     } else {
       throw new DescriptorParseException("Could not detect bridge "
           + "descriptor type in descriptor starting with '" + firstLines

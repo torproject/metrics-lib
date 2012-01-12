@@ -46,7 +46,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     super(descriptorBytes);
     this.parseDescriptorBytes();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
-        "extra-info,published,router-signature").split(",")));
+        "extra-info,published").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
         "read-history,write-history,geoip-db-digest,dirreq-stats-end,"
@@ -58,12 +58,12 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         + "cell-processed-cells,cell-queued-cells,cell-time-in-queue,"
         + "cell-circuits-per-decile,conn-bi-direct,exit-stats-end,"
         + "exit-kibibytes-written,exit-kibibytes-read,"
-        + "exit-streams-opened").split(",")));
+        + "exit-streams-opened,bridge-stats-end,bridge-stats-ips,"
+        + "router-signature").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     /* TODO Add more checks to see that only statistics details lines are
      * included with corresponding statistics interval lines. */
     this.checkFirstKeyword("extra-info");
-    this.checkLastKeyword("router-signature");
     return;
   }
 
@@ -147,6 +147,10 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
           this.parseExitKibibytesReadLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("exit-streams-opened")) {
           this.parseExitStreamsOpenedLine(line, lineNoOpt, partsNoOpt);
+        } else if (keyword.equals("bridge-stats-end")) {
+          this.parseBridgeStatsEndLine(line, lineNoOpt, partsNoOpt);
+        } else if (keyword.equals("bridge-ips")) {
+          this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("router-signature")) {
           this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
         } else if (line.startsWith("-----BEGIN")) {
@@ -349,6 +353,16 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseExitStreamsOpenedLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    /* TODO Implement me. */
+  }
+
+  private void parseBridgeStatsEndLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    /* TODO Implement me. */
+  }
+
+  private void parseBridgeStatsIpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     /* TODO Implement me. */
   }

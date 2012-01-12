@@ -42,18 +42,17 @@ public class ServerDescriptorImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(descriptorBytes);
     this.parseDescriptorBytes();
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
-        "router,bandwidth,published,onion-key,signing-key,"
-        + "router-signature").split(",")));
+    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(
+        "router,bandwidth,published".split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
         "platform,fingerprint,hibernating,uptime,contact,family,"
         + "read-history,write-history,eventdns,caches-extra-info,"
         + "extra-info-digest,hidden-service-dir,protocols,"
-        + "allow-single-hop-exits").split(",")));
+        + "allow-single-hop-exits,onion-key,signing-key,"
+        + "router-signature").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("router");
-    this.checkLastKeyword("router-signature");
     if (this.getKeywordCount("accept") == 0 &&
         this.getKeywordCount("reject") == 0) {
       throw new DescriptorParseException("Either keyword 'accept' or "

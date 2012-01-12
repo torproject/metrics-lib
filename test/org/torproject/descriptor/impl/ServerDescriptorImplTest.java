@@ -609,11 +609,6 @@ public class ServerDescriptorImplTest {
     assertNull(descriptor.getExtraInfoDigest());
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testOnionKeyMissing() throws DescriptorParseException {
-    DescriptorBuilder.createWithOnionKeyLines(null);
-  }
-
   @Test()
   public void testOnionKeyOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
@@ -624,11 +619,6 @@ public class ServerDescriptorImplTest {
         + "uC3cTF\n9wE4WXY4nX7w0RTN18UVLxrt1A9PP0cobFNiPs9rzJCbKFfacOkpAg"
         + "MBAAE=\n"
         + "-----END RSA PUBLIC KEY-----");
-  }
-
-  @Test(expected = DescriptorParseException.class)
-  public void testSigningKeyMissing() throws DescriptorParseException {
-    DescriptorBuilder.createWithSigningKeyLines(null);
   }
 
   @Test()
@@ -747,12 +737,6 @@ public class ServerDescriptorImplTest {
   @Test(expected = DescriptorParseException.class)
   public void testExitPolicyMissing() throws DescriptorParseException {
     DescriptorBuilder.createWithExitPolicyLines(null);
-  }
-
-  @Test(expected = DescriptorParseException.class)
-  public void testRouterSignatureMissing()
-      throws DescriptorParseException {
-    DescriptorBuilder.createWithRouterSignatureLines(null);
   }
 
   @Test()
