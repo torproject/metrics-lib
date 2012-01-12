@@ -88,6 +88,10 @@ public class RelayExtraInfoDescriptorImpl extends DescriptorImpl
           this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("geoip-db-digest")) {
           this.parseGeoipDbDigestLine(line, lineNoOpt, partsNoOpt);
+        } else if (keyword.equals("geoip-start-time")) {
+          this.parseGeoipStartTimeLine(line, lineNoOpt, partsNoOpt);
+        } else if (keyword.equals("geoip-client-origins")) {
+          this.parseGeoipClientOriginsLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("dirreq-stats-end")) {
           this.parseDirreqStatsEndLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("dirreq-v2-ips")) {
@@ -196,6 +200,16 @@ public class RelayExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseGeoipDbDigestLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    /* TODO Implement me. */
+  }
+
+  private void parseGeoipStartTimeLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    /* TODO Implement me. */
+  }
+
+  private void parseGeoipClientOriginsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     /* TODO Implement me. */
   }
