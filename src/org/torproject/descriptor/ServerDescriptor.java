@@ -5,7 +5,7 @@ package org.torproject.descriptor;
 import java.util.List;
 
 /* Contains a relay server descriptor. */
-public interface RelayServerDescriptor extends Descriptor {
+public interface ServerDescriptor extends Descriptor {
 
   /* Return the relay's nickname. */
   public String getNickname();

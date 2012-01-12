@@ -11,26 +11,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
-import org.torproject.descriptor.RelayExtraInfoDescriptor;
+import org.torproject.descriptor.ExtraInfoDescriptor;
 import org.torproject.descriptor.BandwidthHistory;
 
 /* TODO Implement methods to parse the various statistics (other than
  * bandwidth histories. */
 /* TODO Write a test class. */
-public class RelayExtraInfoDescriptorImpl extends DescriptorImpl
-    implements RelayExtraInfoDescriptor {
+public class ExtraInfoDescriptorImpl extends DescriptorImpl
+    implements ExtraInfoDescriptor {
 
-  protected static List<RelayExtraInfoDescriptor> parseDescriptors(
+  protected static List<ExtraInfoDescriptor> parseDescriptors(
       byte[] descriptorsBytes) {
-    List<RelayExtraInfoDescriptor> parsedDescriptors =
-        new ArrayList<RelayExtraInfoDescriptor>();
+    List<ExtraInfoDescriptor> parsedDescriptors =
+        new ArrayList<ExtraInfoDescriptor>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "extra-info ");
     try {
       for (byte[] descriptorBytes : splitDescriptorsBytes) {
-        RelayExtraInfoDescriptor parsedDescriptor =
-            new RelayExtraInfoDescriptorImpl(descriptorBytes);
+        ExtraInfoDescriptor parsedDescriptor =
+            new ExtraInfoDescriptorImpl(descriptorBytes);
         parsedDescriptors.add(parsedDescriptor);
       }
     } catch (DescriptorParseException e) {
@@ -41,7 +41,7 @@ public class RelayExtraInfoDescriptorImpl extends DescriptorImpl
     return parsedDescriptors;
   }
 
-  protected RelayExtraInfoDescriptorImpl(byte[] descriptorBytes)
+  protected ExtraInfoDescriptorImpl(byte[] descriptorBytes)
       throws DescriptorParseException {
     super(descriptorBytes);
     this.parseDescriptorBytes();

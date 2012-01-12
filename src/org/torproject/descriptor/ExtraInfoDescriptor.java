@@ -5,7 +5,7 @@ package org.torproject.descriptor;
 import java.util.List;
 import java.util.SortedMap;
 
-public interface RelayExtraInfoDescriptor extends Descriptor {
+public interface ExtraInfoDescriptor extends Descriptor {
 
   /* Return the relay's nickname. */
   public String getNickname();

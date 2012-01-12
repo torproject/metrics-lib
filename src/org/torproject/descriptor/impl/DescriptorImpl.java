@@ -37,11 +37,11 @@ public abstract class DescriptorImpl implements Descriptor {
       }
     } else if (firstLines.startsWith("router ") ||
         firstLines.contains("\nrouter ")) {
-      parsedDescriptors.addAll(RelayServerDescriptorImpl.
+      parsedDescriptors.addAll(ServerDescriptorImpl.
           parseDescriptors(rawDescriptorBytes));
     } else if (firstLines.startsWith("extra-info ") ||
         firstLines.contains("\nextra-info ")) {
-      parsedDescriptors.addAll(RelayExtraInfoDescriptorImpl.
+      parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
           parseDescriptors(rawDescriptorBytes));
     } else {
       throw new DescriptorParseException("Could not detect relay "

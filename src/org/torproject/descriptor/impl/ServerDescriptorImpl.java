@@ -10,24 +10,24 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.torproject.descriptor.RelayServerDescriptor;
+import org.torproject.descriptor.ServerDescriptor;
 import org.torproject.descriptor.BandwidthHistory;
 
 /* Contains a relay server descriptor. */
-public class RelayServerDescriptorImpl extends DescriptorImpl
-    implements RelayServerDescriptor {
+public class ServerDescriptorImpl extends DescriptorImpl
+    implements ServerDescriptor {
 
-  protected static List<RelayServerDescriptor> parseDescriptors(
+  protected static List<ServerDescriptor> parseDescriptors(
       byte[] descriptorsBytes) {
-    List<RelayServerDescriptor> parsedDescriptors =
-        new ArrayList<RelayServerDescriptor>();
+    List<ServerDescriptor> parsedDescriptors =
+        new ArrayList<ServerDescriptor>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "router ");
     try {
       for (byte[] descriptorBytes : splitDescriptorsBytes) {
-        RelayServerDescriptor parsedDescriptor =
-            new RelayServerDescriptorImpl(descriptorBytes);
+        ServerDescriptor parsedDescriptor =
+            new ServerDescriptorImpl(descriptorBytes);
         parsedDescriptors.add(parsedDescriptor);
       }
     } catch (DescriptorParseException e) {
@@ -38,7 +38,7 @@ public class RelayServerDescriptorImpl extends DescriptorImpl
     return parsedDescriptors;
   }
 
-  protected RelayServerDescriptorImpl(byte[] descriptorBytes)
+  protected ServerDescriptorImpl(byte[] descriptorBytes)
       throws DescriptorParseException {
     super(descriptorBytes);
     this.parseDescriptorBytes();
