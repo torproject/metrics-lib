@@ -51,6 +51,36 @@ public abstract class DescriptorImpl implements Descriptor {
     return parsedDescriptors;
   }
 
+  protected static List<Descriptor> parseBridgeDescriptors(
+      byte[] rawDescriptorBytes, String fileName)
+      throws DescriptorParseException {
+    List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
+    byte[] first100Chars = new byte[Math.min(100,
+        rawDescriptorBytes.length)];
+    System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,
+        first100Chars.length);
+    String firstLines = new String(first100Chars);
+    if (firstLines.startsWith("r ")) {
+      parsedDescriptors.add(new BridgeNetworkStatusImpl(
+          rawDescriptorBytes, fileName));
+    } else if (firstLines.startsWith("router ") ||
+        firstLines.contains("\nrouter ")) {
+      /* TODO Implement me.
+      parsedDescriptors.addAll(BridgeServerDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes)); */
+    } else if (firstLines.startsWith("extra-info ") ||
+        firstLines.contains("\nextra-info ")) {
+      /* TODO Implement me.
+      parsedDescriptors.addAll(BridgeExtraInfoDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes)); */
+    } else {
+      throw new DescriptorParseException("Could not detect bridge "
+          + "descriptor type in descriptor starting with '" + firstLines
+          + "'.");
+    }
+    return parsedDescriptors;
+  }
+
   protected static List<byte[]> splitRawDescriptorBytes(
       byte[] rawDescriptorBytes, String startToken) {
     List<byte[]> rawDescriptors = new ArrayList<byte[]>();
