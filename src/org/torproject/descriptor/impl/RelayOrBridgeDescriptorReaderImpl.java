@@ -148,10 +148,9 @@ public class RelayOrBridgeDescriptorReaderImpl
           System.err.println("Error while reading descriptors in '"
               + directory.getAbsolutePath() + "'.");
           /* TODO Handle this exception somehow. */
-        } finally {
-          this.descriptorQueue.setOutOfDescriptors();
         }
       }
+      this.descriptorQueue.setOutOfDescriptors();
     }
     private List<Descriptor> readFile(File file) throws IOException,
         DescriptorParseException {
