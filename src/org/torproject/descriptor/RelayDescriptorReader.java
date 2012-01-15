@@ -13,20 +13,12 @@ public interface RelayDescriptorReader {
   /* Add a local directory to read relay descriptors from. */
   public void addDirectory(File directory);
 
-  /* Exclude the given file from the results. */
-  public void setExcludeFile(File fileToExclude);
-
-  /* Exclude the given files from the results. */
-  public void setExcludeFiles(Set<File> filesToExclude);
-
-  /* Exclude the given file from the results if it wasn't modified since
-   * the given timestamp. */
-  public void setExcludeFile(File fileToExclude, long lastModifiedMillis);
-
-  /* Exclude the given files from the results if they were not modified
-   * since the given timestamps.  Map keys are files to exclude and map
-   * values are last modified timestamps. */
-  public void setExcludeFiles(Map<File, Long> filesToExclude);
+  /* Exclude files that are contained in the given history file and that
+   * haven't changed since they were last read.  Add reads from the
+   * current run to the history file.  Remove files that don't exist
+   * anymore from the history file.  Lines in the history file contain the
+   * last modified timestamp and the absolute path of a file. */
+  public void setExcludeFiles(File historyFile);
 
   /* Read the previously configured relay descriptors and make them
    * available via the returned blocking iterator.  Whenever the reader
