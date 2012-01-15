@@ -23,5 +23,11 @@ public class DescriptorSourceFactory {
   public static BridgeDescriptorReader createBridgeDescriptorReader() {
     return new RelayOrBridgeDescriptorReaderImpl();
   }
+
+  /* Create a bridge pool assignment reader. */
+  public static BridgePoolAssignmentReader
+      createBridgePoolAssignmentReader() {
+    return new RelayOrBridgeDescriptorReaderImpl();
+  }
 }
 

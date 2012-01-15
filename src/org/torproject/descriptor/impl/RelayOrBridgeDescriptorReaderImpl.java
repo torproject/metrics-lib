@@ -24,9 +24,11 @@ import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorFile;
 import org.torproject.descriptor.RelayDescriptorReader;
 import org.torproject.descriptor.BridgeDescriptorReader;
+import org.torproject.descriptor.BridgePoolAssignmentReader;
 
 public class RelayOrBridgeDescriptorReaderImpl
-    implements RelayDescriptorReader, BridgeDescriptorReader {
+    implements RelayDescriptorReader, BridgeDescriptorReader,
+    BridgePoolAssignmentReader {
 
   private List<File> directories = new ArrayList<File>();
   public void addDirectory(File directory) {

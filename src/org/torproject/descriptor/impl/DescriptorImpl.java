@@ -47,10 +47,13 @@ public abstract class DescriptorImpl implements Descriptor {
         firstLines.contains("\nextra-info ")) {
       parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
           parseDescriptors(rawDescriptorBytes));
+    } else if (firstLines.startsWith("bridge-pool-assignment ") ||
+        firstLines.contains("\nbridge-pool-assignment ")) {
+      parsedDescriptors.addAll(BridgePoolAssignmentImpl.
+          parseDescriptors(rawDescriptorBytes));
     } else {
-      throw new DescriptorParseException("Could not detect relay or "
-          + "bridge descriptor type in descriptor starting with '"
-          + firstLines + "'.");
+      throw new DescriptorParseException("Could not detect descriptor "
+          + "type in descriptor starting with '" + firstLines + "'.");
     }
     return parsedDescriptors;
   }
