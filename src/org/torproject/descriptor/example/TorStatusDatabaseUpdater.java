@@ -35,8 +35,8 @@ public class TorStatusDatabaseUpdater {
      * ran this application.  This may save some execution time.  The
      * application needs to store the information when files were last
      * modified, because the API is supposed to be stateless. */
-    reader.setExcludeFile(new File("tor-data-dir/cached-descriptors"),
-        1234567890000L);
+    //reader.setExcludeFile(new File("tor-data-dir/cached-descriptors"),
+    //    1234567890000L);
 
     /* Read all descriptors in the given directory and import them into
      * the database.  Also go through the list of parsed files and store

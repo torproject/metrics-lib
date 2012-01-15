@@ -14,8 +14,9 @@ import org.torproject.descriptor.Descriptor;
 
 public abstract class DescriptorImpl implements Descriptor {
 
-  protected static List<Descriptor> parseRelayDescriptors(
-      byte[] rawDescriptorBytes) throws DescriptorParseException {
+  protected static List<Descriptor> parseRelayOrBridgeDescriptors(
+      byte[] rawDescriptorBytes, String fileName)
+      throws DescriptorParseException {
     List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
     byte[] first100Chars = new byte[Math.min(100,
         rawDescriptorBytes.length)];
@@ -35,32 +36,7 @@ public abstract class DescriptorImpl implements Descriptor {
             + "network status type in descriptor starting with '"
             + firstLines + "'.");
       }
-    } else if (firstLines.startsWith("router ") ||
-        firstLines.contains("\nrouter ")) {
-      parsedDescriptors.addAll(ServerDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes));
-    } else if (firstLines.startsWith("extra-info ") ||
-        firstLines.contains("\nextra-info ")) {
-      parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes));
-    } else {
-      throw new DescriptorParseException("Could not detect relay "
-          + "descriptor type in descriptor starting with '" + firstLines
-          + "'.");
-    }
-    return parsedDescriptors;
-  }
-
-  protected static List<Descriptor> parseBridgeDescriptors(
-      byte[] rawDescriptorBytes, String fileName)
-      throws DescriptorParseException {
-    List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
-    byte[] first100Chars = new byte[Math.min(100,
-        rawDescriptorBytes.length)];
-    System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,
-        first100Chars.length);
-    String firstLines = new String(first100Chars);
-    if (firstLines.startsWith("r ")) {
+    } else if (firstLines.startsWith("r ")) {
       parsedDescriptors.add(new BridgeNetworkStatusImpl(
           rawDescriptorBytes, fileName));
     } else if (firstLines.startsWith("router ") ||
@@ -72,9 +48,9 @@ public abstract class DescriptorImpl implements Descriptor {
       parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
           parseDescriptors(rawDescriptorBytes));
     } else {
-      throw new DescriptorParseException("Could not detect bridge "
-          + "descriptor type in descriptor starting with '" + firstLines
-          + "'.");
+      throw new DescriptorParseException("Could not detect relay or "
+          + "bridge descriptor type in descriptor starting with '"
+          + firstLines + "'.");
     }
     return parsedDescriptors;
   }

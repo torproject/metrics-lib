@@ -52,8 +52,8 @@ public class MetricsRelayDescriptorAggregator {
 
     /* Exclude cached descriptor files that haven't changed since we last
      * ran this application. */
-    reader.setExcludeFile(new File("tor-data-dir/cached-descriptors"),
-        1234567890000L);
+    //reader.setExcludeFile(new File("tor-data-dir/cached-descriptors"),
+    //    1234567890000L);
 
     /* Read descriptors and process them. */
     Iterator<DescriptorFile> descriptorFiles = reader.readDescriptors();
