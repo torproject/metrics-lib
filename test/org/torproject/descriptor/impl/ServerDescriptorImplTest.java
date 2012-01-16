@@ -836,6 +836,17 @@ public class ServerDescriptorImplTest {
   }
 
   @Test()
+  public void testFamilyFingerprintNickname()
+      throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithFamilyLine("family "
+        + "$D8733048FC8EC9102466AD8F3098622BF1BF71FD=saberrider2008");
+    assertEquals(Arrays.asList(new String[]
+        { "$D8733048FC8EC9102466AD8F3098622BF1BF71FD=saberrider2008" }),
+        descriptor.getFamilyEntries());
+  }
+
+  @Test()
   public void testWriteHistory() throws DescriptorParseException {
     String writeHistoryLine = "write-history 2012-01-01 03:51:44 (900 s) "
         + "4345856,261120,7591936,1748992";

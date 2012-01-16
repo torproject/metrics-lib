@@ -62,9 +62,9 @@ public interface ServerDescriptor extends Descriptor {
    * information is included in the descriptor. */
   public String getContact();
 
-  /* Return the nicknames or ($-prefixed) fingerprints contained in the
-   * family line of this relay, or null if the descriptor does not contain
-   * a family line. */
+  /* Return the nicknames, ($-prefixed) fingerprints, or
+   * $fingerprint=nickname tuples contained in the family line of this
+   * relay, or null if the descriptor does not contain a family line. */
   public List<String> getFamilyEntries();
 
   /* Return the relay's read history.  (Current Tor versions include their
