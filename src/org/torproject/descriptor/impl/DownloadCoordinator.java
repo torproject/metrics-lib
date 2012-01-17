@@ -102,6 +102,10 @@ public class DownloadCoordinator {
    * hasn't tried downloading it before attempt to download it? */
   private boolean missingConsensus = false;
 
+  /* Which directories are currently attempting to download the
+   * consensus? */
+  private Set<String> requestingConsensuses = new HashSet<String>();
+
   /* Which directories have attempted to download the consensus so far,
    * including those directories that are currently attempting it? */
   private Set<String> requestedConsensuses = new HashSet<String>();
@@ -136,6 +140,7 @@ public class DownloadCoordinator {
         if (!this.downloadConsensusFromAllAuthorities) {
           this.missingConsensus = false;
         }
+        this.requestingConsensuses.add(nickname);
         this.requestedConsensuses.add(nickname);
         request.setRequestedResource(
             "/tor/status-vote/current/consensus.z");
@@ -182,6 +187,7 @@ public class DownloadCoordinator {
       DescriptorRequestImpl response) {
     String nickname = response.getDirectoryNickname();
     if (response.getDescriptorType().equals("consensus")) {
+      this.requestingConsensuses.remove(nickname);
       if (response.getResponseCode() == 200) {
         List<RelayNetworkStatusConsensus> parsedConsensuses =
             RelayNetworkStatusConsensusImpl.parseConsensuses(
@@ -236,7 +242,8 @@ public class DownloadCoordinator {
     if ((!this.missingConsensus ||
         (this.downloadConsensusFromAllAuthorities &&
         this.requestedConsensuses.containsAll(
-        this.directoryAuthorities.keySet()))) &&
+        this.directoryAuthorities.keySet()) &&
+        this.requestingConsensuses.isEmpty())) &&
         this.missingVotes.isEmpty() &&
         this.requestingVotes.isEmpty()) {
       /* TODO This logic may be somewhat broken.  We don't wait for all
