@@ -2,14 +2,17 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
-import org.torproject.descriptor.impl.RelayNetworkStatusConsensusImpl;
-
-import java.util.*;
-
-import org.junit.*;
-import org.junit.rules.*;
-import static org.junit.Assert.*;
 
 /* TODO Add test cases for all lines starting with "opt ". */
 

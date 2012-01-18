@@ -4,7 +4,6 @@ package org.torproject.descriptor;
 
 import java.io.File;
 import java.util.Iterator;
-import org.torproject.descriptor.DescriptorFile;
 
 /* Read Torperf data files from one or more local directories. */
 public interface TorperfDataReader {

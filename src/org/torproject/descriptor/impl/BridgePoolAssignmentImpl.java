@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import org.torproject.descriptor.BridgePoolAssignment;
 
 /* TODO Write a test class. */

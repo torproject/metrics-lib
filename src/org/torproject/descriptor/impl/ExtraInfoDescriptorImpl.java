@@ -11,8 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
-import org.torproject.descriptor.ExtraInfoDescriptor;
+
 import org.torproject.descriptor.BandwidthHistory;
+import org.torproject.descriptor.ExtraInfoDescriptor;
 
 /* TODO Implement methods to parse the various statistics (other than
  * bandwidth histories. */

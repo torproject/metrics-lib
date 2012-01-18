@@ -2,8 +2,8 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 

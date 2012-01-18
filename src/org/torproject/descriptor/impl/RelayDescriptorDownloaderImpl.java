@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import org.torproject.descriptor.DescriptorRequest;
 import org.torproject.descriptor.RelayDescriptorDownloader;
 

@@ -2,14 +2,18 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.SortedMap;
+
+import org.junit.Test;
 import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.ServerDescriptor;
-
-import java.util.*;
-
-import org.junit.*;
-import org.junit.rules.*;
-import static org.junit.Assert.*;
 
 /* Test parsing of relay server descriptors. */
 public class ServerDescriptorImplTest {

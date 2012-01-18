@@ -2,8 +2,8 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor;
 
-import org.torproject.descriptor.impl.RelayOrBridgeDescriptorReaderImpl;
 import org.torproject.descriptor.impl.RelayDescriptorDownloaderImpl;
+import org.torproject.descriptor.impl.RelayOrBridgeDescriptorReaderImpl;
 
 /* Create descriptor source instances. */
 public class DescriptorSourceFactory {

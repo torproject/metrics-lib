@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import org.torproject.descriptor.DirSourceEntry;
 
 public class DirSourceEntryImpl implements DirSourceEntry {

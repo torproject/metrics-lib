@@ -7,8 +7,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,11 +19,12 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.Stack;
 import java.util.TreeMap;
+
+import org.torproject.descriptor.BridgeDescriptorReader;
+import org.torproject.descriptor.BridgePoolAssignmentReader;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorFile;
 import org.torproject.descriptor.RelayDescriptorReader;
-import org.torproject.descriptor.BridgeDescriptorReader;
-import org.torproject.descriptor.BridgePoolAssignmentReader;
 
 public class RelayOrBridgeDescriptorReaderImpl
     implements RelayDescriptorReader, BridgeDescriptorReader,

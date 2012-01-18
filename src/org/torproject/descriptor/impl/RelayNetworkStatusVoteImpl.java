@@ -14,6 +14,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
 import org.torproject.descriptor.RelayNetworkStatusVote;
 
 /* Contains a network status vote. */

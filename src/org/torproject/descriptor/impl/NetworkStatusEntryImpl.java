@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import org.torproject.descriptor.NetworkStatusEntry;
 
 public class NetworkStatusEntryImpl implements NetworkStatusEntry {

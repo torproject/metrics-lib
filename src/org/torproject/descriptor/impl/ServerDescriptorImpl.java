@@ -10,8 +10,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.torproject.descriptor.ServerDescriptor;
+
 import org.torproject.descriptor.BandwidthHistory;
+import org.torproject.descriptor.ServerDescriptor;
 
 /* Contains a relay server descriptor. */
 public class ServerDescriptorImpl extends DescriptorImpl

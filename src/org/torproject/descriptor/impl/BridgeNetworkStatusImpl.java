@@ -5,6 +5,7 @@ package org.torproject.descriptor.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+
 import org.torproject.descriptor.BridgeNetworkStatus;
 
 /* Contains a bridge network status. */

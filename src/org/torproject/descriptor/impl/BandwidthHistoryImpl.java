@@ -4,6 +4,7 @@ package org.torproject.descriptor.impl;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
+
 import org.torproject.descriptor.BandwidthHistory;
 
 public class BandwidthHistoryImpl implements BandwidthHistory {
