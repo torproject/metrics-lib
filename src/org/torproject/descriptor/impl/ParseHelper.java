@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
@@ -76,7 +75,6 @@ public class ParseHelper {
       String[] addressParts = addressPart.split("/");
       String address = addressParts[0];
       ParseHelper.parseIpv4Address(line, address);
-      String mask = addressParts[1];
       int maskValue = -1;
       try {
         maskValue = Integer.parseInt(addressPart.substring(

@@ -12,12 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import org.torproject.descriptor.Descriptor;
-import org.torproject.descriptor.DirSourceEntry;
-import org.torproject.descriptor.NetworkStatusEntry;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
 /* Contains a network status consensus. */

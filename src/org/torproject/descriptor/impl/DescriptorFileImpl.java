@@ -14,7 +14,7 @@ public class DescriptorFileImpl implements DescriptorFile {
     this.directory = directory;
   }
   public File getDirectory() {
-    return this.file;
+    return this.directory;
   }
 
   private File file;

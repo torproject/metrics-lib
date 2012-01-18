@@ -4,8 +4,6 @@ package org.torproject.descriptor;
 
 import java.io.File;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /* Read bridge descriptors from one or more local directories. */
 public interface BridgeDescriptorReader {

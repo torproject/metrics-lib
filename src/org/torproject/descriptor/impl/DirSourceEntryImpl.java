@@ -5,7 +5,6 @@ package org.torproject.descriptor.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.ParseException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import org.torproject.descriptor.DirSourceEntry;

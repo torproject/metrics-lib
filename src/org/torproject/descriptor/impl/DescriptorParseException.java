@@ -3,6 +3,7 @@
 package org.torproject.descriptor.impl;
 
 public class DescriptorParseException extends Exception {
+  private static final long serialVersionUID = 100L;
   protected DescriptorParseException(String message) {
     super(message);
   }

@@ -2,21 +2,13 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorRequest;
-import org.torproject.descriptor.DirSourceEntry;
 import org.torproject.descriptor.RelayDescriptorDownloader;
-import org.torproject.descriptor.RelayNetworkStatusConsensus;
-import org.torproject.descriptor.RelayNetworkStatusVote;
 
 public class RelayDescriptorDownloaderImpl
     implements RelayDescriptorDownloader {

@@ -368,7 +368,6 @@ public class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseProtocolsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    List<String> partsList = Arrays.asList(partsNoOpt);
     boolean isValid = true;
     this.linkProtocolVersions = new ArrayList<Integer>();
     this.circuitProtocolVersions = new ArrayList<Integer>();

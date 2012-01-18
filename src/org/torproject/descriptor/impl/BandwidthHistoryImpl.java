@@ -2,9 +2,6 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.torproject.descriptor.BandwidthHistory;
