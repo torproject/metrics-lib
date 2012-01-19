@@ -227,11 +227,12 @@ public class RelayDescriptorDownloaderImpl
           + "permitted once.");
     }
     this.hasStartedDownloading = true;
-    DownloadCoordinator downloadCoordinator = new DownloadCoordinator(
-        this.directoryAuthorities, this.directoryMirrors,
-        this.downloadConsensus, this.downloadConsensusFromAllAuthorities,
-        this.downloadVotes, this.includeCurrentReferencedVotes,
-        this.requestTimeoutMillis, this.globalTimeoutMillis);
+    DownloadCoordinatorImpl downloadCoordinator =
+        new DownloadCoordinatorImpl(this.directoryAuthorities,
+        this.directoryMirrors, this.downloadConsensus,
+        this.downloadConsensusFromAllAuthorities, this.downloadVotes,
+        this.includeCurrentReferencedVotes, this.requestTimeoutMillis,
+        this.globalTimeoutMillis);
     Iterator<DescriptorRequest> descriptorQueue = downloadCoordinator.
         getDescriptorQueue();
     return descriptorQueue;
