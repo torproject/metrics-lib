@@ -190,17 +190,16 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     if (response.getDescriptorType().equals("consensus")) {
       this.requestingConsensuses.remove(nickname);
       if (response.getResponseCode() == 200) {
-        List<RelayNetworkStatusConsensus> parsedConsensuses =
-            RelayNetworkStatusConsensusImpl.parseConsensuses(
-            response.getResponseBytes());
-        List<Descriptor> parsedDescriptors =
-            new ArrayList<Descriptor>(parsedConsensuses);
-        response.setDescriptors(parsedDescriptors);
         if (this.includeCurrentReferencedVotes) {
           /* TODO Only add votes if the consensus is not older than one
            * hour.  Or does that make no sense? */
-          for (RelayNetworkStatusConsensus parsedConsensus :
-              parsedConsensuses) {
+          for (Descriptor parsedDescriptor : response.getDescriptors()) {
+            if (!(parsedDescriptor instanceof
+                RelayNetworkStatusConsensus)) {
+              continue;
+            }
+            RelayNetworkStatusConsensus parsedConsensus =
+                (RelayNetworkStatusConsensus) parsedDescriptor;
             for (DirSourceEntry dirSource :
                 parsedConsensus.getDirSourceEntries().values()) {
               String identity = dirSource.getIdentity();
@@ -226,14 +225,7 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
       }
     } else if (response.getDescriptorType().equals("vote")) {
       String requestedVote = requestingVotes.remove(nickname);
-      if (response.getResponseCode() == 200) {
-        List<RelayNetworkStatusVote> parsedVotes =
-            RelayNetworkStatusVoteImpl.parseVotes(
-            response.getResponseBytes());
-        List<Descriptor> parsedDescriptors =
-            new ArrayList<Descriptor>(parsedVotes);
-        response.setDescriptors(parsedDescriptors);
-      } else {
+      if (response.getResponseCode() != 200) {
         this.missingVotes.add(requestedVote);
       }
     }

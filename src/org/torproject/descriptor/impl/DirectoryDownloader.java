@@ -66,8 +66,11 @@ public class DirectoryDownloader implements Runnable {
             byte[] responseBytes = baos.toByteArray();
             request.setResponseBytes(responseBytes);
             request.setRequestEnd(System.currentTimeMillis());
+            request.setDescriptors(DescriptorImpl.
+                parseRelayOrBridgeDescriptors(responseBytes, null));
           }
-        } catch (IOException e) {
+        } catch (Exception e) {
+          request.setException(e);
           /* Stop downloading from this directory if there are any
            * problems, e.g., refused connections. */
           keepRunning = false;
@@ -83,6 +86,9 @@ public class DirectoryDownloader implements Runnable {
   }
 
   /* Interrupt a download request if it takes longer than a given time. */
+  /* TODO Also look at URLConnection.setConnectTimeout() and
+   * URLConnection.setReadTimeout() instead of implementing this
+   * ourselves. */
   private static class RequestTimeout implements Runnable {
     private long timeoutMillis;
     private Thread downloaderThread;

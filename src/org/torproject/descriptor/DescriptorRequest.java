@@ -15,6 +15,10 @@ public interface DescriptorRequest {
    * previously configured. */
   public String getDirectoryNickname();
 
+  /* Return the first exception that was thrown when making this request
+   * or parsing the response, or null if no exception was thrown. */
+  public Exception getException();
+
   /* Return the response code that the directory mirror or authority
    * returned. */
   public int getResponseCode();

@@ -19,6 +19,9 @@ public abstract class DescriptorImpl implements Descriptor {
       byte[] rawDescriptorBytes, String fileName)
       throws DescriptorParseException {
     List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
+    if (rawDescriptorBytes == null) {
+      return parsedDescriptors;
+    }
     byte[] first100Chars = new byte[Math.min(100,
         rawDescriptorBytes.length)];
     System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,

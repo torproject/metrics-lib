@@ -87,5 +87,13 @@ public class DescriptorRequestImpl implements DescriptorRequest {
   public List<Descriptor> getDescriptors() {
     return this.descriptors;
   }
+
+  private Exception exception;
+  protected void setException(Exception exception) {
+    this.exception = exception;
+  }
+  public Exception getException() {
+    return this.exception;
+  }
 }
 
