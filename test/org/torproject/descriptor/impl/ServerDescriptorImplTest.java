@@ -516,6 +516,7 @@ public class ServerDescriptorImplTest {
   public void testUptimeOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithUptimeLine("opt uptime 48");
+    assertEquals(48, (int) descriptor.getUptime());
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -615,8 +616,7 @@ public class ServerDescriptorImplTest {
 
   @Test()
   public void testOnionKeyOpt() throws DescriptorParseException {
-    ServerDescriptor descriptor = DescriptorBuilder.
-        createWithOnionKeyLines("opt onion-key\n"
+    DescriptorBuilder.createWithOnionKeyLines("opt onion-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"
         + "MIGJAoGBAKM+iiHhO6eHsvd6Xjws9z9EQB1V/Bpuy5ciGJ1U4V9SeiKooSo5Bp"
         + "PL\no3XT+6PIgzl3R6uycjS3Ejk47vLEJdcVTm/VG6E0ppu3olIynCI4QryfCE"
@@ -627,8 +627,7 @@ public class ServerDescriptorImplTest {
 
   @Test()
   public void testSigningKeyOpt() throws DescriptorParseException {
-    ServerDescriptor descriptor = DescriptorBuilder.
-        createWithSigningKeyLines("opt signing-key\n"
+    DescriptorBuilder.createWithSigningKeyLines("opt signing-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"
         + "MIGJAoGBALMm3r3QDh482Ewe6Ub9wvRIfmEkoNX6q5cEAtQRNHSDcNx41gjELb"
         + "cl\nEniVMParBYACKfOxkS+mTTnIRDKVNEJTsDOwryNrc4X9JnPc/nn6ymYPiN"
@@ -946,9 +945,8 @@ public class ServerDescriptorImplTest {
 
   @Test(expected = DescriptorParseException.class)
   public void testWriteHistoryNoS() throws DescriptorParseException {
-    ServerDescriptor descriptor = DescriptorBuilder.
-        createWithWriteHistoryLine("write-history 2012-01-01 03:51:44 "
-        + "(900 ");
+    DescriptorBuilder.createWithWriteHistoryLine(
+        "write-history 2012-01-01 03:51:44 (900 ");
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -989,16 +987,15 @@ public class ServerDescriptorImplTest {
     assertTrue(bandwidthValues.isEmpty());
   }
 
-  /* TODO There are some old server descriptors with " read-history"
+  /* TODO There are some old server descriptors with "read-history  "
    * lines.  Find out if these were spec-compliant and if other lines may
    * start with leading spaces, too. */
   @Test(expected = DescriptorParseException.class)
   public void testReadHistoryLeadingSpace()
       throws DescriptorParseException {
-    String readHistoryLine = " read-history 2012-01-01 03:51:44 (900 s) "
+    String readHistoryLine = "read-history  2012-01-01 03:51:44 (900 s) "
         + "4268032,139264,7797760,1415168";
-    ServerDescriptor descriptor = DescriptorBuilder.
-        createWithReadHistoryLine(readHistoryLine);
+    DescriptorBuilder.createWithReadHistoryLine(readHistoryLine);
   }
 
   @Test()
@@ -1057,7 +1054,7 @@ public class ServerDescriptorImplTest {
   public void testAllowSingleHopExitsOpt()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
-        createWithCachesExtraInfoLine("opt allow-single-hop-exits");
+        createWithAllowSingleHopExitsLine("opt allow-single-hop-exits");
     assertTrue(descriptor.getAllowSingleHopExits());
   }
 
@@ -1065,14 +1062,14 @@ public class ServerDescriptorImplTest {
   public void testAllowSingleHopExitsNoSpace()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
-        createWithCachesExtraInfoLine("allow-single-hop-exits");
+        createWithAllowSingleHopExitsLine("allow-single-hop-exits");
     assertTrue(descriptor.getAllowSingleHopExits());
   }
 
   @Test(expected = DescriptorParseException.class)
   public void testAllowSingleHopExitsTrue()
       throws DescriptorParseException {
-    DescriptorBuilder.createWithCachesExtraInfoLine(
+    DescriptorBuilder.createWithAllowSingleHopExitsLine(
         "allow-single-hop-exits true");
   }
 }

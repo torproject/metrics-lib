@@ -915,6 +915,12 @@ public class RelayNetworkStatusConsensusImplTest {
   }
 
   @Test(expected = DescriptorParseException.class)
+  public void testDirSourceNicknameTooLong()
+      throws DescriptorParseException {
+    DirSourceBuilder.createWithNickname("gabelmooisfinebutthisistoolong");
+  }
+
+  @Test(expected = DescriptorParseException.class)
   public void testDirSourceIdentityTooShort()
       throws DescriptorParseException {
     DirSourceBuilder.createWithIdentity("ED03BB616EB2F60BEC8015111");
