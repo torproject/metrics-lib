@@ -45,7 +45,7 @@
         <fileset dir="${libs}"/>
       </classpath>
     </javac>
-    <junit haltonfailure="true" printsummary="off">
+    <junit fork="true" haltonfailure="true" printsummary="off">
       <classpath refid="classpath"/>
       <formatter type="plain" usefile="false"/>
       <batchtest>
