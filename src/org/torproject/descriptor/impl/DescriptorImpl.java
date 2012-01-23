@@ -32,7 +32,7 @@ public abstract class DescriptorImpl implements Descriptor {
       if (firstLines.contains("\nvote-status consensus\n")) {
         parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl.
             parseConsensuses(rawDescriptorBytes));
-      } else if (firstLines.contains("\nvote-status consensus\n")) {
+      } else if (firstLines.contains("\nvote-status vote\n")) {
         parsedDescriptors.addAll(RelayNetworkStatusVoteImpl.
             parseVotes(rawDescriptorBytes));
       } else {
