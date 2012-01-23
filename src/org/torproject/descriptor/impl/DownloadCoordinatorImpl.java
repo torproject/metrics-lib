@@ -2,11 +2,9 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -15,7 +13,6 @@ import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorRequest;
 import org.torproject.descriptor.DirSourceEntry;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
-import org.torproject.descriptor.RelayNetworkStatusVote;
 
 /* TODO This whole download logic is a mess and needs a cleanup. */
 public class DownloadCoordinatorImpl implements DownloadCoordinator {
