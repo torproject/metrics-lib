@@ -18,13 +18,6 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     this.setPublishedMillisFromFileName(fileName);
   }
 
-  private static SimpleDateFormat fileNameFormat = new SimpleDateFormat(
-      "yyyyMMdd-HHmmss");
-  static {
-    fileNameFormat.setLenient(false);
-    fileNameFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-  }
-
   private void setPublishedMillisFromFileName(String fileName)
       throws DescriptorParseException {
     if (fileName.length() == 
@@ -33,6 +26,10 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
       String publishedString = fileName.substring(0,
           "yyyyMMdd-HHmmss".length());
       try {
+        SimpleDateFormat fileNameFormat = new SimpleDateFormat(
+            "yyyyMMdd-HHmmss");
+        fileNameFormat.setLenient(false);
+        fileNameFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         this.publishedMillis = fileNameFormat.parse(publishedString).
             getTime();
       } catch (ParseException e) {

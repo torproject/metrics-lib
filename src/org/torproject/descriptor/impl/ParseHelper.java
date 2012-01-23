@@ -105,12 +105,6 @@ public class ParseHelper {
     return exitPattern;
   }
 
-  private static SimpleDateFormat dateTimeFormat = new SimpleDateFormat(
-      "yyyy-MM-dd HH:mm:ss");
-  static {
-    dateTimeFormat.setLenient(false);
-    dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-  }
   public static long parseTimestampAtIndex(String line, String[] parts,
       int dateIndex, int timeIndex) throws DescriptorParseException {
     if (dateIndex >= parts.length || timeIndex >= parts.length) {
@@ -119,6 +113,10 @@ public class ParseHelper {
     }
     long result = -1L;
     try {
+      SimpleDateFormat dateTimeFormat = new SimpleDateFormat(
+          "yyyy-MM-dd HH:mm:ss");
+      dateTimeFormat.setLenient(false);
+      dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
       result = dateTimeFormat.parse(
           parts[dateIndex] + " " + parts[timeIndex]).getTime();
     } catch (ParseException e) {
