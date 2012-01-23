@@ -193,18 +193,32 @@ public class RelayDescriptorDownloaderImpl
         + "descriptors is not implemented yet.");
   }
 
-  private long requestTimeoutMillis = 60L * 1000L;
-  public void setRequestTimeout(long requestTimeoutMillis) {
+  private long readTimeoutMillis = 60L * 1000L;
+  public void setReadTimeout(long readTimeoutMillis) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
           + "after starting to download.");
     }
-    if (requestTimeoutMillis < 0L) {
-      throw new IllegalArgumentException("Request timeout value "
-          + String.valueOf(requestTimeoutMillis) + " may not be "
+    if (readTimeoutMillis < 0L) {
+      throw new IllegalArgumentException("Read timeout value "
+          + String.valueOf(readTimeoutMillis) + " may not be "
           + "negative.");
     }
-    this.requestTimeoutMillis = requestTimeoutMillis;
+    this.readTimeoutMillis = readTimeoutMillis;
+  }
+
+  private long connectTimeoutMillis = 60L * 1000L;
+  public void setConnectTimeout(long connectTimeoutMillis) {
+    if (this.hasStartedDownloading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to download.");
+    }
+    if (connectTimeoutMillis < 0L) {
+      throw new IllegalArgumentException("Connect timeout value "
+          + String.valueOf(connectTimeoutMillis) + " may not be "
+          + "negative.");
+    }
+    this.connectTimeoutMillis = connectTimeoutMillis;
   }
 
   private long globalTimeoutMillis = 60L * 60L * 1000L;
@@ -231,8 +245,8 @@ public class RelayDescriptorDownloaderImpl
         new DownloadCoordinatorImpl(this.directoryAuthorities,
         this.directoryMirrors, this.downloadConsensus,
         this.downloadConsensusFromAllAuthorities, this.downloadVotes,
-        this.includeCurrentReferencedVotes, this.requestTimeoutMillis,
-        this.globalTimeoutMillis);
+        this.includeCurrentReferencedVotes, this.connectTimeoutMillis,
+        this.readTimeoutMillis, this.globalTimeoutMillis);
     Iterator<DescriptorRequest> descriptorQueue = downloadCoordinator.
         getDescriptorQueue();
     return descriptorQueue;

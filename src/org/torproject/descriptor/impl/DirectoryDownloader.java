@@ -27,9 +27,14 @@ public class DirectoryDownloader implements Runnable {
     this.downloadCoordinator = downloadCoordinator;
   }
 
-  private long requestTimeout;
-  protected void setRequestTimeout(long requestTimeout) {
-    this.requestTimeout = requestTimeout;
+  private long connectTimeout;
+  protected void setConnectTimeout(long connectTimeout) {
+    this.connectTimeout = connectTimeout;
+  }
+
+  private long readTimeout;
+  protected void setReadTimeout(long readTimeout) {
+    this.readTimeout = readTimeout;
   }
 
   public void run() {
@@ -41,13 +46,12 @@ public class DirectoryDownloader implements Runnable {
         String url = "http://" + this.ipPort
             + request.getRequestedResource();
         request.setRequestStart(System.currentTimeMillis());
-        Thread timeoutThread = new Thread(new RequestTimeout(
-            this.requestTimeout));
-        timeoutThread.start();
         try {
           URL u = new URL(url);
           HttpURLConnection huc =
               (HttpURLConnection) u.openConnection();
+          huc.setConnectTimeout((int) this.connectTimeout);
+          huc.setReadTimeout((int) this.readTimeout);
           huc.setRequestMethod("GET");
           huc.connect();
           int responseCode = huc.getResponseCode();
@@ -74,39 +78,11 @@ public class DirectoryDownloader implements Runnable {
            * problems, e.g., refused connections. */
           keepRunning = false;
         }
-        /* TODO How do we find out if we were interrupted, and by who?
-         * Set the request or global timeout flag in the response. */
-        timeoutThread.interrupt();
         this.downloadCoordinator.deliverResponse(request);
       } else {
         keepRunning = false;
       }
     } while (keepRunning);
-  }
-
-  /* Interrupt a download request if it takes longer than a given time. */
-  /* TODO Also look at URLConnection.setConnectTimeout() and
-   * URLConnection.setReadTimeout() instead of implementing this
-   * ourselves. */
-  private static class RequestTimeout implements Runnable {
-    private long timeoutMillis;
-    private Thread downloaderThread;
-    private RequestTimeout(long timeoutMillis) {
-      this.downloaderThread = Thread.currentThread();
-      this.timeoutMillis = timeoutMillis;
-    }
-    public void run() {
-      long started = System.currentTimeMillis(), sleep;
-      while ((sleep = started + this.timeoutMillis
-          - System.currentTimeMillis()) > 0L) {
-        try {
-          Thread.sleep(sleep);
-        } catch (InterruptedException e) {
-          return;
-        }
-      }
-      this.downloaderThread.interrupt();
-    }
   }
 }
 

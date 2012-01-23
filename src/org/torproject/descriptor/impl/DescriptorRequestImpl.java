@@ -70,9 +70,14 @@ public class DescriptorRequestImpl implements DescriptorRequest {
     return this.requestEnd;
   }
 
-  private boolean requestTimeoutHasExpired;
-  public boolean requestTimeoutHasExpired() {
-    return this.requestTimeoutHasExpired;
+  private boolean connectTimeoutHasExpired;
+  public boolean connectTimeoutHasExpired() {
+    return this.connectTimeoutHasExpired;
+  }
+
+  private boolean readTimeoutHasExpired;
+  public boolean readTimeoutHasExpired() {
+    return this.readTimeoutHasExpired;
   }
 
   private boolean globalTimeoutHasExpired;

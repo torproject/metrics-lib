@@ -29,12 +29,16 @@ public interface DescriptorRequest {
   /* Return the time in millis when this request ended. */
   public long getRequestEnd();
 
-  /* Return whether this request ended, because the request timeout
+  /* Return whether this request ended, because the connect timeout has
    * expired. */
-  public boolean requestTimeoutHasExpired();
+  public boolean connectTimeoutHasExpired();
+
+  /* Return whether this request ended, because the read timeout has
+   * expired. */
+  public boolean readTimeoutHasExpired();
 
   /* Return whether this request ended, because the global timeout for all
-   * requests expired. */
+   * requests has expired. */
   public boolean globalTimeoutHasExpired();
 
   /* Return the descriptors contained in the reply. */

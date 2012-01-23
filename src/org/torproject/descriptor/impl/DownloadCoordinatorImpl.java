@@ -27,7 +27,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
   private SortedMap<String, DirectoryDownloader> directoryMirrors;
   private boolean downloadConsensusFromAllAuthorities;
   private boolean includeCurrentReferencedVotes;
-  private long requestTimeoutMillis;
+  private long connectTimeoutMillis;
+  private long readTimeoutMillis;
   private long globalTimeoutMillis;
 
   protected DownloadCoordinatorImpl(
@@ -36,7 +37,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
       boolean downloadConsensus,
       boolean downloadConsensusFromAllAuthorities,
       Set<String> downloadVotes, boolean includeCurrentReferencedVotes,
-      long requestTimeoutMillis, long globalTimeoutMillis) {
+      long connectTimeoutMillis, long readTimeoutMillis,
+      long globalTimeoutMillis) {
     this.directoryAuthorities = directoryAuthorities;
     this.directoryMirrors = directoryMirrors;
     this.missingConsensus = downloadConsensus;
@@ -44,7 +46,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
         downloadConsensusFromAllAuthorities;
     this.missingVotes = downloadVotes;
     this.includeCurrentReferencedVotes = includeCurrentReferencedVotes;
-    this.requestTimeoutMillis = requestTimeoutMillis;
+    this.connectTimeoutMillis = connectTimeoutMillis;
+    this.readTimeoutMillis = readTimeoutMillis;
     this.globalTimeoutMillis = globalTimeoutMillis;
     if (this.directoryMirrors.isEmpty() &&
         this.directoryAuthorities.isEmpty()) {
@@ -59,13 +62,15 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
       for (DirectoryDownloader directoryMirror :
           this.directoryMirrors.values()) {
         directoryMirror.setDownloadCoordinator(this);
-        directoryMirror.setRequestTimeout(this.requestTimeoutMillis);
+        directoryMirror.setConnectTimeout(this.connectTimeoutMillis);
+        directoryMirror.setReadTimeout(this.readTimeoutMillis);
         new Thread(directoryMirror).start();
       }
       for (DirectoryDownloader directoryAuthority :
           this.directoryAuthorities.values()) {
         directoryAuthority.setDownloadCoordinator(this);
-        directoryAuthority.setRequestTimeout(this.requestTimeoutMillis);
+        directoryAuthority.setConnectTimeout(this.connectTimeoutMillis);
+        directoryAuthority.setReadTimeout(this.readTimeoutMillis);
         new Thread(directoryAuthority).start();
       }
     }

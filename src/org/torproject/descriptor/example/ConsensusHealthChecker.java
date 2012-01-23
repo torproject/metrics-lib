@@ -38,9 +38,10 @@ public class ConsensusHealthChecker {
     downloader.setIncludeCurrentConsensusFromAllDirectoryAuthorities();
     downloader.setIncludeCurrentReferencedVotes();
 
-    /* Set a request timeout of 1 minute and a global timeout of 10
-     * minutes to avoid being blocked forever by a slow download. */
-    downloader.setRequestTimeout(60L * 1000L);
+    /* Set connect and read timeouts of 1 minute each and a global timeout
+     * of 10 minutes to avoid being blocked forever by a slow download. */
+    downloader.setConnectTimeout(60L * 1000L);
+    downloader.setReadTimeout(60L * 1000L);
     downloader.setGlobalTimeout(10L * 60L * 1000L);
 
     /* Run the previously configured downloads and iterate over the
@@ -60,7 +61,8 @@ public class ConsensusHealthChecker {
             + "more consensuses and/or votes and cannot make a good "
             + "statement about the consensus health.  Exiting.");
         return;
-      } else if (request.requestTimeoutHasExpired()) {
+      } else if (request.connectTimeoutHasExpired() ||
+          request.readTimeoutHasExpired()) {
         System.out.println("The request to directory authority "
             + request.getDirectoryNickname() + " to download the "
             + "descriptor(s) at " + request.getRequestUrl() + " has "

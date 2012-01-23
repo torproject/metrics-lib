@@ -74,11 +74,17 @@ public interface RelayDescriptorDownloader {
    * descriptors. */
   public void setExcludeExtraInfoDescriptors(Set<String> identifiers);
 
-  /* Define a request timeout for a single request.  If a timeout expires,
+  /* Define a connect timeout for a single request.  If a timeout expires,
    * no further requests will be sent to the directory authority or
-   * mirror.  Setting this value to 0 disables the request timeout.
+   * mirror.  Setting this value to 0 disables the connect timeout.
    * Default value is 1 minute (60 * 1000). */
-  public void setRequestTimeout(long requestTimeoutMillis);
+  public void setConnectTimeout(long connectTimeoutMillis);
+
+  /* Define a read timeout for a single request.  If a timeout expires,
+   * no further requests will be sent to the directory authority or
+   * mirror.  Setting this value to 0 disables the read timeout.
+   * Default value is 1 minute (60 * 1000). */
+  public void setReadTimeout(long readTimeoutMillis);
 
   /* Define a global timeout for all requests.  Once this timeout expires,
    * all running requests are aborted and no further requests are made.

@@ -99,10 +99,11 @@ public class MetricsRelayDescriptorAggregator {
     downloader.setExcludeExtraInfoDescriptors(
         knownExtraInfoDescriptorIdentifiers.keySet());
 
-    /* Set a request timeout of 2 minutes and a global timeout of 1 hour
-     * to avoid being blocked forever by a slow download, but also to
-     * avoid giving up too quickly. */
-    downloader.setRequestTimeout(2L * 60L * 1000L);
+    /* Set connect and read timeouts of 2 minutes each and a global
+     * timeout of 1 hour to avoid being blocked forever by a slow
+     * download, but also to avoid giving up too quickly. */
+    downloader.setConnectTimeout(2L * 60L * 1000L);
+    downloader.setReadTimeout(2L * 60L * 1000L);
     downloader.setGlobalTimeout(60L * 60L * 1000L);
 
     /* Download descriptors and process them. */
