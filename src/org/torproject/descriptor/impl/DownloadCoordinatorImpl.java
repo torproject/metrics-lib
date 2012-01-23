@@ -229,16 +229,30 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     if (response.getRequestEnd() != 0L) {
       this.descriptorQueue.add(response);
     }
-    if ((!this.missingConsensus ||
-        (this.downloadConsensusFromAllAuthorities &&
-        this.requestedConsensuses.containsAll(
-        this.directoryAuthorities.keySet()) &&
-        this.requestingConsensuses.isEmpty())) &&
-        this.missingVotes.isEmpty() &&
-        this.requestingVotes.isEmpty()) {
-      /* TODO This logic may be somewhat broken.  We don't wait for all
-       * consensus requests to complete or fail, which results in adding
-       * (failed) requests to the queue when we think we're done. */
+    boolean doneDownloading = true;
+    if ((this.missingConsensus ||
+        this.downloadConsensusFromAllAuthorities) &&
+        (!this.requestedConsensuses.containsAll(
+        this.directoryAuthorities.keySet()) ||
+        !this.requestingConsensuses.isEmpty())) {
+      doneDownloading = false;
+    }
+    if (!this.missingVotes.isEmpty()) {
+      if (!this.requestingVotes.isEmpty() ||
+          !this.requestedVotes.keySet().containsAll(
+          this.directoryAuthorities.keySet())) {
+        doneDownloading = false;
+      } else {
+        for (String missingVote : this.missingVotes) {
+          for (Set<String> reqVotes : this.requestedVotes.values()) {
+            if (!reqVotes.contains(missingVote)) {
+              doneDownloading = false;
+            }
+          }
+        }
+      }
+    }
+    if (doneDownloading) {
       this.hasFinishedDownloading = true;
       this.globalTimerThread.interrupt();
       this.descriptorQueue.setOutOfDescriptors();
