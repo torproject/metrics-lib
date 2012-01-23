@@ -22,6 +22,11 @@ public interface ServerDescriptor extends Descriptor {
   /* Return the relay's directory port. */
   public int getDirPort();
 
+  /* Return the relay's additional OR addresses and ports contained in
+   * or-address lines, or an empty list if the descriptor doesn't contain
+   * such lines. */
+  public List<String> getOrAddresses();
+
   /* Return the average bandwidth in bytes per second that the relay is
    * willing to sustain over long periods. */
   public int getBandwidthRate();

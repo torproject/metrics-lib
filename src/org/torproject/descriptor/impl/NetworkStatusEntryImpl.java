@@ -5,6 +5,8 @@ package org.torproject.descriptor.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -59,7 +61,9 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
         String[] parts = !line.startsWith("opt ") ? line.split(" ") :
             line.substring("opt ".length()).split(" ");
         String keyword = parts[0];
-        if (keyword.equals("s")) {
+        if (keyword.equals("a")) {
+          this.parseALine(line, parts);
+        } else if (keyword.equals("s")) {
           this.parseSLine(line, parts);
         } else if (keyword.equals("v")) {
           this.parseVLine(line, parts);
@@ -100,6 +104,17 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.address = ParseHelper.parseIpv4Address(line, parts[6]);
     this.orPort = ParseHelper.parsePort(line, parts[7]);
     this.dirPort = ParseHelper.parsePort(line, parts[8]);
+  }
+
+  private void parseALine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 2) {
+      throw new DescriptorParseException("Invalid line '" + line + "' in "
+          + "status entry.");
+    }
+    /* TODO Add more checks. */
+    /* TODO Add tests. */
+    this.orAddresses.add(parts[1]);
   }
 
   private void parseSLine(String line, String[] parts)
@@ -210,6 +225,11 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private int dirPort;
   public int getDirPort() {
     return this.dirPort;
+  }
+
+  private List<String> orAddresses = new ArrayList<String>();
+  public List<String> getOrAddresses() {
+    return new ArrayList<String>(this.orAddresses);
   }
 
   private SortedSet<String> flags;

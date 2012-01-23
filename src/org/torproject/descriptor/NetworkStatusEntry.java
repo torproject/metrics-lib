@@ -2,6 +2,7 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor;
 
+import java.util.List;
 import java.util.SortedSet;
 
 public interface NetworkStatusEntry {
@@ -29,6 +30,11 @@ public interface NetworkStatusEntry {
 
   /* Return the DirPort. */
   public int getDirPort();
+
+  /* Return the relay's additional OR addresses and ports contained in
+   * or-address lines, or an empty list if the network status doesn't
+   * contain such lines. */
+  public List<String> getOrAddresses();
 
   /* Return the relay flags or null if the status entry didn't contain any
    * relay flags. */

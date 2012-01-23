@@ -78,6 +78,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
         String keyword = partsNoOpt[0];
         if (keyword.equals("router")) {
           this.parseRouterLine(line, lineNoOpt, partsNoOpt);
+        } else if (keyword.equals("or-address")) {
+          this.parseOrAddressLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("bandwidth")) {
           this.parseBandwidthLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("platform")) {
@@ -152,6 +154,17 @@ public class ServerDescriptorImpl extends DescriptorImpl
     this.orPort = ParseHelper.parsePort(line, partsNoOpt[3]);
     this.socksPort = ParseHelper.parsePort(line, partsNoOpt[4]);
     this.dirPort = ParseHelper.parsePort(line, partsNoOpt[5]);
+  }
+
+  private void parseOrAddressLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Wrong number of values in line "
+          + "'" + line + "'.");
+    }
+    /* TODO Add more checks. */
+    /* TODO Add tests. */
+    this.orAddresses.add(partsNoOpt[1]);
   }
 
   private void parseBandwidthLine(String line, String lineNoOpt,
@@ -430,6 +443,11 @@ public class ServerDescriptorImpl extends DescriptorImpl
   private int dirPort;
   public int getDirPort() {
     return this.dirPort;
+  }
+
+  private List<String> orAddresses = new ArrayList<String>();
+  public List<String> getOrAddresses() {
+    return new ArrayList<String>(this.orAddresses);
   }
 
   private int bandwidthRate;
