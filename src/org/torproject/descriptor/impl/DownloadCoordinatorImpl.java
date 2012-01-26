@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorRequest;
@@ -23,6 +25,7 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     return this.descriptorQueue;
   }
 
+  private SortedSet<String> runningDirectories;
   private SortedMap<String, DirectoryDownloader> directoryAuthorities;
   private SortedMap<String, DirectoryDownloader> directoryMirrors;
   private boolean downloadConsensusFromAllAuthorities;
@@ -41,6 +44,9 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
       long globalTimeoutMillis) {
     this.directoryAuthorities = directoryAuthorities;
     this.directoryMirrors = directoryMirrors;
+    this.runningDirectories = new TreeSet<String>();
+    this.runningDirectories.addAll(directoryAuthorities.keySet());
+    this.runningDirectories.addAll(directoryMirrors.keySet());
     this.missingConsensus = downloadConsensus;
     this.downloadConsensusFromAllAuthorities =
         downloadConsensusFromAllAuthorities;
@@ -189,6 +195,9 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
   public synchronized void deliverResponse(
       DescriptorRequestImpl response) {
     String nickname = response.getDirectoryNickname();
+    if (response.getException() != null) {
+      this.runningDirectories.remove(nickname);
+    }
     if (response.getDescriptorType().equals("consensus")) {
       this.requestingConsensuses.remove(nickname);
       if (response.getResponseCode() == 200) {
@@ -238,21 +247,22 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     if ((this.missingConsensus ||
         this.downloadConsensusFromAllAuthorities) &&
         (!this.requestedConsensuses.containsAll(
-        this.directoryAuthorities.keySet()) ||
+        this.runningDirectories) ||
         !this.requestingConsensuses.isEmpty())) {
       doneDownloading = false;
     }
-    if (!this.missingVotes.isEmpty()) {
-      if (!this.requestingVotes.isEmpty() ||
-          !this.requestedVotes.keySet().containsAll(
-          this.directoryAuthorities.keySet())) {
-        doneDownloading = false;
-      } else {
-        for (String missingVote : this.missingVotes) {
-          for (Set<String> reqVotes : this.requestedVotes.values()) {
-            if (!reqVotes.contains(missingVote)) {
-              doneDownloading = false;
-            }
+    if (!this.requestingVotes.isEmpty()) {
+      doneDownloading = false;
+    } else if (!this.requestedVotes.keySet().containsAll(
+        this.runningDirectories)) {
+      doneDownloading = false;
+    } else if (!this.missingVotes.isEmpty()) {
+      for (String missingVote : this.missingVotes) {
+        for (String runningDirectory : this.runningDirectories) {
+          Set<String> reqVotes = this.requestedVotes.get(
+              runningDirectory);
+          if (!reqVotes.contains(missingVote)) {
+            doneDownloading = false;
           }
         }
       }
