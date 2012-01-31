@@ -22,29 +22,26 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     implements RelayNetworkStatusVote {
 
   protected static List<RelayNetworkStatusVote> parseVotes(
-      byte[] votesBytes) {
+      byte[] votesBytes, boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
     List<RelayNetworkStatusVote> parsedVotes =
         new ArrayList<RelayNetworkStatusVote>();
     List<byte[]> splitVotesBytes =
         DescriptorImpl.splitRawDescriptorBytes(votesBytes,
         "network-status-version 3");
-    try {
-      for (byte[] voteBytes : splitVotesBytes) {
-        RelayNetworkStatusVote parsedVote =
-            new RelayNetworkStatusVoteImpl(voteBytes);
-        parsedVotes.add(parsedVote);
-      }
-    } catch (DescriptorParseException e) {
-      /* TODO Handle this error somehow. */
-      System.err.println("Failed to parse vote.  Skipping.");
-      e.printStackTrace();
+    for (byte[] voteBytes : splitVotesBytes) {
+      RelayNetworkStatusVote parsedVote =
+          new RelayNetworkStatusVoteImpl(voteBytes,
+              failUnrecognizedDescriptorLines);
+      parsedVotes.add(parsedVote);
     }
     return parsedVotes;
   }
 
-  protected RelayNetworkStatusVoteImpl(byte[] voteBytes)
+  protected RelayNetworkStatusVoteImpl(byte[] voteBytes,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(voteBytes);
+    super(voteBytes, failUnrecognizedDescriptorLines);
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "vote-status,consensus-methods,published,valid-after,fresh-until,"
         + "valid-until,voting-delay,known-flags,dir-source,"
@@ -93,12 +90,14 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           this.parseKnownFlagsLine(line, parts);
         } else if (keyword.equals("params")) {
           this.parseParamsLine(line, parts);
-        } else {
-          /* TODO Is throwing an exception the right thing to do here?
-           * This is probably fine for development, but once the library
-           * is in production use, this seems annoying. */
+        } else if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '" + line
-              + "'.");
+              + "' in vote.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
+          }
+          this.unrecognizedLines.add(line);
         }
       }
     } catch (IOException e) {
@@ -271,11 +270,15 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         } else if (line.startsWith("-----END")) {
           skipCrypto = false;
         } else if (!skipCrypto) {
-          /* TODO Is throwing an exception the right thing to do here?
-           * This is probably fine for development, but once the library
-           * is in production use, this seems annoying. */
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "'.");
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in vote.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<String>();
+            }
+            this.unrecognizedLines.add(line);
+          }
         }
       }
     } catch (IOException e) {
@@ -366,8 +369,30 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         parts, 1, 2);
   }
 
-  protected void parseFooter(byte[] footerBytes) {
-    /* There is nothing in the footer that we'd want to parse. */
+  protected void parseFooter(byte[] footerBytes)
+      throws DescriptorParseException {
+    try {
+      BufferedReader br = new BufferedReader(new StringReader(
+          new String(footerBytes)));
+      String line;
+      while ((line = br.readLine()) != null) {
+        if (!line.equals("directory-footer")) {
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in vote.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<String>();
+            }
+            this.unrecognizedLines.add(line);
+          }
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("Internal error: Ran into an "
+          + "IOException while parsing a String in memory.  Something's "
+          + "really wrong.", e);
+    }
   }
 
   private String nickname;

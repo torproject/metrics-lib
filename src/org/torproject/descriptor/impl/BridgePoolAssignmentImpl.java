@@ -20,29 +20,26 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
     implements BridgePoolAssignment {
 
   protected static List<BridgePoolAssignment> parseDescriptors(
-      byte[] descriptorsBytes) {
+      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
     List<BridgePoolAssignment> parsedDescriptors =
         new ArrayList<BridgePoolAssignment>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "bridge-pool-assignment ");
-    try {
-      for (byte[] descriptorBytes : splitDescriptorsBytes) {
-        BridgePoolAssignment parsedDescriptor =
-            new BridgePoolAssignmentImpl(descriptorBytes);
-        parsedDescriptors.add(parsedDescriptor);
-      }
-    } catch (DescriptorParseException e) {
-      /* TODO Handle this error somehow. */
-      System.err.println("Failed to parse descriptor.  Skipping.");
-      e.printStackTrace();
+    for (byte[] descriptorBytes : splitDescriptorsBytes) {
+      BridgePoolAssignment parsedDescriptor =
+          new BridgePoolAssignmentImpl(descriptorBytes,
+              failUnrecognizedDescriptorLines);
+      parsedDescriptors.add(parsedDescriptor);
     }
     return parsedDescriptors;
   }
 
-  protected BridgePoolAssignmentImpl(byte[] descriptorBytes)
+  protected BridgePoolAssignmentImpl(byte[] descriptorBytes,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes);
+    super(descriptorBytes, failUnrecognizedDescriptorLines);
     this.parseDescriptorBytes();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(
         new String[] { "bridge-pool-assignment" }));
@@ -81,7 +78,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
         parts, 1, 2);
   }
 
-  private void parseBridgeLine(String line) 
+  private void parseBridgeLine(String line)
       throws DescriptorParseException {
     String[] parts = line.split(" ");
     if (parts.length < 2) {

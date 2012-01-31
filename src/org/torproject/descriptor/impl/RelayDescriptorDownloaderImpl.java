@@ -235,6 +235,15 @@ public class RelayDescriptorDownloaderImpl
     this.globalTimeoutMillis = globalTimeoutMillis;
   }
 
+  private boolean failUnrecognizedDescriptorLines = false;
+  public void setFailUnrecognizedDescriptorLines() {
+    if (this.hasStartedDownloading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to download.");
+    }
+    this.failUnrecognizedDescriptorLines = true;
+  }
+
   public Iterator<DescriptorRequest> downloadDescriptors() {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Initiating downloads is only "
@@ -246,7 +255,8 @@ public class RelayDescriptorDownloaderImpl
         this.directoryMirrors, this.downloadConsensus,
         this.downloadConsensusFromAllAuthorities, this.downloadVotes,
         this.includeCurrentReferencedVotes, this.connectTimeoutMillis,
-        this.readTimeoutMillis, this.globalTimeoutMillis);
+        this.readTimeoutMillis, this.globalTimeoutMillis,
+        this.failUnrecognizedDescriptorLines);
     Iterator<DescriptorRequest> descriptorQueue = downloadCoordinator.
         getDescriptorQueue();
     return descriptorQueue;

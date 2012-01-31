@@ -13,14 +13,15 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     implements BridgeNetworkStatus {
 
   protected BridgeNetworkStatusImpl(byte[] statusBytes,
-      String fileName) throws DescriptorParseException {
-    super(statusBytes);
+      String fileName, boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
+    super(statusBytes, failUnrecognizedDescriptorLines);
     this.setPublishedMillisFromFileName(fileName);
   }
 
   private void setPublishedMillisFromFileName(String fileName)
       throws DescriptorParseException {
-    if (fileName.length() == 
+    if (fileName.length() ==
         "20000101-000000-4A0CCD2DDC7995083D73F5D667100C8A5831F16D".
         length()) {
       String publishedString = fileName.substring(0,
@@ -33,7 +34,7 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
         this.publishedMillis = fileNameFormat.parse(publishedString).
             getTime();
       } catch (ParseException e) {
-      } 
+      }
     }
     if (this.publishedMillis == 0L) {
       throw new DescriptorParseException("Unrecognized bridge network "

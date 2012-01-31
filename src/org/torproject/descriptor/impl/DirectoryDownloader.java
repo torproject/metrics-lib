@@ -37,6 +37,13 @@ public class DirectoryDownloader implements Runnable {
     this.readTimeout = readTimeout;
   }
 
+  private boolean failUnrecognizedDescriptorLines;
+  protected void setFailUnrecognizedDescriptorLines(
+      boolean failUnrecognizedDescriptorLines) {
+    this.failUnrecognizedDescriptorLines =
+        failUnrecognizedDescriptorLines;
+  }
+
   public void run() {
     boolean keepRunning = true;
     do {
@@ -70,7 +77,8 @@ public class DirectoryDownloader implements Runnable {
             request.setResponseBytes(responseBytes);
             request.setRequestEnd(System.currentTimeMillis());
             request.setDescriptors(DescriptorImpl.
-                parseRelayOrBridgeDescriptors(responseBytes, null));
+                parseRelayOrBridgeDescriptors(responseBytes, null,
+                this.failUnrecognizedDescriptorLines));
           }
         } catch (Exception e) {
           request.setException(e);

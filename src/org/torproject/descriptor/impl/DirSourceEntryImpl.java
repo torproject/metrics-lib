@@ -5,6 +5,8 @@ package org.torproject.descriptor.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -17,9 +19,20 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     return this.dirSourceEntryBytes;
   }
 
-  protected DirSourceEntryImpl(byte[] dirSourceEntryBytes)
+  private boolean failUnrecognizedDescriptorLines;
+  private List<String> unrecognizedLines;
+  protected List<String> getAndClearUnrecognizedLines() {
+    List<String> lines = this.unrecognizedLines;
+    this.unrecognizedLines = null;
+    return lines;
+  }
+
+  protected DirSourceEntryImpl(byte[] dirSourceEntryBytes,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     this.dirSourceEntryBytes = dirSourceEntryBytes;
+    this.failUnrecognizedDescriptorLines =
+        failUnrecognizedDescriptorLines;
     this.initializeKeywords();
     this.parseDirSourceEntryBytes();
     this.checkKeywords();
@@ -65,6 +78,7 @@ public class DirSourceEntryImpl implements DirSourceEntry {
       BufferedReader br = new BufferedReader(new StringReader(
           new String(this.dirSourceEntryBytes)));
       String line;
+      boolean skipCrypto = false;
       while ((line = br.readLine()) != null) {
         if (line.startsWith("dir-source")) {
           this.parseDirSourceLine(line);
@@ -72,10 +86,20 @@ public class DirSourceEntryImpl implements DirSourceEntry {
           this.parseContactLine(line);
         } else if (line.startsWith("vote-digest")) {
           this.parseVoteDigestLine(line);
-        } else {
-          /* TODO Should we really throw an exception here? */
-          throw new DescriptorParseException("Unknown line '" + line
-              + "' in dir-source entry.");
+        } else if (line.startsWith("-----BEGIN")) {
+          skipCrypto = true;
+        } else if (line.startsWith("-----END")) {
+          skipCrypto = false;
+        } else if (!skipCrypto) {
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in dir-source entry.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<String>();
+            }
+            this.unrecognizedLines.add(line);
+          }
         }
       }
     } catch (IOException e) {
@@ -89,6 +113,9 @@ public class DirSourceEntryImpl implements DirSourceEntry {
       throws DescriptorParseException {
     this.parsedExactlyOnceKeyword("dir-source");
     String[] parts = line.split(" ");
+    if (parts.length != 7) {
+      throw new DescriptorParseException("Invalid line '" + line + "'.");
+    }
     String nickname = parts[1];
     if (nickname.endsWith("-legacy")) {
       nickname = nickname.substring(0, nickname.length()

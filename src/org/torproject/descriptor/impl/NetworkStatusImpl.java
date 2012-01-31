@@ -18,9 +18,10 @@ import org.torproject.descriptor.NetworkStatusEntry;
  * delegate the specific parts to the subclasses. */
 public abstract class NetworkStatusImpl extends DescriptorImpl {
 
-  protected NetworkStatusImpl(byte[] rawDescriptorBytes)
+  protected NetworkStatusImpl(byte[] rawDescriptorBytes,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(rawDescriptorBytes);
+    super(rawDescriptorBytes, failUnrecognizedDescriptorLines);
     this.splitAndParseParts(rawDescriptorBytes);
   }
 
@@ -161,17 +162,33 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   protected void parseDirSource(byte[] dirSourceBytes)
       throws DescriptorParseException {
-    DirSourceEntry dirSourceEntry = new DirSourceEntryImpl(
-        dirSourceBytes);
+    DirSourceEntryImpl dirSourceEntry = new DirSourceEntryImpl(
+        dirSourceBytes, this.failUnrecognizedDescriptorLines);
     this.dirSourceEntries.put(dirSourceEntry.getIdentity(),
         dirSourceEntry);
+    List<String> unrecognizedDirSourceLines = dirSourceEntry.
+        getAndClearUnrecognizedLines();
+    if (unrecognizedDirSourceLines != null) {
+      if (this.unrecognizedLines == null) {
+        this.unrecognizedLines = new ArrayList<String>();
+      }
+      this.unrecognizedLines.addAll(unrecognizedDirSourceLines);
+    }
   }
 
   protected void parseStatusEntry(byte[] statusEntryBytes)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
-        statusEntryBytes);
+        statusEntryBytes, this.failUnrecognizedDescriptorLines);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
+    List<String> unrecognizedDirSourceLines = statusEntry.
+        getAndClearUnrecognizedLines();
+    if (unrecognizedDirSourceLines != null) {
+      if (this.unrecognizedLines == null) {
+        this.unrecognizedLines = new ArrayList<String>();
+      }
+      this.unrecognizedLines.addAll(unrecognizedDirSourceLines);
+    }
   }
 
   protected abstract void parseFooter(byte[] footerBytes)
@@ -186,6 +203,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       BufferedReader br = new BufferedReader(new StringReader(
           new String(directorySignatureBytes)));
       String line;
+      boolean skipCrypto = false;
       while ((line = br.readLine()) != null) {
         if (line.startsWith("directory-signature ")) {
           String[] parts = line.split(" ", -1);
@@ -198,7 +216,20 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
           String signingKeyDigest = ParseHelper.parseTwentyByteHexString(
               line, parts[2]);
           this.directorySignatures.put(identity, signingKeyDigest);
-          break;
+        } else if (line.startsWith("-----BEGIN")) {
+          skipCrypto = true;
+        } else if (line.startsWith("-----END")) {
+          skipCrypto = false;
+        } else if (!skipCrypto) {
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in dir-source entry.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<String>();
+            }
+            this.unrecognizedLines.add(line);
+          }
         }
       }
     } catch (IOException e) {

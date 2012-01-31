@@ -22,29 +22,26 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     implements ExtraInfoDescriptor {
 
   protected static List<ExtraInfoDescriptor> parseDescriptors(
-      byte[] descriptorsBytes) {
+      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
     List<ExtraInfoDescriptor> parsedDescriptors =
         new ArrayList<ExtraInfoDescriptor>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "extra-info ");
-    try {
-      for (byte[] descriptorBytes : splitDescriptorsBytes) {
-        ExtraInfoDescriptor parsedDescriptor =
-            new ExtraInfoDescriptorImpl(descriptorBytes);
-        parsedDescriptors.add(parsedDescriptor);
-      }
-    } catch (DescriptorParseException e) {
-      /* TODO Handle this error somehow. */
-      System.err.println("Failed to parse descriptor.  Skipping.");
-      e.printStackTrace();
+    for (byte[] descriptorBytes : splitDescriptorsBytes) {
+      ExtraInfoDescriptor parsedDescriptor =
+          new ExtraInfoDescriptorImpl(descriptorBytes,
+              failUnrecognizedDescriptorLines);
+      parsedDescriptors.add(parsedDescriptor);
     }
     return parsedDescriptors;
   }
 
-  protected ExtraInfoDescriptorImpl(byte[] descriptorBytes)
+  protected ExtraInfoDescriptorImpl(byte[] descriptorBytes,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes);
+    super(descriptorBytes, failUnrecognizedDescriptorLines);
     this.parseDescriptorBytes();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "extra-info,published").split(",")));
@@ -159,13 +156,15 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         } else if (line.startsWith("-----END")) {
           skipCrypto = false;
         } else if (!skipCrypto) {
-          /* TODO Is throwing an exception the right thing to do here?
-           * This is probably fine for development, but once the library
-           * is in production use, this seems annoying.  In theory,
-           * dir-spec.txt says that unknown lines should be ignored.  This
-           * also applies to the other descriptors. */
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "'.");
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in extra-info descriptor.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<String>();
+            }
+            this.unrecognizedLines.add(line);
+          }
         }
       }
     } catch (IOException e) {

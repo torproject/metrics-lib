@@ -18,6 +18,13 @@ public interface RelayDescriptorReader {
    * last modified timestamp and the absolute path of a file. */
   public void setExcludeFiles(File historyFile);
 
+  /* Fail descriptor parsing when encountering an unrecognized line.  This
+   * is not set by default, because the Tor specifications allow for new
+   * lines to be added that shall be ignored by older Tor versions.  But
+   * some applications may want to handle unrecognized descriptor lines
+   * explicitly. */
+  public void setFailUnrecognizedDescriptorLines();
+
   /* Read the previously configured relay descriptors and make them
    * available via the returned blocking iterator.  Whenever the reader
    * runs out of descriptors and expects to provide more shortly after, it

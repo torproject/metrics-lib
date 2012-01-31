@@ -92,6 +92,13 @@ public interface RelayDescriptorDownloader {
    * hour (60 * 60 * 1000). */
   public void setGlobalTimeout(long globalTimeoutMillis);
 
+  /* Fail descriptor parsing when encountering an unrecognized line.  This
+   * is not set by default, because the Tor specifications allow for new
+   * lines to be added that shall be ignored by older Tor versions.  But
+   * some applications may want to handle unrecognized descriptor lines
+   * explicitly. */
+  public void setFailUnrecognizedDescriptorLines();
+
   /* Download the previously configured relay descriptors and make them
    * available via the returned blocking iterator.  Whenever the
    * downloader runs out of descriptors and expects to provide more

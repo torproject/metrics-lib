@@ -16,7 +16,8 @@ import org.torproject.descriptor.Descriptor;
 public abstract class DescriptorImpl implements Descriptor {
 
   protected static List<Descriptor> parseRelayOrBridgeDescriptors(
-      byte[] rawDescriptorBytes, String fileName)
+      byte[] rawDescriptorBytes, String fileName,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
     if (rawDescriptorBytes == null) {
@@ -31,10 +32,12 @@ public abstract class DescriptorImpl implements Descriptor {
         firstLines.contains("\nnetwork-status-version 3\n")) {
       if (firstLines.contains("\nvote-status consensus\n")) {
         parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl.
-            parseConsensuses(rawDescriptorBytes));
+            parseConsensuses(rawDescriptorBytes,
+            failUnrecognizedDescriptorLines));
       } else if (firstLines.contains("\nvote-status vote\n")) {
         parsedDescriptors.addAll(RelayNetworkStatusVoteImpl.
-            parseVotes(rawDescriptorBytes));
+            parseVotes(rawDescriptorBytes,
+            failUnrecognizedDescriptorLines));
       } else {
         throw new DescriptorParseException("Could not detect relay "
             + "network status type in descriptor starting with '"
@@ -42,19 +45,22 @@ public abstract class DescriptorImpl implements Descriptor {
       }
     } else if (firstLines.startsWith("r ")) {
       parsedDescriptors.add(new BridgeNetworkStatusImpl(
-          rawDescriptorBytes, fileName));
+          rawDescriptorBytes, fileName, failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("router ") ||
         firstLines.contains("\nrouter ")) {
       parsedDescriptors.addAll(ServerDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes));
+          parseDescriptors(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("extra-info ") ||
         firstLines.contains("\nextra-info ")) {
       parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes));
+          parseDescriptors(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("bridge-pool-assignment ") ||
         firstLines.contains("\nbridge-pool-assignment ")) {
       parsedDescriptors.addAll(BridgePoolAssignmentImpl.
-          parseDescriptors(rawDescriptorBytes));
+          parseDescriptors(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");
@@ -90,9 +96,20 @@ public abstract class DescriptorImpl implements Descriptor {
     return this.rawDescriptorBytes;
   }
 
-  protected DescriptorImpl(byte[] rawDescriptorBytes)
+  protected boolean failUnrecognizedDescriptorLines = false;
+
+  protected List<String> unrecognizedLines;
+  public List<String> getUnrecognizedLines() {
+    return this.unrecognizedLines == null ? new ArrayList<String>() :
+        new ArrayList<String>(this.unrecognizedLines);
+  }
+
+  protected DescriptorImpl(byte[] rawDescriptorBytes,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     this.rawDescriptorBytes = rawDescriptorBytes;
+    this.failUnrecognizedDescriptorLines =
+        failUnrecognizedDescriptorLines;
     this.countKeywords(rawDescriptorBytes);
   }
 

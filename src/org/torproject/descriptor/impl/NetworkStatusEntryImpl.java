@@ -20,9 +20,20 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     return this.statusEntryBytes;
   }
 
-  protected NetworkStatusEntryImpl(byte[] statusEntryBytes)
+  private boolean failUnrecognizedDescriptorLines;
+  private List<String> unrecognizedLines;
+  protected List<String> getAndClearUnrecognizedLines() {
+    List<String> lines = this.unrecognizedLines;
+    this.unrecognizedLines = null;
+    return lines;
+  }
+
+  protected NetworkStatusEntryImpl(byte[] statusEntryBytes,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     this.statusEntryBytes = statusEntryBytes;
+    this.failUnrecognizedDescriptorLines =
+        failUnrecognizedDescriptorLines;
     this.initializeKeywords();
     this.parseStatusEntryBytes();
   }
@@ -73,12 +84,14 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
           this.parsePLine(line, parts);
         } else if (keyword.equals("m")) {
           this.parseMLine(line, parts);
-        } else {
-          /* TODO Is throwing an exception the right thing to do here?
-           * This is probably fine for development, but once the library
-           * is in production use, this seems annoying. */
-          throw new DescriptorParseException("Unknown line '" + line
+        } else if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '" + line
               + "' in status entry.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
+          }
+          this.unrecognizedLines.add(line);
         }
       }
     } catch (IOException e) {

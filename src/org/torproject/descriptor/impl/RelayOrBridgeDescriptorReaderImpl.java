@@ -40,11 +40,17 @@ public class RelayOrBridgeDescriptorReaderImpl
     this.historyFile = historyFile;
   }
 
+  private boolean failUnrecognizedDescriptorLines = false;
+  public void setFailUnrecognizedDescriptorLines() {
+    this.failUnrecognizedDescriptorLines = true;
+  }
+
   public Iterator<DescriptorFile> readDescriptors() {
     BlockingIteratorImpl<DescriptorFile> descriptorQueue =
         new BlockingIteratorImpl<DescriptorFile>();
     DescriptorReader reader = new DescriptorReader(this.directories,
-        descriptorQueue, this.historyFile);
+        descriptorQueue, this.historyFile,
+        this.failUnrecognizedDescriptorLines);
     new Thread(reader).start();
     return descriptorQueue;
   }
@@ -53,12 +59,15 @@ public class RelayOrBridgeDescriptorReaderImpl
     private List<File> directories;
     private BlockingIteratorImpl<DescriptorFile> descriptorQueue;
     private File historyFile;
+    private boolean failUnrecognizedDescriptorLines;
     private DescriptorReader(List<File> directories,
         BlockingIteratorImpl<DescriptorFile> descriptorQueue,
-        File historyFile) {
+        File historyFile, boolean failUnrecognizedDescriptorLines) {
       this.directories = directories;
       this.descriptorQueue = descriptorQueue;
       this.historyFile = historyFile;
+      this.failUnrecognizedDescriptorLines =
+          failUnrecognizedDescriptorLines;
     }
     public void run() {
       this.readOldHistory();
@@ -167,7 +176,8 @@ public class RelayOrBridgeDescriptorReaderImpl
       bis.close();
       byte[] rawDescriptorBytes = baos.toByteArray();
       return DescriptorImpl.parseRelayOrBridgeDescriptors(
-          rawDescriptorBytes, file.getName());
+          rawDescriptorBytes, file.getName(),
+          this.failUnrecognizedDescriptorLines);
     }
   }
 }

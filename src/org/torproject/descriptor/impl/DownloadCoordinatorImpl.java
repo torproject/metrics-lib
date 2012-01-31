@@ -33,6 +33,7 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
   private long connectTimeoutMillis;
   private long readTimeoutMillis;
   private long globalTimeoutMillis;
+  private boolean failUnrecognizedDescriptorLines;
 
   protected DownloadCoordinatorImpl(
       SortedMap<String, DirectoryDownloader> directoryAuthorities,
@@ -41,7 +42,7 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
       boolean downloadConsensusFromAllAuthorities,
       Set<String> downloadVotes, boolean includeCurrentReferencedVotes,
       long connectTimeoutMillis, long readTimeoutMillis,
-      long globalTimeoutMillis) {
+      long globalTimeoutMillis, boolean failUnrecognizedDescriptorLines) {
     this.directoryAuthorities = directoryAuthorities;
     this.directoryMirrors = directoryMirrors;
     this.runningDirectories = new TreeSet<String>();
@@ -55,6 +56,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     this.connectTimeoutMillis = connectTimeoutMillis;
     this.readTimeoutMillis = readTimeoutMillis;
     this.globalTimeoutMillis = globalTimeoutMillis;
+    this.failUnrecognizedDescriptorLines =
+        failUnrecognizedDescriptorLines;
     if (this.directoryMirrors.isEmpty() &&
         this.directoryAuthorities.isEmpty()) {
       this.descriptorQueue.setOutOfDescriptors();
@@ -70,6 +73,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
         directoryMirror.setDownloadCoordinator(this);
         directoryMirror.setConnectTimeout(this.connectTimeoutMillis);
         directoryMirror.setReadTimeout(this.readTimeoutMillis);
+        directoryMirror.setFailUnrecognizedDescriptorLines(
+            this.failUnrecognizedDescriptorLines);
         new Thread(directoryMirror).start();
       }
       for (DirectoryDownloader directoryAuthority :
@@ -77,6 +82,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
         directoryAuthority.setDownloadCoordinator(this);
         directoryAuthority.setConnectTimeout(this.connectTimeoutMillis);
         directoryAuthority.setReadTimeout(this.readTimeoutMillis);
+        directoryAuthority.setFailUnrecognizedDescriptorLines(
+            this.failUnrecognizedDescriptorLines);
         new Thread(directoryAuthority).start();
       }
     }

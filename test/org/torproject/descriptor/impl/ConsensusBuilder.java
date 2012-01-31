@@ -16,7 +16,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.networkStatusVersionLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String voteStatusLine = "vote-status consensus";
   protected static RelayNetworkStatusConsensus
@@ -24,7 +24,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.voteStatusLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String consensusMethodLine = "consensus-method 11";
   protected static RelayNetworkStatusConsensus
@@ -32,7 +32,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.consensusMethodLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String validAfterLine = "valid-after 2011-11-30 09:00:00";
   protected static RelayNetworkStatusConsensus
@@ -40,7 +40,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.validAfterLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String freshUntilLine = "fresh-until 2011-11-30 10:00:00";
   protected static RelayNetworkStatusConsensus
@@ -48,7 +48,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.freshUntilLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String validUntilLine = "valid-until 2011-11-30 12:00:00";
   protected static RelayNetworkStatusConsensus
@@ -56,7 +56,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.validUntilLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String votingDelayLine = "voting-delay 300 300";
   protected static RelayNetworkStatusConsensus
@@ -64,7 +64,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.votingDelayLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   String clientVersionsLine = "client-versions 0.2.1.31,"
       + "0.2.2.34,0.2.3.6-alpha,0.2.3.7-alpha,0.2.3.8-alpha";
@@ -73,7 +73,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.clientVersionsLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   String serverVersionsLine = "server-versions 0.2.1.31,"
       + "0.2.2.34,0.2.3.6-alpha,0.2.3.7-alpha,0.2.3.8-alpha";
@@ -82,7 +82,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.serverVersionsLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String knownFlagsLine = "known-flags Authority BadExit Exit "
       + "Fast Guard HSDir Named Running Stable Unnamed V2Dir Valid";
@@ -91,7 +91,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.knownFlagsLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String paramsLine = "params "
       + "CircuitPriorityHalflifeMsec=30000 bwauthbestratio=1 "
@@ -103,7 +103,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.paramsLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   List<String> dirSources = new ArrayList<String>();
   List<String> statusEntries = new ArrayList<String>();
@@ -113,7 +113,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.directoryFooterLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private String bandwidthWeightsLine = "bandwidth-weights Wbd=285 "
       + "Wbe=0 Wbg=0 Wbm=10000 Wdb=10000 Web=10000 Wed=1021 Wee=10000 "
@@ -124,11 +124,61 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.bandwidthWeightsLine = line;
-    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus());
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
   private List<String> directorySignatures = new ArrayList<String>();
   protected void addDirectorySignature(String directorySignatureString) {
     this.directorySignatures.add(directorySignatureString);
+  }
+  private String unrecognizedHeaderLine = null;
+  protected static RelayNetworkStatusConsensus
+      createWithUnrecognizedHeaderLine(String line,
+      boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.unrecognizedHeaderLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
+        failUnrecognizedDescriptorLines);
+  }
+  private String unrecognizedDirSourceLine = null;
+  protected static RelayNetworkStatusConsensus
+      createWithUnrecognizedDirSourceLine(String line,
+      boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.unrecognizedDirSourceLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
+        failUnrecognizedDescriptorLines);
+  }
+  private String unrecognizedStatusEntryLine = null;
+  protected static RelayNetworkStatusConsensus
+      createWithUnrecognizedStatusEntryLine(String line,
+      boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.unrecognizedStatusEntryLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
+        failUnrecognizedDescriptorLines);
+  }
+  private String unrecognizedFooterLine = null;
+  protected static RelayNetworkStatusConsensus
+      createWithUnrecognizedFooterLine(String line,
+      boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.unrecognizedFooterLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
+        failUnrecognizedDescriptorLines);
+  }
+  private String unrecognizedDirectorySignatureLine = null;
+  protected static RelayNetworkStatusConsensus
+      createWithUnrecognizedDirectorySignatureLine(String line,
+      boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.unrecognizedDirectorySignatureLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
+        failUnrecognizedDescriptorLines);
   }
 
   protected ConsensusBuilder() {
@@ -170,8 +220,10 @@ public class ConsensusBuilder {
   protected byte[] buildConsensus() {
     StringBuilder sb = new StringBuilder();
     this.appendHeader(sb);
-    this.appendBody(sb);
+    this.appendDirSources(sb);
+    this.appendStatusEntries(sb);
     this.appendFooter(sb);
+    this.appendDirectorySignatures(sb);
     return sb.toString().getBytes();
   }
   private void appendHeader(StringBuilder sb) {
@@ -208,13 +260,24 @@ public class ConsensusBuilder {
     if (this.paramsLine != null) {
       sb.append(this.paramsLine + "\n");
     }
+    if (this.unrecognizedHeaderLine != null) {
+      sb.append(this.unrecognizedHeaderLine + "\n");
+    }
+  }
+  private void appendDirSources(StringBuilder sb) {
     for (String dirSource : this.dirSources) {
       sb.append(dirSource + "\n");
     }
+    if (this.unrecognizedDirSourceLine != null) {
+      sb.append(this.unrecognizedDirSourceLine + "\n");
+    }
   }
-  private void appendBody(StringBuilder sb) {
+  private void appendStatusEntries(StringBuilder sb) {
     for (String statusEntry : this.statusEntries) {
       sb.append(statusEntry + "\n");
+    }
+    if (this.unrecognizedStatusEntryLine != null) {
+      sb.append(this.unrecognizedStatusEntryLine + "\n");
     }
   }
   private void appendFooter(StringBuilder sb) {
@@ -224,8 +287,16 @@ public class ConsensusBuilder {
     if (this.bandwidthWeightsLine != null) {
       sb.append(this.bandwidthWeightsLine + "\n");
     }
+    if (this.unrecognizedFooterLine != null) {
+      sb.append(this.unrecognizedFooterLine + "\n");
+    }
+  }
+  private void appendDirectorySignatures(StringBuilder sb) {
     for (String directorySignature : this.directorySignatures) {
       sb.append(directorySignature + "\n");
+    }
+    if (this.unrecognizedDirectorySignatureLine != null) {
+      sb.append(this.unrecognizedDirectorySignatureLine + "\n");
     }
   }
 }

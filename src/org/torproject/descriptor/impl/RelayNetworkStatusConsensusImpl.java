@@ -22,29 +22,26 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     implements RelayNetworkStatusConsensus {
 
   protected static List<RelayNetworkStatusConsensus> parseConsensuses(
-      byte[] consensusesBytes) {
+      byte[] consensusesBytes, boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
     List<RelayNetworkStatusConsensus> parsedConsensuses =
         new ArrayList<RelayNetworkStatusConsensus>();
     List<byte[]> splitConsensusBytes =
         DescriptorImpl.splitRawDescriptorBytes(consensusesBytes,
         "network-status-version 3");
-    try {
-      for (byte[] consensusBytes : splitConsensusBytes) {
-        RelayNetworkStatusConsensus parsedConsensus =
-            new RelayNetworkStatusConsensusImpl(consensusBytes);
-        parsedConsensuses.add(parsedConsensus);
-      }
-    } catch (DescriptorParseException e) {
-      /* TODO Handle this error somehow. */
-      System.err.println("Failed to parse consensus.  Skipping.");
-      e.printStackTrace();
+    for (byte[] consensusBytes : splitConsensusBytes) {
+      RelayNetworkStatusConsensus parsedConsensus =
+          new RelayNetworkStatusConsensusImpl(consensusBytes,
+              failUnrecognizedDescriptorLines);
+      parsedConsensuses.add(parsedConsensus);
     }
     return parsedConsensuses;
   }
 
-  protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes)
+  protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(consensusBytes);
+    super(consensusBytes, failUnrecognizedDescriptorLines);
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "vote-status,consensus-method,valid-after,fresh-until,"
         + "valid-until,voting-delay,known-flags,"
@@ -88,12 +85,14 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
           this.parseKnownFlagsLine(line, parts);
         } else if (keyword.equals("params")) {
           this.parseParamsLine(line, parts);
-        } else {
-          /* TODO Is throwing an exception the right thing to do here?
-           * This is probably fine for development, but once the library
-           * is in production use, this seems annoying. */
+        } else if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '" + line
-              + "'.");
+              + "' in consensus.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
+          }
+          this.unrecognizedLines.add(line);
         }
       }
     } catch (IOException e) {
@@ -115,12 +114,14 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         if (keyword.equals("directory-footer")) {
         } else if (keyword.equals("bandwidth-weights")) {
           this.parseBandwidthWeightsLine(line, parts);
-        } else {
-          /* TODO Is throwing an exception the right thing to do here?
-           * This is probably fine for development, but once the library
-           * is in production use, this seems annoying. */
+        } else if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '" + line
-              + "'.");
+              + "' in consensus.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
+          }
+          this.unrecognizedLines.add(line);
         }
       }
     } catch (IOException e) {
