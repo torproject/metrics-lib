@@ -253,16 +253,18 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     }
     if (!this.requestingVotes.isEmpty()) {
       doneDownloading = false;
-    } else if (!this.requestedVotes.keySet().containsAll(
-        this.runningDirectories)) {
-      doneDownloading = false;
     } else if (!this.missingVotes.isEmpty()) {
-      for (String missingVote : this.missingVotes) {
-        for (String runningDirectory : this.runningDirectories) {
-          Set<String> reqVotes = this.requestedVotes.get(
-              runningDirectory);
-          if (!reqVotes.contains(missingVote)) {
-            doneDownloading = false;
+      if (!this.requestedVotes.keySet().containsAll(
+          this.runningDirectories)) {
+        doneDownloading = false;
+      } else {
+        for (String missingVote : this.missingVotes) {
+          for (String runningDirectory : this.runningDirectories) {
+            Set<String> reqVotes = this.requestedVotes.get(
+                runningDirectory);
+            if (!reqVotes.contains(missingVote)) {
+              doneDownloading = false;
+            }
           }
         }
       }
