@@ -12,19 +12,3 @@
     which descriptors to include, and it may be useful to exclude
     descriptors by publication date.
 
-- New example applications
-  - The metrics-web data importer could make use of this API, too.  It
-    would read relay descriptors, bridge descriptors, Torperf data files,
-    and GetTor stats files from disk.
-  - Another example application could be a relay descriptor database
-    application to support searching for relays or looking up relay
-    descriptors in general.  This application might read daily rsync'ed
-    relay descriptors and import them into a database.
-  - Another example application might be the Java version of ExoneraTor.
-    This application would index locally extracted relay descriptor
-    tarballs and parse only the relevant files.  This version of
-    ExoneraTor could also read exit lists to provide more accurate
-    results.
-  - Another example application might be the Java version of VisiTor which
-    reads locally extracted exit list tarballs.
-
