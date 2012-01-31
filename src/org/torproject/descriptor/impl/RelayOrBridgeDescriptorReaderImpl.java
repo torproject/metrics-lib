@@ -30,22 +30,41 @@ public class RelayOrBridgeDescriptorReaderImpl
     implements RelayDescriptorReader, BridgeDescriptorReader,
     BridgePoolAssignmentReader {
 
+  private boolean hasStartedReading = false;
+
   private List<File> directories = new ArrayList<File>();
   public void addDirectory(File directory) {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to read.");
+    }
     this.directories.add(directory);
   }
 
   private File historyFile;
   public void setExcludeFiles(File historyFile) {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to read.");
+    }
     this.historyFile = historyFile;
   }
 
   private boolean failUnrecognizedDescriptorLines = false;
   public void setFailUnrecognizedDescriptorLines() {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to read.");
+    }
     this.failUnrecognizedDescriptorLines = true;
   }
 
   public Iterator<DescriptorFile> readDescriptors() {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Initiating reading is only "
+          + "permitted once.");
+    }
+    this.hasStartedReading = true;
     BlockingIteratorImpl<DescriptorFile> descriptorQueue =
         new BlockingIteratorImpl<DescriptorFile>();
     DescriptorReader reader = new DescriptorReader(this.directories,
