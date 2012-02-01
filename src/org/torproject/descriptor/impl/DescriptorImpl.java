@@ -61,6 +61,8 @@ public abstract class DescriptorImpl implements Descriptor {
       parsedDescriptors.addAll(BridgePoolAssignmentImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith("dir-key-certificate-version ")) {
+      /* TODO Implement parsing of directory certificates. */
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");
