@@ -144,40 +144,35 @@ public class RelayOrBridgeDescriptorReaderImpl
     }
     private void readDescriptors() {
       for (File directory : this.directories) {
-        try {
-          Stack<File> files = new Stack<File>();
-          files.add(directory);
-          while (!files.isEmpty()) {
-            File file = files.pop();
-            if (file.isDirectory()) {
-              files.addAll(Arrays.asList(file.listFiles()));
-            } else {
-              String absolutePath = file.getAbsolutePath();
-              long lastModifiedMillis = file.lastModified();
-              this.newHistory.put(absolutePath, lastModifiedMillis);
-              if (this.oldHistory.containsKey(absolutePath) &&
-                  this.oldHistory.get(absolutePath) ==
-                  lastModifiedMillis) {
-                continue;
-              }
-              try {
-                List<Descriptor> parsedDescriptors = this.readFile(file);
-                DescriptorFileImpl descriptorFile =
-                    new DescriptorFileImpl();
-                descriptorFile.setDirectory(directory);
-                descriptorFile.setFile(file);
-                descriptorFile.setLastModified(lastModifiedMillis);
-                descriptorFile.setDescriptors(parsedDescriptors);
-                this.descriptorQueue.add(descriptorFile);
-              } catch (DescriptorParseException e) {
-                /* TODO Handle me. */
-              }
+        Stack<File> files = new Stack<File>();
+        files.add(directory);
+        boolean abortReading = false;
+        while (!abortReading && !files.isEmpty()) {
+          File file = files.pop();
+          if (file.isDirectory()) {
+            files.addAll(Arrays.asList(file.listFiles()));
+          } else {
+            String absolutePath = file.getAbsolutePath();
+            long lastModifiedMillis = file.lastModified();
+            this.newHistory.put(absolutePath, lastModifiedMillis);
+            if (this.oldHistory.containsKey(absolutePath) &&
+                this.oldHistory.get(absolutePath) == lastModifiedMillis) {
+              continue;
             }
+            DescriptorFileImpl descriptorFile = new DescriptorFileImpl();
+            try {
+              descriptorFile.setDirectory(directory);
+              descriptorFile.setFile(file);
+              descriptorFile.setLastModified(lastModifiedMillis);
+              descriptorFile.setDescriptors(this.readFile(file));
+            } catch (DescriptorParseException e) {
+              descriptorFile.setException(e);
+            } catch (IOException e) {
+              descriptorFile.setException(e);
+              abortReading = true;
+            }
+            this.descriptorQueue.add(descriptorFile);
           }
-        } catch (IOException e) {
-          System.err.println("Error while reading descriptors in '"
-              + directory.getAbsolutePath() + "'.");
-          /* TODO Handle this exception somehow. */
         }
       }
       this.descriptorQueue.setOutOfDescriptors();

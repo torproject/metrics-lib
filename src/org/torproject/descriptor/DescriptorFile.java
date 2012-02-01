@@ -21,5 +21,9 @@ public interface DescriptorFile {
 
   /* Return the descriptors contained in the descriptor file. */
   public List<Descriptor> getDescriptors();
+
+  /* Return the first exception that was thrown when reading this file or
+   * parsing its content, or null if no exception was thrown. */
+  public Exception getException();
 }
 
