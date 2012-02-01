@@ -218,6 +218,18 @@ public abstract class DescriptorImpl implements Descriptor {
     }
   }
 
+  protected void checkKeywordsDependOn(Set<String> dependentKeywords,
+      String dependingKeyword) throws DescriptorParseException {
+    for (String dependentKeyword : dependentKeywords) {
+      if (this.parsedKeywords.containsKey(dependentKeyword) &&
+          !this.parsedKeywords.containsKey(dependingKeyword)) {
+        throw new DescriptorParseException("Keyword '" + dependentKeyword
+            + "' is contained, but keyword '" + dependingKeyword + "' is "
+            + "not.");
+      }
+    }
+  }
+
   protected int getKeywordCount(String keyword) {
     if (!this.parsedKeywords.containsKey(keyword)) {
       return 0;

@@ -4,6 +4,8 @@ package org.torproject.descriptor.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -59,6 +61,16 @@ public class ParseHelper {
           + line + "' is not a valid port number.");
     }
     return port;
+  }
+
+  public static long parseSeconds(String line, String secondsString)
+      throws DescriptorParseException {
+    try {
+      return Long.parseLong(secondsString);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("'" + secondsString + "' in "
+          + "line '" + line + "' is not a valid time in seconds.");
+    }
   }
 
   public static String parseExitPattern(String line, String exitPattern)
@@ -184,6 +196,97 @@ public class ParseHelper {
     }
     return Hex.encodeHexString(Base64.decodeBase64(base64String + "=")).
         toUpperCase();
+  }
+
+  public static SortedMap<String, Integer>
+      parseCommaSeparatedKeyValueList(String line, String[] partsNoOpt,
+      int index, int keyLength) throws DescriptorParseException {
+    SortedMap<String, Integer> result = new TreeMap<String, Integer>();
+    if (partsNoOpt.length < index) {
+      throw new DescriptorParseException("Line '" + line + "' does not "
+          + "contain a key-value list at index " + index + ".");
+    } else if (partsNoOpt.length > index + 1 ) {
+      throw new DescriptorParseException("Line '" + line + "' contains "
+          + "unrecognized values beyond the expected key-value list at "
+          + "index " + index + ".");
+    } else if (partsNoOpt.length > index) {
+      String[] listElements = partsNoOpt[index].split(",");
+      for (String listElement : listElements) {
+        String[] keyAndValue = listElement.split("=");
+        String key = null;
+        int value = -1;
+        if (keyAndValue.length == 2 && (keyLength == 0 ||
+            keyAndValue[0].length() == keyLength)) {
+          try {
+            value = Integer.parseInt(keyAndValue[1]);
+            key = keyAndValue[0];
+          } catch (NumberFormatException e) {
+            /* Handle below. */
+          }
+        }
+        if (key == null) {
+          throw new DescriptorParseException("Line '" + line + "' "
+              + "contains an illegal key or value in list element '"
+              + listElement + "'.");
+        }
+        result.put(key, value);
+      }
+    }
+    return result;
+  }
+
+  public static List<Integer> parseCommaSeparatedIntegerValueList(
+      String line, String[] partsNoOpt, int index)
+      throws DescriptorParseException {
+    List<Integer> result = new ArrayList<Integer>();
+    if (partsNoOpt.length < index) {
+      throw new DescriptorParseException("Line '" + line + "' does not "
+          + "contain a comma-separated value list at index " + index
+          + ".");
+    } else if (partsNoOpt.length > index + 1 ) {
+      throw new DescriptorParseException("Line '" + line + "' contains "
+          + "unrecognized values beyond the expected comma-separated "
+          + "value list at index " + index + ".");
+    } else if (partsNoOpt.length > index) {
+      String[] listElements = partsNoOpt[index].split(",");
+      for (String listElement : listElements) {
+        try {
+          result.add(Integer.parseInt(listElement));
+        } catch (NumberFormatException e) {
+          throw new DescriptorParseException("Line '" + line + "' "
+              + "contains an illegal value in list element '"
+              + listElement + "'.");
+        }
+      }
+    }
+    return result;
+  }
+
+  public static List<Double> parseCommaSeparatedDoubleValueList(
+      String line, String[] partsNoOpt, int index)
+      throws DescriptorParseException {
+    List<Double> result = new ArrayList<Double>();
+    if (partsNoOpt.length < index) {
+      throw new DescriptorParseException("Line '" + line + "' does not "
+          + "contain a comma-separated value list at index " + index
+          + ".");
+    } else if (partsNoOpt.length > index + 1 ) {
+      throw new DescriptorParseException("Line '" + line + "' contains "
+          + "unrecognized values beyond the expected comma-separated "
+          + "value list at index " + index + ".");
+    } else if (partsNoOpt.length > index) {
+      String[] listElements = partsNoOpt[index].split(",");
+      for (String listElement : listElements) {
+        try {
+          result.add(Double.parseDouble(listElement));
+        } catch (NumberFormatException e) {
+          throw new DescriptorParseException("Line '" + line + "' "
+              + "contains an illegal value in list element '"
+              + listElement + "'.");
+        }
+      }
+    }
+    return result;
   }
 }
 

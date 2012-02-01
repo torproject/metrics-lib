@@ -487,6 +487,11 @@ public class ServerDescriptorImplTest {
         + "04:03:19");
   }
 
+  @Test(expected = DescriptorParseException.class)
+  public void testPublishedNoTime() throws DescriptorParseException {
+    DescriptorBuilder.createWithPublishedLine("published 2012-01-01");
+  }
+
   @Test()
   public void testFingerprintNoOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.

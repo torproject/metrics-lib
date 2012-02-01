@@ -143,7 +143,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
 
   /* Return the mean number of cells contained in circuit queues by
    * circuit deciles. */
-  public List<Integer> getCellQueueCells();
+  public List<Double> getCellQueuedCells();
 
   /* Return the mean times in milliseconds that cells spend in circuit
    * queues by circuit deciles. */
@@ -160,7 +160,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
   /* Return the interval length of the included statistics on
    * bi-directional connection usage, or -1 if no such statistics are
    * included. */
-  public long getConnBiDirectIntervalLength();
+  public long getConnBiDirectStatsIntervalLength();
 
   /* Return the number of connections on which this relay read and wrote
    * less than 2 KiB/s in a 10-second interval, or -1 if no statistics on
@@ -194,18 +194,19 @@ public interface ExtraInfoDescriptor extends Descriptor {
   public long getExitStatsIntervalLength();
 
   /* Return statistics on KiB written by port with map keys being ports
-   * and map values being KiB rounded up to the next full KiB, or null if
-   * no exit statistics are included. */
-  public SortedMap<Integer, Integer> getExitKibibytesWritten();
+   * (or "other") and map values being KiB rounded up to the next full
+   * KiB, or null if no exit statistics are included. */
+  public SortedMap<String, Integer> getExitKibibytesWritten();
 
-  /* Return statistics on KiB read by port with map keys being ports and
-   * map values being KiB rounded up to the next full KiB, or null if no
-   * exit statistics are included. */
-  public SortedMap<Integer, Integer> getExitKibibytesRead();
+  /* Return statistics on KiB read by port with map keys being ports (or
+   * "other") and map values being KiB rounded up to the next full KiB, or
+   * null if no exit statistics are included. */
+  public SortedMap<String, Integer> getExitKibibytesRead();
 
   /* Return statistics on opened exit streams with map keys being ports
-   * and map values being the number of opened streams, rounded up to the
-   * nearest multiple of 4, or null if no exit statistics are included. */
-  public SortedMap<Integer, Integer> getExitStreamsOpened();
+   * (or "other") and map values being the number of opened streams,
+   * rounded up to the nearest multiple of 4, or null if no exit
+   * statistics are included. */
+  public SortedMap<String, Integer> getExitStreamsOpened();
 }
 

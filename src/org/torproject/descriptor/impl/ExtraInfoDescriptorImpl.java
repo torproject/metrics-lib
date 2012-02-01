@@ -11,12 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.ExtraInfoDescriptor;
 
-/* TODO Implement methods to parse the various statistics (other than
- * bandwidth histories. */
 /* TODO Write a test class. */
 public class ExtraInfoDescriptorImpl extends DescriptorImpl
     implements ExtraInfoDescriptor {
@@ -46,21 +45,39 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "extra-info,published").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
+    Set<String> dirreqStatsKeywords = new HashSet<String>(Arrays.asList((
+        "dirreq-stats-end,dirreq-v2-ips,dirreq-v3-ips,dirreq-v2-reqs,"
+        + "dirreq-v3-reqs,dirreq-v2-share,dirreq-v3-share,dirreq-v2-resp,"
+        + "dirreq-v3-resp,dirreq-v2-direct-dl,dirreq-v3-direct-dl,"
+        + "dirreq-v2-tunneled-dl,dirreq-v3-tunneled-dl,").split(",")));
+    Set<String> entryStatsKeywords = new HashSet<String>(Arrays.asList(
+        "entry-stats-end,entry-ips".split(",")));
+    Set<String> cellStatsKeywords = new HashSet<String>(Arrays.asList((
+        "cell-stats-end,cell-processed-cells,cell-queued-cells,"
+        + "cell-time-in-queue,cell-circuits-per-decile").split(",")));
+    Set<String> connBiDirectStatsKeywords = new HashSet<String>(
+        Arrays.asList("conn-bi-direct".split(",")));
+    Set<String> exitStatsKeywords = new HashSet<String>(Arrays.asList((
+        "exit-stats-end,exit-kibibytes-written,exit-kibibytes-read,"
+        + "exit-streams-opened").split(",")));
+    Set<String> bridgeStatsKeywords = new HashSet<String>(Arrays.asList(
+        "bridge-stats-end,bridge-stats-ips".split(",")));
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
-        "read-history,write-history,geoip-db-digest,dirreq-stats-end,"
-        + "dirreq-v2-ips,dirreq-v3-ips,dirreq-v2-reqs,dirreq-v3-reqs,"
-        + "dirreq-v2-share,dirreq-v3-share,dirreq-v2-resp,dirreq-v3-resp,"
-        + "dirreq-v2-direct-dl,dirreq-v3-direct-dl,dirreq-v2-tunneled-dl,"
-        + "dirreq-v3-tunneled-dl,dirreq-read-history,"
-        + "dirreq-write-history,entry-stats-end,entry-ips,cell-stats-end,"
-        + "cell-processed-cells,cell-queued-cells,cell-time-in-queue,"
-        + "cell-circuits-per-decile,conn-bi-direct,exit-stats-end,"
-        + "exit-kibibytes-written,exit-kibibytes-read,"
-        + "exit-streams-opened,bridge-stats-end,bridge-stats-ips,"
-        + "router-signature").split(",")));
+        "read-history,write-history,dirreq-read-history,"
+        + "dirreq-write-history,geoip-db-digest,router-signature").
+        split(",")));
+    atMostOnceKeywords.addAll(dirreqStatsKeywords);
+    atMostOnceKeywords.addAll(entryStatsKeywords);
+    atMostOnceKeywords.addAll(cellStatsKeywords);
+    atMostOnceKeywords.addAll(connBiDirectStatsKeywords);
+    atMostOnceKeywords.addAll(exitStatsKeywords);
+    atMostOnceKeywords.addAll(bridgeStatsKeywords);
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    /* TODO Add more checks to see that only statistics details lines are
-     * included with corresponding statistics interval lines. */
+    this.checkKeywordsDependOn(dirreqStatsKeywords, "dirreq-stats-end");
+    this.checkKeywordsDependOn(entryStatsKeywords, "entry-stats-end");
+    this.checkKeywordsDependOn(cellStatsKeywords, "cell-stats-end");
+    this.checkKeywordsDependOn(exitStatsKeywords, "exit-stats-end");
+    this.checkKeywordsDependOn(bridgeStatsKeywords, "bridge-stats-end");
     this.checkFirstKeyword("extra-info");
     return;
   }
@@ -205,82 +222,139 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseGeoipDbDigestLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in extra-info descriptor.");
+    }
+    this.geoipDbDigest = ParseHelper.parseTwentyByteHexString(line,
+        partsNoOpt[1]);
   }
 
   private void parseGeoipStartTimeLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    if (partsNoOpt.length != 3) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in extra-info descriptor.");
+    }
+    this.geoipStartTimeMillis = ParseHelper.parseTimestampAtIndex(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseGeoipClientOriginsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.geoipClientOrigins = ParseHelper.parseCommaSeparatedKeyValueList(
+        line, partsNoOpt, 1, 2);
   }
 
   private void parseDirreqStatsEndLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        5);
+    this.dirreqStatsEndMillis = parsedStatsEndData[0];
+    this.dirreqStatsIntervalLength = parsedStatsEndData[1];
+  }
+
+  private long[] parseStatsEndLine(String line, String partsNoOpt[],
+      int partsNoOptExpectedLength) throws DescriptorParseException {
+    if (partsNoOpt.length != partsNoOptExpectedLength ||
+        partsNoOpt[3].length() < 2 || !partsNoOpt[3].startsWith("(") ||
+        !partsNoOpt[4].equals("s)")) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    long[] result = new long[2];
+    result[0] = ParseHelper.parseTimestampAtIndex(line, partsNoOpt, 1, 2);
+    result[1] = ParseHelper.parseSeconds(line,
+        partsNoOpt[3].substring(1));
+    return result;
   }
 
   private void parseDirreqV2IpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV2Ips = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseDirreqV3IpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV3Ips = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseDirreqV2ReqsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV2Reqs = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseDirreqV3ReqsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV3Reqs = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseDirreqV2ShareLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV2Share = this.parseShareLine(line, partsNoOpt);
   }
 
   private void parseDirreqV3ShareLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV3Share = this.parseShareLine(line, partsNoOpt);
+  }
+
+  private double parseShareLine(String line, String[] partsNoOpt)
+      throws DescriptorParseException {
+    double share = -1.0;
+    if (partsNoOpt.length == 2 && partsNoOpt[1].length() >= 2 &&
+        partsNoOpt[1].endsWith("%")) {
+      String shareString = partsNoOpt[1];
+      shareString = shareString.substring(0, shareString.length() - 1);
+      try {
+        share = Double.parseDouble(shareString);
+      } catch (NumberFormatException e) {
+        /* Handle below. */
+      }
+    }
+    if (share < 0.0) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    return share;
   }
 
   private void parseDirreqV2RespLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV2Resp = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV3RespLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV3Resp = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV2DirectDlLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV2DirectDl = ParseHelper.parseCommaSeparatedKeyValueList(
+        line, partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV3DirectDlLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV3DirectDl = ParseHelper.parseCommaSeparatedKeyValueList(
+        line, partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV2TunneledDlLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV2TunneledDl = ParseHelper.parseCommaSeparatedKeyValueList(
+        line, partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV3TunneledDlLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.dirreqV3TunneledDl = ParseHelper.parseCommaSeparatedKeyValueList(
+        line, partsNoOpt, 1, 0);
   }
 
   private void parseDirreqReadHistoryLine(String line, String lineNoOpt,
@@ -297,74 +371,118 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseEntryStatsEndLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        5);
+    this.entryStatsEndMillis = parsedStatsEndData[0];
+    this.entryStatsIntervalLength = parsedStatsEndData[1];
   }
 
   private void parseEntryIpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.entryIps = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseCellStatsEndLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        5);
+    this.cellStatsEndMillis = parsedStatsEndData[0];
+    this.cellStatsIntervalLength = parsedStatsEndData[1];
   }
 
   private void parseCellProcessedCellsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.cellProcessedCells = ParseHelper.
+        parseCommaSeparatedIntegerValueList(line, partsNoOpt, 1);
   }
 
   private void parseCellQueuedCellsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.cellQueuedCells = ParseHelper.parseCommaSeparatedDoubleValueList(
+        line, partsNoOpt, 1);
   }
 
   private void parseCellTimeInQueueLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.cellTimeInQueue = ParseHelper.
+        parseCommaSeparatedIntegerValueList(line, partsNoOpt, 1);
   }
 
   private void parseCellCircuitsPerDecileLine(String line,
       String lineNoOpt, String[] partsNoOpt)
       throws DescriptorParseException {
-    /* TODO Implement me. */
+    int circuits = -1;
+    if (partsNoOpt.length == 2) {
+      try {
+        circuits = Integer.parseInt(partsNoOpt[1]);
+      } catch (NumberFormatException e) {
+        /* Handle below. */
+      }
+    }
+    if (circuits < 0) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.cellCircuitsPerDecile = circuits;
   }
 
   private void parseConnBiDirectLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        6);
+    this.connBiDirectStatsEndMillis = parsedStatsEndData[0];
+    this.connBiDirectStatsIntervalLength = parsedStatsEndData[1];
+    List<Integer> parsedConnBiDirectStats = ParseHelper.
+        parseCommaSeparatedIntegerValueList(line, partsNoOpt, 5);
+    if (parsedConnBiDirectStats.size() != 4) {
+      throw new DescriptorParseException("Illegal line '" + line + "' in "
+          + "extra-info descriptor.");
+    }
+    this.connBiDirectBelow = parsedConnBiDirectStats.get(0);
+    this.connBiDirectRead = parsedConnBiDirectStats.get(1);
+    this.connBiDirectWrite = parsedConnBiDirectStats.get(2);
+    this.connBiDirectBoth = parsedConnBiDirectStats.get(3);
   }
 
   private void parseExitStatsEndLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        5);
+    this.exitStatsEndMillis = parsedStatsEndData[0];
+    this.exitStatsIntervalLength = parsedStatsEndData[1];
   }
 
   private void parseExitKibibytesWrittenLine(String line,
       String lineNoOpt, String[] partsNoOpt)
       throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.exitKibibytesWritten = ParseHelper.
+        parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0);
   }
 
   private void parseExitKibibytesReadLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.exitKibibytesRead = ParseHelper.parseCommaSeparatedKeyValueList(
+        line, partsNoOpt, 1, 0);
   }
 
   private void parseExitStreamsOpenedLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.exitStreamsOpened = ParseHelper.parseCommaSeparatedKeyValueList(
+        line, partsNoOpt, 1, 0);
   }
 
   private void parseBridgeStatsEndLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        5);
+    this.bridgeStatsEndMillis = parsedStatsEndData[0];
+    this.bridgeStatsIntervalLength = parsedStatsEndData[1];
   }
 
   private void parseBridgeStatsIpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* TODO Implement me. */
+    this.bridgeIps = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseRouterSignatureLine(String line, String lineNoOpt,
@@ -400,79 +518,89 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.writeHistory;
   }
 
+  private String geoipDbDigest;
   public String getGeoipDbDigest() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.geoipDbDigest;
   }
 
+  private long dirreqStatsEndMillis = -1L;
   public long getDirreqStatsEndMillis() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqStatsEndMillis;
   }
 
+  private long dirreqStatsIntervalLength = -1L;
   public long getDirreqStatsIntervalLength() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqStatsIntervalLength;
   }
 
+  private SortedMap<String, Integer> dirreqV2Ips;
   public SortedMap<String, Integer> getDirreqV2Ips() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV2Ips == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV2Ips);
   }
 
+  private SortedMap<String, Integer> dirreqV3Ips;
   public SortedMap<String, Integer> getDirreqV3Ips() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV3Ips == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV3Ips);
   }
 
+  private SortedMap<String, Integer> dirreqV2Reqs;
   public SortedMap<String, Integer> getDirreqV2Reqs() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV2Reqs == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV2Reqs);
   }
 
+  private SortedMap<String, Integer> dirreqV3Reqs;
   public SortedMap<String, Integer> getDirreqV3Reqs() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV3Reqs == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV3Reqs);
   }
 
+  private double dirreqV2Share = -1.0;
   public double getDirreqV2Share() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV2Share;
   }
 
+  private double dirreqV3Share = -1.0;
   public double getDirreqV3Share() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV3Share;
   }
 
+  private SortedMap<String, Integer> dirreqV2Resp;
   public SortedMap<String, Integer> getDirreqV2Resp() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV2Resp == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV2Resp);
   }
 
+  private SortedMap<String, Integer> dirreqV3Resp;
   public SortedMap<String, Integer> getDirreqV3Resp() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV3Resp == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV3Resp);
   }
 
+  private SortedMap<String, Integer> dirreqV2DirectDl;
   public SortedMap<String, Integer> getDirreqV2DirectDl() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV2DirectDl == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV2DirectDl);
   }
 
+  private SortedMap<String, Integer> dirreqV3DirectDl;
   public SortedMap<String, Integer> getDirreqV3DirectDl() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV3DirectDl == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV3DirectDl);
   }
 
+  private SortedMap<String, Integer> dirreqV2TunneledDl;
   public SortedMap<String, Integer> getDirreqV2TunneledDl() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV2TunneledDl == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV2TunneledDl);
   }
 
+  private SortedMap<String, Integer> dirreqV3TunneledDl;
   public SortedMap<String, Integer> getDirreqV3TunneledDl() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.dirreqV3TunneledDl == null ? null :
+        new TreeMap<String, Integer>(this.dirreqV3TunneledDl);
   }
 
   private BandwidthHistory dirreqReadHistory;
@@ -485,104 +613,142 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.dirreqWriteHistory;
   }
 
+  private long entryStatsEndMillis = -1L;
   public long getEntryStatsEndMillis() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.entryStatsEndMillis;
   }
 
+  private long entryStatsIntervalLength = -1L;
   public long getEntryStatsIntervalLength() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.entryStatsIntervalLength;
   }
 
+  private SortedMap<String, Integer> entryIps;
   public SortedMap<String, Integer> getEntryIps() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.entryIps == null ? null :
+        new TreeMap<String, Integer>(this.entryIps);
   }
 
+  private long cellStatsEndMillis = -1L;
   public long getCellStatsEndMillis() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.cellStatsEndMillis;
   }
 
+  private long cellStatsIntervalLength = -1L;
   public long getCellStatsIntervalLength() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.cellStatsIntervalLength;
   }
 
+  private List<Integer> cellProcessedCells;
   public List<Integer> getCellProcessedCells() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.cellProcessedCells == null ? null :
+        new ArrayList<Integer>(this.cellProcessedCells);
   }
 
-  public List<Integer> getCellQueueCells() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+  private List<Double> cellQueuedCells;
+  public List<Double> getCellQueuedCells() {
+    return this.cellQueuedCells == null ? null :
+        new ArrayList<Double>(this.cellQueuedCells);
   }
 
+  private List<Integer> cellTimeInQueue;
   public List<Integer> getCellTimeInQueue() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.cellTimeInQueue == null ? null :
+        new ArrayList<Integer>(this.cellTimeInQueue);
   }
 
+  private int cellCircuitsPerDecile = -1;
   public int getCellCircuitsPerDecile() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.cellCircuitsPerDecile;
   }
 
+  private long connBiDirectStatsEndMillis = -1L;
   public long getConnBiDirectStatsEndMillis() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.connBiDirectStatsEndMillis;
   }
 
-  public long getConnBiDirectIntervalLength() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+  private long connBiDirectStatsIntervalLength = -1L;
+  public long getConnBiDirectStatsIntervalLength() {
+    return this.connBiDirectStatsIntervalLength;
   }
 
+  private int connBiDirectBelow = -1;
   public int getConnBiDirectBelow() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.connBiDirectBelow;
   }
 
+  private int connBiDirectRead = -1;
   public int getConnBiDirectRead() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.connBiDirectRead;
   }
 
+  private int connBiDirectWrite = -1;
   public int getConnBiDirectWrite() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.connBiDirectWrite;
   }
 
+  private int connBiDirectBoth = -1;
   public int getConnBiDirectBoth() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.connBiDirectBoth;
   }
 
+  private long exitStatsEndMillis = -1L;
   public long getExitStatsEndMillis() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.exitStatsEndMillis;
   }
 
+  private long exitStatsIntervalLength = -1L;
   public long getExitStatsIntervalLength() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+    return this.exitStatsIntervalLength;
   }
 
-  public SortedMap<Integer, Integer> getExitKibibytesWritten() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+  /* TODO Add custom comparators to the maps returned by all three
+   * exit-stats methods to sort keys alphanumerically, not
+   * alphabetically. */
+
+  private SortedMap<String, Integer> exitKibibytesWritten;
+  public SortedMap<String, Integer> getExitKibibytesWritten() {
+    return this.exitKibibytesWritten == null ? null :
+        new TreeMap<String, Integer>(this.exitKibibytesWritten);
   }
 
-  public SortedMap<Integer, Integer> getExitKibibytesRead() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+  private SortedMap<String, Integer> exitKibibytesRead;
+  public SortedMap<String, Integer> getExitKibibytesRead() {
+    return this.exitKibibytesRead == null ? null :
+        new TreeMap<String, Integer>(this.exitKibibytesRead);
   }
 
-  public SortedMap<Integer, Integer> getExitStreamsOpened() {
-    /* TODO Implement me. */
-    throw new UnsupportedOperationException();
+  private SortedMap<String, Integer> exitStreamsOpened;
+  public SortedMap<String, Integer> getExitStreamsOpened() {
+    return this.exitStreamsOpened == null ? null :
+        new TreeMap<String, Integer>(this.exitStreamsOpened);
+  }
+
+  private long geoipStartTimeMillis = -1L;
+  public long getGeoipStartTimeMillis() {
+    return this.geoipStartTimeMillis;
+  }
+
+  private SortedMap<String, Integer> geoipClientOrigins;
+  public SortedMap<String, Integer> getGeoipClientOrigins() {
+    return this.geoipClientOrigins == null ? null :
+        new TreeMap<String, Integer>(this.geoipClientOrigins);
+  }
+
+  private long bridgeStatsEndMillis = -1L;
+  public long getBridgeStatsEndMillis() {
+    return this.bridgeStatsEndMillis;
+  }
+
+  private long bridgeStatsIntervalLength = -1L;
+  public long getBridgeStatsIntervalLength() {
+    return this.bridgeStatsIntervalLength;
+  }
+
+  private SortedMap<String, Integer> bridgeIps;
+  public SortedMap<String, Integer> getBridgeIps() {
+    return this.bridgeIps == null ? null :
+        new TreeMap<String, Integer>(this.bridgeIps);
   }
 }
 
