@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /* Download relay descriptors from directory mirrors or authorities. */
-public interface RelayDescriptorDownloader {
+public interface DescriptorDownloader {
 
   /* Add a directory authority to download descriptors from.  A directory
    * authority is only required for downloading network status vote and

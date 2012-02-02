@@ -9,10 +9,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.torproject.descriptor.DescriptorRequest;
-import org.torproject.descriptor.RelayDescriptorDownloader;
+import org.torproject.descriptor.DescriptorDownloader;
 
-public class RelayDescriptorDownloaderImpl
-    implements RelayDescriptorDownloader {
+public class DescriptorDownloaderImpl
+    implements DescriptorDownloader {
 
   private boolean hasStartedDownloading = false;
 

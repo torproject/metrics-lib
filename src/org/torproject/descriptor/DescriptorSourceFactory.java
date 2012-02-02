@@ -2,32 +2,20 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor;
 
-import org.torproject.descriptor.impl.RelayDescriptorDownloaderImpl;
-import org.torproject.descriptor.impl.RelayOrBridgeDescriptorReaderImpl;
+import org.torproject.descriptor.impl.DescriptorDownloaderImpl;
+import org.torproject.descriptor.impl.DescriptorReaderImpl;
 
 /* Create descriptor source instances. */
 public class DescriptorSourceFactory {
 
-  /* Create a relay descriptor reader. */
-  public static RelayDescriptorReader createRelayDescriptorReader() {
-    return new RelayOrBridgeDescriptorReaderImpl();
+  /* Create a descriptor reader. */
+  public static DescriptorReader createDescriptorReader() {
+    return new DescriptorReaderImpl();
   }
 
-  /* Create a relay descriptor downloader. */
-  public static RelayDescriptorDownloader
-      createRelayDescriptorDownloader() {
-    return new RelayDescriptorDownloaderImpl();
-  }
-
-  /* Create a bridge descriptor reader. */
-  public static BridgeDescriptorReader createBridgeDescriptorReader() {
-    return new RelayOrBridgeDescriptorReaderImpl();
-  }
-
-  /* Create a bridge pool assignment reader. */
-  public static BridgePoolAssignmentReader
-      createBridgePoolAssignmentReader() {
-    return new RelayOrBridgeDescriptorReaderImpl();
+  /* Create a descriptor downloader. */
+  public static DescriptorDownloader createDescriptorDownloader() {
+    return new DescriptorDownloaderImpl();
   }
 }
 

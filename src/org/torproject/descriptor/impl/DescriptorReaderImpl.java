@@ -20,15 +20,11 @@ import java.util.SortedMap;
 import java.util.Stack;
 import java.util.TreeMap;
 
-import org.torproject.descriptor.BridgeDescriptorReader;
-import org.torproject.descriptor.BridgePoolAssignmentReader;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorFile;
-import org.torproject.descriptor.RelayDescriptorReader;
+import org.torproject.descriptor.DescriptorReader;
 
-public class RelayOrBridgeDescriptorReaderImpl
-    implements RelayDescriptorReader, BridgeDescriptorReader,
-    BridgePoolAssignmentReader {
+public class DescriptorReaderImpl implements DescriptorReader {
 
   private boolean hasStartedReading = false;
 
@@ -67,19 +63,19 @@ public class RelayOrBridgeDescriptorReaderImpl
     this.hasStartedReading = true;
     BlockingIteratorImpl<DescriptorFile> descriptorQueue =
         new BlockingIteratorImpl<DescriptorFile>();
-    DescriptorReader reader = new DescriptorReader(this.directories,
-        descriptorQueue, this.historyFile,
+    DescriptorReaderRunnable reader = new DescriptorReaderRunnable(
+        this.directories, descriptorQueue, this.historyFile,
         this.failUnrecognizedDescriptorLines);
     new Thread(reader).start();
     return descriptorQueue;
   }
 
-  private static class DescriptorReader implements Runnable {
+  private static class DescriptorReaderRunnable implements Runnable {
     private List<File> directories;
     private BlockingIteratorImpl<DescriptorFile> descriptorQueue;
     private File historyFile;
     private boolean failUnrecognizedDescriptorLines;
-    private DescriptorReader(List<File> directories,
+    private DescriptorReaderRunnable(List<File> directories,
         BlockingIteratorImpl<DescriptorFile> descriptorQueue,
         File historyFile, boolean failUnrecognizedDescriptorLines) {
       this.directories = directories;

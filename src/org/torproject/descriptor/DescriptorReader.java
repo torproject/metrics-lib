@@ -5,10 +5,10 @@ package org.torproject.descriptor;
 import java.io.File;
 import java.util.Iterator;
 
-/* Read bridge pool assignments from one or more local directories. */
-public interface BridgePoolAssignmentReader {
+/* Read descriptors from one or more local directories. */
+public interface DescriptorReader {
 
-  /* Add a local directory to read bridge pool assignments from. */
+  /* Add a local directory to read descriptors from. */
   public void addDirectory(File directory);
 
   /* Exclude files that are contained in the given history file and that
@@ -25,10 +25,10 @@ public interface BridgePoolAssignmentReader {
    * explicitly. */
   public void setFailUnrecognizedDescriptorLines();
 
-  /* Read the previously configured bridge pool assignments and make them
-   * available via the returned blocking iterator.  Whenever the reader
-   * runs out of descriptors and expects to provide more shortly after, it
-   * blocks the caller.  This method can only be run once. */
+  /* Read the previously configured descriptors and make them available
+   * via the returned blocking iterator.  Whenever the reader runs out of
+   * descriptors and expects to provide more shortly after, it blocks the
+   * caller.  This method can only be run once. */
   public Iterator<DescriptorFile> readDescriptors();
 }
 
