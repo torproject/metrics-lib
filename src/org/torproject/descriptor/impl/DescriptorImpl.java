@@ -63,6 +63,9 @@ public abstract class DescriptorImpl implements Descriptor {
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("dir-key-certificate-version ")) {
       /* TODO Implement parsing of directory certificates. */
+    } else if (firstLines.startsWith("ExitNode ")) {
+      parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, fileName,
+          failUnrecognizedDescriptorLines));
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");
