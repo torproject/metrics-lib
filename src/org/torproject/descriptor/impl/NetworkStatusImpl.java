@@ -181,13 +181,13 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
         statusEntryBytes, this.failUnrecognizedDescriptorLines);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
-    List<String> unrecognizedDirSourceLines = statusEntry.
+    List<String> unrecognizedStatusEntryLines = statusEntry.
         getAndClearUnrecognizedLines();
-    if (unrecognizedDirSourceLines != null) {
+    if (unrecognizedStatusEntryLines != null) {
       if (this.unrecognizedLines == null) {
         this.unrecognizedLines = new ArrayList<String>();
       }
-      this.unrecognizedLines.addAll(unrecognizedDirSourceLines);
+      this.unrecognizedLines.addAll(unrecognizedStatusEntryLines);
     }
   }
 
