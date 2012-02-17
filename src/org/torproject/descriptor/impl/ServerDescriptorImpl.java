@@ -340,9 +340,9 @@ public class ServerDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    if (partsNoOpt[1].equals("true")) {
+    if (partsNoOpt[1].equals("1")) {
       this.usesEnhancedDnsLogic = true;
-    } else if (partsNoOpt[1].equals("false")) {
+    } else if (partsNoOpt[1].equals("0")) {
       this.usesEnhancedDnsLogic = false;
     } else {
       throw new DescriptorParseException("Illegal line '" + line + "'.");

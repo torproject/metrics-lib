@@ -1021,27 +1021,27 @@ public class ServerDescriptorImplTest {
   @Test()
   public void testEventdnsOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
-        createWithEventdnsLine("opt eventdns true");
+        createWithEventdnsLine("opt eventdns 1");
     assertTrue(descriptor.getUsesEnhancedDnsLogic());
   }
 
   @Test()
   public void testEventdnsTrue() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
-        createWithEventdnsLine("eventdns true");
+        createWithEventdnsLine("eventdns 1");
     assertTrue(descriptor.getUsesEnhancedDnsLogic());
   }
 
   @Test()
   public void testEventdnsFalse() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
-        createWithEventdnsLine("eventdns false");
+        createWithEventdnsLine("eventdns 0");
     assertFalse(descriptor.getUsesEnhancedDnsLogic());
   }
 
   @Test(expected = DescriptorParseException.class)
   public void testEventdns1() throws DescriptorParseException {
-    DescriptorBuilder.createWithEventdnsLine("eventdns 1");
+    DescriptorBuilder.createWithEventdnsLine("eventdns true");
   }
 
   @Test(expected = DescriptorParseException.class)
