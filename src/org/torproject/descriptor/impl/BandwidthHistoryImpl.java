@@ -15,6 +15,11 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
     if (partsNoOpt.length >= 5) {
       try {
         this.line = line;
+        if (lineNoOpt.startsWith("read-history  ")) {
+          lineNoOpt = "read-history "
+              + lineNoOpt.substring("read-history  ".length());
+          partsNoOpt = lineNoOpt.split(" ");
+        }
         this.historyEndMillis = ParseHelper.parseTimestampAtIndex(line,
             partsNoOpt, 1, 2);
         if (partsNoOpt[3].startsWith("(") &&

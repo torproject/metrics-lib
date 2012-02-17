@@ -1007,14 +1007,12 @@ public class ServerDescriptorImplTest {
     assertTrue(bandwidthValues.isEmpty());
   }
 
-  /* TODO There are some old server descriptors with "read-history  "
-   * lines.  Find out if these were spec-compliant and if other lines may
-   * start with leading spaces, too. */
-  @Test(expected = DescriptorParseException.class)
-  public void testReadHistoryLeadingSpace()
-      throws DescriptorParseException {
-    String readHistoryLine = "read-history  2012-01-01 03:51:44 (900 s) "
-        + "4268032,139264,7797760,1415168";
+  @Test()
+  public void testReadHistoryTwoSpaces() throws DescriptorParseException {
+    /* There are some server descriptors from older Tor versions that
+     * contain "opt read-history  " lines. */
+    String readHistoryLine = "opt read-history  2012-01-01 03:51:44 "
+        + "(900 s) 4268032,139264,7797760,1415168";
     DescriptorBuilder.createWithReadHistoryLine(readHistoryLine);
   }
 
