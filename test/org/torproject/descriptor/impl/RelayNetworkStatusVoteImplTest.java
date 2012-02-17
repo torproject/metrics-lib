@@ -146,6 +146,14 @@ public class RelayNetworkStatusVoteImplTest {
       vb.contactLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+    private String legacyDirKeyLine = null;
+    private static RelayNetworkStatusVote
+        createWithLegacyDirKeyLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.legacyDirKeyLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
     private String dirKeyCertificateVersionLine =
         "dir-key-certificate-version 3";
     private static RelayNetworkStatusVote
@@ -393,6 +401,9 @@ public class RelayNetworkStatusVoteImplTest {
       }
       if (this.contactLine != null) {
         sb.append(this.contactLine + "\n");
+      }
+      if (this.legacyDirKeyLine != null) {
+        sb.append(this.legacyDirKeyLine + "\n");
       }
       if (this.dirKeyCertificateVersionLine != null) {
         sb.append(this.dirKeyCertificateVersionLine + "\n");
@@ -900,6 +911,19 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithContactLine("contact 4096R/E012B42D Jacob "
         + "Appelbaum <jacob@appelbaum.net>\ncontact 4096R/E012B42D Jacob "
         + "Appelbaum <jacob@appelbaum.net>");
+  }
+
+  @Test()
+  public void testLegacyDirKeyLine() throws DescriptorParseException {
+    RelayNetworkStatusVote vote = VoteBuilder.createWithLegacyDirKeyLine(
+        "legacy-dir-key 81349FC1F2DBA2C2C11B45CB9706637D480AB913");
+    assertEquals("81349FC1F2DBA2C2C11B45CB9706637D480AB913",
+        vote.getLegacyDirKey());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testLegacyDirKeyLineNoId() throws DescriptorParseException {
+    VoteBuilder.createWithLegacyDirKeyLine("legacy-dir-key ");
   }
 
   @Test(expected = DescriptorParseException.class)

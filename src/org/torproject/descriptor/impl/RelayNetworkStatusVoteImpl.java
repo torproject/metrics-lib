@@ -255,8 +255,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           this.parseDirAddressLine(line, parts);
         } else if (keyword.equals("fingerprint")) {
           this.parseFingerprintLine(line, parts);
-        } else if (keyword.equals("legacy-key")) {
-          this.parseLegacyKeyLine(line, parts);
+        } else if (keyword.equals("legacy-dir-key")) {
+          this.parseLegacyDirKeyLine(line, parts);
         } else if (keyword.equals("dir-key-published")) {
           this.parseDirKeyPublished(line, parts);
         } else if (keyword.equals("dir-key-expires")) {
@@ -349,12 +349,12 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     ParseHelper.parseTwentyByteHexString(line, parts[1]);
   }
 
-  private void parseLegacyKeyLine(String line, String[] parts)
+  private void parseLegacyDirKeyLine(String line, String[] parts)
       throws DescriptorParseException {
     if (parts.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    this.legacyKey = ParseHelper.parseTwentyByteHexString(line, parts[2]);
+    this.legacyDirKey = ParseHelper.parseTwentyByteHexString(line, parts[1]);
   }
 
   private void parseDirKeyPublished(String line, String[] parts)
@@ -430,9 +430,9 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     return this.dirKeyCertificateVersion;
   }
 
-  private String legacyKey;
-  public String getLegacyKey() {
-    return this.legacyKey;
+  private String legacyDirKey;
+  public String getLegacyDirKey() {
+    return this.legacyDirKey;
   }
 
   private long dirKeyPublishedMillis;

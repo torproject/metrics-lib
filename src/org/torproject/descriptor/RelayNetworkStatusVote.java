@@ -68,9 +68,9 @@ public interface RelayNetworkStatusVote extends Descriptor {
   /* Return the directory key certificate version. */
   public int getDirKeyCertificateVersion();
 
-  /* Return the legacy key or null if the directory authority does not use
-   * a legacy key. */
-  public String getLegacyKey();
+  /* Return the legacy dir key or null if the directory authority does not
+   * use a legacy dir key. */
+  public String getLegacyDirKey();
 
   /* Return the directory key publication timestamp. */
   public long getDirKeyPublishedMillis();
