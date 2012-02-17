@@ -16,7 +16,6 @@ import java.util.TreeMap;
 import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.ExtraInfoDescriptor;
 
-/* TODO Write a test class. */
 public class ExtraInfoDescriptorImpl extends DescriptorImpl
     implements ExtraInfoDescriptor {
 
