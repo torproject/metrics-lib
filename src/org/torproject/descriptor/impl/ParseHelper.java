@@ -87,17 +87,25 @@ public class ParseHelper {
     } else if (addressPart.contains("/")) {
       String[] addressParts = addressPart.split("/");
       String address = addressParts[0];
+      String mask = addressParts[1];
       ParseHelper.parseIpv4Address(line, address);
-      int maskValue = -1;
-      try {
-        maskValue = Integer.parseInt(addressPart.substring(
-            addressPart.indexOf("/") + 1));
-      } catch (NumberFormatException e) {
-        /* Handle below. */
-      }
-      if (addressParts.length != 2 || maskValue < 0 || maskValue > 32) {
+      if (addressParts.length != 2) {
         throw new DescriptorParseException("'" + addressPart + "' in "
             + "line '" + line + "' is not a valid address part.");
+      }
+      if (mask.contains(".")) {
+        ParseHelper.parseIpv4Address(line, mask);
+      } else {
+        int maskValue = -1;
+        try {
+          maskValue = Integer.parseInt(mask);
+        } catch (NumberFormatException e) {
+          /* Handle below. */
+        }
+        if (maskValue < 0 || maskValue > 32) {
+          throw new DescriptorParseException("'" + mask + "' in line '"
+              + line + "' is not a valid IPv4 mask.");
+        }
       }
     } else {
       ParseHelper.parseIpv4Address(line, addressPart);

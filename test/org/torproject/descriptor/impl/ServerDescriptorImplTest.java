@@ -763,6 +763,16 @@ public class ServerDescriptorImplTest {
   }
 
   @Test()
+  public void testExitPolicyMaskTypes() throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithExitPolicyLines("reject 192.168.0.0/16:*\n"
+        + "reject 94.134.192.243/255.255.255.0:*");
+    assertEquals(Arrays.asList(new String[] { "reject 192.168.0.0/16:*",
+        "reject 94.134.192.243/255.255.255.0:*"}),
+        descriptor.getExitPolicyLines());
+  }
+
+  @Test()
   public void testRouterSignatureOpt()
       throws DescriptorParseException {
     DescriptorBuilder.createWithRouterSignatureLines("opt "
