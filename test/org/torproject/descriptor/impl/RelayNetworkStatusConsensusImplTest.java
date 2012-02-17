@@ -981,7 +981,22 @@ public class RelayNetworkStatusConsensusImplTest {
   @Test(expected = DescriptorParseException.class)
   public void testDirectoryFooterNoLine()
       throws DescriptorParseException {
+    /* This breaks, because a bandwidth-weights line without a preceding
+     * directory-footer line is not allowed. */
     ConsensusBuilder.createWithDirectoryFooterLine(null);
+  }
+
+  @Test()
+  public void testDirectoryFooterMissing()
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.setDirectoryFooterLine(null);
+    cb.setBandwidthWeightsLine(null);
+    /* This does not break, because directory footers were optional before
+     * consensus method 9. */
+    RelayNetworkStatusConsensus consensus =
+        new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    assertNull(consensus.getBandwidthWeights());
   }
 
   @Test()

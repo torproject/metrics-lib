@@ -108,6 +108,9 @@ public class ConsensusBuilder {
   List<String> dirSources = new ArrayList<String>();
   List<String> statusEntries = new ArrayList<String>();
   private String directoryFooterLine = "directory-footer";
+  protected void setDirectoryFooterLine(String line) {
+    this.directoryFooterLine = line;
+  }
   protected static RelayNetworkStatusConsensus
       createWithDirectoryFooterLine(String line)
       throws DescriptorParseException {
@@ -119,6 +122,9 @@ public class ConsensusBuilder {
       + "Wbe=0 Wbg=0 Wbm=10000 Wdb=10000 Web=10000 Wed=1021 Wee=10000 "
       + "Weg=1021 Wem=10000 Wgb=10000 Wgd=8694 Wgg=10000 Wgm=10000 "
       + "Wmb=10000 Wmd=285 Wme=0 Wmg=0 Wmm=10000";
+  protected void setBandwidthWeightsLine(String line) {
+    this.bandwidthWeightsLine = line;
+  }
   protected static RelayNetworkStatusConsensus
       createWithBandwidthWeightsLine(String line)
       throws DescriptorParseException {

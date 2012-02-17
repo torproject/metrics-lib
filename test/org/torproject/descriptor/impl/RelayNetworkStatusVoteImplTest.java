@@ -1032,7 +1032,7 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithDirKeyCertificationLines(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testDirectoryFooterLineMissing()
       throws DescriptorParseException {
     VoteBuilder.createWithDirectoryFooterLine(null);

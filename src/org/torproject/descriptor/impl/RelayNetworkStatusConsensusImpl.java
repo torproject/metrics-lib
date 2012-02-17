@@ -44,11 +44,10 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     super(consensusBytes, failUnrecognizedDescriptorLines);
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "vote-status,consensus-method,valid-after,fresh-until,"
-        + "valid-until,voting-delay,known-flags,"
-        + "directory-footer").split(",")));
+        + "valid-until,voting-delay,known-flags").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
-        "client-versions,server-versions,params,"
+        "client-versions,server-versions,params,directory-footer,"
         + "bandwidth-weights").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");

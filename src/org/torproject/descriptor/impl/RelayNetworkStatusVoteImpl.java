@@ -47,12 +47,11 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         + "valid-until,voting-delay,known-flags,dir-source,"
         + "dir-key-certificate-version,fingerprint,dir-key-published,"
         + "dir-key-expires,dir-identity-key,dir-signing-key,"
-        + "dir-key-certification,directory-footer,directory-signature").
-        split(",")));
+        + "dir-key-certification,directory-signature").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
         "client-versions,server-versions,params,contact,legacy-key,"
-        + "dir-key-crosscert,dir-address").split(",")));
+        + "dir-key-crosscert,dir-address,directory-footer").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
   }
