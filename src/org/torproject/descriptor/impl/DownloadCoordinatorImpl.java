@@ -207,7 +207,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     }
     if (response.getDescriptorType().equals("consensus")) {
       this.requestingConsensuses.remove(nickname);
-      if (response.getResponseCode() == 200) {
+      if (response.getResponseCode() == 200 &&
+          response.getDescriptors() != null) {
         if (this.includeCurrentReferencedVotes) {
           /* TODO Only add votes if the consensus is not older than one
            * hour.  Or does that make no sense? */
