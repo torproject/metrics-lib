@@ -209,5 +209,29 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * rounded up to the nearest multiple of 4, or null if no exit
    * statistics are included. */
   public SortedMap<String, Integer> getExitStreamsOpened();
+
+  /* Return the start of the included geoip statistics, or -1 if no geoip
+   * statistics are included. */
+  public long getGeoipStartTimeMillis();
+
+  /* Return statistics on client IP addresses with map keys being country
+   * codes and map values being the number of unique IP addresses that
+   * have connected from that country rounded up to the nearest multiple
+   * of 8, or null if no geoip statistics are included. */
+  public SortedMap<String, Integer> getGeoipClientOrigins();
+
+  /* Return the end of the included bridge statistics, or -1 if no bridge
+   * statistics are included. */
+  public long getBridgeStatsEndMillis();
+
+  /* Return the interval length of the included bridge statistics in
+   * seconds, or -1 if no bridge statistics are included. */
+  public long getBridgeStatsIntervalLength();
+
+  /* Return statistics on client IP addresses with map keys being country
+   * codes and map values being the number of unique IP addresses that
+   * have connected from that country rounded up to the nearest multiple
+   * of 8, or null if no bridge statistics are included. */
+  public SortedMap<String, Integer> getBridgeIps();
 }
 
