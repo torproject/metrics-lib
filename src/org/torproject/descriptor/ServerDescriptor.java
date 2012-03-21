@@ -40,7 +40,8 @@ public interface ServerDescriptor extends Descriptor {
   public int getBandwidthObserved();
 
   /* Return the platform string containing the Tor software version and
-   * the operating system. */
+   * the operating system, or null if this descriptor does not contain a
+   * platform line. */
   public String getPlatform();
 
   /* Return the time when this descriptor and the corresponding extra-info
