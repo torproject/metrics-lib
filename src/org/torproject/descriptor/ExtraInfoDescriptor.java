@@ -33,7 +33,8 @@ public interface ExtraInfoDescriptor extends Descriptor {
   public long getDirreqStatsEndMillis();
 
   /* Return the interval length of the included directory request
-   * statistics, or -1 if no directory request statistics are included. */
+   * statistics in seconds, or -1 if no directory request statistics are
+   * included. */
   public long getDirreqStatsIntervalLength();
 
   /* Return statistics on unique IP addresses requesting v2 network
@@ -119,8 +120,8 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * entry statistics are included. */
   public long getEntryStatsEndMillis();
 
-  /* Return the interval length of the included entry statistics, or -1 if
-   * no entry statistics are included. */
+  /* Return the interval length of the included entry statistics in
+   * seconds, or -1 if no entry statistics are included. */
   public long getEntryStatsIntervalLength();
 
   /* Return statistics on client IP addresses with map keys being country
@@ -133,8 +134,8 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * cell statistics are included. */
   public long getCellStatsEndMillis();
 
-  /* Return the interval length of the included cell statistics, or -1 if
-   * no cell statistics are included. */
+  /* Return the interval length of the included cell statistics in
+   * seconds, or -1 if no cell statistics are included. */
   public long getCellStatsIntervalLength();
 
   /* Return the mean number of processed cells per circuit by circuit
@@ -158,8 +159,8 @@ public interface ExtraInfoDescriptor extends Descriptor {
   public long getConnBiDirectStatsEndMillis();
 
   /* Return the interval length of the included statistics on
-   * bi-directional connection usage, or -1 if no such statistics are
-   * included. */
+   * bi-directional connection usage in seconds, or -1 if no such
+   * statistics are included. */
   public long getConnBiDirectStatsIntervalLength();
 
   /* Return the number of connections on which this relay read and wrote
@@ -189,8 +190,8 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * exit statistics are included. */
   public long getExitStatsEndMillis();
 
-  /* Return the interval length of the included exit statistics, or -1 if
-   * no exit statistics are included. */
+  /* Return the interval length of the included exit statistics in
+   * seconds, or -1 if no exit statistics are included. */
   public long getExitStatsIntervalLength();
 
   /* Return statistics on KiB written by port with map keys being ports
