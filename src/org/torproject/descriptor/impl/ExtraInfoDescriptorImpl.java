@@ -5,6 +5,7 @@ package org.torproject.descriptor.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.ExtraInfoDescriptor;
 
@@ -41,6 +43,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(descriptorBytes, failUnrecognizedDescriptorLines);
     this.parseDescriptorBytes();
+    this.calculateDigest();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "extra-info,published").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
@@ -490,6 +493,33 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     /* Not parsing crypto parts (yet). */
+  }
+
+  private void calculateDigest() throws DescriptorParseException {
+    try {
+      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
+      String startToken = "router ";
+      String sigToken = "\nrouter-signature\n";
+      int start = ascii.indexOf(startToken);
+      int sig = ascii.indexOf(sigToken) + sigToken.length();
+      if (start >= 0 || sig >= 0 || sig > start) {
+        byte[] forDigest = new byte[sig - start];
+        System.arraycopy(this.getRawDescriptorBytes(), start,
+            forDigest, 0, sig - start);
+        this.extraInfoDigest = DigestUtils.shaHex(forDigest);
+      }
+    } catch (UnsupportedEncodingException e) {
+      /* Handle below. */
+    }
+    if (this.extraInfoDigest == null) {
+      throw new DescriptorParseException("Could not calculate extra-info "
+          + "descriptor digest.");
+    }
+  }
+
+  private String extraInfoDigest;
+  public String getExtraInfoDigest() {
+    return this.extraInfoDigest;
   }
 
   private String nickname;

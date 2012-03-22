@@ -7,6 +7,10 @@ import java.util.SortedMap;
 
 public interface ExtraInfoDescriptor extends Descriptor {
 
+  /* Return the descriptor digest that is used to reference this
+   * extra-info descriptor in a server descriptor. */
+  public String getExtraInfoDigest();
+
   /* Return the relay's nickname. */
   public String getNickname();
 

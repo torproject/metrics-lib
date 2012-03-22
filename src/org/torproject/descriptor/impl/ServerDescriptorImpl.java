@@ -5,12 +5,14 @@ package org.torproject.descriptor.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.ServerDescriptor;
 
@@ -45,6 +47,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(descriptorBytes, failUnrecognizedDescriptorLines);
     this.parseDescriptorBytes();
+    this.calculateDigest();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(
         "router,bandwidth,published".split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
@@ -422,6 +425,33 @@ public class ServerDescriptorImpl extends DescriptorImpl
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.allowSingleHopExits = true;
+  }
+
+  private void calculateDigest() throws DescriptorParseException {
+    try {
+      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
+      String startToken = "router ";
+      String sigToken = "\nrouter-signature\n";
+      int start = ascii.indexOf(startToken);
+      int sig = ascii.indexOf(sigToken) + sigToken.length();
+      if (start >= 0 || sig >= 0 || sig > start) {
+        byte[] forDigest = new byte[sig - start];
+        System.arraycopy(this.getRawDescriptorBytes(), start,
+            forDigest, 0, sig - start);
+        this.serverDescriptorDigest = DigestUtils.shaHex(forDigest);
+      }
+    } catch (UnsupportedEncodingException e) {
+      /* Handle below. */
+    }
+    if (this.serverDescriptorDigest == null) {
+      throw new DescriptorParseException("Could not calculate server "
+          + "descriptor digest.");
+    }
+  }
+
+  private String serverDescriptorDigest;
+  public String getServerDescriptorDigest() {
+    return this.serverDescriptorDigest;
   }
 
   private String nickname;

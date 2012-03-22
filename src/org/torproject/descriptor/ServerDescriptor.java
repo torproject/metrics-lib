@@ -7,6 +7,10 @@ import java.util.List;
 /* Contains a relay server descriptor. */
 public interface ServerDescriptor extends Descriptor {
 
+  /* Return the descriptor digest that is used to reference this server
+   * descriptor in a network status. */
+  public String getServerDescriptorDigest();
+
   /* Return the relay's nickname. */
   public String getNickname();
 
