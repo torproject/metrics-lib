@@ -498,11 +498,11 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   private void calculateDigest() throws DescriptorParseException {
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "router ";
+      String startToken = "extra-info ";
       String sigToken = "\nrouter-signature\n";
       int start = ascii.indexOf(startToken);
       int sig = ascii.indexOf(sigToken) + sigToken.length();
-      if (start >= 0 || sig >= 0 || sig > start) {
+      if (start >= 0 && sig >= 0 && sig > start) {
         byte[] forDigest = new byte[sig - start];
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
