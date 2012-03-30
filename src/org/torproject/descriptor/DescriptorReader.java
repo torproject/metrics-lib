@@ -8,8 +8,13 @@ import java.util.Iterator;
 /* Read descriptors from one or more local directories. */
 public interface DescriptorReader {
 
-  /* Add a local directory to read descriptors from. */
+  /* Add a local directory to read descriptor files or tarballs containing
+   * descriptor files from. */
   public void addDirectory(File directory);
+
+  /* Add an uncompressed or bz2-compressed tarball to read descriptors
+   * from. */
+  public void addTarball(File tarball);
 
   /* Exclude files that are contained in the given history file and that
    * haven't changed since they were last read.  Add reads from the

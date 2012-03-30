@@ -20,6 +20,9 @@ import java.util.SortedMap;
 import java.util.Stack;
 import java.util.TreeMap;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorFile;
 import org.torproject.descriptor.DescriptorReader;
@@ -35,6 +38,15 @@ public class DescriptorReaderImpl implements DescriptorReader {
           + "after starting to read.");
     }
     this.directories.add(directory);
+  }
+
+  private List<File> tarballs = new ArrayList<File>();
+  public void addTarball(File tarball) {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to read.");
+    }
+    this.tarballs.add(tarball);
   }
 
   private File historyFile;
@@ -64,21 +76,24 @@ public class DescriptorReaderImpl implements DescriptorReader {
     BlockingIteratorImpl<DescriptorFile> descriptorQueue =
         new BlockingIteratorImpl<DescriptorFile>();
     DescriptorReaderRunnable reader = new DescriptorReaderRunnable(
-        this.directories, descriptorQueue, this.historyFile,
-        this.failUnrecognizedDescriptorLines);
+        this.directories, this.tarballs, descriptorQueue,
+        this.historyFile, this.failUnrecognizedDescriptorLines);
     new Thread(reader).start();
     return descriptorQueue;
   }
 
   private static class DescriptorReaderRunnable implements Runnable {
     private List<File> directories;
+    private List<File> tarballs;
     private BlockingIteratorImpl<DescriptorFile> descriptorQueue;
     private File historyFile;
     private boolean failUnrecognizedDescriptorLines;
     private DescriptorReaderRunnable(List<File> directories,
+        List<File> tarballs,
         BlockingIteratorImpl<DescriptorFile> descriptorQueue,
         File historyFile, boolean failUnrecognizedDescriptorLines) {
       this.directories = directories;
+      this.tarballs = tarballs;
       this.descriptorQueue = descriptorQueue;
       this.historyFile = historyFile;
       this.failUnrecognizedDescriptorLines =
@@ -87,6 +102,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
     public void run() {
       this.readOldHistory();
       this.readDescriptors();
+      this.readTarballs();
+      this.descriptorQueue.setOutOfDescriptors();
       this.writeNewHistory();
     }
     private SortedMap<String, Long>
@@ -147,6 +164,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
           File file = files.pop();
           if (file.isDirectory()) {
             files.addAll(Arrays.asList(file.listFiles()));
+          } else if (file.getName().endsWith(".tar") ||
+              file.getName().endsWith(".tar.bz2")) {
+            this.tarballs.add(file);
           } else {
             String absolutePath = file.getAbsolutePath();
             long lastModifiedMillis = file.lastModified();
@@ -171,7 +191,71 @@ public class DescriptorReaderImpl implements DescriptorReader {
           }
         }
       }
-      this.descriptorQueue.setOutOfDescriptors();
+    }
+    private void readTarballs() {
+      List<File> files = new ArrayList<File>(this.tarballs);
+      boolean abortReading = false;
+      while (!abortReading && !files.isEmpty()) {
+        File tarball = files.remove(0);
+        if (!tarball.getName().endsWith(".tar") &&
+            !tarball.getName().endsWith(".tar.bz2")) {
+          continue;
+        }
+        String absolutePath = tarball.getAbsolutePath();
+        long lastModifiedMillis = tarball.lastModified();
+        this.newHistory.put(absolutePath, lastModifiedMillis);
+        if (this.oldHistory.containsKey(absolutePath) &&
+            this.oldHistory.get(absolutePath) == lastModifiedMillis) {
+          continue;
+        }
+        try {
+          FileInputStream in = new FileInputStream(tarball);
+          if (in.available() > 0) {
+            TarArchiveInputStream tais = null;
+            if (tarball.getName().endsWith(".tar.bz2")) {
+              tais = new TarArchiveInputStream(
+                  new BZip2CompressorInputStream(in));
+            } else if (tarball.getName().endsWith(".tar")) {
+              tais = new TarArchiveInputStream(in);
+            }
+            BufferedInputStream bis = new BufferedInputStream(tais);
+            TarArchiveEntry tae = null;
+            while ((tae = tais.getNextTarEntry()) != null) {
+              DescriptorFileImpl descriptorFile =
+                  new DescriptorFileImpl();
+              /* TODO Is it correct to set these values for files
+               * contained in a tarball? */
+              descriptorFile.setDirectory(tarball);
+              descriptorFile.setFile(null);
+              descriptorFile.setLastModified(lastModifiedMillis);
+              ByteArrayOutputStream baos = new ByteArrayOutputStream();
+              int len;
+              byte[] data = new byte[1024];
+              while ((len = bis.read(data, 0, 1024)) >= 0) {
+                baos.write(data, 0, len);
+              }
+              byte[] rawDescriptorBytes = baos.toByteArray();
+              if (rawDescriptorBytes.length < 1) {
+                continue;
+              }
+              try {
+                String fileName = tae.getName().substring(
+                    tae.getName().lastIndexOf("/") + 1);
+                List<Descriptor> parsedDescriptors =
+                    DescriptorImpl.parseRelayOrBridgeDescriptors(
+                    rawDescriptorBytes, fileName,
+                    this.failUnrecognizedDescriptorLines);
+                descriptorFile.setDescriptors(parsedDescriptors);
+              } catch (DescriptorParseException e) {
+                descriptorFile.setException(e);
+             }
+             this.descriptorQueue.add(descriptorFile);
+            }
+          }
+        } catch (IOException e) {
+          abortReading = true;
+        }
+      }
     }
     private List<Descriptor> readFile(File file) throws IOException,
         DescriptorParseException {
