@@ -64,9 +64,24 @@ public interface ServerDescriptor extends Descriptor {
    * if the descriptor does not contain an uptime line. */
   public int getUptime();
 
+  /* Return the onion key in PEM format, or null if the descriptor
+   * doesn't contain a signing key (which is the case in sanitized bridge
+   * descriptors). */
+  public String getOnionKey();
+
+  /* Return the signing key in PEM format, or null if the descriptor
+   * doesn't contain a signing key (which is the case in sanitized bridge
+   * descriptors). */
+  public String getSigningKey();
+
   /* Return the relay's exit policy consisting of one or more accept or
    * reject lines. */
   public List<String> getExitPolicyLines();
+
+  /* Return the signature of the PKCS1-padded server descriptor digest, or
+   * null if the descriptor doesn't contain a signature (which is the case
+   * in sanitized bridge descriptors). */
+  public String getRouterSignature();
 
   /* Return the contact information for this relay, or null if no contact
    * information is included in the descriptor. */

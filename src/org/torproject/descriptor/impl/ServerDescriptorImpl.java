@@ -71,8 +71,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
     try {
       BufferedReader br = new BufferedReader(new StringReader(
           new String(this.rawDescriptorBytes)));
-      String line;
-      boolean skipCrypto = false;
+      String line, nextCrypto = null;
+      StringBuilder crypto = null;
       while ((line = br.readLine()) != null) {
         if (line.startsWith("@")) {
           continue;
@@ -99,14 +99,17 @@ public class ServerDescriptorImpl extends DescriptorImpl
           this.parseUptimeLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("onion-key")) {
           this.parseOnionKeyLine(line, lineNoOpt, partsNoOpt);
+          nextCrypto = "onion-key";
         } else if (keyword.equals("signing-key")) {
           this.parseSigningKeyLine(line, lineNoOpt, partsNoOpt);
+          nextCrypto = "signing-key";
         } else if (keyword.equals("accept")) {
           this.parseAcceptLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("reject")) {
           this.parseRejectLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("router-signature")) {
           this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
+          nextCrypto = "router-signature";
         } else if (keyword.equals("contact")) {
           this.parseContactLine(line, lineNoOpt, partsNoOpt);
         } else if (keyword.equals("family")) {
@@ -128,10 +131,26 @@ public class ServerDescriptorImpl extends DescriptorImpl
         } else if (keyword.equals("allow-single-hop-exits")) {
           this.parseAllowSingleHopExitsLine(line, lineNoOpt, partsNoOpt);
         } else if (line.startsWith("-----BEGIN")) {
-          skipCrypto = true;
+          crypto = new StringBuilder();
+          crypto.append(line + "\n");
         } else if (line.startsWith("-----END")) {
-          skipCrypto = false;
-        } else if (!skipCrypto) {
+          crypto.append(line + "\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          if (nextCrypto.equals("onion-key")) {
+            this.onionKey = cryptoString;
+          } else if (nextCrypto.equals("signing-key")) {
+            this.signingKey = cryptoString;
+          } else if (nextCrypto.equals("router-signature")) {
+            this.routerSignature = cryptoString;
+          } else {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block in server descriptor.");
+          }
+          nextCrypto = null;
+        } else if (crypto != null) {
+          crypto.append(line + "\n");
+        } else {
           if (this.failUnrecognizedDescriptorLines) {
             throw new DescriptorParseException("Unrecognized line '"
                 + line + "' in server descriptor.");
@@ -259,12 +278,16 @@ public class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseOnionKeyLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* Not parsing crypto parts (yet). */
+    if (!lineNoOpt.equals("onion-key")) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
   }
 
   private void parseSigningKeyLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    /* Not parsing crypto parts (yet). */
+    if (!lineNoOpt.equals("signing-key")) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
   }
 
   private void parseAcceptLine(String line, String lineNoOpt,
@@ -291,7 +314,6 @@ public class ServerDescriptorImpl extends DescriptorImpl
     if (!lineNoOpt.equals("router-signature")) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    /* Not parsing crypto parts (yet). */
   }
 
   private void parseContactLine(String line, String lineNoOpt,
@@ -524,9 +546,24 @@ public class ServerDescriptorImpl extends DescriptorImpl
     return this.uptime;
   }
 
+  private String onionKey;
+  public String getOnionKey() {
+    return this.onionKey;
+  }
+
+  private String signingKey;
+  public String getSigningKey() {
+    return this.signingKey;
+  }
+
   private List<String> exitPolicyLines = new ArrayList<String>();
   public List<String> getExitPolicyLines() {
     return new ArrayList<String>(this.exitPolicyLines);
+  }
+
+  private String routerSignature;
+  public String getRouterSignature() {
+    return this.routerSignature;
   }
 
   private String contact;
