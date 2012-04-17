@@ -248,8 +248,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
                 descriptorFile.setDescriptors(parsedDescriptors);
               } catch (DescriptorParseException e) {
                 descriptorFile.setException(e);
-             }
-             this.descriptorQueue.add(descriptorFile);
+              }
+              this.descriptorQueue.add(descriptorFile);
             }
           }
         } catch (IOException e) {
