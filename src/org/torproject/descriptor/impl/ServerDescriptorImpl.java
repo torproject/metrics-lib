@@ -21,23 +21,18 @@ public class ServerDescriptorImpl extends DescriptorImpl
     implements ServerDescriptor {
 
   protected static List<ServerDescriptor> parseDescriptors(
-      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines) {
+      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
+      throws DescriptorParseException {
     List<ServerDescriptor> parsedDescriptors =
         new ArrayList<ServerDescriptor>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "router ");
-    try {
-      for (byte[] descriptorBytes : splitDescriptorsBytes) {
-        ServerDescriptor parsedDescriptor =
-            new ServerDescriptorImpl(descriptorBytes,
-            failUnrecognizedDescriptorLines);
-        parsedDescriptors.add(parsedDescriptor);
-      }
-    } catch (DescriptorParseException e) {
-      /* TODO Handle this error somehow. */
-      System.err.println("Failed to parse descriptor.  Skipping.");
-      e.printStackTrace();
+    for (byte[] descriptorBytes : splitDescriptorsBytes) {
+      ServerDescriptor parsedDescriptor =
+          new ServerDescriptorImpl(descriptorBytes,
+          failUnrecognizedDescriptorLines);
+      parsedDescriptors.add(parsedDescriptor);
     }
     return parsedDescriptors;
   }
