@@ -470,8 +470,8 @@ public class ServerDescriptorImplTest {
   }
 
   @Test(expected = DescriptorParseException.class)
-  public void testPublished3012() throws DescriptorParseException {
-    DescriptorBuilder.createWithPublishedLine("published 3012-01-01 "
+  public void testPublished2039() throws DescriptorParseException {
+    DescriptorBuilder.createWithPublishedLine("published 2039-01-01 "
         + "04:03:19");
   }
 

@@ -142,7 +142,7 @@ public class ParseHelper {
     } catch (ParseException e) {
       /* Leave result at -1L. */
     }
-    if (result < 0L || result > 2000000000000L) {
+    if (result < 0L || result / 1000L > (long) Integer.MAX_VALUE) {
       throw new DescriptorParseException("Illegal timestamp format in "
           + "line '" + line + "'.");
     }
