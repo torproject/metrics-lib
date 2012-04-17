@@ -258,10 +258,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
     }
     boolean isValid = false;
     try {
-      this.uptime = Integer.parseInt(partsNoOpt[1]);
-      if (this.uptime >= 0) {
-        isValid = true;
-      }
+      this.uptime = Long.parseLong(partsNoOpt[1]);
+      isValid = true;
     } catch (NumberFormatException e) {
       /* Handle below. */
     }
@@ -536,8 +534,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
     return this.hibernating;
   }
 
-  private int uptime = -1;
-  public int getUptime() {
+  private Long uptime;
+  public Long getUptime() {
     return this.uptime;
   }
 

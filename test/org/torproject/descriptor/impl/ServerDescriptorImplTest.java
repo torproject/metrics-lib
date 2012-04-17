@@ -293,7 +293,7 @@ public class ServerDescriptorImplTest {
     assertEquals(1325390599000L, descriptor.getPublishedMillis());
     assertEquals("D8733048FC8EC9102466AD8F3098622BF1BF71FD",
         descriptor.getFingerprint());
-    assertEquals(48, (int) descriptor.getUptime());
+    assertEquals(48, descriptor.getUptime().longValue());
     assertEquals(51200, (int) descriptor.getBandwidthRate());
     assertEquals(51200, (int) descriptor.getBandwidthBurst());
     assertEquals(53470, (int) descriptor.getBandwidthObserved());
@@ -529,14 +529,14 @@ public class ServerDescriptorImplTest {
   public void testUptimeMissing() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithUptimeLine(null);
-    assertEquals(-1, (int) descriptor.getUptime());
+    assertNull(descriptor.getUptime());
   }
 
   @Test()
   public void testUptimeOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithUptimeLine("opt uptime 48");
-    assertEquals(48, (int) descriptor.getUptime());
+    assertEquals(48, descriptor.getUptime().longValue());
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -544,7 +544,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithUptimeLine("uptime fourty-eight");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testUptimeMinusOne() throws DescriptorParseException {
     DescriptorBuilder.createWithUptimeLine("uptime -1");
   }

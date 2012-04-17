@@ -60,9 +60,10 @@ public interface ServerDescriptor extends Descriptor {
    * published. */
   public boolean isHibernating();
 
-  /* Return the number of seconds that this relay has been running, or -1
+  /* Return the number of seconds that this relay has been running (which
+   * might even be negative in a few descriptors due to a bug), or null
    * if the descriptor does not contain an uptime line. */
-  public int getUptime();
+  public Long getUptime();
 
   /* Return the onion key in PEM format, or null if the descriptor
    * doesn't contain a signing key (which is the case in sanitized bridge
