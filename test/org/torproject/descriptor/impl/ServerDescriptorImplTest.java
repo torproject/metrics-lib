@@ -1034,21 +1034,21 @@ public class ServerDescriptorImplTest {
   }
 
   @Test()
-  public void testEventdnsTrue() throws DescriptorParseException {
+  public void testEventdns1() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithEventdnsLine("eventdns 1");
     assertTrue(descriptor.getUsesEnhancedDnsLogic());
   }
 
   @Test()
-  public void testEventdnsFalse() throws DescriptorParseException {
+  public void testEventdns0() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithEventdnsLine("eventdns 0");
     assertFalse(descriptor.getUsesEnhancedDnsLogic());
   }
 
   @Test(expected = DescriptorParseException.class)
-  public void testEventdns1() throws DescriptorParseException {
+  public void testEventdnsTrue() throws DescriptorParseException {
     DescriptorBuilder.createWithEventdnsLine("eventdns true");
   }
 
