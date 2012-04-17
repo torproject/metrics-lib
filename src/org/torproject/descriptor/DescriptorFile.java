@@ -9,11 +9,21 @@ import java.util.List;
  * descriptors. */
 public interface DescriptorFile {
 
-  /* Return the directory where this descriptor file was contained. */
+  /* Return the directory where this descriptor file was contained, or
+   * null if the file was contained in a tarball. */
   public File getDirectory();
 
-  /* Return the descriptor file itself. */
+  /* Return the tarball where this descriptor file was contained, or null
+   * if the file was not contained in a tarball. */
+  public File getTarball();
+
+  /* Return the descriptor file itself, or null if the descriptor file was
+   * contained in a tarball. */
   public File getFile();
+
+  /* Return the descriptor file name, which is either the absolute path of
+   * the file on disk, or the tar file entry name. */
+  public String getFileName();
 
   /* Return the time in millis when the descriptor file on disk was last
    * modified. */

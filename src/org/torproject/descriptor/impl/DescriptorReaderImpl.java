@@ -221,13 +221,15 @@ public class DescriptorReaderImpl implements DescriptorReader {
             BufferedInputStream bis = new BufferedInputStream(tais);
             TarArchiveEntry tae = null;
             while ((tae = tais.getNextTarEntry()) != null) {
+              if (tae.isDirectory()) {
+                continue;
+              }
               DescriptorFileImpl descriptorFile =
                   new DescriptorFileImpl();
-              /* TODO Is it correct to set these values for files
-               * contained in a tarball? */
-              descriptorFile.setDirectory(tarball);
-              descriptorFile.setFile(null);
-              descriptorFile.setLastModified(lastModifiedMillis);
+              descriptorFile.setTarball(tarball);
+              descriptorFile.setFileName(tae.getName());
+              descriptorFile.setLastModified(tae.getLastModifiedDate().
+                  getTime());
               ByteArrayOutputStream baos = new ByteArrayOutputStream();
               int len;
               byte[] data = new byte[1024];

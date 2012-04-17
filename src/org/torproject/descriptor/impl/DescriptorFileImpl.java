@@ -19,12 +19,28 @@ public class DescriptorFileImpl implements DescriptorFile {
     return this.directory;
   }
 
+  private File tarball;
+  protected void setTarball(File tarball) {
+    this.tarball = tarball;
+  }
+  public File getTarball() {
+    return this.tarball;
+  }
+
   private File file;
   protected void setFile(File file) {
     this.file = file;
   }
   public File getFile() {
     return this.file;
+  }
+
+  private String fileName;
+  protected void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
+  public String getFileName() {
+    return this.fileName;
   }
 
   private long lastModified;
