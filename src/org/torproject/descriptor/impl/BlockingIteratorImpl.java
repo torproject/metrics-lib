@@ -19,12 +19,19 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
   protected BlockingIteratorImpl() {
   }
 
-  /* Add an object to the queue. */
+  /* Add an object to the queue if there's still room. */
+  final int MAX_DESCRIPTORS = 100;
   protected synchronized void add(T object) {
     if (this.outOfDescriptors) {
       throw new IllegalStateException("Internal error: Adding results to "
           + "descriptor queue not allowed after sending end-of-stream "
           + "object.");
+    }
+    while (this.queue.size() >= this.MAX_DESCRIPTORS) {
+      try {
+        wait();
+      } catch (InterruptedException e) {
+      }
     }
     this.queue.offer(object);
     notifyAll();
@@ -68,6 +75,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
     if (this.queue.peek() == null) {
       throw new NoSuchElementException();
     }
+    notifyAll();
     return this.queue.remove();
   }
 
