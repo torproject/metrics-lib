@@ -104,8 +104,8 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private void parseRLine(String line, String[] parts)
       throws DescriptorParseException {
     if (parts.length < 9) {
-      throw new RuntimeException("r line '" + line + "' has fewer "
-          + "space-separated elements than expected.");
+      throw new DescriptorParseException("r line '" + line + "' has "
+          + "fewer space-separated elements than expected.");
     }
     this.nickname = ParseHelper.parseNickname(line, parts[1]);
     this.fingerprint = ParseHelper.parseTwentyByteBase64String(line,
