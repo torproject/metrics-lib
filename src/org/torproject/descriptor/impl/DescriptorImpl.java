@@ -2,13 +2,11 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.torproject.descriptor.Descriptor;
@@ -132,39 +130,32 @@ public abstract class DescriptorImpl implements Descriptor {
         descriptorString.contains("\n\n")) {
       throw new DescriptorParseException("Empty lines are not allowed.");
     }
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          descriptorString));
-      String line;
-      boolean skipCrypto = false;
-      while ((line = br.readLine()) != null) {
-        if (line.startsWith("-----BEGIN")) {
-          skipCrypto = true;
-        } else if (line.startsWith("-----END")) {
-          skipCrypto = false;
-        } else if (!line.startsWith("@") && !skipCrypto) {
-          String lineNoOpt = line.startsWith("opt ") ?
-              line.substring("opt ".length()) : line;
-          String keyword = lineNoOpt.split(" ", -1)[0];
-          if (keyword.equals("")) {
-            throw new DescriptorParseException("Illegal keyword in line '"
-                + line + "'.");
-          }
-          if (this.firstKeyword == null) {
-            this.firstKeyword = keyword;
-          }
-          lastKeyword = keyword;
-          if (parsedKeywords.containsKey(keyword)) {
-            parsedKeywords.put(keyword, parsedKeywords.get(keyword) + 1);
-          } else {
-            parsedKeywords.put(keyword, 1);
-          }
+    boolean skipCrypto = false;
+    Scanner s = new Scanner(descriptorString).useDelimiter("\n");
+    while (s.hasNext()) {
+      String line = s.next();
+      if (line.startsWith("-----BEGIN")) {
+        skipCrypto = true;
+      } else if (line.startsWith("-----END")) {
+        skipCrypto = false;
+      } else if (!line.startsWith("@") && !skipCrypto) {
+        String lineNoOpt = line.startsWith("opt ") ?
+            line.substring("opt ".length()) : line;
+        String keyword = lineNoOpt.split(" ", -1)[0];
+        if (keyword.equals("")) {
+          throw new DescriptorParseException("Illegal keyword in line '"
+              + line + "'.");
+        }
+        if (this.firstKeyword == null) {
+          this.firstKeyword = keyword;
+        }
+        lastKeyword = keyword;
+        if (parsedKeywords.containsKey(keyword)) {
+          parsedKeywords.put(keyword, parsedKeywords.get(keyword) + 1);
+        } else {
+          parsedKeywords.put(keyword, 1);
         }
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

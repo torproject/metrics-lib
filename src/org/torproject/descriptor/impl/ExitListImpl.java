@@ -2,14 +2,12 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -56,39 +54,32 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
         descriptorString.contains("\n\n")) {
       throw new DescriptorParseException("Empty lines are not allowed.");
     }
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          descriptorString));
-      String line;
-      StringBuilder sb = new StringBuilder();
-      while ((line = br.readLine()) != null) {
-        String[] parts = line.split(" ");
-        String keyword = parts[0];
-        if (keyword.equals("ExitNode")) {
-          sb = new StringBuilder();
-          sb.append(line + "\n");
-        } else if (keyword.equals("Published")) {
-          sb.append(line + "\n");
-        } else if (keyword.equals("LastStatus")) {
-          sb.append(line + "\n");
-        } else if (keyword.equals("ExitAddress")) {
-          String exitListEntryString = sb.toString() + line + "\n";
-          byte[] exitListEntryBytes = exitListEntryString.getBytes();
-          this.parseExitListEntry(exitListEntryBytes);
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in exit list.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
-          }
-          this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(descriptorString).useDelimiter("\n");
+    StringBuilder sb = new StringBuilder();
+    while (s.hasNext()) {
+      String line = s.next();
+      String[] parts = line.split(" ");
+      String keyword = parts[0];
+      if (keyword.equals("ExitNode")) {
+        sb = new StringBuilder();
+        sb.append(line + "\n");
+      } else if (keyword.equals("Published")) {
+        sb.append(line + "\n");
+      } else if (keyword.equals("LastStatus")) {
+        sb.append(line + "\n");
+      } else if (keyword.equals("ExitAddress")) {
+        String exitListEntryString = sb.toString() + line + "\n";
+        byte[] exitListEntryBytes = exitListEntryString.getBytes();
+        this.parseExitListEntry(exitListEntryBytes);
+      } else if (this.failUnrecognizedDescriptorLines) {
+        throw new DescriptorParseException("Unrecognized line '" + line
+            + "' in exit list.");
+      } else {
+        if (this.unrecognizedLines == null) {
+          this.unrecognizedLines = new ArrayList<String>();
         }
+        this.unrecognizedLines.add(line);
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

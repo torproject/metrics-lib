@@ -2,11 +2,9 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -58,46 +56,41 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private void parseStatusEntryBytes() throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(this.statusEntryBytes)));
-      String line = br.readLine();
-      if (line == null || !line.startsWith("r ")) {
-        throw new DescriptorParseException("Status entry must start with "
-            + "an r line.");
-      }
-      String[] rLineParts = line.split(" ");
-      this.parseRLine(line, rLineParts);
-      while ((line = br.readLine()) != null) {
-        String[] parts = !line.startsWith("opt ") ? line.split(" ") :
-            line.substring("opt ".length()).split(" ");
-        String keyword = parts[0];
-        if (keyword.equals("a")) {
-          this.parseALine(line, parts);
-        } else if (keyword.equals("s")) {
-          this.parseSLine(line, parts);
-        } else if (keyword.equals("v")) {
-          this.parseVLine(line, parts);
-        } else if (keyword.equals("w")) {
-          this.parseWLine(line, parts);
-        } else if (keyword.equals("p")) {
-          this.parsePLine(line, parts);
-        } else if (keyword.equals("m")) {
-          this.parseMLine(line, parts);
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in status entry.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
-          }
-          this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(this.statusEntryBytes)).
+        useDelimiter("\n");
+    String line = null;
+    if (!s.hasNext() || !(line = s.next()).startsWith("r ")) {
+      throw new DescriptorParseException("Status entry must start with "
+          + "an r line.");
+    }
+    String[] rLineParts = line.split(" ");
+    this.parseRLine(line, rLineParts);
+    while (s.hasNext()) {
+      line = s.next();
+      String[] parts = !line.startsWith("opt ") ? line.split(" ") :
+          line.substring("opt ".length()).split(" ");
+      String keyword = parts[0];
+      if (keyword.equals("a")) {
+        this.parseALine(line, parts);
+      } else if (keyword.equals("s")) {
+        this.parseSLine(line, parts);
+      } else if (keyword.equals("v")) {
+        this.parseVLine(line, parts);
+      } else if (keyword.equals("w")) {
+        this.parseWLine(line, parts);
+      } else if (keyword.equals("p")) {
+        this.parsePLine(line, parts);
+      } else if (keyword.equals("m")) {
+        this.parseMLine(line, parts);
+      } else if (this.failUnrecognizedDescriptorLines) {
+        throw new DescriptorParseException("Unrecognized line '" + line
+            + "' in status entry.");
+      } else {
+        if (this.unrecognizedLines == null) {
+          this.unrecognizedLines = new ArrayList<String>();
         }
+        this.unrecognizedLines.add(line);
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

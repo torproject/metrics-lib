@@ -2,14 +2,12 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -63,104 +61,99 @@ public class ServerDescriptorImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(this.rawDescriptorBytes)));
-      String line, nextCrypto = null;
-      StringBuilder crypto = null;
-      while ((line = br.readLine()) != null) {
-        if (line.startsWith("@")) {
-          continue;
-        }
-        String lineNoOpt = line.startsWith("opt ") ?
-            line.substring("opt ".length()) : line;
-        String[] partsNoOpt = lineNoOpt.split(" ");
-        String keyword = partsNoOpt[0];
-        if (keyword.equals("router")) {
-          this.parseRouterLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("or-address")) {
-          this.parseOrAddressLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("bandwidth")) {
-          this.parseBandwidthLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("platform")) {
-          this.parsePlatformLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("published")) {
-          this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("fingerprint")) {
-          this.parseFingerprintLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("hibernating")) {
-          this.parseHibernatingLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("uptime")) {
-          this.parseUptimeLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("onion-key")) {
-          this.parseOnionKeyLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "onion-key";
-        } else if (keyword.equals("signing-key")) {
-          this.parseSigningKeyLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "signing-key";
-        } else if (keyword.equals("accept")) {
-          this.parseAcceptLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("reject")) {
-          this.parseRejectLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("router-signature")) {
-          this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "router-signature";
-        } else if (keyword.equals("contact")) {
-          this.parseContactLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("family")) {
-          this.parseFamilyLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("read-history")) {
-          this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("write-history")) {
-          this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("eventdns")) {
-          this.parseEventdnsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("caches-extra-info")) {
-          this.parseCachesExtraInfoLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("extra-info-digest")) {
-          this.parseExtraInfoDigestLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("hidden-service-dir")) {
-          this.parseHiddenServiceDirLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("protocols")) {
-          this.parseProtocolsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("allow-single-hop-exits")) {
-          this.parseAllowSingleHopExitsLine(line, lineNoOpt, partsNoOpt);
-        } else if (line.startsWith("-----BEGIN")) {
-          crypto = new StringBuilder();
-          crypto.append(line + "\n");
-        } else if (line.startsWith("-----END")) {
-          crypto.append(line + "\n");
-          String cryptoString = crypto.toString();
-          crypto = null;
-          if (nextCrypto.equals("onion-key")) {
-            this.onionKey = cryptoString;
-          } else if (nextCrypto.equals("signing-key")) {
-            this.signingKey = cryptoString;
-          } else if (nextCrypto.equals("router-signature")) {
-            this.routerSignature = cryptoString;
-          } else {
-            throw new DescriptorParseException("Unrecognized crypto "
-                + "block in server descriptor.");
-          }
-          nextCrypto = null;
-        } else if (crypto != null) {
-          crypto.append(line + "\n");
+    Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
+        useDelimiter("\n");
+    String nextCrypto = null;
+    StringBuilder crypto = null;
+    while (s.hasNext()) {
+      String line = s.next();
+      if (line.startsWith("@")) {
+        continue;
+      }
+      String lineNoOpt = line.startsWith("opt ") ?
+          line.substring("opt ".length()) : line;
+      String[] partsNoOpt = lineNoOpt.split(" ");
+      String keyword = partsNoOpt[0];
+      if (keyword.equals("router")) {
+        this.parseRouterLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("or-address")) {
+        this.parseOrAddressLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("bandwidth")) {
+        this.parseBandwidthLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("platform")) {
+        this.parsePlatformLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("published")) {
+        this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("fingerprint")) {
+        this.parseFingerprintLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("hibernating")) {
+        this.parseHibernatingLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("uptime")) {
+        this.parseUptimeLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("onion-key")) {
+        this.parseOnionKeyLine(line, lineNoOpt, partsNoOpt);
+        nextCrypto = "onion-key";
+      } else if (keyword.equals("signing-key")) {
+        this.parseSigningKeyLine(line, lineNoOpt, partsNoOpt);
+        nextCrypto = "signing-key";
+      } else if (keyword.equals("accept")) {
+        this.parseAcceptLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("reject")) {
+        this.parseRejectLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("router-signature")) {
+        this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
+        nextCrypto = "router-signature";
+      } else if (keyword.equals("contact")) {
+        this.parseContactLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("family")) {
+        this.parseFamilyLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("read-history")) {
+        this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("write-history")) {
+        this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("eventdns")) {
+        this.parseEventdnsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("caches-extra-info")) {
+        this.parseCachesExtraInfoLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("extra-info-digest")) {
+        this.parseExtraInfoDigestLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("hidden-service-dir")) {
+        this.parseHiddenServiceDirLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("protocols")) {
+        this.parseProtocolsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("allow-single-hop-exits")) {
+        this.parseAllowSingleHopExitsLine(line, lineNoOpt, partsNoOpt);
+      } else if (line.startsWith("-----BEGIN")) {
+        crypto = new StringBuilder();
+        crypto.append(line + "\n");
+      } else if (line.startsWith("-----END")) {
+        crypto.append(line + "\n");
+        String cryptoString = crypto.toString();
+        crypto = null;
+        if (nextCrypto.equals("onion-key")) {
+          this.onionKey = cryptoString;
+        } else if (nextCrypto.equals("signing-key")) {
+          this.signingKey = cryptoString;
+        } else if (nextCrypto.equals("router-signature")) {
+          this.routerSignature = cryptoString;
         } else {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in server descriptor.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<String>();
-            }
-            this.unrecognizedLines.add(line);
+          throw new DescriptorParseException("Unrecognized crypto "
+              + "block in server descriptor.");
+        }
+        nextCrypto = null;
+      } else if (crypto != null) {
+        crypto.append(line + "\n");
+      } else {
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '"
+              + line + "' in server descriptor.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
           }
+          this.unrecognizedLines.add(line);
         }
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

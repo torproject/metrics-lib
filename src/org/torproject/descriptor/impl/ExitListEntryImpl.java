@@ -2,11 +2,9 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -65,35 +63,29 @@ public class ExitListEntryImpl implements ExitListEntry {
 
   private void parseExitListEntryBytes()
       throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(this.exitListEntryBytes)));
-      String line;
-      while ((line = br.readLine()) != null) {
-        String[] parts = line.split(" ");
-        String keyword = parts[0];
-        if (keyword.equals("ExitNode")) {
-          this.parseExitNodeLine(line, parts);
-        } else if (keyword.equals("Published")) {
-          this.parsePublishedLine(line, parts);
-        } else if (keyword.equals("LastStatus")) {
-          this.parseLastStatusLine(line, parts);
-        } else if (keyword.equals("ExitAddress")) {
-          this.parseExitAddressLine(line, parts);
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in exit list entry.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
-          }
-          this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(this.exitListEntryBytes)).
+        useDelimiter("\n");
+    while (s.hasNext()) {
+      String line = s.next();
+      String[] parts = line.split(" ");
+      String keyword = parts[0];
+      if (keyword.equals("ExitNode")) {
+        this.parseExitNodeLine(line, parts);
+      } else if (keyword.equals("Published")) {
+        this.parsePublishedLine(line, parts);
+      } else if (keyword.equals("LastStatus")) {
+        this.parseLastStatusLine(line, parts);
+      } else if (keyword.equals("ExitAddress")) {
+        this.parseExitAddressLine(line, parts);
+      } else if (this.failUnrecognizedDescriptorLines) {
+        throw new DescriptorParseException("Unrecognized line '" + line
+            + "' in exit list entry.");
+      } else {
+        if (this.unrecognizedLines == null) {
+          this.unrecognizedLines = new ArrayList<String>();
         }
+        this.unrecognizedLines.add(line);
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

@@ -2,13 +2,11 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -55,78 +53,64 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(headerBytes)));
-      String line;
-      while ((line = br.readLine()) != null) {
-        String[] parts = line.split(" ");
-        String keyword = parts[0];
-        if (keyword.equals("network-status-version")) {
-          this.parseNetworkStatusVersionLine(line, parts);
-        } else if (keyword.equals("vote-status")) {
-          this.parseVoteStatusLine(line, parts);
-        } else if (keyword.equals("consensus-method")) {
-          this.parseConsensusMethodLine(line, parts);
-        } else if (keyword.equals("valid-after")) {
-          this.parseValidAfterLine(line, parts);
-        } else if (keyword.equals("fresh-until")) {
-          this.parseFreshUntilLine(line, parts);
-        } else if (keyword.equals("valid-until")) {
-          this.parseValidUntilLine(line, parts);
-        } else if (keyword.equals("voting-delay")) {
-          this.parseVotingDelayLine(line, parts);
-        } else if (keyword.equals("client-versions")) {
-          this.parseClientVersionsLine(line, parts);
-        } else if (keyword.equals("server-versions")) {
-          this.parseServerVersionsLine(line, parts);
-        } else if (keyword.equals("known-flags")) {
-          this.parseKnownFlagsLine(line, parts);
-        } else if (keyword.equals("params")) {
-          this.parseParamsLine(line, parts);
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in consensus.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
-          }
-          this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    while (s.hasNext()) {
+      String line = s.next();
+      String[] parts = line.split(" ");
+      String keyword = parts[0];
+      if (keyword.equals("network-status-version")) {
+        this.parseNetworkStatusVersionLine(line, parts);
+      } else if (keyword.equals("vote-status")) {
+        this.parseVoteStatusLine(line, parts);
+      } else if (keyword.equals("consensus-method")) {
+        this.parseConsensusMethodLine(line, parts);
+      } else if (keyword.equals("valid-after")) {
+        this.parseValidAfterLine(line, parts);
+      } else if (keyword.equals("fresh-until")) {
+        this.parseFreshUntilLine(line, parts);
+      } else if (keyword.equals("valid-until")) {
+        this.parseValidUntilLine(line, parts);
+      } else if (keyword.equals("voting-delay")) {
+        this.parseVotingDelayLine(line, parts);
+      } else if (keyword.equals("client-versions")) {
+        this.parseClientVersionsLine(line, parts);
+      } else if (keyword.equals("server-versions")) {
+        this.parseServerVersionsLine(line, parts);
+      } else if (keyword.equals("known-flags")) {
+        this.parseKnownFlagsLine(line, parts);
+      } else if (keyword.equals("params")) {
+        this.parseParamsLine(line, parts);
+      } else if (this.failUnrecognizedDescriptorLines) {
+        throw new DescriptorParseException("Unrecognized line '" + line
+            + "' in consensus.");
+      } else {
+        if (this.unrecognizedLines == null) {
+          this.unrecognizedLines = new ArrayList<String>();
         }
+        this.unrecognizedLines.add(line);
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 
   protected void parseFooter(byte[] footerBytes)
       throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(footerBytes)));
-      String line;
-      while ((line = br.readLine()) != null) {
-        String[] parts = line.split(" ");
-        String keyword = parts[0];
-        if (keyword.equals("directory-footer")) {
-        } else if (keyword.equals("bandwidth-weights")) {
-          this.parseBandwidthWeightsLine(line, parts);
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in consensus.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
-          }
-          this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(footerBytes)).useDelimiter("\n");
+    while (s.hasNext()) {
+      String line = s.next();
+      String[] parts = line.split(" ");
+      String keyword = parts[0];
+      if (keyword.equals("directory-footer")) {
+      } else if (keyword.equals("bandwidth-weights")) {
+        this.parseBandwidthWeightsLine(line, parts);
+      } else if (this.failUnrecognizedDescriptorLines) {
+        throw new DescriptorParseException("Unrecognized line '" + line
+            + "' in consensus.");
+      } else {
+        if (this.unrecognizedLines == null) {
+          this.unrecognizedLines = new ArrayList<String>();
         }
+        this.unrecognizedLines.add(line);
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

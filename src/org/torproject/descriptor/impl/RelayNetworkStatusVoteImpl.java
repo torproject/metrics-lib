@@ -2,13 +2,11 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -58,51 +56,44 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(headerBytes)));
-      String line;
-      while ((line = br.readLine()) != null) {
-        String[] parts = line.split(" ");
-        String keyword = parts[0];
-        if (keyword.equals("network-status-version")) {
-          this.parseNetworkStatusVersionLine(line, parts);
-        } else if (keyword.equals("vote-status")) {
-          this.parseVoteStatusLine(line, parts);
-        } else if (keyword.equals("consensus-methods")) {
-          this.parseConsensusMethodsLine(line, parts);
-        } else if (keyword.equals("published")) {
-          this.parsePublishedLine(line, parts);
-        } else if (keyword.equals("valid-after")) {
-          this.parseValidAfterLine(line, parts);
-        } else if (keyword.equals("fresh-until")) {
-          this.parseFreshUntilLine(line, parts);
-        } else if (keyword.equals("valid-until")) {
-          this.parseValidUntilLine(line, parts);
-        } else if (keyword.equals("voting-delay")) {
-          this.parseVotingDelayLine(line, parts);
-        } else if (keyword.equals("client-versions")) {
-          this.parseClientVersionsLine(line, parts);
-        } else if (keyword.equals("server-versions")) {
-          this.parseServerVersionsLine(line, parts);
-        } else if (keyword.equals("known-flags")) {
-          this.parseKnownFlagsLine(line, parts);
-        } else if (keyword.equals("params")) {
-          this.parseParamsLine(line, parts);
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in vote.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
-          }
-          this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    while (s.hasNext()) {
+      String line = s.next();
+      String[] parts = line.split(" ");
+      String keyword = parts[0];
+      if (keyword.equals("network-status-version")) {
+        this.parseNetworkStatusVersionLine(line, parts);
+      } else if (keyword.equals("vote-status")) {
+        this.parseVoteStatusLine(line, parts);
+      } else if (keyword.equals("consensus-methods")) {
+        this.parseConsensusMethodsLine(line, parts);
+      } else if (keyword.equals("published")) {
+        this.parsePublishedLine(line, parts);
+      } else if (keyword.equals("valid-after")) {
+        this.parseValidAfterLine(line, parts);
+      } else if (keyword.equals("fresh-until")) {
+        this.parseFreshUntilLine(line, parts);
+      } else if (keyword.equals("valid-until")) {
+        this.parseValidUntilLine(line, parts);
+      } else if (keyword.equals("voting-delay")) {
+        this.parseVotingDelayLine(line, parts);
+      } else if (keyword.equals("client-versions")) {
+        this.parseClientVersionsLine(line, parts);
+      } else if (keyword.equals("server-versions")) {
+        this.parseServerVersionsLine(line, parts);
+      } else if (keyword.equals("known-flags")) {
+        this.parseKnownFlagsLine(line, parts);
+      } else if (keyword.equals("params")) {
+        this.parseParamsLine(line, parts);
+      } else if (this.failUnrecognizedDescriptorLines) {
+        throw new DescriptorParseException("Unrecognized line '" + line
+            + "' in vote.");
+      } else {
+        if (this.unrecognizedLines == null) {
+          this.unrecognizedLines = new ArrayList<String>();
         }
+        this.unrecognizedLines.add(line);
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 
@@ -236,54 +227,48 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   protected void parseDirSource(byte[] dirSourceBytes)
       throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(dirSourceBytes)));
-      String line;
-      boolean skipCrypto = false;
-      while ((line = br.readLine()) != null) {
-        String[] parts = line.split(" ");
-        String keyword = parts[0];
-        if (keyword.equals("dir-source")) {
-          this.parseDirSourceLine(line, parts);
-        } else if (keyword.equals("contact")) {
-          this.parseContactLine(line, parts);
-        } else if (keyword.equals("dir-key-certificate-version")) {
-          this.parseDirKeyCertificateVersionLine(line, parts);
-        } else if (keyword.equals("dir-address")) {
-          this.parseDirAddressLine(line, parts);
-        } else if (keyword.equals("fingerprint")) {
-          this.parseFingerprintLine(line, parts);
-        } else if (keyword.equals("legacy-dir-key")) {
-          this.parseLegacyDirKeyLine(line, parts);
-        } else if (keyword.equals("dir-key-published")) {
-          this.parseDirKeyPublished(line, parts);
-        } else if (keyword.equals("dir-key-expires")) {
-          this.parseDirKeyExpiresLine(line, parts);
-        } else if (keyword.equals("dir-identity-key") ||
-            keyword.equals("dir-signing-key") ||
-            keyword.equals("dir-key-crosscert") ||
-            keyword.equals("dir-key-certification")) {
-        } else if (line.startsWith("-----BEGIN")) {
-          skipCrypto = true;
-        } else if (line.startsWith("-----END")) {
-          skipCrypto = false;
-        } else if (!skipCrypto) {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in vote.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<String>();
-            }
-            this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(dirSourceBytes)).
+        useDelimiter("\n");
+    boolean skipCrypto = false;
+    while (s.hasNext()) {
+      String line = s.next();
+      String[] parts = line.split(" ");
+      String keyword = parts[0];
+      if (keyword.equals("dir-source")) {
+        this.parseDirSourceLine(line, parts);
+      } else if (keyword.equals("contact")) {
+        this.parseContactLine(line, parts);
+      } else if (keyword.equals("dir-key-certificate-version")) {
+        this.parseDirKeyCertificateVersionLine(line, parts);
+      } else if (keyword.equals("dir-address")) {
+        this.parseDirAddressLine(line, parts);
+      } else if (keyword.equals("fingerprint")) {
+        this.parseFingerprintLine(line, parts);
+      } else if (keyword.equals("legacy-dir-key")) {
+        this.parseLegacyDirKeyLine(line, parts);
+      } else if (keyword.equals("dir-key-published")) {
+        this.parseDirKeyPublished(line, parts);
+      } else if (keyword.equals("dir-key-expires")) {
+        this.parseDirKeyExpiresLine(line, parts);
+      } else if (keyword.equals("dir-identity-key") ||
+          keyword.equals("dir-signing-key") ||
+          keyword.equals("dir-key-crosscert") ||
+          keyword.equals("dir-key-certification")) {
+      } else if (line.startsWith("-----BEGIN")) {
+        skipCrypto = true;
+      } else if (line.startsWith("-----END")) {
+        skipCrypto = false;
+      } else if (!skipCrypto) {
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '"
+              + line + "' in vote.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
           }
+          this.unrecognizedLines.add(line);
         }
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 
@@ -370,27 +355,20 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   protected void parseFooter(byte[] footerBytes)
       throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(footerBytes)));
-      String line;
-      while ((line = br.readLine()) != null) {
-        if (!line.equals("directory-footer")) {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in vote.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<String>();
-            }
-            this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(footerBytes)).useDelimiter("\n");
+    while (s.hasNext()) {
+      String line = s.next();
+      if (!line.equals("directory-footer")) {
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '"
+              + line + "' in vote.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
           }
+          this.unrecognizedLines.add(line);
         }
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

@@ -2,11 +2,9 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -199,43 +197,37 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     if (this.directorySignatures == null) {
       this.directorySignatures = new TreeMap<String, String>();
     }
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(directorySignatureBytes)));
-      String line;
-      boolean skipCrypto = false;
-      while ((line = br.readLine()) != null) {
-        if (line.startsWith("directory-signature ")) {
-          String[] parts = line.split(" ", -1);
-          if (parts.length != 3) {
-            throw new DescriptorParseException("Illegal line '" + line
-                + "'.");
+    Scanner s = new Scanner(new String(directorySignatureBytes)).
+        useDelimiter("\n");
+    boolean skipCrypto = false;
+    while (s.hasNext()) {
+      String line = s.next();
+      if (line.startsWith("directory-signature ")) {
+        String[] parts = line.split(" ", -1);
+        if (parts.length != 3) {
+          throw new DescriptorParseException("Illegal line '" + line
+              + "'.");
+        }
+        String identity = ParseHelper.parseTwentyByteHexString(line,
+            parts[1]);
+        String signingKeyDigest = ParseHelper.parseTwentyByteHexString(
+            line, parts[2]);
+        this.directorySignatures.put(identity, signingKeyDigest);
+      } else if (line.startsWith("-----BEGIN")) {
+        skipCrypto = true;
+      } else if (line.startsWith("-----END")) {
+        skipCrypto = false;
+      } else if (!skipCrypto) {
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '"
+              + line + "' in dir-source entry.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
           }
-          String identity = ParseHelper.parseTwentyByteHexString(line,
-              parts[1]);
-          String signingKeyDigest = ParseHelper.parseTwentyByteHexString(
-              line, parts[2]);
-          this.directorySignatures.put(identity, signingKeyDigest);
-        } else if (line.startsWith("-----BEGIN")) {
-          skipCrypto = true;
-        } else if (line.startsWith("-----END")) {
-          skipCrypto = false;
-        } else if (!skipCrypto) {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in dir-source entry.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<String>();
-            }
-            this.unrecognizedLines.add(line);
-          }
+          this.unrecognizedLines.add(line);
         }
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

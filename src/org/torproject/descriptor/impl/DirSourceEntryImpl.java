@@ -2,11 +2,9 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -74,38 +72,32 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   private void parseDirSourceEntryBytes()
       throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(this.dirSourceEntryBytes)));
-      String line;
-      boolean skipCrypto = false;
-      while ((line = br.readLine()) != null) {
-        if (line.startsWith("dir-source")) {
-          this.parseDirSourceLine(line);
-        } else if (line.startsWith("contact")) {
-          this.parseContactLine(line);
-        } else if (line.startsWith("vote-digest")) {
-          this.parseVoteDigestLine(line);
-        } else if (line.startsWith("-----BEGIN")) {
-          skipCrypto = true;
-        } else if (line.startsWith("-----END")) {
-          skipCrypto = false;
-        } else if (!skipCrypto) {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in dir-source entry.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<String>();
-            }
-            this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(this.dirSourceEntryBytes)).
+        useDelimiter("\n");
+    boolean skipCrypto = false;
+    while (s.hasNext()) {
+      String line = s.next();
+      if (line.startsWith("dir-source")) {
+        this.parseDirSourceLine(line);
+      } else if (line.startsWith("contact")) {
+        this.parseContactLine(line);
+      } else if (line.startsWith("vote-digest")) {
+        this.parseVoteDigestLine(line);
+      } else if (line.startsWith("-----BEGIN")) {
+        skipCrypto = true;
+      } else if (line.startsWith("-----END")) {
+        skipCrypto = false;
+      } else if (!skipCrypto) {
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '"
+              + line + "' in dir-source entry.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
           }
+          this.unrecognizedLines.add(line);
         }
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

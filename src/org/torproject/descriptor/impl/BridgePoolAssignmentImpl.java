@@ -2,13 +2,11 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -49,21 +47,15 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(this.rawDescriptorBytes)));
-      String line;
-      while ((line = br.readLine()) != null) {
-        if (line.startsWith("bridge-pool-assignment ")) {
-          this.parseBridgePoolAssignmentLine(line);
-        } else {
-          this.parseBridgeLine(line);
-        }
+    Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
+        useDelimiter("\n");
+    while (s.hasNext()) {
+      String line = s.next();
+      if (line.startsWith("bridge-pool-assignment ")) {
+        this.parseBridgePoolAssignmentLine(line);
+      } else {
+        this.parseBridgeLine(line);
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

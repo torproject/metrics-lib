@@ -2,14 +2,12 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -85,111 +83,104 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    try {
-      BufferedReader br = new BufferedReader(new StringReader(
-          new String(this.rawDescriptorBytes)));
-      String line;
-      boolean skipCrypto = false;
-      while ((line = br.readLine()) != null) {
-        String lineNoOpt = line.startsWith("opt ") ?
-            line.substring("opt ".length()) : line;
-        String[] partsNoOpt = lineNoOpt.split(" ");
-        String keyword = partsNoOpt[0];
-        if (keyword.equals("extra-info")) {
-          this.parseExtraInfoLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("published")) {
-          this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("read-history")) {
-          this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("write-history")) {
-          this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("geoip-db-digest")) {
-          this.parseGeoipDbDigestLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("geoip-start-time")) {
-          this.parseGeoipStartTimeLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("geoip-client-origins")) {
-          this.parseGeoipClientOriginsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-stats-end")) {
-          this.parseDirreqStatsEndLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v2-ips")) {
-          this.parseDirreqV2IpsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v3-ips")) {
-          this.parseDirreqV3IpsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v2-reqs")) {
-          this.parseDirreqV2ReqsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v3-reqs")) {
-          this.parseDirreqV3ReqsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v2-share")) {
-          this.parseDirreqV2ShareLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v3-share")) {
-          this.parseDirreqV3ShareLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v2-resp")) {
-          this.parseDirreqV2RespLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v3-resp")) {
-          this.parseDirreqV3RespLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v2-direct-dl")) {
-          this.parseDirreqV2DirectDlLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v3-direct-dl")) {
-          this.parseDirreqV3DirectDlLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v2-tunneled-dl")) {
-          this.parseDirreqV2TunneledDlLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-v3-tunneled-dl")) {
-          this.parseDirreqV3TunneledDlLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-read-history")) {
-          this.parseDirreqReadHistoryLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("dirreq-write-history")) {
-          this.parseDirreqWriteHistoryLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("entry-stats-end")) {
-          this.parseEntryStatsEndLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("entry-ips")) {
-          this.parseEntryIpsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("cell-stats-end")) {
-          this.parseCellStatsEndLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("cell-processed-cells")) {
-          this.parseCellProcessedCellsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("cell-queued-cells")) {
-          this.parseCellQueuedCellsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("cell-time-in-queue")) {
-          this.parseCellTimeInQueueLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("cell-circuits-per-decile")) {
-          this.parseCellCircuitsPerDecileLine(line, lineNoOpt,
-              partsNoOpt);
-        } else if (keyword.equals("conn-bi-direct")) {
-          this.parseConnBiDirectLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("exit-stats-end")) {
-          this.parseExitStatsEndLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("exit-kibibytes-written")) {
-          this.parseExitKibibytesWrittenLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("exit-kibibytes-read")) {
-          this.parseExitKibibytesReadLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("exit-streams-opened")) {
-          this.parseExitStreamsOpenedLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("bridge-stats-end")) {
-          this.parseBridgeStatsEndLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("bridge-ips")) {
-          this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
-        } else if (keyword.equals("router-signature")) {
-          this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
-        } else if (line.startsWith("-----BEGIN")) {
-          skipCrypto = true;
-        } else if (line.startsWith("-----END")) {
-          skipCrypto = false;
-        } else if (!skipCrypto) {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in extra-info descriptor.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<String>();
-            }
-            this.unrecognizedLines.add(line);
+    Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
+        useDelimiter("\n");
+    boolean skipCrypto = false;
+    while (s.hasNext()) {
+      String line = s.next();
+      String lineNoOpt = line.startsWith("opt ") ?
+          line.substring("opt ".length()) : line;
+      String[] partsNoOpt = lineNoOpt.split(" ");
+      String keyword = partsNoOpt[0];
+      if (keyword.equals("extra-info")) {
+        this.parseExtraInfoLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("published")) {
+        this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("read-history")) {
+        this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("write-history")) {
+        this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("geoip-db-digest")) {
+        this.parseGeoipDbDigestLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("geoip-start-time")) {
+        this.parseGeoipStartTimeLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("geoip-client-origins")) {
+        this.parseGeoipClientOriginsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-stats-end")) {
+        this.parseDirreqStatsEndLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v2-ips")) {
+        this.parseDirreqV2IpsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v3-ips")) {
+        this.parseDirreqV3IpsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v2-reqs")) {
+        this.parseDirreqV2ReqsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v3-reqs")) {
+        this.parseDirreqV3ReqsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v2-share")) {
+        this.parseDirreqV2ShareLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v3-share")) {
+        this.parseDirreqV3ShareLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v2-resp")) {
+        this.parseDirreqV2RespLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v3-resp")) {
+        this.parseDirreqV3RespLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v2-direct-dl")) {
+        this.parseDirreqV2DirectDlLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v3-direct-dl")) {
+        this.parseDirreqV3DirectDlLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v2-tunneled-dl")) {
+        this.parseDirreqV2TunneledDlLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-v3-tunneled-dl")) {
+        this.parseDirreqV3TunneledDlLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-read-history")) {
+        this.parseDirreqReadHistoryLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dirreq-write-history")) {
+        this.parseDirreqWriteHistoryLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("entry-stats-end")) {
+        this.parseEntryStatsEndLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("entry-ips")) {
+        this.parseEntryIpsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("cell-stats-end")) {
+        this.parseCellStatsEndLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("cell-processed-cells")) {
+        this.parseCellProcessedCellsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("cell-queued-cells")) {
+        this.parseCellQueuedCellsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("cell-time-in-queue")) {
+        this.parseCellTimeInQueueLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("cell-circuits-per-decile")) {
+        this.parseCellCircuitsPerDecileLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("conn-bi-direct")) {
+        this.parseConnBiDirectLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("exit-stats-end")) {
+        this.parseExitStatsEndLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("exit-kibibytes-written")) {
+        this.parseExitKibibytesWrittenLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("exit-kibibytes-read")) {
+        this.parseExitKibibytesReadLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("exit-streams-opened")) {
+        this.parseExitStreamsOpenedLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("bridge-stats-end")) {
+        this.parseBridgeStatsEndLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("bridge-ips")) {
+        this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("router-signature")) {
+        this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
+      } else if (line.startsWith("-----BEGIN")) {
+        skipCrypto = true;
+      } else if (line.startsWith("-----END")) {
+        skipCrypto = false;
+      } else if (!skipCrypto) {
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '"
+              + line + "' in extra-info descriptor.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
           }
+          this.unrecognizedLines.add(line);
         }
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Internal error: Ran into an "
-          + "IOException while parsing a String in memory.  Something's "
-          + "really wrong.", e);
     }
   }
 

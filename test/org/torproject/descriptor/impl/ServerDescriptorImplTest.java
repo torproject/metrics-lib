@@ -710,6 +710,21 @@ public class ServerDescriptorImplTest {
   }
 
   @Test()
+  public void testContactCarriageReturn()
+      throws DescriptorParseException {
+    String contactString = "Random "
+        + "Person -----BEGIN PGP PUBLIC KEY BLOCK-----\r"
+        + "Version: GnuPG v1 dot 4 dot 7 (Darwin)\r\r"
+        + "mQGiBEbb0rcRBADqBiUXsmtpJifh74irNnkHbhKMj8O4TqenaZYhdjLWouZsZd"
+        + "07\rmTQoP40G4zqOrVEOOcXpdSiRnHWJYfgTnkibNZrOZEZLn3H1ywpovEgESm"
+        + "oGEdAX\roid3XuIYRpRnqoafbFg9sg+OofX/mGrO+5ACfagQ9rlfx2oxCWijYw"
+        + "pYFRk3NhCY=\r=Xaw3\r-----END PGP PUBLIC KEY BLOCK-----";
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithContactLine("contact " + contactString);
+    assertEquals(contactString, descriptor.getContact());
+  }
+
+  @Test()
   public void testExitPolicyRejectAllAcceptAll()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
