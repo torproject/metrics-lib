@@ -179,6 +179,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
             try {
               descriptorFile.setDirectory(directory);
               descriptorFile.setFile(file);
+              descriptorFile.setFileName(file.getAbsolutePath());
               descriptorFile.setLastModified(lastModifiedMillis);
               descriptorFile.setDescriptors(this.readFile(file));
             } catch (DescriptorParseException e) {
