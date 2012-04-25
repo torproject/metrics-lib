@@ -11,6 +11,9 @@ public interface Descriptor {
   /* Return the raw descriptor bytes. */
   public byte[] getRawDescriptorBytes();
 
+  /* Return the (possibly empty) list of annotations. */
+  public List<String> getAnnotations();
+
   /* Return any unrecognized lines when parsing this descriptor, or an
    * empty list if there were no unrecognized lines. */
   public List<String> getUnrecognizedLines();

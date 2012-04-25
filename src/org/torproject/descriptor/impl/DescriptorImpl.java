@@ -76,19 +76,37 @@ public abstract class DescriptorImpl implements Descriptor {
     List<byte[]> rawDescriptors = new ArrayList<byte[]>();
     String splitToken = "\n" + startToken;
     String ascii = new String(rawDescriptorBytes);
-    int length = rawDescriptorBytes.length,
-        start = ascii.indexOf(startToken);
-    while (start < length) {
-      int end = ascii.indexOf(splitToken, start);
-      if (end < 0) {
-        end = length;
+    int endAllDescriptors = rawDescriptorBytes.length,
+        startAnnotations = 0;
+    boolean containsAnnotations = ascii.startsWith("@") ||
+        ascii.contains("\n@");
+    while (startAnnotations < endAllDescriptors) {
+      int startDescriptor;
+      if (ascii.indexOf(startToken, startAnnotations) == 0) {
+        startDescriptor = startAnnotations;
       } else {
-        end += 1;
+        startDescriptor = ascii.indexOf(splitToken, startAnnotations - 1);
+        if (startDescriptor < 0) {
+          break;
+        } else {
+          startDescriptor += 1;
+        }
       }
-      byte[] rawDescriptor = new byte[end - start];
-      System.arraycopy(rawDescriptorBytes, start, rawDescriptor, 0,
-          end - start);
-      start = end;
+      int endDescriptor = -1;
+      if (containsAnnotations) {
+        endDescriptor = ascii.indexOf("\n@", startDescriptor);
+      }
+      if (endDescriptor < 0) {
+        endDescriptor = ascii.indexOf(splitToken, startDescriptor);
+      }
+      if (endDescriptor < 0) {
+        endDescriptor = endAllDescriptors - 1;
+      }
+      endDescriptor += 1;
+      byte[] rawDescriptor = new byte[endDescriptor - startAnnotations];
+      System.arraycopy(rawDescriptorBytes, startAnnotations,
+          rawDescriptor, 0, endDescriptor - startAnnotations);
+      startAnnotations = endDescriptor;
       rawDescriptors.add(rawDescriptor);
     }
     return rawDescriptors;
@@ -113,7 +131,31 @@ public abstract class DescriptorImpl implements Descriptor {
     this.rawDescriptorBytes = rawDescriptorBytes;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
+    this.cutOffAnnotations(rawDescriptorBytes);
     this.countKeywords(rawDescriptorBytes);
+  }
+
+  /* Parse annotation lines from the descriptor bytes. */
+  private List<String> annotations = new ArrayList<String>();
+  private void cutOffAnnotations(byte[] rawDescriptorBytes) {
+    String ascii = new String(rawDescriptorBytes);
+    int start = 0;
+    while ((start == 0 && ascii.startsWith("@")) ||
+        (start > 0 && ascii.indexOf("\n@", start - 1) >= 0)) {
+      int end = ascii.indexOf("\n", start);
+      this.annotations.add(ascii.substring(start, end));
+      start = end + 1;
+    }
+    if (start > 0) {
+      int length = rawDescriptorBytes.length;
+      byte[] rawDescriptor = new byte[length - start];
+      System.arraycopy(rawDescriptorBytes, start, rawDescriptor, 0,
+        length - start);
+      this.rawDescriptorBytes = rawDescriptor;
+    }
+  }
+  public List<String> getAnnotations() {
+    return new ArrayList<String>(this.annotations);
   }
 
   /* Count parsed keywords for consistency checks by subclasses. */
