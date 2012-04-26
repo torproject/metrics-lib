@@ -3,16 +3,13 @@
 package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
-import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.ExtraInfoDescriptor;
 
 /* Test parsing of extra-info descriptors. */
@@ -801,8 +798,36 @@ public class ExtraInfoDescriptorImplTest {
 
   @Test()
   public void testExitStatsValid() throws DescriptorParseException {
-    ExitStatsBuilder.createWithDefaultLines();
-    /* TODO Check stats parts. */
+    ExtraInfoDescriptor descriptor = ExitStatsBuilder.
+        createWithDefaultLines();
+    assertEquals(1328925579000L, descriptor.getExitStatsEndMillis());
+    assertEquals(86400L, descriptor.getExitStatsIntervalLength());
+    String[] ports = new String[] { "25", "80", "443", "49755",
+        "52563", "52596", "57528", "60912", "61351", "64811", "other" };
+    int[] writtenValues = new int[] { 74647, 31370, 20577, 23, 12, 1111,
+        4, 11, 6, 3365, 2592};
+    int i = 0;
+    for (Map.Entry<String, Integer> e :
+        descriptor.getExitKibibytesWritten().entrySet()) {
+      assertEquals(ports[i], e.getKey());
+      assertEquals(writtenValues[i++], e.getValue().intValue());
+    }
+    int[] readValues = new int[] { 35562, 1254256, 110279, 9396, 1911,
+        648, 1188, 1427, 1824, 14, 3054 };
+    i = 0;
+    for (Map.Entry<String, Integer> e :
+        descriptor.getExitKibibytesRead().entrySet()) {
+      assertEquals(ports[i], e.getKey());
+      assertEquals(readValues[i++], e.getValue().intValue());
+    }
+    int[] streamsValues = new int[] { 369748, 64212, 151660, 4, 4, 4, 4,
+        4, 4, 4, 1212 };
+    i = 0;
+    for (Map.Entry<String, Integer> e :
+        descriptor.getExitStreamsOpened().entrySet()) {
+      assertEquals(ports[i], e.getKey());
+      assertEquals(streamsValues[i++], e.getValue().intValue());
+    }
   }
 
   /* TODO Add tests for invalid exit stats. */

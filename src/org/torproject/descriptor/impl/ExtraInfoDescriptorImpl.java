@@ -5,6 +5,7 @@ package org.torproject.descriptor.impl;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
@@ -448,20 +449,48 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   private void parseExitKibibytesWrittenLine(String line,
       String lineNoOpt, String[] partsNoOpt)
       throws DescriptorParseException {
-    this.exitKibibytesWritten = ParseHelper.
-        parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0);
+    this.exitKibibytesWritten = this.sortByPorts(ParseHelper.
+        parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
   }
 
   private void parseExitKibibytesReadLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.exitKibibytesRead = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 0);
+    this.exitKibibytesRead = this.sortByPorts(ParseHelper.
+        parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
   }
 
   private void parseExitStreamsOpenedLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.exitStreamsOpened = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 0);
+    this.exitStreamsOpened = this.sortByPorts(ParseHelper.
+        parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
+  }
+
+  private SortedMap<String, Integer> sortByPorts(
+      SortedMap<String, Integer> naturalOrder) {
+    SortedMap<String, Integer> byPortNumber =
+        new TreeMap<String, Integer>(new Comparator<String>() {
+          public int compare(String arg0, String arg1) {
+            int port0 = 0, port1 = 0;
+            try {
+              port1 = Integer.parseInt(arg1);
+            } catch (NumberFormatException e) {
+              return -1;
+            }
+            try {
+              port0 = Integer.parseInt(arg0);
+            } catch (NumberFormatException e) {
+              return 1;
+            }
+            if (port0 < port1) {
+              return -1;
+            } else if (port0 > port1) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }});
+    byPortNumber.putAll(naturalOrder);
+    return byPortNumber;
   }
 
   private void parseBridgeStatsEndLine(String line, String lineNoOpt,
@@ -721,10 +750,6 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   public long getExitStatsIntervalLength() {
     return this.exitStatsIntervalLength;
   }
-
-  /* TODO Add custom comparators to the maps returned by all three
-   * exit-stats methods to sort keys alphanumerically, not
-   * alphabetically. */
 
   private SortedMap<String, Integer> exitKibibytesWritten;
   public SortedMap<String, Integer> getExitKibibytesWritten() {
