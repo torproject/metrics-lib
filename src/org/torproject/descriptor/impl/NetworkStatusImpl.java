@@ -4,11 +4,11 @@ package org.torproject.descriptor.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.torproject.descriptor.DirSourceEntry;
+import org.torproject.descriptor.DirectorySignature;
 import org.torproject.descriptor.NetworkStatusEntry;
 
 /* Parse the common parts of v3 consensuses, v3 votes, v3 microdesc
@@ -195,39 +195,19 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   protected void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
     if (this.directorySignatures == null) {
-      this.directorySignatures = new TreeMap<String, String>();
+      this.directorySignatures = new TreeMap<String,
+          DirectorySignature>();
     }
-    Scanner s = new Scanner(new String(directorySignatureBytes)).
-        useDelimiter("\n");
-    boolean skipCrypto = false;
-    while (s.hasNext()) {
-      String line = s.next();
-      if (line.startsWith("directory-signature ")) {
-        String[] parts = line.split(" ", -1);
-        if (parts.length != 3) {
-          throw new DescriptorParseException("Illegal line '" + line
-              + "'.");
-        }
-        String identity = ParseHelper.parseTwentyByteHexString(line,
-            parts[1]);
-        String signingKeyDigest = ParseHelper.parseTwentyByteHexString(
-            line, parts[2]);
-        this.directorySignatures.put(identity, signingKeyDigest);
-      } else if (line.startsWith("-----BEGIN")) {
-        skipCrypto = true;
-      } else if (line.startsWith("-----END")) {
-        skipCrypto = false;
-      } else if (!skipCrypto) {
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in dir-source entry.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
-          }
-          this.unrecognizedLines.add(line);
-        }
+    DirectorySignatureImpl signature = new DirectorySignatureImpl(
+        directorySignatureBytes, failUnrecognizedDescriptorLines);
+    this.directorySignatures.put(signature.getIdentity(), signature);
+    List<String> unrecognizedStatusEntryLines = signature.
+        getAndClearUnrecognizedLines();
+    if (unrecognizedStatusEntryLines != null) {
+      if (this.unrecognizedLines == null) {
+        this.unrecognizedLines = new ArrayList<String>();
       }
+      this.unrecognizedLines.addAll(unrecognizedStatusEntryLines);
     }
   }
 
@@ -249,10 +229,10 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     return this.statusEntries.get(fingerprint);
   }
 
-  private SortedMap<String, String> directorySignatures;
-  public SortedMap<String, String> getDirectorySignatures() {
+  private SortedMap<String, DirectorySignature> directorySignatures;
+  public SortedMap<String, DirectorySignature> getDirectorySignatures() {
     return this.directorySignatures == null ? null :
-        new TreeMap<String, String>(this.directorySignatures);
+        new TreeMap<String, DirectorySignature>(this.directorySignatures);
   }
 }
 

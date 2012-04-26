@@ -2,6 +2,7 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
 /* Contains a network status consensus. */
@@ -49,6 +51,32 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         + "bandwidth-weights").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
+    this.calculateDigest();
+  }
+
+  private void calculateDigest() throws DescriptorParseException {
+    try {
+      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
+      String startToken = "network-status-version ";
+      String sigToken = "\ndirectory-signature ";
+      if (!ascii.contains(sigToken)) {
+        return;
+      }
+      int start = ascii.indexOf(startToken);
+      int sig = ascii.indexOf(sigToken) + sigToken.length();
+      if (start >= 0 && sig >= 0 && sig > start) {
+        byte[] forDigest = new byte[sig - start];
+        System.arraycopy(this.getRawDescriptorBytes(), start,
+            forDigest, 0, sig - start);
+        this.consensusDigest = DigestUtils.shaHex(forDigest);
+      }
+    } catch (UnsupportedEncodingException e) {
+      /* Handle below. */
+    }
+    if (this.consensusDigest == null) {
+      throw new DescriptorParseException("Could not calculate consensus "
+          + "digest.");
+    }
   }
 
   protected void parseHeader(byte[] headerBytes)
@@ -236,6 +264,11 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       throws DescriptorParseException {
     this.bandwidthWeights = ParseHelper.parseKeyValuePairs(line, parts,
         1);
+  }
+
+  private String consensusDigest;
+  public String getConsensusDigest() {
+    return this.consensusDigest;
   }
 
   private int networkStatusVersion;

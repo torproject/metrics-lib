@@ -92,6 +92,6 @@ public interface RelayNetworkStatusVote extends Descriptor {
   public NetworkStatusEntry getStatusEntry(String fingerprint);
 
   /* Return directory signatures. */
-  public SortedMap<String, String> getDirectorySignatures();
+  public SortedMap<String, DirectorySignature> getDirectorySignatures();
 }
 

@@ -60,10 +60,14 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   public NetworkStatusEntry getStatusEntry(String fingerprint);
 
   /* Return directory signatures. */
-  public SortedMap<String, String> getDirectorySignatures();
+  public SortedMap<String, DirectorySignature> getDirectorySignatures();
 
   /* Return bandwidth weights or null if the consensus doesn't contain
    * bandwidth weights. */
   public SortedMap<String, Integer> getBandwidthWeights();
+
+  /* Return the consensus digest that directory authorities use to sign
+   * the consensus. */
+  public String getConsensusDigest();
 }
 
