@@ -26,6 +26,10 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
             partsNoOpt[4].equals("s)")) {
           this.intervalLength = Long.parseLong(partsNoOpt[3].
               substring(1));
+          if (this.intervalLength <= 0L) {
+            throw new DescriptorParseException("Only positive interval "
+                + "lengths are allowed in line '" + line + "'.");
+          }
           if (partsNoOpt.length > 6) {
             /* Invalid line, handle below. */
           } else if (partsNoOpt.length == 5) {
@@ -36,6 +40,10 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
             String[] values = partsNoOpt[5].split(",", -1);
             for (int i = values.length - 1; i >= 0; i--) {
               long bandwidthValue = Long.parseLong(values[i]);
+              if (bandwidthValue < 0L) {
+                throw new DescriptorParseException("Negative bandwidth "
+                    + "values are not allowed in line '" + line + "'.");
+              }
               this.bandwidthValues.put(endMillis, bandwidthValue);
               endMillis -= this.intervalLength * 1000L;
             }

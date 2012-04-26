@@ -5,6 +5,7 @@ package org.torproject.descriptor.impl;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -259,6 +260,10 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     result[0] = ParseHelper.parseTimestampAtIndex(line, partsNoOpt, 1, 2);
     result[1] = ParseHelper.parseSeconds(line,
         partsNoOpt[3].substring(1));
+    if (result[1] <= 0) {
+      throw new DescriptorParseException("Interval length must be "
+          + "positive in line '" + line + "'.");
+    }
     return result;
   }
 
@@ -389,18 +394,30 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellProcessedCells = ParseHelper.
         parseCommaSeparatedIntegerValueList(line, partsNoOpt, 1);
+    if (this.cellProcessedCells.size() != 10) {
+      throw new DescriptorParseException("There must be exact ten values "
+          + "in line '" + line + "'.");
+    }
   }
 
   private void parseCellQueuedCellsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellQueuedCells = ParseHelper.parseCommaSeparatedDoubleValueList(
         line, partsNoOpt, 1);
+    if (this.cellQueuedCells.size() != 10) {
+      throw new DescriptorParseException("There must be exact ten values "
+          + "in line '" + line + "'.");
+    }
   }
 
   private void parseCellTimeInQueueLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellTimeInQueue = ParseHelper.
         parseCommaSeparatedIntegerValueList(line, partsNoOpt, 1);
+    if (this.cellTimeInQueue.size() != 10) {
+      throw new DescriptorParseException("There must be exact ten values "
+          + "in line '" + line + "'.");
+    }
   }
 
   private void parseCellCircuitsPerDecileLine(String line,
@@ -451,18 +468,24 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       throws DescriptorParseException {
     this.exitKibibytesWritten = this.sortByPorts(ParseHelper.
         parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
+    this.verifyPorts(line, this.exitKibibytesWritten.keySet());
+    this.verifyBytesOrStreams(line, this.exitKibibytesWritten.values());
   }
 
   private void parseExitKibibytesReadLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     this.exitKibibytesRead = this.sortByPorts(ParseHelper.
         parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
+    this.verifyPorts(line, this.exitKibibytesRead.keySet());
+    this.verifyBytesOrStreams(line, this.exitKibibytesRead.values());
   }
 
   private void parseExitStreamsOpenedLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     this.exitStreamsOpened = this.sortByPorts(ParseHelper.
         parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
+    this.verifyPorts(line, this.exitStreamsOpened.keySet());
+    this.verifyBytesOrStreams(line, this.exitStreamsOpened.values());
   }
 
   private SortedMap<String, Integer> sortByPorts(
@@ -491,6 +514,41 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
           }});
     byPortNumber.putAll(naturalOrder);
     return byPortNumber;
+  }
+
+  private void verifyPorts(String line, Set<String> ports)
+      throws DescriptorParseException {
+    boolean valid = true;
+    try {
+      for (String port : ports) {
+        if (!port.equals("other") && Integer.parseInt(port) <= 0) {
+          valid = false;
+          break;
+        }
+      }
+    } catch (NumberFormatException e) {
+      valid = false;
+    }
+    if (!valid) {
+      throw new DescriptorParseException("Invalid port in line '" + line
+          + "'.");
+    }
+  }
+
+  private void verifyBytesOrStreams(String line,
+      Collection<Integer> bytesOrStreams)
+      throws DescriptorParseException {
+    boolean valid = true;
+    for (int s : bytesOrStreams) {
+      if (s < 0) {
+        valid = false;
+        break;
+      }
+    }
+    if (!valid) {
+      throw new DescriptorParseException("Invalid value in line '" + line
+          + "'.");
+    }
   }
 
   private void parseBridgeStatsEndLine(String line, String lineNoOpt,

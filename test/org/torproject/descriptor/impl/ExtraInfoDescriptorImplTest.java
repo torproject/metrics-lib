@@ -746,9 +746,7 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(1328951316000L, descriptor.getPublishedMillis());
   }
 
-  /* TODO This test should fail, even though dir-spec.txt doesn't
-   * explicitly say that reported bytes must be non-negative. */
-  @Test()
+  @Test(expected = DescriptorParseException.class)
   public void testWriteHistoryNegativeBytes()
       throws DescriptorParseException {
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
@@ -772,9 +770,7 @@ public class ExtraInfoDescriptorImplTest {
         + "4707695616,4699666432,4650004480,4489718784");
   }
 
-  /* TODO This test should fail, even though dir-spec.txt doesn't
-   * explicitly say that the interval must be positive. */
-  @Test()
+  @Test(expected = DescriptorParseException.class)
   public void testReadHistoryNegativeInterval()
       throws DescriptorParseException {
     DescriptorBuilder.createWithReadHistoryLine("read-history "
@@ -918,9 +914,7 @@ public class ExtraInfoDescriptorImplTest {
         + "gb=208,ir=200");
   }
 
-  /* TODO Lines shouldn't be allowed to end with a comma.  This also
-   * applies to all other key-value pair lines. */
-  @Test()
+  @Test(expected = DescriptorParseException.class)
   public void testGeoipClientOriginsMissingEnd()
       throws DescriptorParseException {
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
@@ -1112,18 +1106,14 @@ public class ExtraInfoDescriptorImplTest {
         + "2012-02-11 01:59:39 (86400)");
   }
 
-  /* TODO Lines shouldn't be allowed to end with a comma.  This also
-   * applies to all other comma-separated value lines. */
-  @Test()
+  @Test(expected = DescriptorParseException.class)
   public void testCellProcessedCellsNineComma()
       throws DescriptorParseException {
     CellStatsBuilder.createWithCellProcessedCellsLine(
         "cell-processed-cells 1441,11,6,4,2,1,1,1,1,");
   }
 
-  /* TODO We should check that there are really ten values, not more or
-   * less.  Applies to most cell-stats lines. */
-  @Test()
+  @Test(expected = DescriptorParseException.class)
   public void testCellProcessedCellsEleven()
       throws DescriptorParseException {
     CellStatsBuilder.createWithCellQueuedCellsLine("cell-queued-cells "
@@ -1207,16 +1197,21 @@ public class ExtraInfoDescriptorImplTest {
         + "2012-02-11 01:59 (86400 s)");
   }
 
-  /* TODO Negative ports should not be allowed. */
-  @Test()
+  @Test(expected = DescriptorParseException.class)
   public void testExitStatsWrittenNegativePort()
       throws DescriptorParseException {
     ExitStatsBuilder.createWithExitKibibytesWrittenLine(
         "exit-kibibytes-written -25=74647");
   }
 
-  /* TODO Negative bytes should not be allowed. */
-  @Test()
+  @Test(expected = DescriptorParseException.class)
+  public void testExitStatsWrittenUnknown()
+      throws DescriptorParseException {
+    ExitStatsBuilder.createWithExitKibibytesWrittenLine(
+        "exit-kibibytes-written unknown=74647");
+  }
+
+  @Test(expected = DescriptorParseException.class)
   public void testExitStatsReadNegativeBytes()
       throws DescriptorParseException {
     ExitStatsBuilder.createWithExitKibibytesReadLine(
@@ -1243,8 +1238,7 @@ public class ExtraInfoDescriptorImplTest {
     assertFalse(ips.containsKey("no"));
   }
 
-  /* TODO Only positive intervals should be allowed, for all stats. */
-  @Test()
+  @Test(expected = DescriptorParseException.class)
   public void testBridgeStatsEndIntervalZero()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeStatsEndLine("bridge-stats-end "

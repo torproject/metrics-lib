@@ -218,7 +218,7 @@ public class ParseHelper {
           + "unrecognized values beyond the expected key-value list at "
           + "index " + index + ".");
     } else if (partsNoOpt.length > index) {
-      String[] listElements = partsNoOpt[index].split(",");
+      String[] listElements = partsNoOpt[index].split(",", -1);
       for (String listElement : listElements) {
         String[] keyAndValue = listElement.split("=");
         String key = null;
@@ -256,7 +256,7 @@ public class ParseHelper {
           + "unrecognized values beyond the expected comma-separated "
           + "value list at index " + index + ".");
     } else if (partsNoOpt.length > index) {
-      String[] listElements = partsNoOpt[index].split(",");
+      String[] listElements = partsNoOpt[index].split(",", -1);
       for (String listElement : listElements) {
         try {
           result.add(Integer.parseInt(listElement));
@@ -283,7 +283,7 @@ public class ParseHelper {
           + "unrecognized values beyond the expected comma-separated "
           + "value list at index " + index + ".");
     } else if (partsNoOpt.length > index) {
-      String[] listElements = partsNoOpt[index].split(",");
+      String[] listElements = partsNoOpt[index].split(",", -1);
       for (String listElement : listElements) {
         try {
           result.add(Double.parseDouble(listElement));
