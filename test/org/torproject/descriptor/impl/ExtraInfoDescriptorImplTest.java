@@ -3,11 +3,14 @@
 package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 import org.junit.Test;
 import org.torproject.descriptor.ExtraInfoDescriptor;
@@ -743,6 +746,66 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(1328951316000L, descriptor.getPublishedMillis());
   }
 
+  /* TODO This test should fail, even though dir-spec.txt doesn't
+   * explicitly say that reported bytes must be non-negative. */
+  @Test()
+  public void testWriteHistoryNegativeBytes()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithWriteHistoryLine("write-history "
+        + "2012-02-11 09:03:39 (900 s) "
+        + "-4713350144,-4723824640,-4710717440,-4572675072");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testReadHistoryTabInterval()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithReadHistoryLine("read-history "
+        + "2012-02-11 09:03:39 (900\ts) "
+        + "4707695616,4699666432,4650004480,4489718784");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testReadHistoryTabIntervalBytes()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithReadHistoryLine("read-history "
+        + "2012-02-11 09:03:39 (900 s)\t"
+        + "4707695616,4699666432,4650004480,4489718784");
+  }
+
+  /* TODO This test should fail, even though dir-spec.txt doesn't
+   * explicitly say that the interval must be positive. */
+  @Test()
+  public void testReadHistoryNegativeInterval()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithReadHistoryLine("read-history "
+        + "2012-02-11 09:03:39 (-900 s) "
+        + "4707695616,4699666432,4650004480,4489718784");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqWriteHistoryMissingBytesBegin()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithDirreqWriteHistoryLine(
+        "dirreq-write-history 2012-02-11 09:03:39 (900 s) "
+        + ",64996352,60625920,67922944");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqWriteHistoryMissingBytesMiddle()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithDirreqWriteHistoryLine(
+        "dirreq-write-history 2012-02-11 09:03:39 (900 s) "
+        + "81281024,,60625920,67922944");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqReadHistoryMissingBytesEnd()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithDirreqReadHistoryLine(
+        "dirreq-read-history 2012-02-11 09:03:39 (900 s) "
+        + "17074176,16235520,16005120,");
+  }
+
   @Test()
   public void testGeoipDbDigestValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder.
@@ -752,49 +815,356 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getGeoipDbDigest());
   }
 
-  /* TODO Add tests for invalid geoip-db-digest lines. */
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipDbDigestTooShort()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithGeoipDbDigestLine("geoip-db-digest "
+        + "916A3CA8B7DF61473D5AE5B21711F35F301C");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipDbDigestIllegalChars()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithGeoipDbDigestLine("geoip-db-digest "
+        + "&%6A3CA8B7DF61473D5AE5B21711F35F301CE9E8");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipDbDigestMissing()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithGeoipDbDigestLine("geoip-db-digest");
+  }
 
   @Test()
   public void testGeoipStatsValid() throws DescriptorParseException {
-    GeoipStatsBuilder.createWithDefaultLines();
-    /* TODO Check stats parts. */
+    ExtraInfoDescriptor descriptor = GeoipStatsBuilder.
+        createWithDefaultLines();
+    assertEquals(1328898771000L, descriptor.getGeoipStartTimeMillis());
+    SortedMap<String, Integer> ips = descriptor.getGeoipClientOrigins();
+    assertNotNull(ips);
+    assertEquals(1152, ips.get("de").intValue());
+    assertEquals(896, ips.get("cn").intValue());
+    assertFalse(ips.containsKey("pl"));
   }
 
-  /* TODO Add tests for invalid geoip stats. */
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipStartTimeDateOnly()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipStartTimeLine("geoip-start-time "
+        + "2012-02-10");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipClientOriginsDash()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de-1152,cn=896,us=712,it=504,ru=352,fr=208,"
+        + "gb=208,ir=200");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipClientOriginsZero()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de=zero,cn=896,us=712,it=504,ru=352,fr=208,"
+        + "gb=208,ir=200");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipClientOriginsNone()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de=none,cn=896,us=712,it=504,ru=352,fr=208,"
+        + "gb=208,ir=200");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipClientOriginsOther()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de=1152,cn=896,us=712,it=504,ru=352,fr=208,"
+        + "gb=208,other=200");
+  }
+
+  @Test()
+  public void testGeoipClientOriginsQuestionMarks()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de=1152,cn=896,us=712,it=504,ru=352,fr=208,"
+        + "gb=208,??=200");
+  }
+
+  @Test()
+  public void testGeoipClientOriginsCapital()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins DE=1152,CN=896,US=712,IT=504,RU=352,FR=208,"
+        + "GB=208,IR=200");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipClientOriginsMissingBegin()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins ,cn=896,us=712,it=504,ru=352,fr=208,gb=208,"
+        + "ir=200");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testGeoipClientOriginsMissingMiddle()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de=1152,,us=712,it=504,ru=352,fr=208,"
+        + "gb=208,ir=200");
+  }
+
+  /* TODO Lines shouldn't be allowed to end with a comma.  This also
+   * applies to all other key-value pair lines. */
+  @Test()
+  public void testGeoipClientOriginsMissingEnd()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de=1152,cn=896,us=712,it=504,ru=352,fr=208,"
+        + "gb=208,");
+  }
+
+  @Test()
+  public void testGeoipClientOriginsDuplicate()
+      throws DescriptorParseException {
+    /* dir-spec.txt doesn't say anything about duplicate country codes, so
+     * this line is valid, even though it leads to a somewhat undefined
+     * parse result. */
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de=1152,de=952,cn=896,us=712,it=504,"
+        + "ru=352,fr=208,gb=208,ir=200");
+  }
 
   @Test()
   public void testDirreqStatsValid() throws DescriptorParseException {
-    DirreqStatsBuilder.createWithDefaultLines();
-    /* TODO Check stats parts. */
+    ExtraInfoDescriptor descriptor = DirreqStatsBuilder.
+        createWithDefaultLines();
+    assertEquals(1328921993000L, descriptor.getDirreqStatsEndMillis());
+    assertEquals(86400L, descriptor.getDirreqStatsIntervalLength());
+    SortedMap<String, Integer> ips = descriptor.getDirreqV3Ips();
+    assertNotNull(ips);
+    assertEquals(1544, ips.get("us").intValue());
+    assertFalse(ips.containsKey("no"));
+    assertTrue(descriptor.getDirreqV2Ips().isEmpty());
+    SortedMap<String, Integer> reqs = descriptor.getDirreqV3Reqs();
+    assertEquals(832, reqs.get("fr").intValue());
+    assertTrue(descriptor.getDirreqV2Reqs().isEmpty());
+    SortedMap<String, Integer> resp = descriptor.getDirreqV3Resp();
+    assertEquals(10848, resp.get("ok").intValue());
+    assertEquals(8, resp.get("not-enough-sigs").intValue());
+    resp = descriptor.getDirreqV2Resp();
+    assertEquals(1576, resp.get("not-found").intValue());
+    assertEquals(0.37, descriptor.getDirreqV2Share(), 0.0001);
+    assertEquals(0.37, descriptor.getDirreqV3Share(), 0.0001);
+    SortedMap<String, Integer> dl = descriptor.getDirreqV3DirectDl();
+    assertEquals(36, dl.get("complete").intValue());
+    dl = descriptor.getDirreqV2DirectDl();
+    assertEquals(0, dl.get("timeout").intValue());
+    dl = descriptor.getDirreqV3TunneledDl();
+    assertEquals(10608, dl.get("complete").intValue());
+    dl = descriptor.getDirreqV2TunneledDl();
+    assertEquals(0, dl.get("complete").intValue());
   }
 
-  /* TODO Add tests for invalid dirreq stats. */
+  @Test()
+  public void testDirreqStatsIntervalTwoDays()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqStatsEndLine("dirreq-stats-end "
+        + "2012-02-11 00:59:53 (172800 s)");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV3IpsThreeLetterCountry()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3IpsLine("dirreq-v3-ips "
+        + "usa=1544");
+  }
+
+  @Test()
+  public void testDirreqV2IpsDigitCountry()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV2IpsLine("dirreq-v2-ips 00=8");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV3ReqsOneLetterCountry()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3ReqsLine("dirreq-v3-reqs "
+        + "u=1744");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV2ReqsNoNumber()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV2ReqsLine("dirreq-v2-reqs us=");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV3RespTwoEqualSigns()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3RespLine("dirreq-v3-resp "
+        + "ok==10848");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV2RespNull()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV2RespLine("dirreq-v2-resp "
+        + "ok=null");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV2ShareComma()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV2ShareLine("dirreq-v2-share "
+        + "0,37%");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV3ShareNoPercent()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3ShareLine("dirreq-v3-share "
+        + "0.37");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV3DirectDlSpace()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3DirectDlLine(
+        "dirreq-v3-direct-dl complete 36");
+  }
+
+  @Test()
+  public void testDirreqV2DirectDlNegative()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV2DirectDlLine(
+        "dirreq-v2-direct-dl complete=-8");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV3TunneledDlTooLarge()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3TunneledDlLine(
+        "dirreq-v3-tunneled-dl complete=2147483648");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirreqV3TunneledDlDouble()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV2TunneledDlLine(
+        "dirreq-v2-tunneled-dl complete=0.001");
+  }
 
   @Test()
   public void testEntryStatsValid() throws DescriptorParseException {
-    EntryStatsBuilder.createWithDefaultLines();
-    /* TODO Check stats parts. */
+    ExtraInfoDescriptor descriptor = EntryStatsBuilder.
+        createWithDefaultLines();
+    assertEquals(1328925579000L, descriptor.getEntryStatsEndMillis());
+    assertEquals(86400L, descriptor.getEntryStatsIntervalLength());
+    SortedMap<String, Integer> ips = descriptor.getEntryIps();
+    assertNotNull(ips);
+    assertEquals(25368, ips.get("ir").intValue());
+    assertFalse(ips.containsKey("no"));
   }
 
-  /* TODO Add tests for invalid entry stats. */
+  @Test(expected = DescriptorParseException.class)
+  public void testEntryStatsEndNoDate() throws DescriptorParseException {
+    EntryStatsBuilder.createWithEntryStatsEndLine("entry-stats-end "
+        + "01:59:39 (86400 s)");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testEntryStatsIpsSemicolon()
+      throws DescriptorParseException {
+    EntryStatsBuilder.createWithEntryIpsLine("entry-ips "
+        + "ir=25368;us=15744");
+  }
 
   @Test()
   public void testCellStatsValid() throws DescriptorParseException {
-    CellStatsBuilder.createWithDefaultLines();
-    /* TODO Check stats parts. */
+    ExtraInfoDescriptor descriptor = CellStatsBuilder.
+        createWithDefaultLines();
+    assertEquals(1328925579000L, descriptor.getCellStatsEndMillis());
+    assertEquals(86400L, descriptor.getCellStatsIntervalLength());
+    List<Integer> processedCells = descriptor.getCellProcessedCells();
+    assertEquals(10, processedCells.size());
+    assertEquals(1441, processedCells.get(0).intValue());
+    assertEquals(11, processedCells.get(1).intValue());
+    List<Double> queuedCells = descriptor.getCellQueuedCells();
+    assertEquals(10, queuedCells.size());
+    assertEquals(3.29, queuedCells.get(0), 0.001);
+    assertEquals(0.00, queuedCells.get(1), 0.001);
+    List<Integer> timeInQueue = descriptor.getCellTimeInQueue();
+    assertEquals(10, timeInQueue.size());
+    assertEquals(524, timeInQueue.get(0).intValue());
+    assertEquals(1, timeInQueue.get(1).intValue());
+    assertEquals(866, descriptor.getCellCircuitsPerDecile());
   }
 
-  /* TODO Add tests for invalid cell stats. */
+  @Test(expected = DescriptorParseException.class)
+  public void testCellStatsEndNoSeconds()
+      throws DescriptorParseException {
+    CellStatsBuilder.createWithCellStatsEndLine("cell-stats-end "
+        + "2012-02-11 01:59:39 (86400)");
+  }
+
+  /* TODO Lines shouldn't be allowed to end with a comma.  This also
+   * applies to all other comma-separated value lines. */
+  @Test()
+  public void testCellProcessedCellsNineComma()
+      throws DescriptorParseException {
+    CellStatsBuilder.createWithCellProcessedCellsLine(
+        "cell-processed-cells 1441,11,6,4,2,1,1,1,1,");
+  }
+
+  /* TODO We should check that there are really ten values, not more or
+   * less.  Applies to most cell-stats lines. */
+  @Test()
+  public void testCellProcessedCellsEleven()
+      throws DescriptorParseException {
+    CellStatsBuilder.createWithCellQueuedCellsLine("cell-queued-cells "
+        + "3.29,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testCellTimeInQueueDouble()
+      throws DescriptorParseException {
+    CellStatsBuilder.createWithCellTimeInQueueLine("cell-time-in-queue "
+        + "524.0,1.0,1.0,0.0,0.0,25.0,0.0,0.0,0.0,0.0");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testCellCircuitsPerDecileNegative()
+      throws DescriptorParseException {
+    CellStatsBuilder.createWithCellCircuitsPerDecileLine(
+        "cell-circuits-per-decile -866");
+  }
 
   @Test()
   public void testConnBiDirectValid()
       throws DescriptorParseException {
-    DescriptorBuilder.createWithConnBiDirectLine("conn-bi-direct "
-        + "2012-02-11 01:59:39 (86400 s) 42173,1591,1310,1744");
-    /* TODO Check stats parts. */
+    ExtraInfoDescriptor descriptor = DescriptorBuilder.
+        createWithConnBiDirectLine("conn-bi-direct 2012-02-11 01:59:39 "
+        + "(86400 s) 42173,1591,1310,1744");
+    assertEquals(1328925579000L,
+        descriptor.getConnBiDirectStatsEndMillis());
+    assertEquals(86400L, descriptor.getConnBiDirectStatsIntervalLength());
+    assertEquals(42173, descriptor.getConnBiDirectBelow());
+    assertEquals(1591, descriptor.getConnBiDirectRead());
+    assertEquals(1310, descriptor.getConnBiDirectWrite());
+    assertEquals(1744, descriptor.getConnBiDirectBoth());
   }
 
-  /* TODO Add tests for invalid conn-bi-direct stats. */
+  @Test(expected = DescriptorParseException.class)
+  public void testConnBiDirectStatsFive()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithConnBiDirectLine("conn-bi-direct "
+        + "2012-02-11 01:59:39 (86400 s) 42173,1591,1310,1744,42");
+  }
 
   @Test()
   public void testExitStatsValid() throws DescriptorParseException {
@@ -805,7 +1175,7 @@ public class ExtraInfoDescriptorImplTest {
     String[] ports = new String[] { "25", "80", "443", "49755",
         "52563", "52596", "57528", "60912", "61351", "64811", "other" };
     int[] writtenValues = new int[] { 74647, 31370, 20577, 23, 12, 1111,
-        4, 11, 6, 3365, 2592};
+        4, 11, 6, 3365, 2592 };
     int i = 0;
     for (Map.Entry<String, Integer> e :
         descriptor.getExitKibibytesWritten().entrySet()) {
@@ -830,16 +1200,62 @@ public class ExtraInfoDescriptorImplTest {
     }
   }
 
-  /* TODO Add tests for invalid exit stats. */
+  @Test(expected = DescriptorParseException.class)
+  public void testExitStatsEndNoSeconds()
+      throws DescriptorParseException {
+    ExitStatsBuilder.createWithExitStatsEndLine("exit-stats-end "
+        + "2012-02-11 01:59 (86400 s)");
+  }
+
+  /* TODO Negative ports should not be allowed. */
+  @Test()
+  public void testExitStatsWrittenNegativePort()
+      throws DescriptorParseException {
+    ExitStatsBuilder.createWithExitKibibytesWrittenLine(
+        "exit-kibibytes-written -25=74647");
+  }
+
+  /* TODO Negative bytes should not be allowed. */
+  @Test()
+  public void testExitStatsReadNegativeBytes()
+      throws DescriptorParseException {
+    ExitStatsBuilder.createWithExitKibibytesReadLine(
+        "exit-kibibytes-read 25=-35562");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testExitStatsStreamsTooLarge()
+      throws DescriptorParseException {
+    ExitStatsBuilder.createWithExitStreamsOpenedLine(
+        "exit-streams-opened 25=2147483648");
+  }
 
   @Test()
   public void testBridgeStatsValid() throws DescriptorParseException {
-    BridgeStatsBuilder.createWithDefaultLines();
-    /* TODO Check stats parts. */
+    ExtraInfoDescriptor descriptor = BridgeStatsBuilder.
+        createWithDefaultLines();
+    assertEquals(1328925579000L, descriptor.getBridgeStatsEndMillis());
+    assertEquals(86400L, descriptor.getBridgeStatsIntervalLength());
+    SortedMap<String, Integer> ips = descriptor.getBridgeIps();
+    assertNotNull(ips);
+    assertEquals(24, ips.get("ir").intValue());
+    assertEquals(16, ips.get("sy").intValue());
+    assertFalse(ips.containsKey("no"));
   }
 
-  /* TODO Add tests for invalid bridge stats. */
+  /* TODO Only positive intervals should be allowed, for all stats. */
+  @Test()
+  public void testBridgeStatsEndIntervalZero()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeStatsEndLine("bridge-stats-end "
+        + "2012-02-11 01:59:39 (0 s)");
+  }
 
+  @Test(expected = DescriptorParseException.class)
+  public void testBridgeIpsDouble()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeIpsLine("bridge-ips ir=24.5");
+  }
   @Test()
   public void testRouterSignatureOpt()
       throws DescriptorParseException {
