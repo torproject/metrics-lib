@@ -35,4 +35,5 @@ the list below (software name, repository, contact person):
  - DocTor, https://git.torproject.org/doctor.git, karsten
  - Onionoo, https://git.torproject.org/onionoo.git, karsten
  - metrics-web, https://git.torproject.org/metrics-web.git, karsten
+ - metrics-db, https://git.torproject.org/metrics-db.git, karsten
 
