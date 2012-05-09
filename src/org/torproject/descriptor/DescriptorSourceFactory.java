@@ -3,10 +3,16 @@
 package org.torproject.descriptor;
 
 import org.torproject.descriptor.impl.DescriptorDownloaderImpl;
+import org.torproject.descriptor.impl.DescriptorParserImpl;
 import org.torproject.descriptor.impl.DescriptorReaderImpl;
 
 /* Create descriptor source instances. */
 public class DescriptorSourceFactory {
+
+  /* Create a descriptor parser. */
+  public static DescriptorParser createDescriptorParser() {
+    return new DescriptorParserImpl();
+  }
 
   /* Create a descriptor reader. */
   public static DescriptorReader createDescriptorReader() {

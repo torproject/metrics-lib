@@ -25,6 +25,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorFile;
+import org.torproject.descriptor.DescriptorParser;
 import org.torproject.descriptor.DescriptorReader;
 
 public class DescriptorReaderImpl implements DescriptorReader {
@@ -87,7 +88,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
     private List<File> tarballs;
     private BlockingIteratorImpl<DescriptorFile> descriptorQueue;
     private File historyFile;
-    private boolean failUnrecognizedDescriptorLines;
+    private DescriptorParser descriptorParser;
     private DescriptorReaderRunnable(List<File> directories,
         List<File> tarballs,
         BlockingIteratorImpl<DescriptorFile> descriptorQueue,
@@ -96,8 +97,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
       this.tarballs = tarballs;
       this.descriptorQueue = descriptorQueue;
       this.historyFile = historyFile;
-      this.failUnrecognizedDescriptorLines =
-          failUnrecognizedDescriptorLines;
+      this.descriptorParser = new DescriptorParserImpl();
+      this.descriptorParser.setFailUnrecognizedDescriptorLines(
+          failUnrecognizedDescriptorLines);
     }
     public void run() {
       this.readOldHistory();
@@ -245,9 +247,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
                 String fileName = tae.getName().substring(
                     tae.getName().lastIndexOf("/") + 1);
                 List<Descriptor> parsedDescriptors =
-                    DescriptorImpl.parseRelayOrBridgeDescriptors(
-                    rawDescriptorBytes, fileName,
-                    this.failUnrecognizedDescriptorLines);
+                    this.descriptorParser.parseDescriptors(
+                    rawDescriptorBytes, fileName);
                 descriptorFile.setDescriptors(parsedDescriptors);
               } catch (DescriptorParseException e) {
                 descriptorFile.setException(e);
@@ -272,9 +273,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
       }
       bis.close();
       byte[] rawDescriptorBytes = baos.toByteArray();
-      return DescriptorImpl.parseRelayOrBridgeDescriptors(
-          rawDescriptorBytes, file.getName(),
-          this.failUnrecognizedDescriptorLines);
+      return this.descriptorParser.parseDescriptors(rawDescriptorBytes,
+          file.getName());
     }
   }
 }
