@@ -8,6 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.zip.InflaterInputStream;
 
+import org.torproject.descriptor.DescriptorParser;
+import org.torproject.descriptor.DescriptorSourceFactory;
+
 /* Download descriptors from one directory authority or mirror.  First,
  * ask the coordinator thread to create a request, run it, and deliver
  * the response.  Repeat until the coordinator thread says there are no
@@ -16,9 +19,12 @@ public class DirectoryDownloader implements Runnable {
 
   private String nickname;
   private String ipPort;
+  private DescriptorParser descriptorParser;
   protected DirectoryDownloader(String nickname, String ip, int dirPort) {
     this.nickname = nickname;
     this.ipPort = ip + ":" + String.valueOf(dirPort);
+    this.descriptorParser =
+        DescriptorSourceFactory.createDescriptorParser();
   }
 
   private DownloadCoordinator downloadCoordinator;
@@ -37,11 +43,10 @@ public class DirectoryDownloader implements Runnable {
     this.readTimeout = readTimeout;
   }
 
-  private boolean failUnrecognizedDescriptorLines;
   protected void setFailUnrecognizedDescriptorLines(
       boolean failUnrecognizedDescriptorLines) {
-    this.failUnrecognizedDescriptorLines =
-        failUnrecognizedDescriptorLines;
+    this.descriptorParser.setFailUnrecognizedDescriptorLines(
+        failUnrecognizedDescriptorLines);
   }
 
   public void run() {
@@ -76,9 +81,8 @@ public class DirectoryDownloader implements Runnable {
             byte[] responseBytes = baos.toByteArray();
             request.setResponseBytes(responseBytes);
             request.setRequestEnd(System.currentTimeMillis());
-            request.setDescriptors(DescriptorImpl.
-                parseRelayOrBridgeDescriptors(responseBytes, null,
-                this.failUnrecognizedDescriptorLines));
+            request.setDescriptors(this.descriptorParser.parseDescriptors(
+                responseBytes, null));
           }
         } catch (Exception e) {
           request.setException(e);
