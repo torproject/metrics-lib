@@ -37,7 +37,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
   protected BridgePoolAssignmentImpl(byte[] descriptorBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, failUnrecognizedDescriptorLines);
+    super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(
         new String[] { "bridge-pool-assignment" }));

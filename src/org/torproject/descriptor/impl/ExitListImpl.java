@@ -20,7 +20,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
   protected ExitListImpl(byte[] rawDescriptorBytes, String fileName,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, failUnrecognizedDescriptorLines);
+    super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
     this.setPublishedMillisFromFileName(fileName);
     this.splitAndParseExitListEntries(rawDescriptorBytes);
   }
@@ -50,10 +50,6 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
       throw new DescriptorParseException("Descriptor is empty.");
     }
     String descriptorString = new String(rawDescriptorBytes);
-    if (descriptorString.startsWith("\n") ||
-        descriptorString.contains("\n\n")) {
-      throw new DescriptorParseException("Empty lines are not allowed.");
-    }
     Scanner s = new Scanner(descriptorString).useDelimiter("\n");
     StringBuilder sb = new StringBuilder();
     while (s.hasNext()) {

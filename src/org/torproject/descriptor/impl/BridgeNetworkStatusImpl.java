@@ -15,7 +15,7 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
   protected BridgeNetworkStatusImpl(byte[] statusBytes,
       String fileName, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(statusBytes, failUnrecognizedDescriptorLines, false);
+    super(statusBytes, failUnrecognizedDescriptorLines, false, false);
     this.setPublishedMillisFromFileName(fileName);
   }
 

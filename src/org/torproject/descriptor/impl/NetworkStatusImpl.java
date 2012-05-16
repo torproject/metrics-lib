@@ -18,8 +18,10 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   protected NetworkStatusImpl(byte[] rawDescriptorBytes,
       boolean failUnrecognizedDescriptorLines,
-      boolean containsDirSourceEntries) throws DescriptorParseException {
-    super(rawDescriptorBytes, failUnrecognizedDescriptorLines);
+      boolean containsDirSourceEntries, boolean blankLinesAllowed)
+      throws DescriptorParseException {
+    super(rawDescriptorBytes, failUnrecognizedDescriptorLines,
+        blankLinesAllowed);
     this.splitAndParseParts(rawDescriptorBytes, containsDirSourceEntries);
   }
 
@@ -29,10 +31,6 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       throw new DescriptorParseException("Descriptor is empty.");
     }
     String descriptorString = new String(rawDescriptorBytes);
-    if (descriptorString.startsWith("\n") ||
-        descriptorString.contains("\n\n")) {
-      throw new DescriptorParseException("Empty lines are not allowed.");
-    }
     int startIndex = 0;
     int firstDirSourceIndex = !containsDirSourceEntries ? -1 :
         this.findFirstIndexOfKeyword(descriptorString, "dir-source");

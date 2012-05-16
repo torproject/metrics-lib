@@ -131,13 +131,13 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   protected DescriptorImpl(byte[] rawDescriptorBytes,
-      boolean failUnrecognizedDescriptorLines)
+      boolean failUnrecognizedDescriptorLines, boolean blankLinesAllowed)
       throws DescriptorParseException {
     this.rawDescriptorBytes = rawDescriptorBytes;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
     this.cutOffAnnotations(rawDescriptorBytes);
-    this.countKeywords(rawDescriptorBytes);
+    this.countKeywords(rawDescriptorBytes, blankLinesAllowed);
   }
 
   /* Parse annotation lines from the descriptor bytes. */
@@ -167,15 +167,15 @@ public abstract class DescriptorImpl implements Descriptor {
   private String firstKeyword, lastKeyword;
   private Map<String, Integer> parsedKeywords =
       new HashMap<String, Integer>();
-  private void countKeywords(byte[] rawDescriptorBytes)
-      throws DescriptorParseException {
+  private void countKeywords(byte[] rawDescriptorBytes,
+      boolean blankLinesAllowed) throws DescriptorParseException {
     if (rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
     String descriptorString = new String(rawDescriptorBytes);
-    if (descriptorString.startsWith("\n") ||
-        descriptorString.contains("\n\n")) {
-      throw new DescriptorParseException("Empty lines are not allowed.");
+    if (!blankLinesAllowed && (descriptorString.startsWith("\n") ||
+        descriptorString.contains("\n\n"))) {
+      throw new DescriptorParseException("Blank lines are not allowed.");
     }
     boolean skipCrypto = false;
     Scanner s = new Scanner(descriptorString).useDelimiter("\n");
@@ -185,7 +185,8 @@ public abstract class DescriptorImpl implements Descriptor {
         skipCrypto = true;
       } else if (line.startsWith("-----END")) {
         skipCrypto = false;
-      } else if (!line.startsWith("@") && !skipCrypto) {
+      } else if (!line.isEmpty() && !line.startsWith("@") &&
+          !skipCrypto) {
         String lineNoOpt = line.startsWith("opt ") ?
             line.substring("opt ".length()) : line;
         String keyword = lineNoOpt.split(" ", -1)[0];

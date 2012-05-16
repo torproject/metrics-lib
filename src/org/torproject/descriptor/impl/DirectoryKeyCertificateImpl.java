@@ -38,7 +38,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   protected DirectoryKeyCertificateImpl(byte[] rawDescriptorBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, failUnrecognizedDescriptorLines);
+    super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((

@@ -38,7 +38,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
   protected ServerDescriptorImpl(byte[] descriptorBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, failUnrecognizedDescriptorLines);
+    super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(

@@ -41,7 +41,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   protected ExtraInfoDescriptorImpl(byte[] descriptorBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, failUnrecognizedDescriptorLines);
+    super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((

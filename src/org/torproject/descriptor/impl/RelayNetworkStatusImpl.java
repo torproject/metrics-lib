@@ -39,7 +39,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
   protected RelayNetworkStatusImpl(byte[] statusBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(statusBytes, failUnrecognizedDescriptorLines, false);
+    super(statusBytes, failUnrecognizedDescriptorLines, false, true);
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "network-status-version,dir-source,fingerprint,contact,"
         + "dir-signing-key,published").split(",")));
@@ -84,6 +84,9 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
+      if (line.isEmpty()) {
+        continue;
+      }
       String[] parts = line.split(" ");
       String keyword = parts[0];
       if (keyword.equals("network-status-version")) {
