@@ -305,7 +305,8 @@ public class RelayNetworkStatusConsensusImplTest {
         "00795A6E8D91C270FC23B30F388A495553E01894").getAddress());
     assertEquals("3509BA5A624403A905C74DA5C8A0CEC9E0D3AF86",
         consensus.getDirectorySignatures().get(
-        "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4"));
+        "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4").
+        getSigningKeyDigest());
     assertEquals(285, (int) consensus.getBandwidthWeights().get("Wbd"));
     assertTrue(consensus.getUnrecognizedLines().isEmpty());
   }
