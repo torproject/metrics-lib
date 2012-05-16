@@ -39,7 +39,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   protected RelayNetworkStatusVoteImpl(byte[] voteBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(voteBytes, failUnrecognizedDescriptorLines);
+    super(voteBytes, failUnrecognizedDescriptorLines, false);
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "vote-status,consensus-methods,published,valid-after,fresh-until,"
         + "valid-until,voting-delay,known-flags,dir-source,"
@@ -57,6 +57,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    boolean skipCrypto = false; /* TODO Parse crypto parts. */
     while (s.hasNext()) {
       String line = s.next();
       String[] parts = line.split(" ");
@@ -85,14 +86,40 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         this.parseKnownFlagsLine(line, parts);
       } else if (keyword.equals("params")) {
         this.parseParamsLine(line, parts);
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized line '" + line
-            + "' in vote.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
+      } else if (keyword.equals("dir-source")) {
+        this.parseDirSourceLine(line, parts);
+      } else if (keyword.equals("contact")) {
+        this.parseContactLine(line, parts);
+      } else if (keyword.equals("dir-key-certificate-version")) {
+        this.parseDirKeyCertificateVersionLine(line, parts);
+      } else if (keyword.equals("dir-address")) {
+        this.parseDirAddressLine(line, parts);
+      } else if (keyword.equals("fingerprint")) {
+        this.parseFingerprintLine(line, parts);
+      } else if (keyword.equals("legacy-dir-key")) {
+        this.parseLegacyDirKeyLine(line, parts);
+      } else if (keyword.equals("dir-key-published")) {
+        this.parseDirKeyPublished(line, parts);
+      } else if (keyword.equals("dir-key-expires")) {
+        this.parseDirKeyExpiresLine(line, parts);
+      } else if (keyword.equals("dir-identity-key") ||
+          keyword.equals("dir-signing-key") ||
+          keyword.equals("dir-key-crosscert") ||
+          keyword.equals("dir-key-certification")) {
+      } else if (line.startsWith("-----BEGIN")) {
+        skipCrypto = true;
+      } else if (line.startsWith("-----END")) {
+        skipCrypto = false;
+      } else if (!skipCrypto) {
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '"
+              + line + "' in vote.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
+          }
+          this.unrecognizedLines.add(line);
         }
-        this.unrecognizedLines.add(line);
       }
     }
   }
@@ -223,53 +250,6 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   private void parseParamsLine(String line, String[] parts)
       throws DescriptorParseException {
     this.consensusParams = ParseHelper.parseKeyValuePairs(line, parts, 1);
-  }
-
-  protected void parseDirSource(byte[] dirSourceBytes)
-      throws DescriptorParseException {
-    Scanner s = new Scanner(new String(dirSourceBytes)).
-        useDelimiter("\n");
-    boolean skipCrypto = false;
-    while (s.hasNext()) {
-      String line = s.next();
-      String[] parts = line.split(" ");
-      String keyword = parts[0];
-      if (keyword.equals("dir-source")) {
-        this.parseDirSourceLine(line, parts);
-      } else if (keyword.equals("contact")) {
-        this.parseContactLine(line, parts);
-      } else if (keyword.equals("dir-key-certificate-version")) {
-        this.parseDirKeyCertificateVersionLine(line, parts);
-      } else if (keyword.equals("dir-address")) {
-        this.parseDirAddressLine(line, parts);
-      } else if (keyword.equals("fingerprint")) {
-        this.parseFingerprintLine(line, parts);
-      } else if (keyword.equals("legacy-dir-key")) {
-        this.parseLegacyDirKeyLine(line, parts);
-      } else if (keyword.equals("dir-key-published")) {
-        this.parseDirKeyPublished(line, parts);
-      } else if (keyword.equals("dir-key-expires")) {
-        this.parseDirKeyExpiresLine(line, parts);
-      } else if (keyword.equals("dir-identity-key") ||
-          keyword.equals("dir-signing-key") ||
-          keyword.equals("dir-key-crosscert") ||
-          keyword.equals("dir-key-certification")) {
-      } else if (line.startsWith("-----BEGIN")) {
-        skipCrypto = true;
-      } else if (line.startsWith("-----END")) {
-        skipCrypto = false;
-      } else if (!skipCrypto) {
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in vote.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
-          }
-          this.unrecognizedLines.add(line);
-        }
-      }
-    }
   }
 
   private void parseDirSourceLine(String line, String[] parts)

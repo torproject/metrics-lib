@@ -41,7 +41,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(consensusBytes, failUnrecognizedDescriptorLines);
+    super(consensusBytes, failUnrecognizedDescriptorLines, true);
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "vote-status,consensus-method,valid-after,fresh-until,"
         + "valid-until,voting-delay,known-flags").split(",")));

@@ -66,6 +66,9 @@ public abstract class DescriptorImpl implements Descriptor {
     } else if (firstLines.startsWith("ExitNode ")) {
       parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, fileName,
           failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith("network-status-version 2\n")) {
+      parsedDescriptors.add(new RelayNetworkStatusImpl(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");

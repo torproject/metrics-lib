@@ -17,14 +17,14 @@ import org.torproject.descriptor.NetworkStatusEntry;
 public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   protected NetworkStatusImpl(byte[] rawDescriptorBytes,
-      boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
+      boolean failUnrecognizedDescriptorLines,
+      boolean containsDirSourceEntries) throws DescriptorParseException {
     super(rawDescriptorBytes, failUnrecognizedDescriptorLines);
-    this.splitAndParseParts(rawDescriptorBytes);
+    this.splitAndParseParts(rawDescriptorBytes, containsDirSourceEntries);
   }
 
-  private void splitAndParseParts(byte[] rawDescriptorBytes)
-      throws DescriptorParseException {
+  private void splitAndParseParts(byte[] rawDescriptorBytes,
+      boolean containsDirSourceEntries) throws DescriptorParseException {
     if (this.rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
@@ -34,8 +34,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       throw new DescriptorParseException("Empty lines are not allowed.");
     }
     int startIndex = 0;
-    int firstDirSourceIndex = this.findFirstIndexOfKeyword(
-        descriptorString, "dir-source");
+    int firstDirSourceIndex = !containsDirSourceEntries ? -1 :
+        this.findFirstIndexOfKeyword(descriptorString, "dir-source");
     int firstRIndex = this.findFirstIndexOfKeyword(descriptorString, "r");
     int directoryFooterIndex = this.findFirstIndexOfKeyword(
         descriptorString, "directory-footer");
