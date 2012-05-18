@@ -22,7 +22,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       throws DescriptorParseException {
     super(rawDescriptorBytes, failUnrecognizedDescriptorLines,
         blankLinesAllowed);
-    this.splitAndParseParts(rawDescriptorBytes, containsDirSourceEntries);
+    this.splitAndParseParts(this.rawDescriptorBytes,
+        containsDirSourceEntries);
   }
 
   private void splitAndParseParts(byte[] rawDescriptorBytes,

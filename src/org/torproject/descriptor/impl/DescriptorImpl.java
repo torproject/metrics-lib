@@ -26,30 +26,31 @@ public abstract class DescriptorImpl implements Descriptor {
     System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,
         first100Chars.length);
     String firstLines = new String(first100Chars);
-    if (firstLines.startsWith("network-status-version 3\n") ||
-        firstLines.contains("\nnetwork-status-version 3\n")) {
-      if (firstLines.contains("\nvote-status consensus\n")) {
-        parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl.
-            parseConsensuses(rawDescriptorBytes,
-            failUnrecognizedDescriptorLines));
-      } else if (firstLines.contains("\nvote-status vote\n")) {
-        parsedDescriptors.addAll(RelayNetworkStatusVoteImpl.
-            parseVotes(rawDescriptorBytes,
-            failUnrecognizedDescriptorLines));
-      } else {
-        throw new DescriptorParseException("Could not detect relay "
-            + "network status type in descriptor starting with '"
-            + firstLines + "'.");
-      }
+    if (firstLines.startsWith("@type network-status-consensus-3 1.0\n") ||
+        ((firstLines.startsWith("network-status-version 3\n") ||
+        firstLines.contains("\nnetwork-status-version 3\n")) &&
+        firstLines.contains("\nvote-status consensus\n"))) {
+      parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl.
+          parseConsensuses(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith("@type network-status-vote-3 1.0\n")
+        || ((firstLines.startsWith("network-status-version 3\n") ||
+        firstLines.contains("\nnetwork-status-version 3\n")) &&
+        firstLines.contains("\nvote-status vote\n"))) {
+      parsedDescriptors.addAll(RelayNetworkStatusVoteImpl.
+          parseVotes(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("r ")) {
       parsedDescriptors.add(new BridgeNetworkStatusImpl(
           rawDescriptorBytes, fileName, failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("router ") ||
+    } else if (firstLines.startsWith("@type server-descriptor 1.0\n") ||
+        firstLines.startsWith("router ") ||
         firstLines.contains("\nrouter ")) {
       parsedDescriptors.addAll(ServerDescriptorImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("extra-info ") ||
+    } else if (firstLines.startsWith("@type extra-info 1.0\n") ||
+        firstLines.startsWith("extra-info ") ||
         firstLines.contains("\nextra-info ")) {
       parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
           parseDescriptors(rawDescriptorBytes,
@@ -59,14 +60,19 @@ public abstract class DescriptorImpl implements Descriptor {
       parsedDescriptors.addAll(BridgePoolAssignmentImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("dir-key-certificate-version ")) {
+    } else if (firstLines.startsWith("@type dir-key-certificate-3 1.0") ||
+        firstLines.startsWith("dir-key-certificate-version ") ||
+        firstLines.contains("\ndir-key-certificate-version ")) {
       parsedDescriptors.addAll(DirectoryKeyCertificateImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("ExitNode ")) {
+    } else if (firstLines.startsWith("ExitNode ") ||
+        firstLines.contains("\nExitNode ")) {
       parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, fileName,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("network-status-version 2\n")) {
+    } else if (firstLines.startsWith("@type network-status-2 1.0\n") ||
+        firstLines.startsWith("network-status-version 2\n") ||
+        firstLines.contains("\nnetwork-status-version 2\n")) {
       parsedDescriptors.add(new RelayNetworkStatusImpl(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else {
