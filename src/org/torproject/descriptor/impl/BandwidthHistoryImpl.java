@@ -12,32 +12,42 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
   protected BandwidthHistoryImpl(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     boolean isValid = false;
-    if (partsNoOpt.length >= 5) {
+    this.line = line;
+    if (lineNoOpt.startsWith("read-history  ")) {
+      lineNoOpt = "read-history "
+          + lineNoOpt.substring("read-history  ".length());
+      partsNoOpt = lineNoOpt.split(" ");
+    }
+    if (partsNoOpt.length == 5 || partsNoOpt.length == 6) {
       try {
-        this.line = line;
-        if (lineNoOpt.startsWith("read-history  ")) {
-          lineNoOpt = "read-history "
-              + lineNoOpt.substring("read-history  ".length());
-          partsNoOpt = lineNoOpt.split(" ");
-        }
         this.historyEndMillis = ParseHelper.parseTimestampAtIndex(line,
             partsNoOpt, 1, 2);
         if (partsNoOpt[3].startsWith("(") &&
-            partsNoOpt[4].equals("s)")) {
+            partsNoOpt[4].startsWith("s)")) {
           this.intervalLength = Long.parseLong(partsNoOpt[3].
               substring(1));
           if (this.intervalLength <= 0L) {
             throw new DescriptorParseException("Only positive interval "
                 + "lengths are allowed in line '" + line + "'.");
           }
-          if (partsNoOpt.length > 6) {
-            /* Invalid line, handle below. */
-          } else if (partsNoOpt.length == 5) {
-            /* No bandwidth values to parse. */
+          String[] values = null;
+          if (partsNoOpt.length == 5 &&
+              partsNoOpt[4].equals("s)")) {
+            /* There are no bandwidth values to parse. */
             isValid = true;
-          } else {
+          } else if (partsNoOpt.length == 6) {
+            /* There are bandwidth values to parse. */
+            values = partsNoOpt[5].split(",", -1);
+          } else if (partsNoOpt[4].length() > 2) {
+            /* There are bandwidth values to parse, but there is no space
+             * between "s)" and "0,0,0,0".  Very old Tor versions around
+             * Tor 0.0.8 wrote such history lines, and even though
+             * dir-spec.txt implies a space here, the old format isn't
+             * totally broken.  Let's pretend there's a space. */
+            values = partsNoOpt[4].substring(2).split(",", -1);
+          }
+          if (values != null) {
             long endMillis = this.historyEndMillis;
-            String[] values = partsNoOpt[5].split(",", -1);
             for (int i = values.length - 1; i >= 0; i--) {
               long bandwidthValue = Long.parseLong(values[i]);
               if (bandwidthValue < 0L) {

@@ -5,6 +5,8 @@ package org.torproject.descriptor;
 import java.util.List;
 import java.util.SortedSet;
 
+/* Status entry contained in a network status with version 2 or higher or
+ * in a bridge network status. */
 public interface NetworkStatusEntry {
 
   /* Return the raw status entry bytes. */

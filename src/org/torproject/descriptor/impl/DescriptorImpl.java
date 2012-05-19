@@ -78,6 +78,11 @@ public abstract class DescriptorImpl implements Descriptor {
         firstLines.contains("\nnetwork-status-version 2\n")) {
       parsedDescriptors.add(new RelayNetworkStatusImpl(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith("@type directory 1.0\n") ||
+        firstLines.startsWith("signed-directory\n") ||
+        firstLines.contains("\nsigned-directory\n")) {
+      parsedDescriptors.add(new RelayDirectoryImpl(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");

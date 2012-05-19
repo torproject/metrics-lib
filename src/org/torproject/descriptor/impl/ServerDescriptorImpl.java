@@ -123,6 +123,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
         this.parseProtocolsLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("allow-single-hop-exits")) {
         this.parseAllowSingleHopExitsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("dircacheport")) {
+        this.parseDircacheportLine(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
         crypto.append(line + "\n");
@@ -183,7 +185,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseBandwidthLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (partsNoOpt.length != 4) {
+    if (partsNoOpt.length < 3 || partsNoOpt.length > 4) {
       throw new DescriptorParseException("Wrong number of values in line "
           + "'" + line + "'.");
     }
@@ -191,10 +193,17 @@ public class ServerDescriptorImpl extends DescriptorImpl
     try {
       this.bandwidthRate = Integer.parseInt(partsNoOpt[1]);
       this.bandwidthBurst = Integer.parseInt(partsNoOpt[2]);
-      this.bandwidthObserved = Integer.parseInt(partsNoOpt[3]);
+      if (partsNoOpt.length == 4) {
+        this.bandwidthObserved = Integer.parseInt(partsNoOpt[3]);
+      }
       if (this.bandwidthRate >= 0 && this.bandwidthBurst >= 0 &&
           this.bandwidthObserved >= 0) {
         isValid = true;
+      }
+      if (partsNoOpt.length < 4) {
+        /* Tor versions 0.0.8 and older only wrote bandwidth lines with
+         * rate and burst values, but no observed value. */
+        this.bandwidthObserved = -1;
       }
     } catch (NumberFormatException e) {
       /* Handle below. */
@@ -433,6 +442,21 @@ public class ServerDescriptorImpl extends DescriptorImpl
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.allowSingleHopExits = true;
+  }
+
+  private void parseDircacheportLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    /* The dircacheport line was only contained in server descriptors
+     * published by Tor 0.0.8 and before.  It's only specified in old
+     * tor-spec.txt versions. */
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    if (this.dirPort != 0) {
+      throw new DescriptorParseException("At most one of dircacheport "
+          + "and the directory port in the router line may be non-zero.");
+    }
+    this.dirPort = ParseHelper.parsePort(line, partsNoOpt[1]);
   }
 
   private void calculateDigest() throws DescriptorParseException {

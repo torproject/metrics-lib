@@ -40,7 +40,9 @@ public interface ServerDescriptor extends Descriptor {
   public int getBandwidthBurst();
 
   /* Return the observed bandwidth in bytes per second as an estimate of
-   * the capacity that the relay can handle. */
+   * the capacity that the relay can handle, or -1 if the descriptor
+   * doesn't contain an observed bandwidth value (which is the case for
+   * Tor versions 0.0.8 or older). */
   public int getBandwidthObserved();
 
   /* Return the platform string containing the Tor software version and
