@@ -162,8 +162,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
       this.measured = pairs.remove("Measured");
     }
     if (!pairs.isEmpty()) {
-      throw new DescriptorParseException("Unknown key-value pair in "
-          + "line '" + line + "'.");
+      /* Ignore unknown key-value pair. */
     }
   }
 
