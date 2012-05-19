@@ -40,16 +40,19 @@ public abstract class DescriptorImpl implements Descriptor {
       parsedDescriptors.addAll(RelayNetworkStatusVoteImpl.
           parseVotes(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("r ")) {
+    } else if (firstLines.startsWith("@type bridge-network-status 1.0\n")
+        || firstLines.startsWith("r ")) {
       parsedDescriptors.add(new BridgeNetworkStatusImpl(
           rawDescriptorBytes, fileName, failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type server-descriptor 1.0\n") ||
+        firstLines.startsWith("@type bridge-server-descriptor 1.0\n") ||
         firstLines.startsWith("router ") ||
         firstLines.contains("\nrouter ")) {
       parsedDescriptors.addAll(ServerDescriptorImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type extra-info 1.0\n") ||
+        firstLines.startsWith("@type bridge-extra-info 1.0\n") ||
         firstLines.startsWith("extra-info ") ||
         firstLines.contains("\nextra-info ")) {
       parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
