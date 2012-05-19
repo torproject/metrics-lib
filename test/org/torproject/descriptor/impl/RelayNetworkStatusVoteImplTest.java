@@ -503,7 +503,7 @@ public class RelayNetworkStatusVoteImplTest {
         "network-status-version 3\n ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testNetworkStatusVersionPrefixLineAtChar()
       throws DescriptorParseException {
     VoteBuilder.createWithNetworkStatusVersionLine(

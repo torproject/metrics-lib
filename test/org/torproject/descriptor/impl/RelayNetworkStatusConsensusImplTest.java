@@ -331,7 +331,7 @@ public class RelayNetworkStatusConsensusImplTest {
         "network-status-version 3\n ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testNetworkStatusVersionPrefixLineAtChar()
       throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
@@ -926,7 +926,7 @@ public class RelayNetworkStatusConsensusImplTest {
     StatusEntryBuilder.createWithWLine("w ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testWLineWarpSeven() throws DescriptorParseException {
     StatusEntryBuilder.createWithWLine("w Warp=7");
   }
