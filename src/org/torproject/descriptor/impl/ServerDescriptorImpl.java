@@ -125,6 +125,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
         this.parseAllowSingleHopExitsLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("dircacheport")) {
         this.parseDircacheportLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("router-digest")) {
+        this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
         crypto.append(line + "\n");
@@ -459,7 +461,21 @@ public class ServerDescriptorImpl extends DescriptorImpl
     this.dirPort = ParseHelper.parsePort(line, partsNoOpt[1]);
   }
 
+  private void parseRouterDigestLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.serverDescriptorDigest = ParseHelper.parseTwentyByteHexString(
+        line, partsNoOpt[1]);
+  }
+
   private void calculateDigest() throws DescriptorParseException {
+    if (this.serverDescriptorDigest != null) {
+      /* We already learned the descriptor digest of this bridge
+       * descriptor from a "router-digest" line. */
+      return;
+    }
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
       String startToken = "router ";

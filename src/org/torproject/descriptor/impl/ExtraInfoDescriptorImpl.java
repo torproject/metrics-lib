@@ -168,6 +168,8 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("router-signature")) {
         this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("router-digest")) {
+        this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
         skipCrypto = true;
       } else if (line.startsWith("-----END")) {
@@ -573,7 +575,21 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     /* Not parsing crypto parts (yet). */
   }
 
+  private void parseRouterDigestLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.extraInfoDigest = ParseHelper.parseTwentyByteHexString(line,
+        partsNoOpt[1]);
+  }
+
   private void calculateDigest() throws DescriptorParseException {
+    if (this.extraInfoDigest != null) {
+      /* We already learned the descriptor digest of this bridge
+       * descriptor from a "router-digest" line. */
+      return;
+    }
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
       String startToken = "extra-info ";

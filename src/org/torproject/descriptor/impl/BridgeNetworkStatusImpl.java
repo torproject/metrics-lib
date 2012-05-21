@@ -4,6 +4,8 @@ package org.torproject.descriptor.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.TimeZone;
 
 import org.torproject.descriptor.BridgeNetworkStatus;
@@ -21,6 +23,11 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
 
   private void setPublishedMillisFromFileName(String fileName)
       throws DescriptorParseException {
+    if (this.publishedMillis != 0L) {
+      /* We already learned the publication timestamp from parsing the
+       * "published" line. */
+      return;
+    }
     if (fileName.length() ==
         "20000101-000000-4A0CCD2DDC7995083D73F5D667100C8A5831F16D".
         length()) {
@@ -44,8 +51,29 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    throw new DescriptorParseException("No directory header expected in "
-        + "bridge network status.");
+    Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    while (s.hasNext()) {
+      String line = s.next();
+      String[] parts = line.split(" ");
+      String keyword = parts[0];
+      if (keyword.equals("published")) {
+        this.parsePublishedLine(line, parts);
+      } else if (this.failUnrecognizedDescriptorLines) {
+        throw new DescriptorParseException("Unrecognized line '" + line
+            + "' in bridge network status.");
+      } else {
+        if (this.unrecognizedLines == null) {
+          this.unrecognizedLines = new ArrayList<String>();
+        }
+        this.unrecognizedLines.add(line);
+      }
+    }
+  }
+
+  private void parsePublishedLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.publishedMillis = ParseHelper.parseTimestampAtIndex(line, parts,
+        1, 2);
   }
 
   protected void parseDirSource(byte[] dirSourceBytes)
