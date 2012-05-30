@@ -19,8 +19,7 @@ public class DescriptorParserImpl implements DescriptorParser {
 
   public List<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
       String fileName) throws DescriptorParseException {
-    return DescriptorImpl.parseRelayOrBridgeDescriptors(
-        rawDescriptorBytes, fileName,
+    return DescriptorImpl.parseDescriptors(rawDescriptorBytes, fileName,
         this.failUnrecognizedDescriptorLines);
   }
 }

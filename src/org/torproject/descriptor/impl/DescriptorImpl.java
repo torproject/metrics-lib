@@ -13,7 +13,7 @@ import org.torproject.descriptor.Descriptor;
 
 public abstract class DescriptorImpl implements Descriptor {
 
-  protected static List<Descriptor> parseRelayOrBridgeDescriptors(
+  protected static List<Descriptor> parseDescriptors(
       byte[] rawDescriptorBytes, String fileName,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
@@ -83,6 +83,9 @@ public abstract class DescriptorImpl implements Descriptor {
         firstLines.contains("\nsigned-directory\n")) {
       parsedDescriptors.add(new RelayDirectoryImpl(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith("@type torperf 1.0\n")) {
+      parsedDescriptors.addAll(TorperfResultImpl.parseTorperfResults(
+          rawDescriptorBytes, failUnrecognizedDescriptorLines));
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");
@@ -156,12 +159,17 @@ public abstract class DescriptorImpl implements Descriptor {
 
   /* Parse annotation lines from the descriptor bytes. */
   private List<String> annotations = new ArrayList<String>();
-  private void cutOffAnnotations(byte[] rawDescriptorBytes) {
+  private void cutOffAnnotations(byte[] rawDescriptorBytes)
+      throws DescriptorParseException {
     String ascii = new String(rawDescriptorBytes);
     int start = 0;
     while ((start == 0 && ascii.startsWith("@")) ||
         (start > 0 && ascii.indexOf("\n@", start - 1) >= 0)) {
       int end = ascii.indexOf("\n", start);
+      if (end < 0) {
+        throw new DescriptorParseException("Annotation line does not "
+            + "contain a newline.");
+      }
       this.annotations.add(ascii.substring(start, end));
       start = end + 1;
     }
