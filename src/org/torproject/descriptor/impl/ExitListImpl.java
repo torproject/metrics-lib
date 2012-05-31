@@ -21,24 +21,25 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
-    this.setPublishedMillisFromFileName(fileName);
     this.splitAndParseExitListEntries(rawDescriptorBytes);
+    this.setPublishedMillisFromFileName(fileName);
   }
 
   private void setPublishedMillisFromFileName(String fileName)
       throws DescriptorParseException {
-    if (fileName.length() == "2012-02-01-04-06-24".length()) {
+    if (this.downloadedMillis == 0L &&
+        fileName.length() == "2012-02-01-04-06-24".length()) {
       try {
         SimpleDateFormat fileNameFormat = new SimpleDateFormat(
             "yyyy-MM-dd-HH-mm-ss");
         fileNameFormat.setLenient(false);
         fileNameFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        this.publishedMillis = fileNameFormat.parse(fileName).getTime();
+        this.downloadedMillis = fileNameFormat.parse(fileName).getTime();
       } catch (ParseException e) {
         /* Handle below. */
       }
     }
-    if (this.publishedMillis == 0L) {
+    if (this.downloadedMillis == 0L) {
       throw new DescriptorParseException("Unrecognized exit list file "
           + "name '" + fileName + "'.");
     }
@@ -56,7 +57,10 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
       String line = s.next();
       String[] parts = line.split(" ");
       String keyword = parts[0];
-      if (keyword.equals("ExitNode")) {
+      if (keyword.equals("Downloaded")) {
+        this.downloadedMillis = ParseHelper.parseTimestampAtIndex(line,
+            parts, 1, 2);
+      } else if (keyword.equals("ExitNode")) {
         sb = new StringBuilder();
         sb.append(line + "\n");
       } else if (keyword.equals("Published")) {
@@ -94,9 +98,9 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
     }
   }
 
-  private long publishedMillis;
-  public long getPublishedMillis() {
-    return this.publishedMillis;
+  private long downloadedMillis;
+  public long getDownloadedMillis() {
+    return this.downloadedMillis;
   }
 
   private Set<ExitListEntry> exitListEntries =

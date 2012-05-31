@@ -70,7 +70,8 @@ public abstract class DescriptorImpl implements Descriptor {
       parsedDescriptors.addAll(DirectoryKeyCertificateImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("ExitNode ") ||
+    } else if (firstLines.startsWith("@type tordnsel 1.") ||
+        firstLines.startsWith("ExitNode ") ||
         firstLines.contains("\nExitNode ")) {
       parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, fileName,
           failUnrecognizedDescriptorLines));
