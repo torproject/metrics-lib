@@ -58,7 +58,8 @@ public abstract class DescriptorImpl implements Descriptor {
       parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("bridge-pool-assignment ") ||
+    } else if (firstLines.startsWith("@type bridge-pool-assignment 1.") ||
+        firstLines.startsWith("bridge-pool-assignment ") ||
         firstLines.contains("\nbridge-pool-assignment ")) {
       parsedDescriptors.addAll(BridgePoolAssignmentImpl.
           parseDescriptors(rawDescriptorBytes,
