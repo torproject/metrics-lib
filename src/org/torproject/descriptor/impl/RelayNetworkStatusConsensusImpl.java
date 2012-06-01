@@ -257,13 +257,14 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   private void parseParamsLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.consensusParams = ParseHelper.parseKeyValuePairs(line, parts, 1);
+    this.consensusParams = ParseHelper.parseKeyValuePairs(line, parts, 1,
+        "=");
   }
 
   private void parseBandwidthWeightsLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.bandwidthWeights = ParseHelper.parseKeyValuePairs(line, parts,
-        1);
+    this.bandwidthWeights = ParseHelper.parseKeyValuePairs(line, parts, 1,
+        "=");
   }
 
   private String consensusDigest;

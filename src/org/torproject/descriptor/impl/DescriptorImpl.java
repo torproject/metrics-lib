@@ -88,6 +88,9 @@ public abstract class DescriptorImpl implements Descriptor {
     } else if (firstLines.startsWith("@type torperf 1.0\n")) {
       parsedDescriptors.addAll(TorperfResultImpl.parseTorperfResults(
           rawDescriptorBytes, failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith("@type gettor 1.0\n")) {
+      parsedDescriptors.addAll(GetTorStatisticsImpl.parseGetTorStatistics(
+          rawDescriptorBytes, failUnrecognizedDescriptorLines));
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");

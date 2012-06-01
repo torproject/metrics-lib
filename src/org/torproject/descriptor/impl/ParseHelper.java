@@ -149,6 +149,28 @@ public class ParseHelper {
     return result;
   }
 
+  public static long parseDateAtIndex(String line, String[] parts,
+      int dateIndex) throws DescriptorParseException {
+    if (dateIndex >= parts.length) {
+      throw new DescriptorParseException("Line '" + line + "' does not "
+          + "contain a date at the expected position.");
+    }
+    long result = -1L;
+    try {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      dateFormat.setLenient(false);
+      dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+      result = dateFormat.parse(parts[dateIndex]).getTime();
+    } catch (ParseException e) {
+      /* Leave result at -1L. */
+    }
+    if (result < 0L || result / 1000L > (long) Integer.MAX_VALUE) {
+      throw new DescriptorParseException("Illegal date format in line '"
+          + line + "'.");
+    }
+    return result;
+  }
+
   private static Pattern twentyByteHexPattern =
       Pattern.compile("^[0-9a-fA-F]{40}$");
   public static String parseTwentyByteHexString(String line,
@@ -161,11 +183,12 @@ public class ParseHelper {
   }
 
   public static SortedMap<String, Integer> parseKeyValuePairs(String line,
-      String[] parts, int startIndex) throws DescriptorParseException {
+      String[] parts, int startIndex, String separatorString)
+      throws DescriptorParseException {
     SortedMap<String, Integer> result = new TreeMap<String, Integer>();
     for (int i = startIndex; i < parts.length; i++) {
       String pair = parts[i];
-      String[] pairParts = pair.split("=");
+      String[] pairParts = pair.split(separatorString);
       if (pairParts.length != 2) {
         throw new DescriptorParseException("Illegal key-value pair in "
             + "line '" + line + "'.");

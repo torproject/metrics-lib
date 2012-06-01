@@ -249,7 +249,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   private void parseParamsLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.consensusParams = ParseHelper.parseKeyValuePairs(line, parts, 1);
+    this.consensusParams = ParseHelper.parseKeyValuePairs(line, parts, 1,
+        "=");
   }
 
   private void parseDirSourceLine(String line, String[] parts)
