@@ -579,8 +579,20 @@ public class ServerDescriptorImplTest {
   }
 
   @Test(expected = DescriptorParseException.class)
+  public void testBandwidthOneValue() throws DescriptorParseException {
+    DescriptorBuilder.createWithBandwidthLine("bandwidth 51200");
+  }
+
+  @Test()
   public void testBandwidthTwoValues() throws DescriptorParseException {
-    DescriptorBuilder.createWithBandwidthLine("bandwidth 51200 51200");
+    /* This is allowed, because Tor versions 0.0.8 and older only wrote
+     * bandwidth lines with rate and burst values, but no observed
+     * value. */
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithBandwidthLine("bandwidth 51200 51200");
+    assertEquals(51200, (int) descriptor.getBandwidthRate());
+    assertEquals(51200, (int) descriptor.getBandwidthBurst());
+    assertEquals(-1, (int) descriptor.getBandwidthObserved());
   }
 
   @Test(expected = DescriptorParseException.class)
