@@ -1,12 +1,13 @@
-<project default="run" name="descriptor" basedir=".">
+<project default="jar" name="descriptor" basedir=".">
   <property name="sources" value="src"/>
   <property name="classes" value="classes"/>
   <property name="tests" value="test"/>
   <property name="libs" value="lib"/>
   <path id="classpath">
     <pathelement path="${classes}"/>
-    <pathelement location="lib/commons-codec-1.4.jar"/>
-    <pathelement location="lib/junit-4.8.2.jar"/>
+    <fileset dir="${libs}">
+      <include name="*.jar"/>
+    </fileset>
   </path>
   <target name="init">
     <mkdir dir="${classes}"/>
@@ -22,9 +23,7 @@
            optimize="false"
            failonerror="true"
            includeantruntime="false">
-      <classpath>
-        <fileset dir="${libs}"/>
-      </classpath>
+      <classpath refid="classpath"/>
     </javac>
   </target>
   <target name="jar" depends="compile">
@@ -41,9 +40,7 @@
            optimize="false"
            failonerror="true"
            includeantruntime="false">
-      <classpath>
-        <fileset dir="${libs}"/>
-      </classpath>
+      <classpath refid="classpath"/>
     </javac>
     <junit fork="true" haltonfailure="true" printsummary="off">
       <classpath refid="classpath"/>
