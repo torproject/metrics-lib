@@ -237,5 +237,9 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * have connected from that country rounded up to the nearest multiple
    * of 8, or null if no bridge statistics are included. */
   public SortedMap<String, Integer> getBridgeIps();
+
+  /* Return the (possibly empty) list of transports supported by this
+   * bridge. */
+  public List<String> getTransports();
 }
 

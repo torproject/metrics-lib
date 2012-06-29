@@ -166,6 +166,8 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         this.parseBridgeStatsEndLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("bridge-ips")) {
         this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("transport")) {
+        this.parseTransportLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("router-signature")) {
         this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("router-digest")) {
@@ -567,6 +569,14 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         partsNoOpt, 1, 2);
   }
 
+  private void parseTransportLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.transports.add(partsNoOpt[1]);
+  }
+
   private void parseRouterSignatureLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     if (!lineNoOpt.equals("router-signature")) {
@@ -868,6 +878,11 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   public SortedMap<String, Integer> getBridgeIps() {
     return this.bridgeIps == null ? null :
         new TreeMap<String, Integer>(this.bridgeIps);
+  }
+
+  private List<String> transports = new ArrayList<String>();
+  public List<String> getTransports() {
+    return new ArrayList<String>(this.transports);
   }
 }
 
