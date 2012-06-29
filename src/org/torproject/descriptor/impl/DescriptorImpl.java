@@ -26,33 +26,33 @@ public abstract class DescriptorImpl implements Descriptor {
     System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,
         first100Chars.length);
     String firstLines = new String(first100Chars);
-    if (firstLines.startsWith("@type network-status-consensus-3 1.0\n") ||
+    if (firstLines.startsWith("@type network-status-consensus-3 1.") ||
         ((firstLines.startsWith("network-status-version 3\n") ||
         firstLines.contains("\nnetwork-status-version 3\n")) &&
         firstLines.contains("\nvote-status consensus\n"))) {
       parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl.
           parseConsensuses(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type network-status-vote-3 1.0\n")
+    } else if (firstLines.startsWith("@type network-status-vote-3 1.")
         || ((firstLines.startsWith("network-status-version 3\n") ||
         firstLines.contains("\nnetwork-status-version 3\n")) &&
         firstLines.contains("\nvote-status vote\n"))) {
       parsedDescriptors.addAll(RelayNetworkStatusVoteImpl.
           parseVotes(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type bridge-network-status 1.0\n")
+    } else if (firstLines.startsWith("@type bridge-network-status 1.")
         || firstLines.startsWith("r ")) {
       parsedDescriptors.add(new BridgeNetworkStatusImpl(
           rawDescriptorBytes, fileName, failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type server-descriptor 1.0\n") ||
-        firstLines.startsWith("@type bridge-server-descriptor 1.0\n") ||
+    } else if (firstLines.startsWith("@type server-descriptor 1.") ||
+        firstLines.startsWith("@type bridge-server-descriptor 1.") ||
         firstLines.startsWith("router ") ||
         firstLines.contains("\nrouter ")) {
       parsedDescriptors.addAll(ServerDescriptorImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type extra-info 1.0\n") ||
-        firstLines.startsWith("@type bridge-extra-info 1.0\n") ||
+    } else if (firstLines.startsWith("@type extra-info 1.") ||
+        firstLines.startsWith("@type bridge-extra-info 1.") ||
         firstLines.startsWith("extra-info ") ||
         firstLines.contains("\nextra-info ")) {
       parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
@@ -64,7 +64,7 @@ public abstract class DescriptorImpl implements Descriptor {
       parsedDescriptors.addAll(BridgePoolAssignmentImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type dir-key-certificate-3 1.0") ||
+    } else if (firstLines.startsWith("@type dir-key-certificate-3 1.") ||
         firstLines.startsWith("dir-key-certificate-version ") ||
         firstLines.contains("\ndir-key-certificate-version ")) {
       parsedDescriptors.addAll(DirectoryKeyCertificateImpl.
@@ -75,20 +75,20 @@ public abstract class DescriptorImpl implements Descriptor {
         firstLines.contains("\nExitNode ")) {
       parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, fileName,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type network-status-2 1.0\n") ||
+    } else if (firstLines.startsWith("@type network-status-2 1.") ||
         firstLines.startsWith("network-status-version 2\n") ||
         firstLines.contains("\nnetwork-status-version 2\n")) {
       parsedDescriptors.add(new RelayNetworkStatusImpl(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type directory 1.0\n") ||
+    } else if (firstLines.startsWith("@type directory 1.") ||
         firstLines.startsWith("signed-directory\n") ||
         firstLines.contains("\nsigned-directory\n")) {
       parsedDescriptors.add(new RelayDirectoryImpl(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type torperf 1.0\n")) {
+    } else if (firstLines.startsWith("@type torperf 1.")) {
       parsedDescriptors.addAll(TorperfResultImpl.parseTorperfResults(
           rawDescriptorBytes, failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type gettor 1.0\n")) {
+    } else if (firstLines.startsWith("@type gettor 1.")) {
       parsedDescriptors.addAll(GetTorStatisticsImpl.parseGetTorStatistics(
           rawDescriptorBytes, failUnrecognizedDescriptorLines));
     } else {
