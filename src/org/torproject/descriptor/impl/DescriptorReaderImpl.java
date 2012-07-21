@@ -59,6 +59,31 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.historyFile = historyFile;
   }
 
+  private SortedMap<String, Long> excludedFiles;
+  public void setExcludedFiles(SortedMap<String, Long> excludedFiles) {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to read.");
+    }
+    this.excludedFiles = excludedFiles;
+  }
+
+  public SortedMap<String, Long> getExcludedFiles() {
+    if (this.reader == null || !this.reader.hasFinishedReading) {
+      throw new IllegalStateException("Operation is not permitted before "
+          + "finishing to read.");
+    }
+    return new TreeMap<String, Long>(this.reader.excludedFilesAfter);
+  }
+
+  public SortedMap<String, Long> getParsedFiles() {
+    if (this.reader == null || !this.reader.hasFinishedReading) {
+      throw new IllegalStateException("Operation is not permitted before "
+          + "finishing to read.");
+    }
+    return new TreeMap<String, Long>(this.reader.parsedFilesAfter);
+  }
+
   private boolean failUnrecognizedDescriptorLines = false;
   public void setFailUnrecognizedDescriptorLines() {
     if (this.hasStartedReading) {
@@ -68,6 +93,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.failUnrecognizedDescriptorLines = true;
   }
 
+  private DescriptorReaderRunnable reader;
   public Iterator<DescriptorFile> readDescriptors() {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Initiating reading is only "
@@ -76,10 +102,10 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.hasStartedReading = true;
     BlockingIteratorImpl<DescriptorFile> descriptorQueue =
         new BlockingIteratorImpl<DescriptorFile>();
-    DescriptorReaderRunnable reader = new DescriptorReaderRunnable(
-        this.directories, this.tarballs, descriptorQueue,
-        this.historyFile, this.failUnrecognizedDescriptorLines);
-    new Thread(reader).start();
+    this.reader = new DescriptorReaderRunnable(this.directories,
+        this.tarballs, descriptorQueue, this.historyFile,
+        this.excludedFiles, this.failUnrecognizedDescriptorLines);
+    new Thread(this.reader).start();
     return descriptorQueue;
   }
 
@@ -88,15 +114,24 @@ public class DescriptorReaderImpl implements DescriptorReader {
     private List<File> tarballs;
     private BlockingIteratorImpl<DescriptorFile> descriptorQueue;
     private File historyFile;
+    private SortedMap<String, Long>
+        excludedFilesBefore = new TreeMap<String, Long>(),
+        excludedFilesAfter = new TreeMap<String, Long>(),
+        parsedFilesAfter = new TreeMap<String, Long>();
     private DescriptorParser descriptorParser;
+    private boolean hasFinishedReading = false;
     private DescriptorReaderRunnable(List<File> directories,
         List<File> tarballs,
         BlockingIteratorImpl<DescriptorFile> descriptorQueue,
-        File historyFile, boolean failUnrecognizedDescriptorLines) {
+        File historyFile, SortedMap<String, Long> excludedFiles,
+        boolean failUnrecognizedDescriptorLines) {
       this.directories = directories;
       this.tarballs = tarballs;
       this.descriptorQueue = descriptorQueue;
       this.historyFile = historyFile;
+      if (excludedFiles != null) {
+        this.excludedFilesBefore = excludedFiles;
+      }
       this.descriptorParser = new DescriptorParserImpl();
       this.descriptorParser.setFailUnrecognizedDescriptorLines(
           failUnrecognizedDescriptorLines);
@@ -105,12 +140,10 @@ public class DescriptorReaderImpl implements DescriptorReader {
       this.readOldHistory();
       this.readDescriptors();
       this.readTarballs();
+      this.hasFinishedReading = true;
       this.descriptorQueue.setOutOfDescriptors();
       this.writeNewHistory();
     }
-    private SortedMap<String, Long>
-        oldHistory = new TreeMap<String, Long>(),
-        newHistory = new TreeMap<String, Long>();
     private void readOldHistory() {
       if (this.historyFile == null) {
         return;
@@ -127,7 +160,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
           long lastModifiedMillis = Long.parseLong(line.substring(0,
               line.indexOf(" ")));
           String absolutePath = line.substring(line.indexOf(" ") + 1);
-          this.oldHistory.put(absolutePath, lastModifiedMillis);
+          this.excludedFilesBefore.put(absolutePath, lastModifiedMillis);
         }
         br.close();
       } catch (IOException e) {
@@ -146,7 +179,10 @@ public class DescriptorReaderImpl implements DescriptorReader {
         }
         BufferedWriter bw = new BufferedWriter(new FileWriter(
             this.historyFile));
-        for (Map.Entry<String, Long> e : this.newHistory.entrySet()) {
+        SortedMap<String, Long> newHistory = new TreeMap<String, Long>();
+        newHistory.putAll(this.excludedFilesAfter);
+        newHistory.putAll(this.parsedFilesAfter);
+        for (Map.Entry<String, Long> e : newHistory.entrySet()) {
           String absolutePath = e.getKey();
           long lastModifiedMillis = e.getValue();
           bw.write(String.valueOf(lastModifiedMillis) + " " + absolutePath
@@ -172,11 +208,14 @@ public class DescriptorReaderImpl implements DescriptorReader {
           } else {
             String absolutePath = file.getAbsolutePath();
             long lastModifiedMillis = file.lastModified();
-            this.newHistory.put(absolutePath, lastModifiedMillis);
-            if (this.oldHistory.containsKey(absolutePath) &&
-                this.oldHistory.get(absolutePath) == lastModifiedMillis) {
+            if (this.excludedFilesBefore.containsKey(absolutePath) &&
+                this.excludedFilesBefore.get(absolutePath) ==
+                lastModifiedMillis) {
+              this.excludedFilesAfter.put(absolutePath,
+                  lastModifiedMillis);
               continue;
             }
+            this.parsedFilesAfter.put(absolutePath, lastModifiedMillis);
             DescriptorFileImpl descriptorFile = new DescriptorFileImpl();
             try {
               descriptorFile.setDirectory(directory);
@@ -206,11 +245,13 @@ public class DescriptorReaderImpl implements DescriptorReader {
         }
         String absolutePath = tarball.getAbsolutePath();
         long lastModifiedMillis = tarball.lastModified();
-        this.newHistory.put(absolutePath, lastModifiedMillis);
-        if (this.oldHistory.containsKey(absolutePath) &&
-            this.oldHistory.get(absolutePath) == lastModifiedMillis) {
+        if (this.excludedFilesBefore.containsKey(absolutePath) &&
+            this.excludedFilesBefore.get(absolutePath) ==
+            lastModifiedMillis) {
+          this.excludedFilesAfter.put(absolutePath, lastModifiedMillis);
           continue;
         }
+        this.parsedFilesAfter.put(absolutePath, lastModifiedMillis);
         try {
           FileInputStream in = new FileInputStream(tarball);
           if (in.available() > 0) {

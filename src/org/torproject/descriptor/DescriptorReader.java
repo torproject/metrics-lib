@@ -4,6 +4,7 @@ package org.torproject.descriptor;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.SortedMap;
 
 /* Read descriptors from one or more local directories. */
 public interface DescriptorReader {
@@ -22,6 +23,24 @@ public interface DescriptorReader {
    * anymore from the history file.  Lines in the history file contain the
    * last modified timestamp and the absolute path of a file. */
   public void setExcludeFiles(File historyFile);
+
+  /* Exclude files if they haven't changed since the corresponding last
+   * modified timestamps.  Can be used instead of (or in addition to) a
+   * history file. */
+  public void setExcludedFiles(SortedMap<String, Long> excludedFiles);
+
+  /* Return files and lost modified timestamps of files that exist in the
+   * input directory or directories, but that have been excluded from
+   * parsing, because they haven't changed since they were last read.
+   * Can be used instead of (or in addition to) a history file when
+   * combined with the set of parsed files. */
+  public SortedMap<String, Long> getExcludedFiles();
+
+  /* Return files and last modified timestamps of files that exist in the
+   * input directory or directories and that have been parsed.  Can be
+   * used instead of (or in addition to) a history file when combined with
+   * the set of excluded files. */
+  public SortedMap<String, Long> getParsedFiles();
 
   /* Fail descriptor parsing when encountering an unrecognized line.  This
    * is not set by default, because the Tor specifications allow for new
