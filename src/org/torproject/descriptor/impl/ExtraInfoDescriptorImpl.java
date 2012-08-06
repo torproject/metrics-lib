@@ -571,7 +571,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseTransportLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (partsNoOpt.length != 2) {
+    if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.transports.add(partsNoOpt[1]);
