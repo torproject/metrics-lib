@@ -8,9 +8,9 @@ network data and for building services and applications.
 
 The descriptor types supported by DescripTor include relay and bridge
 descriptors which are part of Tor's directory protocol as well as Torperf
-data files, GetTor statistics files, and TorDNSEL's exit lists.  Access to
-these descriptors is unified to facilitate access to publicly available
-data about the Tor network.
+data files and TorDNSEL's exit lists.  Access to these descriptors is
+unified to facilitate access to publicly available data about the Tor
+network.
 
 This API is designed for Java programs that process Tor descriptors in
 batches.  A Java program using this API first sets up a descriptor source
