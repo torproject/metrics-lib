@@ -43,7 +43,6 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.atMostOnceKeywords.add("v");
     this.atMostOnceKeywords.add("w");
     this.atMostOnceKeywords.add("p");
-    this.atMostOnceKeywords.add("m");
   }
 
   private void parsedAtMostOnceKeyword(String keyword)
@@ -192,9 +191,8 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private void parseMLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.parsedAtMostOnceKeyword("m");
-    /* TODO Implement parsing of m lines in votes.  Try to find where m
-     * lines are specified first. */
+    /* TODO Implement parsing of m lines in votes as specified in
+     * dir-spec.txt. */
   }
 
   private String nickname;
