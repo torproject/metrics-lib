@@ -104,6 +104,8 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("geoip-db-digest")) {
         this.parseGeoipDbDigestLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("geoip6-db-digest")) {
+        this.parseGeoip6DbDigestLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("geoip-start-time")) {
         this.parseGeoipStartTimeLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("geoip-client-origins")) {
@@ -226,6 +228,16 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
           + "' in extra-info descriptor.");
     }
     this.geoipDbDigest = ParseHelper.parseTwentyByteHexString(line,
+        partsNoOpt[1]);
+  }
+
+  private void parseGeoip6DbDigestLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in extra-info descriptor.");
+    }
+    this.geoip6DbDigest = ParseHelper.parseTwentyByteHexString(line,
         partsNoOpt[1]);
   }
 
@@ -654,6 +666,11 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   private String geoipDbDigest;
   public String getGeoipDbDigest() {
     return this.geoipDbDigest;
+  }
+
+  private String geoip6DbDigest;
+  public String getGeoip6DbDigest() {
+    return this.geoip6DbDigest;
   }
 
   private long dirreqStatsEndMillis = -1L;

@@ -77,6 +77,13 @@ public class ExtraInfoDescriptorImplTest {
       db.geoipDbDigestLine = line;
       return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
+    private String geoip6DbDigestLine = null;
+    private static ExtraInfoDescriptor createWithGeoip6DbDigestLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.geoip6DbDigestLine = line;
+      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+    }
     private String geoipStatsLines = null;
     private static ExtraInfoDescriptor createWithGeoipStatsLines(
         String lines) throws DescriptorParseException {
@@ -169,6 +176,9 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.geoipDbDigestLine != null) {
         sb.append(this.geoipDbDigestLine + "\n");
+      }
+      if (this.geoip6DbDigestLine != null) {
+        sb.append(this.geoip6DbDigestLine + "\n");
       }
       if (this.geoipStatsLines != null) {
         sb.append(this.geoipStatsLines + "\n");
@@ -829,6 +839,15 @@ public class ExtraInfoDescriptorImplTest {
   public void testGeoipDbDigestMissing()
       throws DescriptorParseException {
     DescriptorBuilder.createWithGeoipDbDigestLine("geoip-db-digest");
+  }
+
+  @Test()
+  public void testGeoip6DbDigestValid() throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder.
+        createWithGeoip6DbDigestLine("geoip6-db-digest "
+        + "916A3CA8B7DF61473D5AE5B21711F35F301CE9E8");
+    assertEquals("916A3CA8B7DF61473D5AE5B21711F35F301CE9E8",
+        descriptor.getGeoip6DbDigest());
   }
 
   @Test()

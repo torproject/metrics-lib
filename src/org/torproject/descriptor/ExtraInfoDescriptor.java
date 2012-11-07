@@ -32,6 +32,10 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * null if no GeoIP database digest is included. */
   public String getGeoipDbDigest();
 
+  /* Return the SHA1 digest of the GeoIPv6 database used by this relay, or
+   * null if no GeoIPv6 database digest is included. */
+  public String getGeoip6DbDigest();
+
   /* Return the end of the included directory request statistics interval,
    * or -1 if no directory request statistics are included. */
   public long getDirreqStatsEndMillis();
