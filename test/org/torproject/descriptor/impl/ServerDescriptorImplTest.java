@@ -896,13 +896,24 @@ public class ServerDescriptorImplTest {
   }
 
   @Test()
-  public void testFamilyFingerprintNickname()
+  public void testFamilyFingerprintNicknameNamed()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithFamilyLine("family "
         + "$D8733048FC8EC9102466AD8F3098622BF1BF71FD=saberrider2008");
     assertEquals(Arrays.asList(new String[]
         { "$D8733048FC8EC9102466AD8F3098622BF1BF71FD=saberrider2008" }),
+        descriptor.getFamilyEntries());
+  }
+
+  @Test()
+  public void testFamilyFingerprintNicknameUnnamed()
+      throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithFamilyLine("family "
+        + "$D8733048FC8EC9102466AD8F3098622BF1BF71FD~saberrider2008");
+    assertEquals(Arrays.asList(new String[]
+        { "$D8733048FC8EC9102466AD8F3098622BF1BF71FD~saberrider2008" }),
         descriptor.getFamilyEntries());
   }
 

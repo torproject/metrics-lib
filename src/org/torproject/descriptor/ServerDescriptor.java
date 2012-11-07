@@ -91,8 +91,8 @@ public interface ServerDescriptor extends Descriptor {
    * information is included in the descriptor. */
   public String getContact();
 
-  /* Return the nicknames, ($-prefixed) fingerprints, or
-   * $fingerprint=nickname tuples contained in the family line of this
+  /* Return nicknames, ($-prefixed) fingerprints, $fingerprint=nickname,
+   * or $fingerprint~nickname tuples contained in the family line of this
    * relay, or null if the descriptor does not contain a family line. */
   public List<String> getFamilyEntries();
 

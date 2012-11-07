@@ -327,12 +327,16 @@ public class ServerDescriptorImpl extends DescriptorImpl
     this.familyEntries = new ArrayList<String>();
     for (int i = 1; i < partsNoOpt.length; i++) {
       if (partsNoOpt[i].startsWith("$")) {
-        if (partsNoOpt[i].contains("=")) {
+        if (partsNoOpt[i].contains("=") ^ partsNoOpt[i].contains("~")) {
+          String separator = partsNoOpt[i].contains("=") ? "=" : "~";
           String fingerprint = ParseHelper.parseTwentyByteHexString(line,
-              partsNoOpt[i].substring(1, partsNoOpt[i].indexOf("=")));
+              partsNoOpt[i].substring(1, partsNoOpt[i].indexOf(
+              separator)));
           String nickname = ParseHelper.parseNickname(line,
-              partsNoOpt[i].substring(partsNoOpt[i].indexOf("=") + 1));
-          this.familyEntries.add("$" + fingerprint + "=" + nickname);
+              partsNoOpt[i].substring(partsNoOpt[i].indexOf(
+              separator) + 1));
+          this.familyEntries.add("$" + fingerprint + separator
+              + nickname);
         } else {
           this.familyEntries.add("$"
               + ParseHelper.parseTwentyByteHexString(line,
