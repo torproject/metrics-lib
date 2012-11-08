@@ -168,6 +168,8 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         this.parseBridgeStatsEndLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("bridge-ips")) {
         this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("bridge-ip-versions")) {
+        this.parseBridgeIpVersionsLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("transport")) {
         this.parseTransportLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("router-signature")) {
@@ -581,6 +583,12 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         partsNoOpt, 1, 2);
   }
 
+  private void parseBridgeIpVersionsLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    this.bridgeIpVersions = ParseHelper.parseCommaSeparatedKeyValueList(line,
+        partsNoOpt, 1, 2);
+  }
+
   private void parseTransportLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length < 2) {
@@ -895,6 +903,12 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   public SortedMap<String, Integer> getBridgeIps() {
     return this.bridgeIps == null ? null :
         new TreeMap<String, Integer>(this.bridgeIps);
+  }
+
+  private SortedMap<String, Integer> bridgeIpVersions;
+  public SortedMap<String, Integer> getBridgeIpVersions() {
+    return this.bridgeIpVersions == null ? null :
+        new TreeMap<String, Integer>(this.bridgeIpVersions);
   }
 
   private List<String> transports = new ArrayList<String>();

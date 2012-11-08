@@ -641,6 +641,14 @@ public class ExtraInfoDescriptorImplTest {
       return DescriptorBuilder.createWithBridgeStatsLines(
           bsb.buildBridgeStatsLines());
     }
+    private String bridgeIpVersionsLine = "bridge-ip-versions v4=8,v6=16";
+    private static ExtraInfoDescriptor createWithBridgeIpVersionsLine(
+        String line) throws DescriptorParseException {
+      BridgeStatsBuilder bsb = new BridgeStatsBuilder();
+      bsb.bridgeIpVersionsLine = line;
+      return DescriptorBuilder.createWithBridgeStatsLines(
+          bsb.buildBridgeStatsLines());
+    }
     private static ExtraInfoDescriptor createWithDefaultLines()
         throws DescriptorParseException {
       return DescriptorBuilder.createWithBridgeStatsLines(
@@ -653,6 +661,9 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.bridgeIpsLine != null) {
         sb.append(this.bridgeIpsLine + "\n");
+      }
+      if (this.bridgeIpVersionsLine != null) {
+        sb.append(this.bridgeIpVersionsLine + "\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -1255,6 +1266,11 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(24, ips.get("ir").intValue());
     assertEquals(16, ips.get("sy").intValue());
     assertFalse(ips.containsKey("no"));
+    SortedMap<String, Integer> ver = descriptor.getBridgeIpVersions();
+    assertNotNull(ver);
+    assertEquals(8, ver.get("v4").intValue());
+    assertEquals(16, ver.get("v6").intValue());
+    assertFalse(ver.containsKey("v8"));
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1269,6 +1285,14 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpsLine("bridge-ips ir=24.5");
   }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testBridgeIpVersionsDouble()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeIpVersionsLine(
+        "bridge-ip-versions v4=24.5");
+  }
+
   @Test()
   public void testRouterSignatureOpt()
       throws DescriptorParseException {

@@ -242,6 +242,12 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * of 8, or null if no bridge statistics are included. */
   public SortedMap<String, Integer> getBridgeIps();
 
+  /* Return statistics on client IP addresses with map keys being protocol
+   * family, e.g., "v4" or "v6", and map values being the number of unique
+   * IP addresses rounded up to the nearest multiple of 8, or null if no
+   * bridge IP version statistics are included. */
+  public SortedMap<String, Integer> getBridgeIpVersions();
+
   /* Return the (possibly empty) list of transports supported by this
    * bridge. */
   public List<String> getTransports();
