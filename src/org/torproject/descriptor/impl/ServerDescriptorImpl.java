@@ -48,7 +48,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
         "platform,fingerprint,hibernating,uptime,contact,family,"
         + "read-history,write-history,eventdns,caches-extra-info,"
         + "extra-info-digest,hidden-service-dir,protocols,"
-        + "allow-single-hop-exits,onion-key,signing-key,"
+        + "allow-single-hop-exits,onion-key,signing-key,ipv6-policy,"
         + "router-signature").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("router");
@@ -127,6 +127,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
         this.parseDircacheportLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("router-digest")) {
         this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("ipv6-policy")) {
+        this.parseIpv6PolicyLine(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
         crypto.append(line + "\n");
@@ -474,6 +476,30 @@ public class ServerDescriptorImpl extends DescriptorImpl
         line, partsNoOpt[1]);
   }
 
+  private void parseIpv6PolicyLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    boolean isValid = true;
+    if (partsNoOpt.length != 3) {
+      isValid = false;
+    } else if (!partsNoOpt[1].equals("accept") &&
+        !partsNoOpt[1].equals("reject")) {
+      isValid = false;
+    } else {
+      this.ipv6DefaultPolicy = partsNoOpt[1];
+      this.ipv6PortList = partsNoOpt[2];
+      String[] ports = partsNoOpt[2].split(",", -1);
+      for (int i = 0; i < ports.length; i++) {
+        if (ports[i].length() < 1) {
+          isValid = false;
+          break;
+        }
+      }
+    }
+    if (!isValid) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
   private void calculateDigest() throws DescriptorParseException {
     if (this.serverDescriptorDigest != null) {
       /* We already learned the descriptor digest of this bridge
@@ -653,6 +679,16 @@ public class ServerDescriptorImpl extends DescriptorImpl
   private boolean allowSingleHopExits;
   public boolean getAllowSingleHopExits() {
     return this.allowSingleHopExits;
+  }
+
+  private String ipv6DefaultPolicy;
+  public String getIpv6DefaultPolicy() {
+    return this.ipv6DefaultPolicy;
+  }
+
+  private String ipv6PortList;
+  public String getIpv6PortList() {
+    return this.ipv6PortList;
   }
 }
 

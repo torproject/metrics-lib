@@ -135,5 +135,13 @@ public interface ServerDescriptor extends Descriptor {
   /* Return whether this relay allows single-hop circuits to make exit
    * connections. */
   public boolean getAllowSingleHopExits();
+
+  /* Return the default policy of the IPv6 port summary or null if the
+   * server descriptor didn't contain an IPv6 port summary line. */
+  public String getIpv6DefaultPolicy();
+
+  /* Return the port list of the IPv6 port summary or null if the server
+   * descriptor didn't contain an IPv6 port summary line. */
+  public String getIpv6PortList();
 }
 

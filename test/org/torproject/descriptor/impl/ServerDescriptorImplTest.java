@@ -181,6 +181,13 @@ public class ServerDescriptorImplTest {
       db.allowSingleHopExitsLine = line;
       return new ServerDescriptorImpl(db.buildDescriptor(), true);
     }
+    private String ipv6PolicyLine = null;
+    private static ServerDescriptor createWithIpv6PolicyLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.ipv6PolicyLine = line;
+      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+    }
     private String routerSignatureLines = "router-signature\n"
         + "-----BEGIN SIGNATURE-----\n"
         + "o4j+kH8UQfjBwepUnr99v0ebN8RpzHJ/lqYsTojXHy9kMr1RNI9IDeSzA7PSqT"
@@ -263,6 +270,9 @@ public class ServerDescriptorImplTest {
       }
       if (this.allowSingleHopExitsLine != null) {
         sb.append(this.allowSingleHopExitsLine + "\n");
+      }
+      if (this.ipv6PolicyLine != null) {
+        sb.append(this.ipv6PolicyLine + "\n");
       }
       if (this.unrecognizedLine != null) {
         sb.append(this.unrecognizedLine + "\n");
@@ -1137,6 +1147,45 @@ public class ServerDescriptorImplTest {
       throws DescriptorParseException {
     DescriptorBuilder.createWithAllowSingleHopExitsLine(
         "allow-single-hop-exits true");
+  }
+
+  @Test()
+  public void testIpv6PolicyLine() throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithIpv6PolicyLine("ipv6-policy accept 80,1194,1220,1293");
+    assertEquals("accept", descriptor.getIpv6DefaultPolicy());
+    assertEquals("80,1194,1220,1293", descriptor.getIpv6PortList());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testIpv6PolicyLineNoPolicy()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithIpv6PolicyLine("ipv6-policy 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testIpv6PolicyLineNoPorts()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithIpv6PolicyLine("ipv6-policy accept");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testIpv6PolicyLineNoPolicyNoPorts()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithIpv6PolicyLine("ipv6-policy ");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testIpv6PolicyLineProject()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithIpv6PolicyLine("ipv6-policy project 80");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testTwoIpv6PolicyLines() throws DescriptorParseException {
+    DescriptorBuilder.createWithIpv6PolicyLine(
+        "ipv6-policy accept 80,1194,1220,1293\n"
+        + "ipv6-policy accept 80,1194,1220,1293");
   }
 
   @Test(expected = DescriptorParseException.class)
