@@ -143,5 +143,9 @@ public interface ServerDescriptor extends Descriptor {
   /* Return the port list of the IPv6 port summary or null if the server
    * descriptor didn't contain an IPv6 port summary line. */
   public String getIpv6PortList();
+
+  /* Return the ntor onion key base64 string with padding omitted, or null
+   * if the server descriptors didn't contain an ntor onion key line. */
+  public String getNtorOnionKey();
 }
 

@@ -188,6 +188,13 @@ public class ServerDescriptorImplTest {
       db.ipv6PolicyLine = line;
       return new ServerDescriptorImpl(db.buildDescriptor(), true);
     }
+    private String ntorOnionKeyLine = null;
+    private static ServerDescriptor createWithNtorOnionKeyLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.ntorOnionKeyLine = line;
+      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+    }
     private String routerSignatureLines = "router-signature\n"
         + "-----BEGIN SIGNATURE-----\n"
         + "o4j+kH8UQfjBwepUnr99v0ebN8RpzHJ/lqYsTojXHy9kMr1RNI9IDeSzA7PSqT"
@@ -273,6 +280,9 @@ public class ServerDescriptorImplTest {
       }
       if (this.ipv6PolicyLine != null) {
         sb.append(this.ipv6PolicyLine + "\n");
+      }
+      if (this.ntorOnionKeyLine != null) {
+        sb.append(this.ntorOnionKeyLine + "\n");
       }
       if (this.unrecognizedLine != null) {
         sb.append(this.unrecognizedLine + "\n");
@@ -1186,6 +1196,46 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithIpv6PolicyLine(
         "ipv6-policy accept 80,1194,1220,1293\n"
         + "ipv6-policy accept 80,1194,1220,1293");
+  }
+
+  @Test()
+  public void testNtorOnionKeyLine() throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithNtorOnionKeyLine("ntor-onion-key "
+        + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY=");
+    assertEquals("Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY",
+        descriptor.getNtorOnionKey());
+  }
+
+  @Test()
+  public void testNtorOnionKeyLineNoPadding()
+      throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithNtorOnionKeyLine("ntor-onion-key "
+        + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY");
+    assertEquals("Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY",
+        descriptor.getNtorOnionKey());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNtorOnionKeyLineNoKey()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithNtorOnionKeyLine("ntor-onion-key ");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNtorOnionKeyLineTwoKeys()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithNtorOnionKeyLine("ntor-onion-key "
+        + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY "
+        + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testTwoNtorOnionKeyLines() throws DescriptorParseException {
+    DescriptorBuilder.createWithNtorOnionKeyLine("ntor-onion-key "
+        + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY\nntor-onion-key "
+        + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY\n");
   }
 
   @Test(expected = DescriptorParseException.class)

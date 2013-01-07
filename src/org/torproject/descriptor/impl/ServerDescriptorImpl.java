@@ -49,7 +49,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
         + "read-history,write-history,eventdns,caches-extra-info,"
         + "extra-info-digest,hidden-service-dir,protocols,"
         + "allow-single-hop-exits,onion-key,signing-key,ipv6-policy,"
-        + "router-signature").split(",")));
+        + "ntor-onion-key,router-signature").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("router");
     if (this.getKeywordCount("accept") == 0 &&
@@ -129,6 +129,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
         this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("ipv6-policy")) {
         this.parseIpv6PolicyLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("ntor-onion-key")) {
+        this.parseNtorOnionKeyLine(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
         crypto.append(line + "\n");
@@ -500,6 +502,14 @@ public class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
+  private void parseNtorOnionKeyLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.ntorOnionKey = partsNoOpt[1].replaceAll("=",  "");
+  }
+
   private void calculateDigest() throws DescriptorParseException {
     if (this.serverDescriptorDigest != null) {
       /* We already learned the descriptor digest of this bridge
@@ -689,6 +699,11 @@ public class ServerDescriptorImpl extends DescriptorImpl
   private String ipv6PortList;
   public String getIpv6PortList() {
     return this.ipv6PortList;
+  }
+
+  private String ntorOnionKey;
+  public String getNtorOnionKey() {
+    return this.ntorOnionKey;
   }
 }
 
