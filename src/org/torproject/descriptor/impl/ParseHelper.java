@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -182,10 +183,10 @@ public class ParseHelper {
     return hexString.toUpperCase();
   }
 
-  public static SortedMap<String, Integer> parseKeyValuePairs(String line,
-      String[] parts, int startIndex, String separatorString)
+  public static SortedMap<String, String> parseKeyValueStringPairs(
+      String line, String[] parts, int startIndex, String separatorString)
       throws DescriptorParseException {
-    SortedMap<String, Integer> result = new TreeMap<String, Integer>();
+    SortedMap<String, String> result = new TreeMap<String, String>();
     for (int i = startIndex; i < parts.length; i++) {
       String pair = parts[i];
       String[] pairParts = pair.split(separatorString);
@@ -193,11 +194,22 @@ public class ParseHelper {
         throw new DescriptorParseException("Illegal key-value pair in "
             + "line '" + line + "'.");
       }
-      String pairName = pairParts[0];
+      result.put(pairParts[0], pairParts[1]);
+    }
+    return result;
+  }
+
+  public static SortedMap<String, Integer> parseKeyValueIntegerPairs(
+      String line, String[] parts, int startIndex, String separatorString)
+      throws DescriptorParseException {
+    SortedMap<String, Integer> result = new TreeMap<String, Integer>();
+    SortedMap<String, String> keyValueStringPairs =
+        ParseHelper.parseKeyValueStringPairs(line, parts, startIndex,
+        separatorString);
+    for (Map.Entry<String, String> e : keyValueStringPairs.entrySet()) {
       try {
-        int pairValue = Integer.parseInt(pairParts[1]);
-        result.put(pairName, pairValue);
-      } catch (NumberFormatException e) {
+        result.put(e.getKey(), Integer.parseInt(e.getValue()));
+      } catch (NumberFormatException ex) {
         throw new DescriptorParseException("Illegal value in line '"
             + line + "'.");
       }

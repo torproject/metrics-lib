@@ -115,6 +115,17 @@ public class RelayNetworkStatusVoteImplTest {
       vb.knownFlagsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+    private String flagThresholdsLine = "flag-thresholds "
+        + "stable-uptime=693369 stable-mtbf=153249 fast-speed=40960 "
+        + "guard-wfu=94.669% guard-tk=691200 guard-bw-inc-exits=174080 "
+        + "guard-bw-exc-exits=184320 enough-mtbf=1";
+    private static RelayNetworkStatusVote
+        createWithFlagThresholdsLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.flagThresholdsLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
     private String paramsLine = "params "
         + "CircuitPriorityHalflifeMsec=30000 bwauthbestratio=1 "
         + "bwauthcircs=1 bwauthdescbw=0 bwauthkp=10000 bwauthpid=1 "
@@ -387,6 +398,9 @@ public class RelayNetworkStatusVoteImplTest {
       }
       if (this.knownFlagsLine != null) {
         sb.append(this.knownFlagsLine + "\n");
+      }
+      if (this.flagThresholdsLine != null) {
+        sb.append(this.flagThresholdsLine + "\n");
       }
       if (this.paramsLine != null) {
         sb.append(this.paramsLine + "\n");
@@ -747,6 +761,74 @@ public class RelayNetworkStatusVoteImplTest {
   @Test(expected = DescriptorParseException.class)
   public void testKnownFlagsOneSpace() throws DescriptorParseException {
     VoteBuilder.createWithKnownFlagsLine("known-flags ");
+  }
+
+  @Test()
+  public void testFlagThresholdsLine() throws DescriptorParseException {
+    VoteBuilder vb = new VoteBuilder();
+    RelayNetworkStatusVote vote =
+        new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    assertEquals(693369L, vote.getStableUptime());
+    assertEquals(153249L, vote.getStableMtbf());
+    assertEquals(40960L, vote.getFastBandwidth());
+    assertEquals(94.669, vote.getGuardWfu(), 0.001);
+    assertEquals(691200L, vote.getGuardTk());
+    assertEquals(174080L, vote.getGuardBandwidthIncludingExits());
+    assertEquals(184320L, vote.getGuardBandwidthExcludingExits());
+    assertEquals(1, vote.getEnoughMtbfInfo());
+  }
+
+  @Test()
+  public void testFlagThresholdsNoLine() throws DescriptorParseException {
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithFlagThresholdsLine(null);
+    assertEquals(-1L, vote.getStableUptime());
+    assertEquals(-1L, vote.getStableMtbf());
+    assertEquals(-1L, vote.getFastBandwidth());
+    assertEquals(-1.0, vote.getGuardWfu(), 0.001);
+    assertEquals(-1L, vote.getGuardTk());
+    assertEquals(-1L, vote.getGuardBandwidthIncludingExits());
+    assertEquals(-1L, vote.getGuardBandwidthExcludingExits());
+    assertEquals(-1, vote.getEnoughMtbfInfo());
+  }
+
+  @Test()
+  public void testFlagThresholdsAllZeroes()
+      throws DescriptorParseException {
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithFlagThresholdsLine("flag-thresholds "
+            + "stable-uptime=0 stable-mtbf=0 fast-speed=0 guard-wfu=0.0% "
+            + "guard-tk=0 guard-bw-inc-exits=0 guard-bw-exc-exits=0 "
+            + "enough-mtbf=0");
+    assertEquals(0L, vote.getStableUptime());
+    assertEquals(0L, vote.getStableMtbf());
+    assertEquals(0L, vote.getFastBandwidth());
+    assertEquals(0.0, vote.getGuardWfu(), 0.001);
+    assertEquals(0L, vote.getGuardTk());
+    assertEquals(0L, vote.getGuardBandwidthIncludingExits());
+    assertEquals(0L, vote.getGuardBandwidthExcludingExits());
+    assertEquals(0, vote.getEnoughMtbfInfo());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFlagThresholdsNoSpace()
+      throws DescriptorParseException {
+    VoteBuilder.createWithFlagThresholdsLine("flag-thresholds");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFlagThresholdsOneSpace()
+      throws DescriptorParseException {
+    VoteBuilder.createWithFlagThresholdsLine("flag-thresholds ");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testFlagThresholdDuplicate()
+      throws DescriptorParseException {
+    VoteBuilder vb = new VoteBuilder();
+    vb.flagThresholdsLine = vb.flagThresholdsLine + "\n"
+        + vb.flagThresholdsLine;
+    new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
   }
 
   @Test(expected = DescriptorParseException.class)

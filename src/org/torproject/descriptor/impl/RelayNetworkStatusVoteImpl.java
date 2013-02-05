@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
@@ -48,14 +49,28 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         + "dir-key-certification,directory-signature").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
-        "client-versions,server-versions,params,contact,legacy-key,"
-        + "dir-key-crosscert,dir-address,directory-footer").split(",")));
+        "client-versions,server-versions,flag-thresholds,params,contact,"
+        + "legacy-key,dir-key-crosscert,dir-address,directory-footer").
+        split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
   }
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
+    /* Initialize flag-thresholds values here for the case that the vote
+     * doesn't contain those values.  Initializing them in the constructor
+     * or when declaring variables wouldn't work, because those parts are
+     * evaluated later and would overwrite everything we parse here. */
+    this.stableUptime = -1L;
+    this.stableMtbf = -1L;
+    this.fastBandwidth = -1L;
+    this.guardWfu = -1.0;
+    this.guardTk = -1L;
+    this.guardBandwidthIncludingExits = -1L;
+    this.guardBandwidthExcludingExits = -1L;
+    this.enoughMtbfInfo = -1;
+
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
     boolean skipCrypto = false; /* TODO Parse crypto parts. */
     while (s.hasNext()) {
@@ -84,6 +99,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         this.parseServerVersionsLine(line, parts);
       } else if (keyword.equals("known-flags")) {
         this.parseKnownFlagsLine(line, parts);
+      } else if (keyword.equals("flag-thresholds")) {
+        this.parseFlagThresholdsLine(line, parts);
       } else if (keyword.equals("params")) {
         this.parseParamsLine(line, parts);
       } else if (keyword.equals("dir-source")) {
@@ -247,10 +264,47 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     }
   }
 
+  private void parseFlagThresholdsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length < 2) {
+      throw new DescriptorParseException("No flag thresholds in line '"
+          + line + "'.");
+    }
+    SortedMap<String, String> flagThresholds =
+        ParseHelper.parseKeyValueStringPairs(line, parts, 1, "=");
+    try {
+      for (Map.Entry<String, String> e : flagThresholds.entrySet()) {
+        if (e.getKey().equals("stable-uptime")) {
+          this.stableUptime = Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("stable-mtbf")) {
+          this.stableMtbf = Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("fast-speed")) {
+          this.fastBandwidth = Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("guard-wfu")) {
+          this.guardWfu = Double.parseDouble(e.getValue().
+              replaceAll("%", ""));
+        } else if (e.getKey().equals("guard-tk")) {
+          this.guardTk = Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("guard-bw-inc-exits")) {
+          this.guardBandwidthIncludingExits =
+              Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("guard-bw-exc-exits")) {
+          this.guardBandwidthExcludingExits =
+              Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("enough-mtbf")) {
+          this.enoughMtbfInfo = Integer.parseInt(e.getValue());
+        }
+      }
+    } catch (NumberFormatException ex) {
+      throw new DescriptorParseException("Illegal value in line '"
+          + line + "'.");
+    }
+  }
+
   private void parseParamsLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.consensusParams = ParseHelper.parseKeyValuePairs(line, parts, 1,
-        "=");
+    this.consensusParams = ParseHelper.parseKeyValueIntegerPairs(line,
+        parts, 1, "=");
   }
 
   private void parseDirSourceLine(String line, String[] parts)
@@ -463,6 +517,46 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   private SortedSet<String> knownFlags;
   public SortedSet<String> getKnownFlags() {
     return new TreeSet<String>(this.knownFlags);
+  }
+
+  private long stableUptime;
+  public long getStableUptime() {
+    return this.stableUptime;
+  }
+
+  private long stableMtbf;
+  public long getStableMtbf() {
+    return this.stableMtbf;
+  }
+
+  private long fastBandwidth;
+  public long getFastBandwidth() {
+    return this.fastBandwidth;
+  }
+
+  private double guardWfu;
+  public double getGuardWfu() {
+    return this.guardWfu;
+  }
+
+  private long guardTk;
+  public long getGuardTk() {
+    return this.guardTk;
+  }
+
+  private long guardBandwidthIncludingExits;
+  public long getGuardBandwidthIncludingExits() {
+    return this.guardBandwidthIncludingExits;
+  }
+
+  private long guardBandwidthExcludingExits;
+  public long getGuardBandwidthExcludingExits() {
+    return this.guardBandwidthExcludingExits;
+  }
+
+  private int enoughMtbfInfo;
+  public int getEnoughMtbfInfo() {
+    return this.enoughMtbfInfo;
   }
 
   private SortedMap<String, Integer> consensusParams;

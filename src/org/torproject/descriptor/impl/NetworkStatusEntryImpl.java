@@ -149,8 +149,8 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private void parseWLine(String line, String[] parts)
       throws DescriptorParseException {
     this.parsedAtMostOnceKeyword("w");
-    SortedMap<String, Integer> pairs = ParseHelper.parseKeyValuePairs(
-        line, parts, 1, "=");
+    SortedMap<String, Integer> pairs =
+        ParseHelper.parseKeyValueIntegerPairs(line, parts, 1, "=");
     if (pairs.isEmpty()) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
