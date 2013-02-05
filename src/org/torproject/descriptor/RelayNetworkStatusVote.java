@@ -64,9 +64,9 @@ public interface RelayNetworkStatusVote extends Descriptor {
    * authority doesn't report this value. */
   public double getGuardWfu();
 
-  /* Return the minimum time in seconds that this authority needs to know
-   * about a relay before assigning the Guard flag, or -1 if the authority
-   * doesn't report this information. */
+  /* Return the minimum weighted time in seconds that this authority needs
+   * to know about a relay before assigning the Guard flag, or -1 if the
+   * authority doesn't report this information. */
   public long getGuardTk();
 
   /* Return the minimum bandwidth that this authority requires for
