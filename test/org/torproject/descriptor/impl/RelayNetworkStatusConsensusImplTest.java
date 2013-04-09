@@ -13,6 +13,7 @@ import java.util.List;
 
 
 import org.junit.Test;
+import org.torproject.descriptor.NetworkStatusEntry;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
 /* TODO Add test cases for all lines starting with "opt ". */
@@ -938,6 +939,30 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
     new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
+
+  @Test()
+  public void testWLineUnmeasured() throws DescriptorParseException {
+    StatusEntryBuilder sb = new StatusEntryBuilder();
+    sb.wLine = "w Bandwidth=42424242 Unmeasured=1";
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.statusEntries.add(sb.buildStatusEntry());
+    RelayNetworkStatusConsensus consensus =
+        new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    for (NetworkStatusEntry s : consensus.getStatusEntries().values()) {
+      if (s.getBandwidth() == 42424242L) {
+        assertTrue(s.getUnmeasured());
+      }
+    }
+  }
+
+  @Test()
+  public void testWLineNotUnmeasured() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        StatusEntryBuilder.createWithWLine("w Bandwidth=20");
+    for (NetworkStatusEntry s : consensus.getStatusEntries().values()) {
+      assertFalse(s.getUnmeasured());
+    }
   }
 
   @Test(expected = DescriptorParseException.class)

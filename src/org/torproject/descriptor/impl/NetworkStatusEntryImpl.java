@@ -160,6 +160,9 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     if (pairs.containsKey("Measured")) {
       this.measured = pairs.remove("Measured");
     }
+    if (pairs.containsKey("Unmeasured")) {
+      this.unmeasured = pairs.remove("Unmeasured") == 1L;
+    }
     if (!pairs.isEmpty()) {
       /* Ignore unknown key-value pair. */
     }
@@ -253,6 +256,11 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private long measured = -1L;
   public long getMeasured() {
     return this.measured;
+  }
+
+  private boolean unmeasured = false;
+  public boolean getUnmeasured() {
+    return this.unmeasured;
   }
 
   private String defaultPolicy;

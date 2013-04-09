@@ -55,6 +55,12 @@ public interface NetworkStatusEntry {
    * bandwidth line. */
   public long getMeasured();
 
+  /* Return whether the status entry contained an Unmeasured=1 entry in
+   * its bandwidth line, meaning that the bandwidth authorities didn't
+   * measure this relay yet.  Only included in consensuses using method
+   * 17 or higher. */
+  public boolean getUnmeasured();
+
   /* Return the default policy of the port summary or null if the status
    * entry didn't contain a port summary line. */
   public String getDefaultPolicy();
