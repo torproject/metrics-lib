@@ -649,6 +649,15 @@ public class ExtraInfoDescriptorImplTest {
       return DescriptorBuilder.createWithBridgeStatsLines(
           bsb.buildBridgeStatsLines());
     }
+    private String bridgeIpTransportsLine = "bridge-ip-transports "
+        + "<OR>=8,obfs2=792,obfs3=1728";
+    private static ExtraInfoDescriptor createWithBridgeIpTransportsLine(
+        String line) throws DescriptorParseException {
+      BridgeStatsBuilder bsb = new BridgeStatsBuilder();
+      bsb.bridgeIpTransportsLine = line;
+      return DescriptorBuilder.createWithBridgeStatsLines(
+          bsb.buildBridgeStatsLines());
+    }
     private static ExtraInfoDescriptor createWithDefaultLines()
         throws DescriptorParseException {
       return DescriptorBuilder.createWithBridgeStatsLines(
@@ -664,6 +673,9 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.bridgeIpVersionsLine != null) {
         sb.append(this.bridgeIpVersionsLine + "\n");
+      }
+      if (this.bridgeIpTransportsLine != null) {
+        sb.append(this.bridgeIpTransportsLine + "\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -1271,6 +1283,11 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(8, ver.get("v4").intValue());
     assertEquals(16, ver.get("v6").intValue());
     assertFalse(ver.containsKey("v8"));
+    SortedMap<String, Integer> trans = descriptor.getBridgeIpTransports();
+    assertNotNull(trans);
+    assertEquals(8, trans.get("<OR>").intValue());
+    assertEquals(792, trans.get("obfs2").intValue());
+    assertEquals(1728, trans.get("obfs3").intValue());
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1291,6 +1308,12 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpVersionsLine(
         "bridge-ip-versions v4=24.5");
+  }
+
+  public void testBridgeIpTransportsDouble()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeIpTransportsLine(
+        "bridge-ip-transports obfs2=24.5");
   }
 
   @Test()

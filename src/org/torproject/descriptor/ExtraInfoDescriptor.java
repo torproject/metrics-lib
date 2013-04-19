@@ -248,6 +248,14 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * bridge IP version statistics are included. */
   public SortedMap<String, Integer> getBridgeIpVersions();
 
+  /* Return statistics on client IP addresses with map keys being
+   * pluggable transport names, e.g., "obfs2" or "obfs3" for known
+   * transports, "<OR>" for no transport, or "<??>" for an unknown
+   * transport, and map values being the number of unique IP addresses
+   * rounded up to the nearest multiple of 8, or null if no bridge IP
+   * transport statistics are included. */
+  public SortedMap<String, Integer> getBridgeIpTransports();
+
   /* Return the (possibly empty) list of transports supported by this
    * bridge. */
   public List<String> getTransports();
