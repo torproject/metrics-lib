@@ -17,6 +17,17 @@ import org.apache.commons.codec.binary.Hex;
 
 public class ParseHelper {
 
+  private static Pattern keywordPattern =
+      Pattern.compile("^[A-Za-z0-9-]+$");
+  public static String parseKeyword(String line, String keyword)
+      throws DescriptorParseException {
+    if (!keywordPattern.matcher(keyword).matches()) {
+      throw new DescriptorParseException("Unrecognized character in "
+          + "keyword '" + keyword + "' in line '" + line + "'.");
+    }
+    return keyword;
+  }
+
   private static Pattern ipv4Pattern =
       Pattern.compile("^[0-9\\.]{7,15}$");
   public static String parseIpv4Address(String line, String address)

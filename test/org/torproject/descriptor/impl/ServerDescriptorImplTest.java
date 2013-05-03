@@ -8,6 +8,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -216,6 +218,15 @@ public class ServerDescriptorImplTest {
       return new ServerDescriptorImpl(db.buildDescriptor(),
           failUnrecognizedDescriptorLines);
     }
+    private byte[] nonAsciiLineBytes = null;
+    private static ServerDescriptor createWithNonAsciiLineBytes(
+        byte[] lineBytes, boolean failUnrecognizedDescriptorLines)
+            throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.nonAsciiLineBytes = lineBytes;
+      return new ServerDescriptorImpl(db.buildDescriptor(),
+          failUnrecognizedDescriptorLines);
+    }
     private byte[] buildDescriptor() {
       StringBuilder sb = new StringBuilder();
       if (this.routerLine != null) {
@@ -286,6 +297,20 @@ public class ServerDescriptorImplTest {
       }
       if (this.unrecognizedLine != null) {
         sb.append(this.unrecognizedLine + "\n");
+      }
+      if (this.nonAsciiLineBytes != null) {
+        try {
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          baos.write(sb.toString().getBytes());
+          baos.write(this.nonAsciiLineBytes);
+          baos.write("\n".getBytes());
+          if (this.routerSignatureLines != null) {
+            baos.write(this.routerSignatureLines.getBytes());
+          }
+          return baos.toByteArray();
+        } catch (IOException e) {
+          return null;
+        }
       }
       if (this.routerSignatureLines != null) {
         sb.append(this.routerSignatureLines + "\n");
@@ -1157,6 +1182,18 @@ public class ServerDescriptorImplTest {
       throws DescriptorParseException {
     DescriptorBuilder.createWithAllowSingleHopExitsLine(
         "allow-single-hop-exits true");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testAllowSingleHopExitsNonAsciiKeyword()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithNonAsciiLineBytes(new byte[] {
+        0x14, (byte) 0xfe, 0x18,                  // non-ascii chars
+        0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x2d,       // "allow-"
+        0x73, 0x69, 0x6e, 0x67, 0x6c, 0x65, 0x2d, // "single-"
+        0x68, 0x6f, 0x70, 0x2d,                   // "hop-"
+        0x65, 0x78, 0x69, 0x74, 0x73 },           // "exits" (no newline)
+        false);
   }
 
   @Test()

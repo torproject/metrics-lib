@@ -7,6 +7,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -142,6 +144,15 @@ public class ExtraInfoDescriptorImplTest {
       return new ExtraInfoDescriptorImpl(db.buildDescriptor(),
           failUnrecognizedDescriptorLines);
     }
+    private byte[] nonAsciiLineBytes = null;
+    private static ExtraInfoDescriptor createWithNonAsciiLineBytes(
+        byte[] lineBytes, boolean failUnrecognizedDescriptorLines)
+        throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.nonAsciiLineBytes = lineBytes;
+      return new ExtraInfoDescriptorImpl(db.buildDescriptor(),
+          failUnrecognizedDescriptorLines);
+    }
     private String routerSignatureLines = "router-signature\n"
         + "-----BEGIN SIGNATURE-----\n"
         + "o4j+kH8UQfjBwepUnr99v0ebN8RpzHJ/lqYsTojXHy9kMr1RNI9IDeSzA7PSqT"
@@ -203,6 +214,20 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.unrecognizedLine != null) {
         sb.append(this.unrecognizedLine + "\n");
+      }
+      if (this.nonAsciiLineBytes != null) {
+        try {
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          baos.write(sb.toString().getBytes());
+          baos.write(this.nonAsciiLineBytes);
+          baos.write("\n".getBytes());
+          if (this.routerSignatureLines != null) {
+            baos.write(this.routerSignatureLines.getBytes());
+          }
+          return baos.toByteArray();
+        } catch (IOException e) {
+          return null;
+        }
       }
       if (this.routerSignatureLines != null) {
         sb.append(this.routerSignatureLines + "\n");
@@ -1301,6 +1326,15 @@ public class ExtraInfoDescriptorImplTest {
   public void testBridgeIpsDouble()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpsLine("bridge-ips ir=24.5");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testBridgeIpsNonAsciiKeyword()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithNonAsciiLineBytes(new byte[] {
+        0x14, (byte) 0xfe, 0x18,                  // non-ascii chars
+        0x62, 0x72, 0x69, 0x64, 0x67, 0x65, 0x2d, // "bridge-"
+        0x69, 0x70, 0x73 }, false);               // "ips" (no newline)
   }
 
   @Test(expected = DescriptorParseException.class)

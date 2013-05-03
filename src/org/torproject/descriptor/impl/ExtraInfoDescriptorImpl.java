@@ -183,6 +183,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       } else if (line.startsWith("-----END")) {
         skipCrypto = false;
       } else if (!skipCrypto) {
+        ParseHelper.parseKeyword(line, partsNoOpt[0]);
         if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '"
               + line + "' in extra-info descriptor.");

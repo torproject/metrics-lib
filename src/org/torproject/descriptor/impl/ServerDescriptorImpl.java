@@ -152,6 +152,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
       } else if (crypto != null) {
         crypto.append(line + "\n");
       } else {
+        ParseHelper.parseKeyword(line, partsNoOpt[0]);
         if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '"
               + line + "' in server descriptor.");
