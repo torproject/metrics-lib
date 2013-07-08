@@ -258,8 +258,9 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseGeoipClientOriginsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.geoipClientOrigins = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 2);
+    this.geoipClientOrigins =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseDirreqStatsEndLine(String line, String lineNoOpt,
@@ -290,25 +291,27 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseDirreqV2IpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV2Ips = ParseHelper.parseCommaSeparatedKeyValueList(line,
-        partsNoOpt, 1, 2);
+    this.dirreqV2Ips = ParseHelper.parseCommaSeparatedKeyIntegerValueList(
+        line, partsNoOpt, 1, 2);
   }
 
   private void parseDirreqV3IpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV3Ips = ParseHelper.parseCommaSeparatedKeyValueList(line,
-        partsNoOpt, 1, 2);
+    this.dirreqV3Ips = ParseHelper.parseCommaSeparatedKeyIntegerValueList(
+        line, partsNoOpt, 1, 2);
   }
 
   private void parseDirreqV2ReqsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV2Reqs = ParseHelper.parseCommaSeparatedKeyValueList(line,
+    this.dirreqV2Reqs =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 2);
   }
 
   private void parseDirreqV3ReqsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV3Reqs = ParseHelper.parseCommaSeparatedKeyValueList(line,
+    this.dirreqV3Reqs =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 2);
   }
 
@@ -343,38 +346,44 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseDirreqV2RespLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV2Resp = ParseHelper.parseCommaSeparatedKeyValueList(line,
+    this.dirreqV2Resp =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV3RespLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV3Resp = ParseHelper.parseCommaSeparatedKeyValueList(line,
+    this.dirreqV3Resp =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV2DirectDlLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV2DirectDl = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 0);
+    this.dirreqV2DirectDl =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
+        partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV3DirectDlLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV3DirectDl = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 0);
+    this.dirreqV3DirectDl =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
+        partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV2TunneledDlLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV2TunneledDl = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 0);
+    this.dirreqV2TunneledDl =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
+        partsNoOpt, 1, 0);
   }
 
   private void parseDirreqV3TunneledDlLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqV3TunneledDl = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 0);
+    this.dirreqV3TunneledDl =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(
+        line,partsNoOpt, 1, 0);
   }
 
   private void parseDirreqReadHistoryLine(String line, String lineNoOpt,
@@ -399,8 +408,8 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseEntryIpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.entryIps = ParseHelper.parseCommaSeparatedKeyValueList(line,
-        partsNoOpt, 1, 2);
+    this.entryIps = ParseHelper.parseCommaSeparatedKeyIntegerValueList(
+        line, partsNoOpt, 1, 2);
   }
 
   private void parseCellStatsEndLine(String line, String lineNoOpt,
@@ -488,7 +497,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       String lineNoOpt, String[] partsNoOpt)
       throws DescriptorParseException {
     this.exitKibibytesWritten = this.sortByPorts(ParseHelper.
-        parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
+        parseCommaSeparatedKeyLongValueList(line, partsNoOpt, 1, 0));
     this.verifyPorts(line, this.exitKibibytesWritten.keySet());
     this.verifyBytesOrStreams(line, this.exitKibibytesWritten.values());
   }
@@ -496,7 +505,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   private void parseExitKibibytesReadLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     this.exitKibibytesRead = this.sortByPorts(ParseHelper.
-        parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
+        parseCommaSeparatedKeyLongValueList(line, partsNoOpt, 1, 0));
     this.verifyPorts(line, this.exitKibibytesRead.keySet());
     this.verifyBytesOrStreams(line, this.exitKibibytesRead.values());
   }
@@ -504,15 +513,15 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   private void parseExitStreamsOpenedLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     this.exitStreamsOpened = this.sortByPorts(ParseHelper.
-        parseCommaSeparatedKeyValueList(line, partsNoOpt, 1, 0));
+        parseCommaSeparatedKeyLongValueList(line, partsNoOpt, 1, 0));
     this.verifyPorts(line, this.exitStreamsOpened.keySet());
     this.verifyBytesOrStreams(line, this.exitStreamsOpened.values());
   }
 
-  private SortedMap<String, Integer> sortByPorts(
-      SortedMap<String, Integer> naturalOrder) {
-    SortedMap<String, Integer> byPortNumber =
-        new TreeMap<String, Integer>(new Comparator<String>() {
+  private SortedMap<String, Long> sortByPorts(
+      SortedMap<String, Long> naturalOrder) {
+    SortedMap<String, Long> byPortNumber =
+        new TreeMap<String, Long>(new Comparator<String>() {
           public int compare(String arg0, String arg1) {
             int port0 = 0, port1 = 0;
             try {
@@ -557,11 +566,10 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void verifyBytesOrStreams(String line,
-      Collection<Integer> bytesOrStreams)
-      throws DescriptorParseException {
+      Collection<Long> bytesOrStreams) throws DescriptorParseException {
     boolean valid = true;
-    for (int s : bytesOrStreams) {
-      if (s < 0) {
+    for (long s : bytesOrStreams) {
+      if (s < 0L) {
         valid = false;
         break;
       }
@@ -582,20 +590,23 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseBridgeStatsIpsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.bridgeIps = ParseHelper.parseCommaSeparatedKeyValueList(line,
+    this.bridgeIps =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 2);
   }
 
   private void parseBridgeIpVersionsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.bridgeIpVersions = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 2);
+    this.bridgeIpVersions =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
+        partsNoOpt, 1, 2);
   }
 
   private void parseBridgeIpTransportsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.bridgeIpTransports = ParseHelper.parseCommaSeparatedKeyValueList(
-        line, partsNoOpt, 1, 0);
+    this.bridgeIpTransports =
+        ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
+        partsNoOpt, 1, 0);
   }
 
   private void parseTransportLine(String line, String lineNoOpt,
@@ -869,22 +880,22 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.exitStatsIntervalLength;
   }
 
-  private SortedMap<String, Integer> exitKibibytesWritten;
-  public SortedMap<String, Integer> getExitKibibytesWritten() {
+  private SortedMap<String, Long> exitKibibytesWritten;
+  public SortedMap<String, Long> getExitKibibytesWritten() {
     return this.exitKibibytesWritten == null ? null :
-        new TreeMap<String, Integer>(this.exitKibibytesWritten);
+        new TreeMap<String, Long>(this.exitKibibytesWritten);
   }
 
-  private SortedMap<String, Integer> exitKibibytesRead;
-  public SortedMap<String, Integer> getExitKibibytesRead() {
+  private SortedMap<String, Long> exitKibibytesRead;
+  public SortedMap<String, Long> getExitKibibytesRead() {
     return this.exitKibibytesRead == null ? null :
-        new TreeMap<String, Integer>(this.exitKibibytesRead);
+        new TreeMap<String, Long>(this.exitKibibytesRead);
   }
 
-  private SortedMap<String, Integer> exitStreamsOpened;
-  public SortedMap<String, Integer> getExitStreamsOpened() {
+  private SortedMap<String, Long> exitStreamsOpened;
+  public SortedMap<String, Long> getExitStreamsOpened() {
     return this.exitStreamsOpened == null ? null :
-        new TreeMap<String, Integer>(this.exitStreamsOpened);
+        new TreeMap<String, Long>(this.exitStreamsOpened);
   }
 
   private long geoipStartTimeMillis = -1L;

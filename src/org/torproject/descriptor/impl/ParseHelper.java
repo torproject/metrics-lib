@@ -253,8 +253,9 @@ public class ParseHelper {
   }
 
   public static SortedMap<String, Integer>
-      parseCommaSeparatedKeyValueList(String line, String[] partsNoOpt,
-      int index, int keyLength) throws DescriptorParseException {
+      parseCommaSeparatedKeyIntegerValueList(String line,
+      String[] partsNoOpt, int index, int keyLength)
+      throws DescriptorParseException {
     SortedMap<String, Integer> result = new TreeMap<String, Integer>();
     if (partsNoOpt.length < index) {
       throw new DescriptorParseException("Line '" + line + "' does not "
@@ -273,6 +274,44 @@ public class ParseHelper {
             keyAndValue[0].length() == keyLength)) {
           try {
             value = Integer.parseInt(keyAndValue[1]);
+            key = keyAndValue[0];
+          } catch (NumberFormatException e) {
+            /* Handle below. */
+          }
+        }
+        if (key == null) {
+          throw new DescriptorParseException("Line '" + line + "' "
+              + "contains an illegal key or value in list element '"
+              + listElement + "'.");
+        }
+        result.put(key, value);
+      }
+    }
+    return result;
+  }
+
+  public static SortedMap<String, Long>
+      parseCommaSeparatedKeyLongValueList(String line,
+      String[] partsNoOpt, int index, int keyLength)
+      throws DescriptorParseException {
+    SortedMap<String, Long> result = new TreeMap<String, Long>();
+    if (partsNoOpt.length < index) {
+      throw new DescriptorParseException("Line '" + line + "' does not "
+          + "contain a key-value list at index " + index + ".");
+    } else if (partsNoOpt.length > index + 1 ) {
+      throw new DescriptorParseException("Line '" + line + "' contains "
+          + "unrecognized values beyond the expected key-value list at "
+          + "index " + index + ".");
+    } else if (partsNoOpt.length > index) {
+      String[] listElements = partsNoOpt[index].split(",", -1);
+      for (String listElement : listElements) {
+        String[] keyAndValue = listElement.split("=");
+        String key = null;
+        long value = -1;
+        if (keyAndValue.length == 2 && (keyLength == 0 ||
+            keyAndValue[0].length() == keyLength)) {
+          try {
+            value = Long.parseLong(keyAndValue[1]);
             key = keyAndValue[0];
           } catch (NumberFormatException e) {
             /* Handle below. */

@@ -205,18 +205,18 @@ public interface ExtraInfoDescriptor extends Descriptor {
   /* Return statistics on KiB written by port with map keys being ports
    * (or "other") and map values being KiB rounded up to the next full
    * KiB, or null if no exit statistics are included. */
-  public SortedMap<String, Integer> getExitKibibytesWritten();
+  public SortedMap<String, Long> getExitKibibytesWritten();
 
   /* Return statistics on KiB read by port with map keys being ports (or
    * "other") and map values being KiB rounded up to the next full KiB, or
    * null if no exit statistics are included. */
-  public SortedMap<String, Integer> getExitKibibytesRead();
+  public SortedMap<String, Long> getExitKibibytesRead();
 
   /* Return statistics on opened exit streams with map keys being ports
    * (or "other") and map values being the number of opened streams,
    * rounded up to the nearest multiple of 4, or null if no exit
    * statistics are included. */
-  public SortedMap<String, Integer> getExitStreamsOpened();
+  public SortedMap<String, Long> getExitStreamsOpened();
 
   /* Return the start of the included geoip statistics, or -1 if no geoip
    * statistics are included. */

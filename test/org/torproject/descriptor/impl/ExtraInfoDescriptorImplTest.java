@@ -1234,7 +1234,7 @@ public class ExtraInfoDescriptorImplTest {
     int[] writtenValues = new int[] { 74647, 31370, 20577, 23, 12, 1111,
         4, 11, 6, 3365, 2592 };
     int i = 0;
-    for (Map.Entry<String, Integer> e :
+    for (Map.Entry<String, Long> e :
         descriptor.getExitKibibytesWritten().entrySet()) {
       assertEquals(ports[i], e.getKey());
       assertEquals(writtenValues[i++], e.getValue().intValue());
@@ -1242,7 +1242,7 @@ public class ExtraInfoDescriptorImplTest {
     int[] readValues = new int[] { 35562, 1254256, 110279, 9396, 1911,
         648, 1188, 1427, 1824, 14, 3054 };
     i = 0;
-    for (Map.Entry<String, Integer> e :
+    for (Map.Entry<String, Long> e :
         descriptor.getExitKibibytesRead().entrySet()) {
       assertEquals(ports[i], e.getKey());
       assertEquals(readValues[i++], e.getValue().intValue());
@@ -1250,7 +1250,7 @@ public class ExtraInfoDescriptorImplTest {
     int[] streamsValues = new int[] { 369748, 64212, 151660, 4, 4, 4, 4,
         4, 4, 4, 1212 };
     i = 0;
-    for (Map.Entry<String, Integer> e :
+    for (Map.Entry<String, Long> e :
         descriptor.getExitStreamsOpened().entrySet()) {
       assertEquals(ports[i], e.getKey());
       assertEquals(streamsValues[i++], e.getValue().intValue());
@@ -1285,7 +1285,14 @@ public class ExtraInfoDescriptorImplTest {
         "exit-kibibytes-read 25=-35562");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
+  public void testExitStatsReadTooLarge()
+      throws DescriptorParseException {
+    ExitStatsBuilder.createWithExitKibibytesReadLine(
+        "exit-kibibytes-read other=2282907805");
+  }
+
+  @Test()
   public void testExitStatsStreamsTooLarge()
       throws DescriptorParseException {
     ExitStatsBuilder.createWithExitStreamsOpenedLine(
