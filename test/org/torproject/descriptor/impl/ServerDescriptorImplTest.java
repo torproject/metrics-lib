@@ -538,6 +538,13 @@ public class ServerDescriptorImplTest {
   }
 
   @Test()
+  public void testPublishedMillis() throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithPublishedLine("opt published 2012-01-01 04:03:19.123");
+    assertEquals(1325390599000L, descriptor.getPublishedMillis());
+  }
+
+  @Test()
   public void testFingerprintNoOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithFingerprintLine("fingerprint D873 3048 FC8E C910 2466 "

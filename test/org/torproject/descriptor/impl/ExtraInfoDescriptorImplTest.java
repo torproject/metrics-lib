@@ -804,6 +804,13 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(1328951316000L, descriptor.getPublishedMillis());
   }
 
+  @Test()
+  public void testPublishedMillis() throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder.
+        createWithPublishedLine("opt published 2012-02-11 09:08:36.123");
+    assertEquals(1328951316000L, descriptor.getPublishedMillis());
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testWriteHistoryNegativeBytes()
       throws DescriptorParseException {
