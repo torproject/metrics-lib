@@ -41,14 +41,18 @@ public class DirectorySignatureImpl implements DirectorySignature {
       String line = s.next();
       if (line.startsWith("directory-signature ")) {
         String[] parts = line.split(" ", -1);
-        if (parts.length != 3) {
+        int algorithmOffset = 0;
+        if (parts.length == 4) {
+          this.algorithm = parts[1];
+          algorithmOffset = 1;
+        } else if (parts.length != 3) {
           throw new DescriptorParseException("Illegal line '" + line
               + "'.");
         }
         this.identity = ParseHelper.parseTwentyByteHexString(line,
-            parts[1]);
+            parts[1 + algorithmOffset]);
         this.signingKeyDigest = ParseHelper.parseTwentyByteHexString(
-            line, parts[2]);
+            line, parts[2 + algorithmOffset]);
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
         crypto.append(line + "\n");
@@ -71,6 +75,11 @@ public class DirectorySignatureImpl implements DirectorySignature {
         }
       }
     }
+  }
+
+  private String algorithm = "sha1";
+  public String getAlgorithm() {
+    return this.algorithm;
   }
 
   private String identity;

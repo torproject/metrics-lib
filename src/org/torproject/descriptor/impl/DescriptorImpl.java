@@ -27,8 +27,10 @@ public abstract class DescriptorImpl implements Descriptor {
         first100Chars.length);
     String firstLines = new String(first100Chars);
     if (firstLines.startsWith("@type network-status-consensus-3 1.") ||
-        ((firstLines.startsWith("network-status-version 3\n") ||
-        firstLines.contains("\nnetwork-status-version 3\n")) &&
+        firstLines.startsWith("@type network-status-microdesc-"
+            + "consensus-3 1.") ||
+        ((firstLines.startsWith("network-status-version 3") ||
+        firstLines.contains("\nnetwork-status-version 3")) &&
         firstLines.contains("\nvote-status consensus\n"))) {
       parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl.
           parseConsensuses(rawDescriptorBytes,
@@ -56,6 +58,12 @@ public abstract class DescriptorImpl implements Descriptor {
         firstLines.startsWith("extra-info ") ||
         firstLines.contains("\nextra-info ")) {
       parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith("@type microdescriptor 1.") ||
+        firstLines.startsWith("onion-key\n") ||
+        firstLines.contains("\nonion-key\n")) {
+      parsedDescriptors.addAll(MicrodescriptorImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type bridge-pool-assignment 1.") ||

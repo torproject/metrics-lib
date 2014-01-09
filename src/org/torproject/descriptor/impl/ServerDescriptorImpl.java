@@ -508,7 +508,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    this.ntorOnionKey = partsNoOpt[1].replaceAll("=",  "");
+    this.ntorOnionKey = partsNoOpt[1].replaceAll("=", "");
   }
 
   private void calculateDigest() throws DescriptorParseException {

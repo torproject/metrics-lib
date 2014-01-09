@@ -4,6 +4,9 @@ package org.torproject.descriptor;
 
 public interface DirectorySignature {
 
+  /* Return the digest algorithm, which is "sha1" by default. */
+  public String getAlgorithm();
+
   /* Return the directory identity fingerprint. */
   public String getIdentity();
 

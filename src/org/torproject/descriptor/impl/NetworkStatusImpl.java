@@ -176,7 +176,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   protected void parseStatusEntry(byte[] statusEntryBytes)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
-        statusEntryBytes, this.failUnrecognizedDescriptorLines);
+        statusEntryBytes, false, this.failUnrecognizedDescriptorLines);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
     List<String> unrecognizedStatusEntryLines = statusEntry.
         getAndClearUnrecognizedLines();
@@ -210,13 +210,13 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     }
   }
 
-  private SortedMap<String, DirSourceEntry> dirSourceEntries =
+  protected SortedMap<String, DirSourceEntry> dirSourceEntries =
       new TreeMap<String, DirSourceEntry>();
   public SortedMap<String, DirSourceEntry> getDirSourceEntries() {
     return new TreeMap<String, DirSourceEntry>(this.dirSourceEntries);
   }
 
-  private SortedMap<String, NetworkStatusEntry> statusEntries =
+  protected SortedMap<String, NetworkStatusEntry> statusEntries =
       new TreeMap<String, NetworkStatusEntry>();
   public SortedMap<String, NetworkStatusEntry> getStatusEntries() {
     return new TreeMap<String, NetworkStatusEntry>(this.statusEntries);
@@ -228,7 +228,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     return this.statusEntries.get(fingerprint);
   }
 
-  private SortedMap<String, DirectorySignature> directorySignatures;
+  protected SortedMap<String, DirectorySignature> directorySignatures;
   public SortedMap<String, DirectorySignature> getDirectorySignatures() {
     return this.directorySignatures == null ? null :
         new TreeMap<String, DirectorySignature>(this.directorySignatures);

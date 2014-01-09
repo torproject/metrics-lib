@@ -239,14 +239,27 @@ public class ParseHelper {
     return nickname;
   }
 
-  private static Pattern base64Pattern =
+  private static Pattern twentyByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{27}$");
   public static String parseTwentyByteBase64String(String line,
       String base64String) throws DescriptorParseException {
-    if (!base64Pattern.matcher(base64String).matches()) {
+    if (!twentyByteBase64Pattern.matcher(base64String).matches()) {
       throw new DescriptorParseException("'" + base64String
           + "' in line '" + line + "' is not a valid base64-encoded "
           + "20-byte value.");
+    }
+    return Hex.encodeHexString(Base64.decodeBase64(base64String + "=")).
+        toUpperCase();
+  }
+
+  private static Pattern thirtyTwoByteBase64Pattern =
+      Pattern.compile("^[0-9a-zA-Z+/]{43}$");
+  public static String parseThirtyTwoByteBase64String(String line,
+      String base64String) throws DescriptorParseException {
+    if (!thirtyTwoByteBase64Pattern.matcher(base64String).matches()) {
+      throw new DescriptorParseException("'" + base64String
+          + "' in line '" + line + "' is not a valid base64-encoded "
+          + "32-byte value.");
     }
     return Hex.encodeHexString(Base64.decodeBase64(base64String + "=")).
         toUpperCase();

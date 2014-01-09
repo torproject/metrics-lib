@@ -1,8 +1,9 @@
-/* Copyright 2011, 2012 The Tor Project
+/* Copyright 2011--2014 The Tor Project
  * See LICENSE for licensing information */
 package org.torproject.descriptor;
 
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 
 /* Status entry contained in a network status with version 2 or higher or
@@ -18,7 +19,8 @@ public interface NetworkStatusEntry {
   /* Return the relay fingerprint. */
   public String getFingerprint();
 
-  /* Return the descriptor identity. */
+  /* Return the descriptor identity or null if the containing status is a
+   * microdesc consensus. */
   public String getDescriptor();
 
   /* Return the publication timestamp. */
@@ -32,6 +34,11 @@ public interface NetworkStatusEntry {
 
   /* Return the DirPort. */
   public int getDirPort();
+
+  /* Return the (possibly empty) set of microdescriptor digest(s) if the
+   * containing status is a vote or microdesc consensus, or null
+   * otherwise. */
+  public Set<String> getMicrodescriptorDigests();
 
   /* Return the relay's additional OR addresses and ports contained in
    * or-address lines, or an empty list if the network status doesn't

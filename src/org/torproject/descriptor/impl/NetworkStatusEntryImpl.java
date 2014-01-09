@@ -1,10 +1,12 @@
-/* Copyright 2011, 2012 The Tor Project
+/* Copyright 2011--2014 The Tor Project
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -18,6 +20,8 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     return this.statusEntryBytes;
   }
 
+  private boolean microdescConsensus;
+
   private boolean failUnrecognizedDescriptorLines;
   private List<String> unrecognizedLines;
   protected List<String> getAndClearUnrecognizedLines() {
@@ -27,9 +31,10 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   protected NetworkStatusEntryImpl(byte[] statusEntryBytes,
-      boolean failUnrecognizedDescriptorLines)
+      boolean microdescConsensus, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     this.statusEntryBytes = statusEntryBytes;
+    this.microdescConsensus = microdescConsensus;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
     this.initializeKeywords();
@@ -95,20 +100,28 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private void parseRLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (parts.length < 9) {
+    if ((!this.microdescConsensus && parts.length != 9) ||
+        (this.microdescConsensus && parts.length != 8)) {
       throw new DescriptorParseException("r line '" + line + "' has "
           + "fewer space-separated elements than expected.");
     }
     this.nickname = ParseHelper.parseNickname(line, parts[1]);
     this.fingerprint = ParseHelper.parseTwentyByteBase64String(line,
         parts[2]);
-    this.descriptor = ParseHelper.parseTwentyByteBase64String(line,
-        parts[3]);
+    int descriptorOffset = 0;
+    if (!this.microdescConsensus) {
+      this.descriptor = ParseHelper.parseTwentyByteBase64String(line,
+          parts[3]);
+      descriptorOffset = 1;
+    }
     this.publishedMillis = ParseHelper.parseTimestampAtIndex(line, parts,
-        4, 5);
-    this.address = ParseHelper.parseIpv4Address(line, parts[6]);
-    this.orPort = ParseHelper.parsePort(line, parts[7]);
-    this.dirPort = ParseHelper.parsePort(line, parts[8]);
+        3 + descriptorOffset, 4 + descriptorOffset);
+    this.address = ParseHelper.parseIpv4Address(line,
+        parts[5 + descriptorOffset]);
+    this.orPort = ParseHelper.parsePort(line,
+        parts[6 + descriptorOffset]);
+    this.dirPort = ParseHelper.parsePort(line,
+        parts[7 + descriptorOffset]);
   }
 
   private void parseALine(String line, String[] parts)
@@ -194,8 +207,18 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private void parseMLine(String line, String[] parts)
       throws DescriptorParseException {
-    /* TODO Implement parsing of m lines in votes as specified in
-     * dir-spec.txt. */
+    if (this.microdescriptorDigests == null) {
+      this.microdescriptorDigests = new HashSet<String>();
+    }
+    if (parts.length == 2) {
+      this.microdescriptorDigests.add(
+          ParseHelper.parseThirtyTwoByteBase64String(line, parts[1]));
+    } else if (parts.length == 3 && parts[2].length() > 7) {
+      /* 7 == "sha256=".length() */
+      this.microdescriptorDigests.add(
+          ParseHelper.parseThirtyTwoByteBase64String(line,
+          parts[2].substring(7)));
+    }
   }
 
   private String nickname;
@@ -231,6 +254,12 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private int dirPort;
   public int getDirPort() {
     return this.dirPort;
+  }
+
+  private Set<String> microdescriptorDigests;
+  public Set<String> getMicrodescriptorDigests() {
+    return this.microdescriptorDigests == null ? null :
+        new HashSet<String>(this.microdescriptorDigests);
   }
 
   private List<String> orAddresses = new ArrayList<String>();

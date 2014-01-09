@@ -1,4 +1,4 @@
-/* Copyright 2011, 2012 The Tor Project
+/* Copyright 2011--2014 The Tor Project
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
@@ -17,7 +17,7 @@ import java.util.TreeSet;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
-/* Contains a network status consensus. */
+/* Contains a network status consensus or microdesc consensus. */
 public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     implements RelayNetworkStatusConsensus {
 
@@ -120,6 +120,23 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     }
   }
 
+  private boolean microdescConsensus = false;
+  protected void parseStatusEntry(byte[] statusEntryBytes)
+      throws DescriptorParseException {
+    NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
+        statusEntryBytes, this.microdescConsensus,
+        this.failUnrecognizedDescriptorLines);
+    this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
+    List<String> unrecognizedStatusEntryLines = statusEntry.
+        getAndClearUnrecognizedLines();
+    if (unrecognizedStatusEntryLines != null) {
+      if (this.unrecognizedLines == null) {
+        this.unrecognizedLines = new ArrayList<String>();
+      }
+      this.unrecognizedLines.addAll(unrecognizedStatusEntryLines);
+    }
+  }
+
   protected void parseFooter(byte[] footerBytes)
       throws DescriptorParseException {
     Scanner s = new Scanner(new String(footerBytes)).useDelimiter("\n");
@@ -144,11 +161,20 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   private void parseNetworkStatusVersionLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("network-status-version 3")) {
+    if (!line.startsWith("network-status-version 3")) {
       throw new DescriptorParseException("Illegal network status version "
           + "number in line '" + line + "'.");
     }
     this.networkStatusVersion = 3;
+    if (parts.length == 3) {
+      this.consensusFlavor = parts[2];
+      if (this.consensusFlavor.equals("microdesc")) {
+        this.microdescConsensus = true;
+      }
+    } else if (parts.length != 2) {
+      throw new DescriptorParseException("Illegal network status version "
+          + "line '" + line + "'.");
+    }
   }
 
   private void parseVoteStatusLine(String line, String[] parts)
@@ -275,6 +301,11 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   private int networkStatusVersion;
   public int getNetworkStatusVersion() {
     return this.networkStatusVersion;
+  }
+
+  private String consensusFlavor;
+  public String getConsensusFlavor() {
+    return this.consensusFlavor;
   }
 
   private int consensusMethod;

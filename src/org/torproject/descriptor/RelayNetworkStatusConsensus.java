@@ -1,4 +1,4 @@
-/* Copyright 2011, 2012 The Tor Project
+/* Copyright 2011--2014 The Tor Project
  * See LICENSE for licensing information */
 package org.torproject.descriptor;
 
@@ -11,6 +11,9 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
 
   /* Return the network status version. */
   public int getNetworkStatusVersion();
+
+  /* Return the flavor name, or null if this consensus is unflavored. */
+  public String getConsensusFlavor();
 
   /* Return the consensus method. */
   public int getConsensusMethod();
