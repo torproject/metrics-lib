@@ -2,6 +2,7 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +108,12 @@ public abstract class DescriptorImpl implements Descriptor {
       byte[] rawDescriptorBytes, String startToken) {
     List<byte[]> rawDescriptors = new ArrayList<byte[]>();
     String splitToken = "\n" + startToken;
-    String ascii = new String(rawDescriptorBytes);
+    String ascii;
+    try {
+      ascii = new String(rawDescriptorBytes, "US-ASCII");
+    } catch (UnsupportedEncodingException e) {
+      return rawDescriptors;
+    }
     int endAllDescriptors = rawDescriptorBytes.length,
         startAnnotations = 0;
     boolean containsAnnotations = ascii.startsWith("@") ||
