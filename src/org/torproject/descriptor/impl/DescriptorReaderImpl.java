@@ -93,6 +93,15 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.failUnrecognizedDescriptorLines = true;
   }
 
+  private Integer maxDescriptorFilesInQueue = null;
+  public void setMaxDescriptorFilesInQueue(int max) {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to read.");
+    }
+    this.maxDescriptorFilesInQueue = max;
+  }
+
   private DescriptorReaderRunnable reader;
   public Iterator<DescriptorFile> readDescriptors() {
     if (this.hasStartedReading) {
@@ -101,7 +110,10 @@ public class DescriptorReaderImpl implements DescriptorReader {
     }
     this.hasStartedReading = true;
     BlockingIteratorImpl<DescriptorFile> descriptorQueue =
-        new BlockingIteratorImpl<DescriptorFile>();
+        this.maxDescriptorFilesInQueue == null
+        ? new BlockingIteratorImpl<DescriptorFile>()
+        : new BlockingIteratorImpl<DescriptorFile>(
+        this.maxDescriptorFilesInQueue);
     this.reader = new DescriptorReaderRunnable(this.directories,
         this.tarballs, descriptorQueue, this.historyFile,
         this.excludedFiles, this.failUnrecognizedDescriptorLines);

@@ -49,6 +49,11 @@ public interface DescriptorReader {
    * explicitly. */
   public void setFailUnrecognizedDescriptorLines();
 
+  /* Don't keep more than this number of parsed descriptor files in the
+   * queue.  The default is 100, but if descriptor files contain hundreds
+   * or even thousands of descriptors, that default may be too high. */
+  public void setMaxDescriptorFilesInQueue(int max);
+
   /* Read the previously configured descriptors and make them available
    * via the returned blocking iterator.  Whenever the reader runs out of
    * descriptors and expects to provide more shortly after, it blocks the

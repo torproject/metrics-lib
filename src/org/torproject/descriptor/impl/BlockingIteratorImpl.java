@@ -15,19 +15,26 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
   /* Queue containing produced elemnts waiting for consumers. */
   private Queue<T> queue = new LinkedList<T>();
 
+  /* Maximum number of elements in queue. */
+  private int maxQueueSize = 100;
+
   /* Restrict object construction to the impl package. */
   protected BlockingIteratorImpl() {
   }
 
+  /* Create instance with maximum queue size. */
+  protected BlockingIteratorImpl(int maxQueueSize) {
+    this.maxQueueSize = maxQueueSize;
+  }
+
   /* Add an object to the queue if there's still room. */
-  final int MAX_DESCRIPTORS = 100;
   protected synchronized void add(T object) {
     if (this.outOfDescriptors) {
       throw new IllegalStateException("Internal error: Adding results to "
           + "descriptor queue not allowed after sending end-of-stream "
           + "object.");
     }
-    while (this.queue.size() >= this.MAX_DESCRIPTORS) {
+    while (this.queue.size() >= this.maxQueueSize) {
       try {
         wait();
       } catch (InterruptedException e) {
