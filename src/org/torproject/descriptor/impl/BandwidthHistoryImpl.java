@@ -47,15 +47,14 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
             values = partsNoOpt[4].substring(2).split(",", -1);
           }
           if (values != null) {
-            long endMillis = this.historyEndMillis;
+            this.bandwidthValues = new long[values.length];
             for (int i = values.length - 1; i >= 0; i--) {
               long bandwidthValue = Long.parseLong(values[i]);
               if (bandwidthValue < 0L) {
                 throw new DescriptorParseException("Negative bandwidth "
                     + "values are not allowed in line '" + line + "'.");
               }
-              this.bandwidthValues.put(endMillis, bandwidthValue);
-              endMillis -= this.intervalLength * 1000L;
+              this.bandwidthValues[i] = bandwidthValue;
             }
             isValid = true;
           }
@@ -85,10 +84,17 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
     return this.intervalLength;
   }
 
-  private SortedMap<Long, Long> bandwidthValues =
-      new TreeMap<Long, Long>();
+  private long[] bandwidthValues;
   public SortedMap<Long, Long> getBandwidthValues() {
-    return new TreeMap<Long, Long>(this.bandwidthValues);
+    SortedMap<Long, Long> result = new TreeMap<Long, Long>();
+    if (this.bandwidthValues != null) {
+      long endMillis = this.historyEndMillis;
+      for (int i = this.bandwidthValues.length - 1; i >= 0; i--) {
+        result.put(endMillis, bandwidthValues[i]);
+        endMillis -= this.intervalLength * 1000L;
+      }
+    }
+    return result;
   }
 }
 
