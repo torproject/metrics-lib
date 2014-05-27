@@ -47,6 +47,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
         "ntor-onion-key,family,p,p6").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("onion-key");
+    this.clearParsedKeywords();
     return;
   }
 

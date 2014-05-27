@@ -51,6 +51,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
         "dir-signing-key,running-routers,router-status".split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("signed-directory");
+    this.clearParsedKeywords();
   }
 
   private void calculateDigest() throws DescriptorParseException {

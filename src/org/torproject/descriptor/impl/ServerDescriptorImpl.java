@@ -57,6 +57,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
       throw new DescriptorParseException("Either keyword 'accept' or "
           + "'reject' must be contained at least once.");
     }
+    this.clearParsedKeywords();
     return;
   }
 

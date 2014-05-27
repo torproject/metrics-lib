@@ -81,6 +81,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.checkKeywordsDependOn(exitStatsKeywords, "exit-stats-end");
     this.checkKeywordsDependOn(bridgeStatsKeywords, "bridge-stats-end");
     this.checkFirstKeyword("extra-info");
+    this.clearParsedKeywords();
     return;
   }
 

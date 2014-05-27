@@ -54,6 +54,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
+    this.clearParsedKeywords();
   }
 
   protected void parseHeader(byte[] headerBytes)

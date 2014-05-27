@@ -51,6 +51,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("dir-key-certificate-version");
     this.checkLastKeyword("dir-key-certification");
+    this.clearParsedKeywords();
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {

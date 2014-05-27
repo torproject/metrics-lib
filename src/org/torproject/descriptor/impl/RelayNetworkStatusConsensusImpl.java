@@ -51,6 +51,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         + "bandwidth-weights").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
+    this.clearParsedKeywords();
     this.calculateDigest();
   }
 

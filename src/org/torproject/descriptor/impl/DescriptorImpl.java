@@ -319,5 +319,9 @@ public abstract class DescriptorImpl implements Descriptor {
       return this.parsedKeywords.get(keyword);
     }
   }
+
+  protected void clearParsedKeywords() {
+    this.parsedKeywords = null;
+  }
 }
 

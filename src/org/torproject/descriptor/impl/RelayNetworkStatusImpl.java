@@ -48,6 +48,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         "dir-options,client-versions,server-versions".split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
+    this.clearParsedKeywords();
     this.calculateDigest();
   }
 

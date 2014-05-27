@@ -43,6 +43,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
         new String[] { "bridge-pool-assignment" }));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     this.checkFirstKeyword("bridge-pool-assignment");
+    this.clearParsedKeywords();
     return;
   }
 
