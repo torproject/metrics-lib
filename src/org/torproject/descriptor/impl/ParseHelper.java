@@ -2,9 +2,11 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -137,6 +139,32 @@ public class ParseHelper {
     return exitPattern;
   }
 
+  private static ThreadLocal<Map<String, DateFormat>> dateFormats =
+      new ThreadLocal<Map<String, DateFormat>> () {
+    public Map<String, DateFormat> get() {
+      return super.get();
+    }
+    protected Map<String, DateFormat> initialValue() {
+      return new HashMap<String, DateFormat>();
+    }
+    public void remove() {
+      super.remove();
+    }
+    public void set(Map<String, DateFormat> value) {
+      super.set(value);
+    }
+  };
+  private static DateFormat getDateFormat(String format) {
+    Map<String, DateFormat> threadDateFormats = dateFormats.get();
+    if (!threadDateFormats.containsKey(format)) {
+      DateFormat dateFormat = new SimpleDateFormat(format);
+      dateFormat.setLenient(false);
+      dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+      threadDateFormats.put(format, dateFormat);
+    }
+    return threadDateFormats.get(format);
+  }
+
   public static long parseTimestampAtIndex(String line, String[] parts,
       int dateIndex, int timeIndex) throws DescriptorParseException {
     if (dateIndex >= parts.length || timeIndex >= parts.length) {
@@ -145,10 +173,7 @@ public class ParseHelper {
     }
     long result = -1L;
     try {
-      SimpleDateFormat dateTimeFormat = new SimpleDateFormat(
-          "yyyy-MM-dd HH:mm:ss");
-      dateTimeFormat.setLenient(false);
-      dateTimeFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+      DateFormat dateTimeFormat = getDateFormat("yyyy-MM-dd HH:mm:ss");
       result = dateTimeFormat.parse(
           parts[dateIndex] + " " + parts[timeIndex]).getTime();
     } catch (ParseException e) {
@@ -169,9 +194,7 @@ public class ParseHelper {
     }
     long result = -1L;
     try {
-      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-      dateFormat.setLenient(false);
-      dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+      DateFormat dateFormat = getDateFormat("yyyy-MM-dd");
       result = dateFormat.parse(parts[dateIndex]).getTime();
     } catch (ParseException e) {
       /* Leave result at -1L. */
