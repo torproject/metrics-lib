@@ -138,10 +138,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private void parseSLine(String line, String[] parts)
       throws DescriptorParseException {
     this.parsedAtMostOnceKeyword("s");
-    this.flags = new TreeSet<String>();
-    for (int i = 1; i < parts.length; i++) {
-      this.flags.add(parts[i]);
-    }
+    this.flags = parts;
   }
 
   private void parseVLine(String line, String[] parts)
@@ -267,9 +264,15 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     return new ArrayList<String>(this.orAddresses);
   }
 
-  private SortedSet<String> flags;
+  private String[] flags;
   public SortedSet<String> getFlags() {
-    return new TreeSet<String>(this.flags);
+    SortedSet<String> result = new TreeSet<String>();
+    if (this.flags != null) {
+      for (int i = 1; i < this.flags.length; i++) {
+        result.add(this.flags[i]);
+      }
+    }
+    return result;
   }
 
   private String version;
