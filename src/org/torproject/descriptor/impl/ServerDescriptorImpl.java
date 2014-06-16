@@ -170,8 +170,17 @@ public class ServerDescriptorImpl extends DescriptorImpl
   private void parseRouterLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 6) {
-      throw new DescriptorParseException("Illegal line '" + line
-          + "' in server descriptor.");
+      /* Also accept [SP|TAB]+ where we'd previously only accept SP as
+       * delimiter.  This is a hotfix for #12403, because we're currently
+       * not storing valid descriptors.  A better place to implement this
+       * would probably be in DescriptorImpl. */
+      partsNoOpt = line.startsWith("opt ") ?
+          line.substring("opt ".length()).split("[ \t]+") :
+          line.split("[ \t]+");
+      if (partsNoOpt.length != 6) {
+        throw new DescriptorParseException("Illegal line '" + line
+            + "' in server descriptor.");
+      }
     }
     this.nickname = ParseHelper.parseNickname(line, partsNoOpt[1]);
     this.address = ParseHelper.parseIpv4Address(line, partsNoOpt[2]);
