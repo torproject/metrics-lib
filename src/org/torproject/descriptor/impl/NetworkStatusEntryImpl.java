@@ -39,6 +39,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
         failUnrecognizedDescriptorLines;
     this.initializeKeywords();
     this.parseStatusEntryBytes();
+    this.clearAtMostOnceKeywords();
   }
 
   private SortedSet<String> atMostOnceKeywords;
@@ -216,6 +217,10 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
           ParseHelper.parseThirtyTwoByteBase64String(line,
           parts[2].substring(7)));
     }
+  }
+
+  private void clearAtMostOnceKeywords() {
+    this.atMostOnceKeywords = null;
   }
 
   private String nickname;

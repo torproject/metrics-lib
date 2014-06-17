@@ -33,7 +33,7 @@ public class DirSourceEntryImpl implements DirSourceEntry {
         failUnrecognizedDescriptorLines;
     this.initializeKeywords();
     this.parseDirSourceEntryBytes();
-    this.checkKeywords();
+    this.checkAndClearKeywords();
   }
 
   private SortedSet<String> exactlyOnceKeywords, atMostOnceKeywords;
@@ -63,11 +63,13 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     this.atMostOnceKeywords.remove(keyword);
   }
 
-  private void checkKeywords() throws DescriptorParseException {
+  private void checkAndClearKeywords() throws DescriptorParseException {
     if (!this.exactlyOnceKeywords.isEmpty()) {
       throw new DescriptorParseException("dir-source does not contain a '"
           + this.exactlyOnceKeywords.first() + "' line.");
     }
+    this.exactlyOnceKeywords = null;
+    this.atMostOnceKeywords = null;
   }
 
   private void parseDirSourceEntryBytes()

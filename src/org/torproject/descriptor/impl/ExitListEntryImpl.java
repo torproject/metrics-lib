@@ -33,7 +33,7 @@ public class ExitListEntryImpl implements ExitListEntry {
         failUnrecognizedDescriptorLines;
     this.initializeKeywords();
     this.parseExitListEntryBytes();
-    this.checkKeywords();
+    this.checkAndClearKeywords();
   }
 
   private SortedSet<String> exactlyOnceKeywords;
@@ -54,11 +54,12 @@ public class ExitListEntryImpl implements ExitListEntry {
     this.exactlyOnceKeywords.remove(keyword);
   }
 
-  private void checkKeywords() throws DescriptorParseException {
+  private void checkAndClearKeywords() throws DescriptorParseException {
     for (String missingKeyword : this.exactlyOnceKeywords) {
       throw new DescriptorParseException("Missing '" + missingKeyword
           + "' line in exit list entry.");
     }
+    this.exactlyOnceKeywords = null;
   }
 
   private void parseExitListEntryBytes()
