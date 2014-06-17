@@ -135,7 +135,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
 
   private void parseFamilyLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.familyEntries = new ArrayList<String>();
+    String[] familyEntries = new String[parts.length - 1];
     for (int i = 1; i < parts.length; i++) {
       if (parts[i].startsWith("$")) {
         if (parts[i].contains("=") ^ parts[i].contains("~")) {
@@ -143,19 +143,18 @@ public class MicrodescriptorImpl extends DescriptorImpl
           String fingerprint = ParseHelper.parseTwentyByteHexString(line,
               parts[i].substring(1, parts[i].indexOf(separator)));
           String nickname = ParseHelper.parseNickname(line,
-              parts[i].substring(parts[i].indexOf(
-              separator) + 1));
-          this.familyEntries.add("$" + fingerprint + separator
-              + nickname);
+              parts[i].substring(parts[i].indexOf(separator) + 1));
+          familyEntries[i - 1] = "$" + fingerprint + separator + nickname;
         } else {
-          this.familyEntries.add("$"
+          familyEntries[i - 1] = "$"
               + ParseHelper.parseTwentyByteHexString(line,
-              parts[i].substring(1)));
+              parts[i].substring(1));
         }
       } else {
-        this.familyEntries.add(ParseHelper.parseNickname(line, parts[i]));
+        familyEntries[i - 1] = ParseHelper.parseNickname(line, parts[i]);
       }
     }
+    this.familyEntries = familyEntries;
   }
 
   private void parsePLine(String line, String[] parts)
@@ -234,10 +233,10 @@ public class MicrodescriptorImpl extends DescriptorImpl
     return new ArrayList<String>(this.orAddresses);
   }
 
-  private List<String> familyEntries;
+  private String[] familyEntries;
   public List<String> getFamilyEntries() {
     return this.familyEntries == null ? null :
-        new ArrayList<String>(this.familyEntries);
+        Arrays.asList(this.familyEntries);
   }
   private String defaultPolicy;
   public String getDefaultPolicy() {

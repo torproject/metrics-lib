@@ -241,17 +241,14 @@ public class TorperfResultImpl extends DescriptorImpl
       String line) throws DescriptorParseException {
     String percentileString = keyValue.substring("DATAPERC".length(),
         keyValue.indexOf("="));
-    if (!unparsedPercentiles.contains(percentileString)) {
+    if (!this.unparsedPercentiles.contains(percentileString)) {
       throw new DescriptorParseException("Illegal value in '" + keyValue
           + "' in line '" + line + "'.");
     }
-    unparsedPercentiles.remove(percentileString);
-    if (this.dataPercentiles == null) {
-      this.dataPercentiles = new TreeMap<Integer, Long>();
-    }
-    int percentile = Integer.parseInt(percentileString);
+    this.unparsedPercentiles.remove(percentileString);
+    int decileIndex = (Integer.parseInt(percentileString) / 10) - 1;
     long timestamp = this.parseTimestamp(value, keyValue, line);
-    this.dataPercentiles.put(percentile, timestamp);
+    this.dataDeciles[decileIndex] = timestamp;
   }
 
   private void parseLaunch(String value, String keyValue, String line)
@@ -266,24 +263,27 @@ public class TorperfResultImpl extends DescriptorImpl
 
   private void parsePath(String value, String keyValue, String line)
       throws DescriptorParseException {
-    this.path = new ArrayList<String>();
-    for (String fingerprint : value.split(",")) {
-      if (fingerprint.length() != 41) {
+    String[] valueParts = value.split(",");
+    String[] result = new String[valueParts.length];
+    for (int i = 0; i < valueParts.length; i++) {
+      if (valueParts[i].length() != 41) {
         throw new DescriptorParseException("Illegal value in '" + keyValue
             + "' in line '" + line + "'.");
       }
-      this.path.add(ParseHelper.parseTwentyByteHexString(line,
-          fingerprint.substring(1)));
+      result[i] = ParseHelper.parseTwentyByteHexString(line,
+          valueParts[i].substring(1));
     }
+    this.path = result;
   }
 
   private void parseBuildTimes(String value, String keyValue, String line)
       throws DescriptorParseException {
-    this.buildTimes = new ArrayList<Long>();
-    for (String buildTimeString : value.split(",")) {
-      this.buildTimes.add(this.parseTimestamp(buildTimeString, keyValue,
-          line));
+    String[] valueParts = value.split(",");
+    Long[] result = new Long[valueParts.length];
+    for (int i = 0; i < valueParts.length; i++) {
+      result[i] = this.parseTimestamp(valueParts[i], keyValue, line);
     }
+    this.buildTimes = result;
   }
 
   private void parseTimeout(String value, String keyValue, String line)
@@ -417,10 +417,18 @@ public class TorperfResultImpl extends DescriptorImpl
     return this.didTimeout;
   }
 
-  private SortedMap<Integer, Long> dataPercentiles;
+  private Long[] dataDeciles = new Long[9];
   public SortedMap<Integer, Long> getDataPercentiles() {
-    return this.dataPercentiles == null ? null :
-        new TreeMap<Integer, Long>(this.dataPercentiles);
+    if (this.dataDeciles == null) {
+      return null;
+    }
+    SortedMap<Integer, Long> result = new TreeMap<Integer, Long>();
+    for (int i = 0; i < dataDeciles.length; i++) {
+      if (dataDeciles[i] > 0L) {
+        result.put(10 * (i + 1), dataDeciles[i]);
+      }
+    }
+    return result;
   }
 
   private long launchMillis = -1L;
@@ -433,14 +441,15 @@ public class TorperfResultImpl extends DescriptorImpl
     return this.usedAtMillis;
   }
 
-  private List<String> path;
+  private String[] path;
   public List<String> getPath() {
-    return new ArrayList<String>(this.path);
+    return this.path == null ? null : Arrays.asList(this.path);
   }
 
-  private List<Long> buildTimes;
+  private Long[] buildTimes;
   public List<Long> getBuildTimes() {
-    return new ArrayList<Long>(this.buildTimes);
+    return this.buildTimes == null ? null :
+        Arrays.asList(this.buildTimes);
   }
 
   private long timeout = -1L;

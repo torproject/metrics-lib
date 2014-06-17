@@ -173,6 +173,26 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     }
   }
 
+  protected String[] parseClientOrServerVersions(String line,
+      String[] parts) throws DescriptorParseException {
+    String[] result = null;
+    if (parts.length > 2) {
+      throw new DescriptorParseException("Illegal versions line '" + line
+          + "'.");
+    } else if (parts.length == 2) {
+      result = parts[1].split(",", -1);
+      for (String version : result) {
+        if (version.length() < 1) {
+          throw new DescriptorParseException("Illegal versions line '"
+              + line + "'.");
+        }
+      }
+    } else if (parts.length == 1) {
+      result = new String[0];
+    }
+    return result;
+  }
+
   protected void parseStatusEntry(byte[] statusEntryBytes)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(

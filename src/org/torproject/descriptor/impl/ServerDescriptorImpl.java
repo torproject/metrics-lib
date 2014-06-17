@@ -330,7 +330,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseFamilyLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.familyEntries = new ArrayList<String>();
+    String[] familyEntries = new String[partsNoOpt.length - 1];
     for (int i = 1; i < partsNoOpt.length; i++) {
       if (partsNoOpt[i].startsWith("$")) {
         if (partsNoOpt[i].contains("=") ^ partsNoOpt[i].contains("~")) {
@@ -341,18 +341,18 @@ public class ServerDescriptorImpl extends DescriptorImpl
           String nickname = ParseHelper.parseNickname(line,
               partsNoOpt[i].substring(partsNoOpt[i].indexOf(
               separator) + 1));
-          this.familyEntries.add("$" + fingerprint + separator
-              + nickname);
+          familyEntries[i - 1] = "$" + fingerprint + separator + nickname;
         } else {
-          this.familyEntries.add("$"
+          familyEntries[i - 1] = "$"
               + ParseHelper.parseTwentyByteHexString(line,
-              partsNoOpt[i].substring(1)));
+              partsNoOpt[i].substring(1));
         }
       } else {
-        this.familyEntries.add(ParseHelper.parseNickname(line,
-            partsNoOpt[i]));
+        familyEntries[i - 1] = ParseHelper.parseNickname(line,
+            partsNoOpt[i]);
       }
     }
+    this.familyEntries = familyEntries;
   }
 
   private void parseReadHistoryLine(String line, String lineNoOpt,
@@ -400,15 +400,15 @@ public class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseHiddenServiceDirLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.hiddenServiceDirVersions = new ArrayList<Integer>();
     if (partsNoOpt.length == 1) {
-      this.hiddenServiceDirVersions.add(2);
+      this.hiddenServiceDirVersions = new Integer[] { 2 };
     } else {
       try {
+        Integer[] result = new Integer[partsNoOpt.length - 1];
         for (int i = 1; i < partsNoOpt.length; i++) {
-          this.hiddenServiceDirVersions.add(Integer.parseInt(
-              partsNoOpt[i]));
+          result[i - 1] = Integer.parseInt(partsNoOpt[i]);
         }
+        this.hiddenServiceDirVersions = result;
       } catch (NumberFormatException e) {
         throw new DescriptorParseException("Illegal value in line '"
             + line + "'.");
@@ -418,32 +418,32 @@ public class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseProtocolsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    boolean isValid = true;
-    this.linkProtocolVersions = new ArrayList<Integer>();
-    this.circuitProtocolVersions = new ArrayList<Integer>();
-    List<Integer> protocolVersions = null;
+    int linkIndex = -1, circuitIndex = -1;
     for (int i = 1; i < partsNoOpt.length; i++) {
-      String part = partsNoOpt[i];
-      if (part.equals("Link")) {
-        protocolVersions = this.linkProtocolVersions;
-      } else if (part.equals("Circuit")) {
-        protocolVersions = this.circuitProtocolVersions;
-      } else if (protocolVersions == null) {
-        isValid = false;
-        break;
-      } else {
-        try {
-          protocolVersions.add(Integer.parseInt(part));
-        } catch (NumberFormatException e) {
-          isValid = false;
-          break;
-        }
+      if (partsNoOpt[i].equals("Link")) {
+        linkIndex = i;
+      } else if (partsNoOpt[i].equals("Circuit")) {
+        circuitIndex = i;
       }
     }
-    if (protocolVersions != this.circuitProtocolVersions) {
-      isValid = false;
+    if (linkIndex < 0 || circuitIndex < 0 || circuitIndex < linkIndex) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    if (!isValid) {
+    try {
+      Integer[] linkProtocolVersions =
+          new Integer[circuitIndex - linkIndex - 1];
+      for (int i = linkIndex + 1, j = 0; i < circuitIndex; i++, j++) {
+        linkProtocolVersions[j] = Integer.parseInt(partsNoOpt[i]);
+      }
+      Integer[] circuitProtocolVersions =
+          new Integer[partsNoOpt.length - circuitIndex - 1];
+      for (int i = circuitIndex + 1, j = 0; i < partsNoOpt.length;
+          i++, j++) {
+        circuitProtocolVersions[j] = Integer.parseInt(partsNoOpt[i]);
+      }
+      this.linkProtocolVersions = linkProtocolVersions;
+      this.circuitProtocolVersions = circuitProtocolVersions;
+    } catch (NumberFormatException e) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
@@ -639,10 +639,10 @@ public class ServerDescriptorImpl extends DescriptorImpl
     return this.contact;
   }
 
-  private List<String> familyEntries;
+  private String[] familyEntries;
   public List<String> getFamilyEntries() {
     return this.familyEntries == null ? null :
-        new ArrayList<String>(this.familyEntries);
+        Arrays.asList(this.familyEntries);
   }
 
   private BandwidthHistory readHistory;
@@ -670,22 +670,22 @@ public class ServerDescriptorImpl extends DescriptorImpl
     return this.extraInfoDigest;
   }
 
-  private List<Integer> hiddenServiceDirVersions;
+  private Integer[] hiddenServiceDirVersions;
   public List<Integer> getHiddenServiceDirVersions() {
     return this.hiddenServiceDirVersions == null ? null :
-        new ArrayList<Integer>(this.hiddenServiceDirVersions);
+        Arrays.asList(this.hiddenServiceDirVersions);
   }
 
-  private List<Integer> linkProtocolVersions;
+  private Integer[] linkProtocolVersions;
   public List<Integer> getLinkProtocolVersions() {
     return this.linkProtocolVersions == null ? null :
-        new ArrayList<Integer>(this.linkProtocolVersions);
+        Arrays.asList(this.linkProtocolVersions);
   }
 
-  private List<Integer> circuitProtocolVersions;
+  private Integer[] circuitProtocolVersions;
   public List<Integer> getCircuitProtocolVersions() {
     return this.circuitProtocolVersions == null ? null :
-        new ArrayList<Integer>(this.circuitProtocolVersions);
+        Arrays.asList(this.circuitProtocolVersions);
   }
 
   private boolean allowSingleHopExits;

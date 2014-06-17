@@ -249,37 +249,17 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         line, parts);
   }
 
-  private List<String> parseClientOrServerVersions(String line,
-      String[] parts) throws DescriptorParseException {
-    List<String> result = new ArrayList<String>();
-    if (parts.length == 1) {
-      return result;
-    } else if (parts.length > 2) {
-      throw new DescriptorParseException("Illegal versions line '" + line
-          + "'.");
-    }
-    String[] versions = parts[1].split(",", -1);
-    for (int i = 0; i < versions.length; i++) {
-      String version = versions[i];
-      if (version.length() < 1) {
-        throw new DescriptorParseException("Illegal versions line '"
-            + line + "'.");
-      }
-      result.add(version);
-    }
-    return result;
-  }
-
   private void parseKnownFlagsLine(String line, String[] parts)
       throws DescriptorParseException {
     if (parts.length < 2) {
       throw new DescriptorParseException("No known flags in line '" + line
           + "'.");
     }
-    this.knownFlags = new TreeSet<String>();
+    String[] knownFlags = new String[parts.length - 1];
     for (int i = 1; i < parts.length; i++) {
-      this.knownFlags.add(parts[i]);
+      knownFlags[i - 1] = parts[i];
     }
+    this.knownFlags = knownFlags;
   }
 
   private void parseParamsLine(String line, String[] parts)
@@ -339,21 +319,21 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     return this.distSeconds;
   }
 
-  private List<String> recommendedClientVersions;
+  private String[] recommendedClientVersions;
   public List<String> getRecommendedClientVersions() {
     return this.recommendedClientVersions == null ? null :
-        new ArrayList<String>(this.recommendedClientVersions);
+        Arrays.asList(this.recommendedClientVersions);
   }
 
-  private List<String> recommendedServerVersions;
+  private String[] recommendedServerVersions;
   public List<String> getRecommendedServerVersions() {
     return this.recommendedServerVersions == null ? null :
-        new ArrayList<String>(this.recommendedServerVersions);
+        Arrays.asList(this.recommendedServerVersions);
   }
 
-  private SortedSet<String> knownFlags;
+  private String[] knownFlags;
   public SortedSet<String> getKnownFlags() {
-    return new TreeSet<String>(this.knownFlags);
+    return new TreeSet<String>(Arrays.asList(this.knownFlags));
   }
 
   private SortedMap<String, Integer> consensusParams;

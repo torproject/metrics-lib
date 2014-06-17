@@ -425,7 +425,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellProcessedCells = ParseHelper.
         parseCommaSeparatedIntegerValueList(line, partsNoOpt, 1);
-    if (this.cellProcessedCells.size() != 10) {
+    if (this.cellProcessedCells.length != 10) {
       throw new DescriptorParseException("There must be exact ten values "
           + "in line '" + line + "'.");
     }
@@ -435,7 +435,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellQueuedCells = ParseHelper.parseCommaSeparatedDoubleValueList(
         line, partsNoOpt, 1);
-    if (this.cellQueuedCells.size() != 10) {
+    if (this.cellQueuedCells.length != 10) {
       throw new DescriptorParseException("There must be exact ten values "
           + "in line '" + line + "'.");
     }
@@ -445,7 +445,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellTimeInQueue = ParseHelper.
         parseCommaSeparatedIntegerValueList(line, partsNoOpt, 1);
-    if (this.cellTimeInQueue.size() != 10) {
+    if (this.cellTimeInQueue.length != 10) {
       throw new DescriptorParseException("There must be exact ten values "
           + "in line '" + line + "'.");
     }
@@ -474,16 +474,16 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         6);
     this.connBiDirectStatsEndMillis = parsedStatsEndData[0];
     this.connBiDirectStatsIntervalLength = parsedStatsEndData[1];
-    List<Integer> parsedConnBiDirectStats = ParseHelper.
+    Integer[] parsedConnBiDirectStats = ParseHelper.
         parseCommaSeparatedIntegerValueList(line, partsNoOpt, 5);
-    if (parsedConnBiDirectStats.size() != 4) {
+    if (parsedConnBiDirectStats.length != 4) {
       throw new DescriptorParseException("Illegal line '" + line + "' in "
           + "extra-info descriptor.");
     }
-    this.connBiDirectBelow = parsedConnBiDirectStats.get(0);
-    this.connBiDirectRead = parsedConnBiDirectStats.get(1);
-    this.connBiDirectWrite = parsedConnBiDirectStats.get(2);
-    this.connBiDirectBoth = parsedConnBiDirectStats.get(3);
+    this.connBiDirectBelow = parsedConnBiDirectStats[0];
+    this.connBiDirectRead = parsedConnBiDirectStats[1];
+    this.connBiDirectWrite = parsedConnBiDirectStats[2];
+    this.connBiDirectBoth = parsedConnBiDirectStats[3];
   }
 
   private void parseExitStatsEndLine(String line, String lineNoOpt,
@@ -818,22 +818,22 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.cellStatsIntervalLength;
   }
 
-  private List<Integer> cellProcessedCells;
+  private Integer[] cellProcessedCells;
   public List<Integer> getCellProcessedCells() {
     return this.cellProcessedCells == null ? null :
-        new ArrayList<Integer>(this.cellProcessedCells);
+        Arrays.asList(this.cellProcessedCells);
   }
 
-  private List<Double> cellQueuedCells;
+  private Double[] cellQueuedCells;
   public List<Double> getCellQueuedCells() {
     return this.cellQueuedCells == null ? null :
-        new ArrayList<Double>(this.cellQueuedCells);
+        Arrays.asList(this.cellQueuedCells);
   }
 
-  private List<Integer> cellTimeInQueue;
+  private Integer[] cellTimeInQueue;
   public List<Integer> getCellTimeInQueue() {
     return this.cellTimeInQueue == null ? null :
-        new ArrayList<Integer>(this.cellTimeInQueue);
+        Arrays.asList(this.cellTimeInQueue);
   }
 
   private int cellCircuitsPerDecile = -1;
