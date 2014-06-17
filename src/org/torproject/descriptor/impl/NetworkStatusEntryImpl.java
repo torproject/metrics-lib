@@ -3,8 +3,11 @@
 package org.torproject.descriptor.impl;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
@@ -136,10 +139,24 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.orAddresses.add(parts[1]);
   }
 
+  private static Map<String, Integer> flagIndexes =
+      new HashMap<String, Integer>();
+  private static Map<Integer, String> flagStrings =
+      new HashMap<Integer, String>();
+
   private void parseSLine(String line, String[] parts)
       throws DescriptorParseException {
     this.parsedAtMostOnceKeyword("s");
-    this.flags = parts;
+    BitSet flags = new BitSet(flagIndexes.size());
+    for (int i = 1; i < parts.length; i++) {
+      String flag = parts[i];
+      if (!flagIndexes.containsKey(flag)) {
+        flagStrings.put(flagIndexes.size(), flag);
+        flagIndexes.put(flag, flagIndexes.size());
+      }
+      flags.set(flagIndexes.get(flag));
+    }
+    this.flags = flags;
   }
 
   private void parseVLine(String line, String[] parts)
@@ -269,12 +286,13 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     return new ArrayList<String>(this.orAddresses);
   }
 
-  private String[] flags;
+  private BitSet flags;
   public SortedSet<String> getFlags() {
     SortedSet<String> result = new TreeSet<String>();
     if (this.flags != null) {
-      for (int i = 1; i < this.flags.length; i++) {
-        result.add(this.flags[i]);
+      for (int i = this.flags.nextSetBit(0); i >= 0;
+          i = this.flags.nextSetBit(i + 1)) {
+        result.add(flagStrings.get(i));
       }
     }
     return result;
