@@ -745,6 +745,17 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getFingerprint());
   }
 
+  @Test()
+  public void testExtraInfoNicknameTwoSpaces()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder.
+        createWithExtraInfoLine("opt extra-info chaoscomputerclub5  "
+        + "A9C039A5FD02FCA06303DCFAABE25C5912C63B26");
+    assertEquals("chaoscomputerclub5", descriptor.getNickname());
+    assertEquals("A9C039A5FD02FCA06303DCFAABE25C5912C63B26",
+        descriptor.getFingerprint());
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testExtraInfoLineNotFirst()
       throws DescriptorParseException {

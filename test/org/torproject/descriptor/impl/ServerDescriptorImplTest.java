@@ -402,6 +402,15 @@ public class ServerDescriptorImplTest {
         + "saberrider2008ReallyLongNickname 94.134.192.243 9001 0 0");
   }
 
+  @Test()
+  public void testNicknameTwoSpaces() throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithRouterLine("router saberrider2008  "
+        + "94.134.192.243 9001 0 0");
+    assertEquals("saberrider2008", descriptor.getNickname());
+    assertEquals("94.134.192.243", descriptor.getAddress());
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testAddress24() throws DescriptorParseException {
     DescriptorBuilder.createWithRouterLine("router saberrider2008 "
