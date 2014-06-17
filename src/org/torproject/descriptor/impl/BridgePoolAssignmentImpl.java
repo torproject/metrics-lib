@@ -62,7 +62,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
 
   private void parseBridgePoolAssignmentLine(String line)
       throws DescriptorParseException {
-    String[] parts = line.split(" ");
+    String[] parts = line.split("[ \t]+");
     if (parts.length != 3) {
       throw new DescriptorParseException("Illegal line '" + line
           + "' in bridge pool assignment.");
@@ -73,7 +73,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
 
   private void parseBridgeLine(String line)
       throws DescriptorParseException {
-    String[] parts = line.split(" ");
+    String[] parts = line.split("[ \t]+");
     if (parts.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line
           + "' in bridge pool assignment.");

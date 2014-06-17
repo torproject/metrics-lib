@@ -93,7 +93,7 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
       String line = s.next();
       String lineNoOpt = line.startsWith("opt ") ?
           line.substring("opt ".length()) : line;
-      String[] partsNoOpt = lineNoOpt.split(" ");
+      String[] partsNoOpt = lineNoOpt.split("[ \t]+");
       String keyword = partsNoOpt[0];
       if (keyword.equals("extra-info")) {
         this.parseExtraInfoLine(line, lineNoOpt, partsNoOpt);
@@ -201,17 +201,8 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
   private void parseExtraInfoLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 3) {
-      /* Also accept [SP|TAB]+ where we'd previously only accept SP as
-       * delimiter.  This is a hotfix for #12403, because we're currently
-       * not storing valid descriptors.  A better place to implement this
-       * would probably be in DescriptorImpl. */
-      partsNoOpt = line.startsWith("opt ") ?
-          line.substring("opt ".length()).split("[ \t]+") :
-          line.split("[ \t]+");
-      if (partsNoOpt.length != 3) {
-        throw new DescriptorParseException("Illegal line '" + line
-            + "' in extra-info descriptor.");
-      }
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in extra-info descriptor.");
     }
     this.nickname = ParseHelper.parseNickname(line, partsNoOpt[1]);
     this.fingerprint = ParseHelper.parseTwentyByteHexString(line,

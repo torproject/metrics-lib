@@ -61,7 +61,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
-      String[] parts = line.split(" ");
+      String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("dir-key-certificate-version")) {
         this.parseDirKeyCertificateVersionLine(line, parts);

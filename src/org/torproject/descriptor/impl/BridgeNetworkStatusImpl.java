@@ -54,7 +54,7 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
     while (s.hasNext()) {
       String line = s.next();
-      String[] parts = line.split(" ");
+      String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("published")) {
         this.parsePublishedLine(line, parts);

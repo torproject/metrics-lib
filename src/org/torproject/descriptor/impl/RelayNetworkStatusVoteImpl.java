@@ -76,7 +76,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     boolean skipCrypto = false; /* TODO Parse crypto parts. */
     while (s.hasNext()) {
       String line = s.next();
-      String[] parts = line.split(" ");
+      String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("network-status-version")) {
         this.parseNetworkStatusVersionLine(line, parts);

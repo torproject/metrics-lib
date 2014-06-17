@@ -830,7 +830,7 @@ public class ExtraInfoDescriptorImplTest {
         + "-4713350144,-4723824640,-4710717440,-4572675072");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testReadHistoryTabInterval()
       throws DescriptorParseException {
     DescriptorBuilder.createWithReadHistoryLine("read-history "
@@ -838,7 +838,7 @@ public class ExtraInfoDescriptorImplTest {
         + "4707695616,4699666432,4650004480,4489718784");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testReadHistoryTabIntervalBytes()
       throws DescriptorParseException {
     DescriptorBuilder.createWithReadHistoryLine("read-history "

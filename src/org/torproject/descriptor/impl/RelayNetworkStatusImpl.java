@@ -88,7 +88,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       if (line.isEmpty()) {
         continue;
       }
-      String[] parts = line.split(" ");
+      String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("network-status-version")) {
         this.parseNetworkStatusVersionLine(line, parts);
@@ -151,7 +151,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
-      String[] parts = line.split(" ");
+      String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("directory-signature")) {
         this.parseDirectorySignatureLine(line, parts);

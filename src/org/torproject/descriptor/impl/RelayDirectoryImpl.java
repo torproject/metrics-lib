@@ -192,7 +192,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
       }
       String lineNoOpt = line.startsWith("opt ") ?
           line.substring("opt ".length()) : line;
-      String[] partsNoOpt = lineNoOpt.split(" ");
+      String[] partsNoOpt = lineNoOpt.split("[ \t]+");
       String keyword = partsNoOpt[0];
       if (keyword.equals("signed-directory")) {
         this.parseSignedDirectoryLine(line, lineNoOpt, partsNoOpt);
@@ -248,14 +248,15 @@ public class RelayDirectoryImpl extends DescriptorImpl
     } else {
       String publishedLineNoOpt = publishedLine.startsWith("opt ") ?
           publishedLine.substring("opt ".length()) : publishedLine;
-      String[] publishedPartsNoOpt = publishedLineNoOpt.split(" ");
+      String[] publishedPartsNoOpt = publishedLineNoOpt.split("[ \t]+");
       this.parsePublishedLine(publishedLine, publishedLineNoOpt,
           publishedPartsNoOpt);
     }
     if (routerStatusLine != null) {
       String routerStatusLineNoOpt = routerStatusLine.startsWith("opt ") ?
           routerStatusLine.substring("opt ".length()) : routerStatusLine;
-      String[] routerStatusPartsNoOpt = routerStatusLineNoOpt.split(" ");
+      String[] routerStatusPartsNoOpt =
+          routerStatusLineNoOpt.split("[ \t]+");
       this.parseRouterStatusLine(routerStatusLine, routerStatusLineNoOpt,
           routerStatusPartsNoOpt);
     } else if (runningRoutersLine != null) {
@@ -264,7 +265,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
           runningRoutersLine.substring("opt ".length()) :
           runningRoutersLine;
       String[] runningRoutersPartsNoOpt =
-          runningRoutersLineNoOpt.split(" ");
+          runningRoutersLineNoOpt.split("[ \t]+");
       this.parseRunningRoutersLine(runningRoutersLine,
           runningRoutersLineNoOpt, runningRoutersPartsNoOpt);
     } else {
@@ -293,7 +294,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
       String line = s.next();
       String lineNoOpt = line.startsWith("opt ") ?
           line.substring("opt ".length()) : line;
-      String[] partsNoOpt = lineNoOpt.split(" ");
+      String[] partsNoOpt = lineNoOpt.split("[ \t]+");
       String keyword = partsNoOpt[0];
       if (keyword.equals("directory-signature")) {
         this.parseDirectorySignatureLine(line, lineNoOpt, partsNoOpt);

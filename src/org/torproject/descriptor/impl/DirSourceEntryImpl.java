@@ -104,7 +104,7 @@ public class DirSourceEntryImpl implements DirSourceEntry {
   private void parseDirSourceLine(String line)
       throws DescriptorParseException {
     this.parsedExactlyOnceKeyword("dir-source");
-    String[] parts = line.split(" ");
+    String[] parts = line.split("[ \t]+");
     if (parts.length != 7) {
       throw new DescriptorParseException("Invalid line '" + line + "'.");
     }
@@ -135,7 +135,7 @@ public class DirSourceEntryImpl implements DirSourceEntry {
   private void parseVoteDigestLine(String line)
       throws DescriptorParseException {
     this.parsedExactlyOnceKeyword("vote-digest");
-    String[] parts = line.split(" ");
+    String[] parts = line.split("[ \t]+");
     if (parts.length != 2) {
       throw new DescriptorParseException("Invalid line '" + line + "'.");
     }

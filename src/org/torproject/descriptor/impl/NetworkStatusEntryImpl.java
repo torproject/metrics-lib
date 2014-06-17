@@ -67,12 +67,12 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
       throw new DescriptorParseException("Status entry must start with "
           + "an r line.");
     }
-    String[] rLineParts = line.split(" ");
+    String[] rLineParts = line.split("[ \t]+");
     this.parseRLine(line, rLineParts);
     while (s.hasNext()) {
       line = s.next();
-      String[] parts = !line.startsWith("opt ") ? line.split(" ") :
-          line.substring("opt ".length()).split(" ");
+      String[] parts = !line.startsWith("opt ") ? line.split("[ \t]+") :
+          line.substring("opt ".length()).split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("a")) {
         this.parseALine(line, parts);

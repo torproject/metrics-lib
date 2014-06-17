@@ -61,7 +61,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
       if (line.startsWith("@")) {
         continue;
       }
-      String[] parts = line.split(" ");
+      String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("onion-key")) {
         this.parseOnionKeyLine(line, parts);

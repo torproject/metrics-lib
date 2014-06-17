@@ -85,7 +85,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
     while (s.hasNext()) {
       String line = s.next();
-      String[] parts = line.split(" ");
+      String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("network-status-version")) {
         this.parseNetworkStatusVersionLine(line, parts);
@@ -143,7 +143,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     Scanner s = new Scanner(new String(footerBytes)).useDelimiter("\n");
     while (s.hasNext()) {
       String line = s.next();
-      String[] parts = line.split(" ");
+      String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       if (keyword.equals("directory-footer")) {
       } else if (keyword.equals("bandwidth-weights")) {

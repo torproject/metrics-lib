@@ -13,11 +13,6 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
       String[] partsNoOpt) throws DescriptorParseException {
     boolean isValid = false;
     this.line = line;
-    if (lineNoOpt.startsWith("read-history  ")) {
-      lineNoOpt = "read-history "
-          + lineNoOpt.substring("read-history  ".length());
-      partsNoOpt = lineNoOpt.split(" ");
-    }
     if (partsNoOpt.length == 5 || partsNoOpt.length == 6) {
       try {
         this.historyEndMillis = ParseHelper.parseTimestampAtIndex(line,
