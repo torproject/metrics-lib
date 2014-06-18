@@ -712,28 +712,28 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.dirreqStatsIntervalLength;
   }
 
-  private SortedMap<String, Integer> dirreqV2Ips;
+  private String dirreqV2Ips;
   public SortedMap<String, Integer> getDirreqV2Ips() {
-    return this.dirreqV2Ips == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV2Ips);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV2Ips);
   }
 
-  private SortedMap<String, Integer> dirreqV3Ips;
+  private String dirreqV3Ips;
   public SortedMap<String, Integer> getDirreqV3Ips() {
-    return this.dirreqV3Ips == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV3Ips);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV3Ips);
   }
 
-  private SortedMap<String, Integer> dirreqV2Reqs;
+  private String dirreqV2Reqs;
   public SortedMap<String, Integer> getDirreqV2Reqs() {
-    return this.dirreqV2Reqs == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV2Reqs);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV2Reqs);
   }
 
-  private SortedMap<String, Integer> dirreqV3Reqs;
+  private String dirreqV3Reqs;
   public SortedMap<String, Integer> getDirreqV3Reqs() {
-    return this.dirreqV3Reqs == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV3Reqs);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV3Reqs);
   }
 
   private double dirreqV2Share = -1.0;
@@ -746,40 +746,40 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.dirreqV3Share;
   }
 
-  private SortedMap<String, Integer> dirreqV2Resp;
+  private String dirreqV2Resp;
   public SortedMap<String, Integer> getDirreqV2Resp() {
-    return this.dirreqV2Resp == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV2Resp);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV2Resp);
   }
 
-  private SortedMap<String, Integer> dirreqV3Resp;
+  private String dirreqV3Resp;
   public SortedMap<String, Integer> getDirreqV3Resp() {
-    return this.dirreqV3Resp == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV3Resp);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV3Resp);
   }
 
-  private SortedMap<String, Integer> dirreqV2DirectDl;
+  private String dirreqV2DirectDl;
   public SortedMap<String, Integer> getDirreqV2DirectDl() {
-    return this.dirreqV2DirectDl == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV2DirectDl);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV2DirectDl);
   }
 
-  private SortedMap<String, Integer> dirreqV3DirectDl;
+  private String dirreqV3DirectDl;
   public SortedMap<String, Integer> getDirreqV3DirectDl() {
-    return this.dirreqV3DirectDl == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV3DirectDl);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV3DirectDl);
   }
 
-  private SortedMap<String, Integer> dirreqV2TunneledDl;
+  private String dirreqV2TunneledDl;
   public SortedMap<String, Integer> getDirreqV2TunneledDl() {
-    return this.dirreqV2TunneledDl == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV2TunneledDl);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV2TunneledDl);
   }
 
-  private SortedMap<String, Integer> dirreqV3TunneledDl;
+  private String dirreqV3TunneledDl;
   public SortedMap<String, Integer> getDirreqV3TunneledDl() {
-    return this.dirreqV3TunneledDl == null ? null :
-        new TreeMap<String, Integer>(this.dirreqV3TunneledDl);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.dirreqV3TunneledDl);
   }
 
   private BandwidthHistory dirreqReadHistory;
@@ -802,10 +802,10 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.entryStatsIntervalLength;
   }
 
-  private SortedMap<String, Integer> entryIps;
+  private String entryIps;
   public SortedMap<String, Integer> getEntryIps() {
-    return this.entryIps == null ? null :
-        new TreeMap<String, Integer>(this.entryIps);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.entryIps);
   }
 
   private long cellStatsEndMillis = -1L;
@@ -904,10 +904,10 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.geoipStartTimeMillis;
   }
 
-  private SortedMap<String, Integer> geoipClientOrigins;
+  private String geoipClientOrigins;
   public SortedMap<String, Integer> getGeoipClientOrigins() {
-    return this.geoipClientOrigins == null ? null :
-        new TreeMap<String, Integer>(this.geoipClientOrigins);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.geoipClientOrigins);
   }
 
   private long bridgeStatsEndMillis = -1L;
@@ -920,22 +920,22 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.bridgeStatsIntervalLength;
   }
 
-  private SortedMap<String, Integer> bridgeIps;
+  private String bridgeIps;
   public SortedMap<String, Integer> getBridgeIps() {
-    return this.bridgeIps == null ? null :
-        new TreeMap<String, Integer>(this.bridgeIps);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.bridgeIps);
   }
 
-  private SortedMap<String, Integer> bridgeIpVersions;
+  private String bridgeIpVersions;
   public SortedMap<String, Integer> getBridgeIpVersions() {
-    return this.bridgeIpVersions == null ? null :
-        new TreeMap<String, Integer>(this.bridgeIpVersions);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.bridgeIpVersions);
   }
 
-  private SortedMap<String, Integer> bridgeIpTransports;
+  private String bridgeIpTransports;
   public SortedMap<String, Integer> getBridgeIpTransports() {
-    return this.bridgeIpTransports == null ? null :
-      new TreeMap<String, Integer>(this.bridgeIpTransports);
+    return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
+        this.bridgeIpTransports);
   }
 
   private List<String> transports = new ArrayList<String>();

@@ -286,11 +286,13 @@ public class ParseHelper {
         toUpperCase();
   }
 
-  public static SortedMap<String, Integer>
-      parseCommaSeparatedKeyIntegerValueList(String line,
-      String[] partsNoOpt, int index, int keyLength)
+  private static Map<Integer, Pattern>
+      commaSeparatedKeyValueListPatterns =
+      new HashMap<Integer, Pattern>();
+  public static String parseCommaSeparatedKeyIntegerValueList(
+      String line, String[] partsNoOpt, int index, int keyLength)
       throws DescriptorParseException {
-    SortedMap<String, Integer> result = new TreeMap<String, Integer>();
+    String result = "";
     if (partsNoOpt.length < index) {
       throw new DescriptorParseException("Line '" + line + "' does not "
           + "contain a key-value list at index " + index + ".");
@@ -299,26 +301,37 @@ public class ParseHelper {
           + "unrecognized values beyond the expected key-value list at "
           + "index " + index + ".");
     } else if (partsNoOpt.length > index) {
-      String[] listElements = partsNoOpt[index].split(",", -1);
-      for (String listElement : listElements) {
-        String[] keyAndValue = listElement.split("=");
-        String key = null;
-        int value = -1;
-        if (keyAndValue.length == 2 && (keyLength == 0 ||
-            keyAndValue[0].length() == keyLength)) {
-          try {
-            value = Integer.parseInt(keyAndValue[1]);
-            key = keyAndValue[0];
-          } catch (NumberFormatException e) {
-            /* Handle below. */
-          }
+      if (!commaSeparatedKeyValueListPatterns.containsKey(keyLength)) {
+        String keyPattern = "[0-9a-zA-Z?<>-]"
+            + (keyLength == 0 ? "+" : "{" + keyLength + "}");
+        String valuePattern = "\\-?[0-9]{1,9}";
+        String patternString = String.format("^%s=%s(,%s=%s)*$",
+            keyPattern, valuePattern, keyPattern, valuePattern);
+        commaSeparatedKeyValueListPatterns.put(keyLength,
+            Pattern.compile(patternString));
+      }
+      Pattern pattern = commaSeparatedKeyValueListPatterns.get(
+          keyLength);
+      if (pattern.matcher(partsNoOpt[index]).matches()) {
+        result = partsNoOpt[index];
+      } else {
+        throw new DescriptorParseException("Line '" + line + "' "
+            + "contains an illegal key or value.");
+      }
+    }
+    return result;
+  }
+
+  public static SortedMap<String, Integer>
+      convertCommaSeparatedKeyIntegerValueList(String validatedString) {
+    SortedMap<String, Integer> result = null;
+    if (validatedString != null) {
+      result = new TreeMap<String, Integer>();
+      if (validatedString.contains("=")) {
+        for (String listElement : validatedString.split(",", -1)) {
+          String[] keyAndValue = listElement.split("=");
+          result.put(keyAndValue[0], Integer.parseInt(keyAndValue[1]));
         }
-        if (key == null) {
-          throw new DescriptorParseException("Line '" + line + "' "
-              + "contains an illegal key or value in list element '"
-              + listElement + "'.");
-        }
-        result.put(key, value);
       }
     }
     return result;
