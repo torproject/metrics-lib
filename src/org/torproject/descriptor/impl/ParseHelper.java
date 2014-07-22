@@ -302,7 +302,7 @@ public class ParseHelper {
           + "index " + index + ".");
     } else if (partsNoOpt.length > index) {
       if (!commaSeparatedKeyValueListPatterns.containsKey(keyLength)) {
-        String keyPattern = "[0-9a-zA-Z?<>-]"
+        String keyPattern = "[0-9a-zA-Z?<>\\-_]"
             + (keyLength == 0 ? "+" : "{" + keyLength + "}");
         String valuePattern = "\\-?[0-9]{1,9}";
         String patternString = String.format("^%s=%s(,%s=%s)*$",

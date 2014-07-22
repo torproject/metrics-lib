@@ -1369,10 +1369,18 @@ public class ExtraInfoDescriptorImplTest {
         "bridge-ip-versions v4=24.5");
   }
 
+  @Test(expected = DescriptorParseException.class)
   public void testBridgeIpTransportsDouble()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpTransportsLine(
         "bridge-ip-transports obfs2=24.5");
+  }
+
+  @Test()
+  public void testBridgeIpTransportsUnderscore()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeIpTransportsLine(
+        "bridge-ip-transports meek=32,obfs3_websocket=8,websocket=64");
   }
 
   @Test()
