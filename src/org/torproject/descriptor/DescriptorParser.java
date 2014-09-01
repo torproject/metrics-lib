@@ -4,7 +4,6 @@ package org.torproject.descriptor;
 
 import java.util.List;
 
-import org.torproject.descriptor.impl.DescriptorParseException;
 
 /* Parse descriptors that are already in memory instead of using the
  * descriptor reader or downloader. */

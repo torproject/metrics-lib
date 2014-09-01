@@ -2,7 +2,11 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-public class DescriptorParseException extends Exception {
+/**
+ * @deprecated Replaced by
+ * org.torproject.descriptor.DescriptorParseException
+ */
+@Deprecated public class DescriptorParseException extends Exception {
   private static final long serialVersionUID = 100L;
   protected DescriptorParseException(String message) {
     super(message);

@@ -2,6 +2,9 @@
   <property name="sources" value="src"/>
   <property name="classes" value="classes"/>
   <property name="tests" value="test"/>
+  <property name="jarfile" value="descriptor.jar" />
+  <property name="source-and-target-java-version" value="1.6" />
+
   <path id="classpath">
     <pathelement path="${classes}"/>
     <fileset dir="/usr/share/java">
@@ -10,15 +13,24 @@
       <include name="junit4.jar"/>
     </fileset>
   </path>
+
   <target name="init">
     <mkdir dir="${classes}"/>
   </target>
+
+  <target name="clean" >
+    <delete includeEmptyDirs="true">
+      <fileset dir="${classes}" defaultexcludes="false" includes="**" />
+    </delete>
+    <delete file="${jarfile}"/>
+  </target>
+
   <target name="compile"
           depends="init">
     <javac destdir="${classes}"
            srcdir="${sources}"
-           source="1.5"
-           target="1.5"
+           source="${source-and-target-java-version}"
+           target="${source-and-target-java-version}"
            debug="true"
            deprecation="true"
            optimize="false"
@@ -28,14 +40,14 @@
     </javac>
   </target>
   <target name="jar" depends="compile">
-    <jar destfile="descriptor.jar"
+    <jar destfile="${jarfile}"
          basedir="${classes}"/>
   </target>
   <target name="test" depends="compile">
     <javac destdir="${classes}"
            srcdir="${tests}"
-           source="1.5"
-           target="1.5"
+           source="${source-and-target-java-version}"
+           target="${source-and-target-java-version}"
            debug="true"
            deprecation="true"
            optimize="false"

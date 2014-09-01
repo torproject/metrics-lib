@@ -2,6 +2,7 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import org.torproject.descriptor.DescriptorParseException;
 import java.util.ArrayList;
 import java.util.List;
 

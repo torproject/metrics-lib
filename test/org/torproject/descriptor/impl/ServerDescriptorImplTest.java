@@ -2,6 +2,7 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import org.torproject.descriptor.DescriptorParseException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
