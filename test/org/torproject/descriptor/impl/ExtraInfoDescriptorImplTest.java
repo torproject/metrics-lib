@@ -855,6 +855,14 @@ public class ExtraInfoDescriptorImplTest {
         + "4707695616,4699666432,4650004480,4489718784");
   }
 
+  @Test()
+  public void testReadHistoryNonStandardInterval()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithReadHistoryLine("read-history "
+        + "2012-02-11 09:03:39 (1800 s) "
+        + "4707695616,4699666432,4650004480,4489718784");
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testDirreqWriteHistoryMissingBytesBegin()
       throws DescriptorParseException {
