@@ -150,12 +150,24 @@ public class DescriptorReaderImpl implements DescriptorReader {
           failUnrecognizedDescriptorLines);
     }
     public void run() {
-      this.readOldHistory();
-      this.readDescriptors();
-      this.readTarballs();
-      this.hasFinishedReading = true;
-      this.descriptorQueue.setOutOfDescriptors();
-      this.writeNewHistory();
+      try {
+        this.readOldHistory();
+        this.readDescriptors();
+        this.readTarballs();
+        this.hasFinishedReading = true;
+      } catch (Throwable t) {
+        /* We're usually not writing to stdout or stderr, but we shouldn't
+         * stay quiet about this potential bug.  If we were to switch to a
+         * logging API, this would qualify as ERROR. */
+        System.err.println("Bug: uncaught exception or error while "
+            + "reading descriptors:");
+        t.printStackTrace();
+      } finally {
+        this.descriptorQueue.setOutOfDescriptors();
+      }
+      if (this.hasFinishedReading) {
+        this.writeNewHistory();
+      }
     }
     private void readOldHistory() {
       if (this.historyFile == null) {
