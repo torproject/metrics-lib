@@ -153,7 +153,7 @@ public class ParseHelper {
       super.set(value);
     }
   };
-  private static DateFormat getDateFormat(String format) {
+  static DateFormat getDateFormat(String format) {
     Map<String, DateFormat> threadDateFormats = dateFormats.get();
     if (!threadDateFormats.containsKey(format)) {
       DateFormat dateFormat = new SimpleDateFormat(format);

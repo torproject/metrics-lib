@@ -12,11 +12,14 @@ public final class DescriptorSourceFactory {
       "org.torproject.descriptor.impl.DescriptorParserImpl";
   public final static String READER_DEFAULT =
       "org.torproject.descriptor.impl.DescriptorReaderImpl";
+  public final static String COLLECTOR_DEFAULT =
+      "org.torproject.descriptor.impl.DescriptorCollectorImpl";
 
   /* property names */
   public final static String PARSER_PROPERTY = "onionoo.parser";
   public final static String READER_PROPERTY = "onionoo.property";
   public final static String LOADER_PROPERTY = "onionoo.downloader";
+  public final static String COLLECTOR_PROPERTY = "onionoo.collector";
 
   /**
    * Create a descriptor parser.
@@ -39,6 +42,13 @@ public final class DescriptorSourceFactory {
     return (DescriptorDownloader) retrieve(LOADER_PROPERTY);
   }
 
+  /**
+   * Create a descriptor collector.
+   */
+  public final static DescriptorCollector createDescriptorCollector() {
+    return (DescriptorCollector) retrieve(COLLECTOR_PROPERTY);
+  }
+
   private final static <T> Object retrieve(String type) {
     Object object;
     String clazzName = null;
@@ -49,6 +59,8 @@ public final class DescriptorSourceFactory {
         clazzName = System.getProperty(type, LOADER_DEFAULT);
       } else if (READER_PROPERTY.equals(type)) {
         clazzName = System.getProperty(type, READER_DEFAULT);
+      } else if (COLLECTOR_PROPERTY.equals(type)) {
+        clazzName = System.getProperty(type, COLLECTOR_DEFAULT);
       }
       object = ClassLoader.getSystemClassLoader().loadClass(clazzName).
           newInstance();
