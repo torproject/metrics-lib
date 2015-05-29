@@ -30,7 +30,7 @@ import org.torproject.descriptor.DescriptorCollector;
 public class DescriptorCollectorImpl implements DescriptorCollector {
 
   @Override
-  public void collectRemoteFiles(String collecTorBaseUrl,
+  public void collectDescriptors(String collecTorBaseUrl,
       String[] remoteDirectories, long minLastModified,
       File localDirectory, boolean deleteExtraneousLocalFiles) {
     collecTorBaseUrl = collecTorBaseUrl.endsWith("/")

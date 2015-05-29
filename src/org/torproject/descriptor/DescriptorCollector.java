@@ -27,7 +27,7 @@ public interface DescriptorCollector {
    * @param deleteExtraneousLocalFiles Whether to delete all local files
    * that do not exist remotely anymore.
    */
-  public void collectRemoteFiles(String collecTorBaseUrl,
+  public void collectDescriptors(String collecTorBaseUrl,
       String[] remoteDirectories, long minLastModified,
       File localDirectory, boolean deleteExtraneousLocalFiles);
 }
