@@ -709,6 +709,19 @@ public class ServerDescriptorImplTest {
   }
 
   @Test()
+  public void testExtraInfoDigestAdditionalDigest()
+      throws DescriptorParseException {
+    String extraInfoDigest = "0879DB7B765218D7B3AE7557669D20307BB21CAA";
+    String additionalExtraInfoDigest =
+        "V609l+N6ActBveebfNbH5lQ6wHDNstDkFgyqEhBHwtA";
+    String extraInfoDigestLine = String.format("extra-info-digest %s %s",
+        extraInfoDigest, additionalExtraInfoDigest);
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithExtraInfoDigestLine(extraInfoDigestLine);
+    assertEquals(extraInfoDigest, descriptor.getExtraInfoDigest());
+  }
+
+  @Test()
   public void testOnionKeyOpt() throws DescriptorParseException {
     DescriptorBuilder.createWithOnionKeyLines("opt onion-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"

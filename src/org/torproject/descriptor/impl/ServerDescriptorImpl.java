@@ -401,7 +401,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseExtraInfoDigestLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (partsNoOpt.length != 2) {
+    if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.extraInfoDigest = ParseHelper.parseTwentyByteHexString(line,
