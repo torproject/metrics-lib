@@ -66,7 +66,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
     Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
         useDelimiter("\n");
     String nextCrypto = null;
-    StringBuilder crypto = null;
+    List<String> cryptoLines = null;
     while (s.hasNext()) {
       String line = s.next();
       if (line.startsWith("@")) {
@@ -134,25 +134,34 @@ public class ServerDescriptorImpl extends DescriptorImpl
       } else if (keyword.equals("ntor-onion-key")) {
         this.parseNtorOnionKeyLine(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
-        crypto = new StringBuilder();
-        crypto.append(line + "\n");
+        cryptoLines = new ArrayList<String>();
+        cryptoLines.add(line);
       } else if (line.startsWith("-----END")) {
-        crypto.append(line + "\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        if (nextCrypto.equals("onion-key")) {
-          this.onionKey = cryptoString;
-        } else if (nextCrypto.equals("signing-key")) {
-          this.signingKey = cryptoString;
-        } else if (nextCrypto.equals("router-signature")) {
-          this.routerSignature = cryptoString;
-        } else {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in server descriptor.");
+        cryptoLines.add(line);
+        StringBuilder sb = new StringBuilder();
+        for (String cryptoLine : cryptoLines) {
+          sb.append("\n" + cryptoLine);
         }
+        String cryptoString = sb.toString().substring(1);
+        if ("onion-key".equals(nextCrypto)) {
+          this.onionKey = cryptoString;
+        } else if ("signing-key".equals(nextCrypto)) {
+          this.signingKey = cryptoString;
+        } else if ("router-signature".equals(nextCrypto)) {
+          this.routerSignature = cryptoString;
+        } else if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized crypto "
+              + "block '" + cryptoString + "' in server descriptor.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
+          }
+          this.unrecognizedLines.addAll(cryptoLines);
+        }
+        cryptoLines = null;
         nextCrypto = null;
-      } else if (crypto != null) {
-        crypto.append(line + "\n");
+      } else if (cryptoLines != null) {
+        cryptoLines.add(line);
       } else {
         ParseHelper.parseKeyword(line, partsNoOpt[0]);
         if (this.failUnrecognizedDescriptorLines) {

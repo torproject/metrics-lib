@@ -1309,5 +1309,47 @@ public class ServerDescriptorImplTest {
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, descriptor.getUnrecognizedLines());
   }
+
+  @Test()
+  public void testSomeOtherKey() throws DescriptorParseException {
+    List<String> unrecognizedLines = new ArrayList<String>();
+    unrecognizedLines.add("some-other-key");
+    unrecognizedLines.add("-----BEGIN RSA PUBLIC KEY-----");
+    unrecognizedLines.add("MIGJAoGBAKM+iiHhO6eHsvd6Xjws9z9EQB1V/Bpuy5ciGJ"
+        + "1U4V9SeiKooSo5BpPL");
+    unrecognizedLines.add("o3XT+6PIgzl3R6uycjS3Ejk47vLEJdcVTm/VG6E0ppu3ol"
+        + "IynCI4QryfCEuC3cTF");
+    unrecognizedLines.add("9wE4WXY4nX7w0RTN18UVLxrt1A9PP0cobFNiPs9rzJCbKF"
+        + "facOkpAgMBAAE=");
+    unrecognizedLines.add("-----END RSA PUBLIC KEY-----");
+    StringBuilder sb = new StringBuilder();
+    for (String line : unrecognizedLines) {
+      sb.append("\n" + line);
+    }
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithUnrecognizedLine(sb.toString().substring(1), false);
+    assertEquals(unrecognizedLines, descriptor.getUnrecognizedLines());
+  }
+
+  @Test()
+  public void testUnrecognizedCryptoBlockNoKeyword()
+      throws DescriptorParseException {
+    List<String> unrecognizedLines = new ArrayList<String>();
+    unrecognizedLines.add("-----BEGIN RSA PUBLIC KEY-----");
+    unrecognizedLines.add("MIGJAoGBAKM+iiHhO6eHsvd6Xjws9z9EQB1V/Bpuy5ciGJ"
+        + "1U4V9SeiKooSo5BpPL");
+    unrecognizedLines.add("o3XT+6PIgzl3R6uycjS3Ejk47vLEJdcVTm/VG6E0ppu3ol"
+        + "IynCI4QryfCEuC3cTF");
+    unrecognizedLines.add("9wE4WXY4nX7w0RTN18UVLxrt1A9PP0cobFNiPs9rzJCbKF"
+        + "facOkpAgMBAAE=");
+    unrecognizedLines.add("-----END RSA PUBLIC KEY-----");
+    StringBuilder sb = new StringBuilder();
+    for (String line : unrecognizedLines) {
+      sb.append("\n" + line);
+    }
+    ServerDescriptor descriptor = DescriptorBuilder.
+        createWithUnrecognizedLine(sb.toString().substring(1), false);
+    assertEquals(unrecognizedLines, descriptor.getUnrecognizedLines());
+  }
 }
 
