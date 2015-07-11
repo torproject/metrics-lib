@@ -2,6 +2,7 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -194,7 +195,8 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
       destinationDirectory.mkdirs();
       File tempDestinationFile = new File(destinationDirectory, "."
           + destinationFile.getName());
-      FileOutputStream fos = new FileOutputStream(tempDestinationFile);
+      BufferedOutputStream bos = new BufferedOutputStream(
+          new FileOutputStream(tempDestinationFile));
       URL u = new URL(url);
       huc = (HttpURLConnection) u.openConnection();
       huc.setRequestMethod("GET");
@@ -213,12 +215,12 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
         }
         BufferedInputStream bis = new BufferedInputStream(is);
         int len;
-        byte[] data = new byte[1024];
-        while ((len = bis.read(data, 0, 1024)) >= 0) {
-          fos.write(data, 0, len);
+        byte[] data = new byte[8192];
+        while ((len = bis.read(data, 0, 8192)) >= 0) {
+          bos.write(data, 0, len);
         }
         bis.close();
-        fos.close();
+        bos.close();
         tempDestinationFile.renameTo(destinationFile);
         destinationFile.setLastModified(lastModifiedMillis);
       }

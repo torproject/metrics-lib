@@ -73,8 +73,8 @@ public class DirectoryDownloader implements Runnable {
                 new InflaterInputStream(huc.getInputStream()));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             int len;
-            byte[] data = new byte[1024];
-            while ((len = in.read(data, 0, 1024)) >= 0) {
+            byte[] data = new byte[8192];
+            while ((len = in.read(data, 0, 8192)) >= 0) {
               baos.write(data, 0, len);
             }
             in.close();
