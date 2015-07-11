@@ -58,10 +58,10 @@ public class DirectoryDownloader implements Runnable {
         String url = "http://" + this.ipPort
             + request.getRequestedResource();
         request.setRequestStart(System.currentTimeMillis());
+        HttpURLConnection huc = null;
         try {
           URL u = new URL(url);
-          HttpURLConnection huc =
-              (HttpURLConnection) u.openConnection();
+          huc = (HttpURLConnection) u.openConnection();
           huc.setConnectTimeout((int) this.connectTimeout);
           huc.setReadTimeout((int) this.readTimeout);
           huc.setRequestMethod("GET");
@@ -86,6 +86,9 @@ public class DirectoryDownloader implements Runnable {
           }
         } catch (Exception e) {
           request.setException(e);
+          if (huc != null) {
+            huc.disconnect();
+          }
           /* Stop downloading from this directory if there are any
            * problems, e.g., refused connections. */
           keepRunning = false;

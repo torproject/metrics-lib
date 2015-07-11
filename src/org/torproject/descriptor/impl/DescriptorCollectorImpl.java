@@ -112,9 +112,10 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
 
   String fetchRemoteDirectory(String url) {
     StringBuilder sb = new StringBuilder();
+    HttpURLConnection huc = null;
     try {
       URL u = new URL(url);
-      HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+      huc = (HttpURLConnection) u.openConnection();
       huc.setRequestMethod("GET");
       huc.connect();
       int responseCode = huc.getResponseCode();
@@ -129,6 +130,9 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
       }
     } catch (IOException e) {
       e.printStackTrace();
+      if (huc != null) {
+        huc.disconnect();
+      }
       return "";
     }
     return sb.toString();
@@ -184,6 +188,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
 
   void fetchRemoteFile(String url, File destinationFile,
       long lastModifiedMillis) {
+    HttpURLConnection huc = null;
     try {
       File destinationDirectory = destinationFile.getParentFile();
       destinationDirectory.mkdirs();
@@ -191,7 +196,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
           + destinationFile.getName());
       FileOutputStream fos = new FileOutputStream(tempDestinationFile);
       URL u = new URL(url);
-      HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+      huc = (HttpURLConnection) u.openConnection();
       huc.setRequestMethod("GET");
       if (!url.endsWith(".xz")) {
         huc.addRequestProperty("Accept-Encoding", "gzip");
@@ -219,6 +224,9 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
       }
     } catch (IOException e) {
       e.printStackTrace();
+      if (huc != null) {
+        huc.disconnect();
+      }
     }
   }
 
