@@ -8,7 +8,6 @@
   <path id="classpath">
     <pathelement path="${classes}"/>
     <fileset dir="/usr/share/java">
-      <include name="commons-codec.jar"/>
       <include name="commons-compress.jar"/>
       <include name="junit4.jar"/>
     </fileset>

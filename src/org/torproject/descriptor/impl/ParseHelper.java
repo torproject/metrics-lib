@@ -2,7 +2,6 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import org.torproject.descriptor.DescriptorParseException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,8 +12,9 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
+import javax.xml.bind.DatatypeConverter;
+
+import org.torproject.descriptor.DescriptorParseException;
 
 public class ParseHelper {
 
@@ -270,7 +270,8 @@ public class ParseHelper {
           + "' in line '" + line + "' is not a valid base64-encoded "
           + "20-byte value.");
     }
-    return Hex.encodeHexString(Base64.decodeBase64(base64String + "=")).
+    return DatatypeConverter.printHexBinary(
+        DatatypeConverter.parseBase64Binary(base64String + "=")).
         toUpperCase();
   }
 
@@ -283,7 +284,8 @@ public class ParseHelper {
           + "' in line '" + line + "' is not a valid base64-encoded "
           + "32-byte value.");
     }
-    return Hex.encodeHexString(Base64.decodeBase64(base64String + "=")).
+    return DatatypeConverter.printHexBinary(
+        DatatypeConverter.parseBase64Binary(base64String + "=")).
         toUpperCase();
   }
 

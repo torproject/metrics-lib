@@ -2,8 +2,9 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import org.torproject.descriptor.DescriptorParseException;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,8 +12,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import javax.xml.bind.DatatypeConverter;
+
 import org.torproject.descriptor.BandwidthHistory;
+import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ServerDescriptor;
 
 /* Contains a relay server descriptor. */
@@ -538,9 +541,12 @@ public class ServerDescriptorImpl extends DescriptorImpl
         byte[] forDigest = new byte[sig - start];
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
-        this.serverDescriptorDigest = DigestUtils.shaHex(forDigest);
+        this.serverDescriptorDigest = DatatypeConverter.printHexBinary(
+            MessageDigest.getInstance("SHA-1").digest(forDigest));
       }
     } catch (UnsupportedEncodingException e) {
+      /* Handle below. */
+    } catch (NoSuchAlgorithmException e) {
       /* Handle below. */
     }
     if (this.serverDescriptorDigest == null) {
