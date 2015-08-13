@@ -542,7 +542,8 @@ public class ServerDescriptorImpl extends DescriptorImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
         this.serverDescriptorDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest));
+            MessageDigest.getInstance("SHA-1").digest(forDigest)).
+            toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */

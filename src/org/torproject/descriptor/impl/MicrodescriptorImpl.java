@@ -207,7 +207,8 @@ public class MicrodescriptorImpl extends DescriptorImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, end - start);
         this.microdescriptorDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-256").digest(forDigest));
+            MessageDigest.getInstance("SHA-256").digest(forDigest)).
+            toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */

@@ -207,7 +207,8 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
         this.certificateDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest));
+            MessageDigest.getInstance("SHA-1").digest(forDigest)).
+            toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */

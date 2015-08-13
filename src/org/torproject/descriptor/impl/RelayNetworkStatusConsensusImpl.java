@@ -74,7 +74,8 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
         this.consensusDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest));
+            MessageDigest.getInstance("SHA-1").digest(forDigest)).
+            toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */
