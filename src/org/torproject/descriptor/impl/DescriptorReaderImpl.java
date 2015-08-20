@@ -220,6 +220,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
     }
     private void readDescriptors() {
       for (File directory : this.directories) {
+        if (!directory.exists() || !directory.isDirectory()) {
+          continue;
+        }
         Stack<File> files = new Stack<File>();
         files.add(directory);
         boolean abortReading = false;
