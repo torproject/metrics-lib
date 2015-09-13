@@ -116,5 +116,19 @@ public class DescriptorCollectorImplTest {
         REMOTE_DIRECTORY_CONSENSUSES, directoryListing);
     assertNull(remoteFiles);
   }
+
+  @Test()
+  public void testInvalidLocaleDe() {
+    String directoryListing = "<tr><td valign=\"top\">"
+        + "<img src=\"/icons/unknown.gif\" alt=\"[   ]\"></td><td>"
+        + "<a href=\"2015-05-24-12-00-00-consensus\">"
+        + "2015-05-24-12-00-00-consensus</a></td>"
+        + "<td align=\"right\">24-Mai-2015 12:08  </td>"
+        + "<td align=\"right\">1.5M</td><td>&nbsp;</td></tr>";
+    SortedMap<String, Long> remoteFiles =
+        new DescriptorCollectorImpl().parseDirectoryListing(
+        REMOTE_DIRECTORY_CONSENSUSES, directoryListing);
+    assertNull(remoteFiles);
+  }
 }
 

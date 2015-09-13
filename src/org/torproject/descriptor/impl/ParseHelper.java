@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TimeZone;
@@ -156,7 +157,7 @@ public class ParseHelper {
   static DateFormat getDateFormat(String format) {
     Map<String, DateFormat> threadDateFormats = dateFormats.get();
     if (!threadDateFormats.containsKey(format)) {
-      DateFormat dateFormat = new SimpleDateFormat(format);
+      DateFormat dateFormat = new SimpleDateFormat(format, Locale.US);
       dateFormat.setLenient(false);
       dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
       threadDateFormats.put(format, dateFormat);
