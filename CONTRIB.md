@@ -25,6 +25,14 @@ Dependencies
 
 We tried to keep the number of dependencies as small as possible, and we tried to avoid adding any dependencies that wouldn't be available in common operating system distributions like Debian stable.  That doesn't mean that we're opposed to add any further dependencies, but we need to keep in mind that any user of our library will have to add those dependencies, too.
 
+metrics-lib currently has the following dependencies to compile:
+
+ - Apache Commons Compression
+   https://commons.apache.org/proper/commons-compress/download_compress.cgi
+
+ - JUnit
+   https://github.com/junit-team/junit/wiki/Download-and-Install
+
 
 Code style
 ----------
