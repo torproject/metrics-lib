@@ -27,10 +27,10 @@ We tried to keep the number of dependencies as small as possible, and we tried t
 
 metrics-lib currently has the following dependencies to compile:
 
- - Apache Commons Compression
+ - Apache Commons Compression 1.4.1
    https://commons.apache.org/proper/commons-compress/download_compress.cgi
 
- - JUnit
+ - JUnit 4.10
    https://github.com/junit-team/junit/wiki/Download-and-Install
 
 
