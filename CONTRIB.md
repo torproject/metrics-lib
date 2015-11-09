@@ -27,11 +27,10 @@ We tried to keep the number of dependencies as small as possible, and we tried t
 
 metrics-lib currently has the following dependencies to compile:
 
- - Apache Commons Compression 1.4.1 (https://commons.apache.org/proper/commons-compress/)
-   https://archive.apache.org/dist/commons/compress/binaries/
+ - Apache Commons Compression 1.4.1
+   (https://commons.apache.org/proper/commons-compress/)
 
  - JUnit 4.10 (http://junit.org/)
-   https://search.maven.org/remotecontent?filepath=junit/junit/4.10/junit-4.10.jar
 
 Code style
 ----------
@@ -40,7 +39,7 @@ We're using a code style that is not really formally defined but that roughly fo
 
  - We avoid tabs and favor 2 spaces where other people would use a tab.
  - We break lines after at most 74 characters and indent new lines with 4 spaces.
- - Every public interface or method should have a javadoc comment, which should be a full sentence.  We failed to turn these comments into JavaDoc comments, but we should fix that at some point.
+ - Every public interface or method should have a JavaDoc comment, which should be a full sentence.  We failed to do this in large parts of the current code where we used comments instead of JavaDoc comments, but we should fix that at some point.
 
 There's probably more to say about code style, but please take a look at the existing code and try to write new code as similar as possible.
 
