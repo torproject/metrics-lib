@@ -6,7 +6,9 @@ import org.torproject.descriptor.DescriptorParseException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.SortedMap;
 import java.util.TimeZone;
 
 import org.torproject.descriptor.BridgeNetworkStatus;
@@ -52,6 +54,20 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
+    /* Initialize flag-thresholds values here for the case that the status
+     * doesn't contain those values.  Initializing them in the constructor
+     * or when declaring variables wouldn't work, because those parts are
+     * evaluated later and would overwrite everything we parse here. */
+    this.stableUptime = -1L;
+    this.stableMtbf = -1L;
+    this.fastBandwidth = -1L;
+    this.guardWfu = -1.0;
+    this.guardTk = -1L;
+    this.guardBandwidthIncludingExits = -1L;
+    this.guardBandwidthExcludingExits = -1L;
+    this.enoughMtbfInfo = -1;
+    this.ignoringAdvertisedBws = -1;
+
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
     while (s.hasNext()) {
       String line = s.next();
@@ -59,6 +75,8 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
       String keyword = parts[0];
       if (keyword.equals("published")) {
         this.parsePublishedLine(line, parts);
+      } else if (keyword.equals("flag-thresholds")) {
+        this.parseFlagThresholdsLine(line, parts);
       } else if (this.failUnrecognizedDescriptorLines) {
         throw new DescriptorParseException("Unrecognized line '" + line
             + "' in bridge network status.");
@@ -75,6 +93,45 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
       throws DescriptorParseException {
     this.publishedMillis = ParseHelper.parseTimestampAtIndex(line, parts,
         1, 2);
+  }
+
+  private void parseFlagThresholdsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length < 2) {
+      throw new DescriptorParseException("No flag thresholds in line '"
+          + line + "'.");
+    }
+    SortedMap<String, String> flagThresholds =
+        ParseHelper.parseKeyValueStringPairs(line, parts, 1, "=");
+    try {
+      for (Map.Entry<String, String> e : flagThresholds.entrySet()) {
+        if (e.getKey().equals("stable-uptime")) {
+          this.stableUptime = Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("stable-mtbf")) {
+          this.stableMtbf = Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("fast-speed")) {
+          this.fastBandwidth = Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("guard-wfu")) {
+          this.guardWfu = Double.parseDouble(e.getValue().
+              replaceAll("%", ""));
+        } else if (e.getKey().equals("guard-tk")) {
+          this.guardTk = Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("guard-bw-inc-exits")) {
+          this.guardBandwidthIncludingExits =
+              Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("guard-bw-exc-exits")) {
+          this.guardBandwidthExcludingExits =
+              Long.parseLong(e.getValue());
+        } else if (e.getKey().equals("enough-mtbf")) {
+          this.enoughMtbfInfo = Integer.parseInt(e.getValue());
+        } else if (e.getKey().equals("ignoring-advertised-bws")) {
+          this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
+        }
+      }
+    } catch (NumberFormatException ex) {
+      throw new DescriptorParseException("Illegal value in line '"
+          + line + "'.");
+    }
   }
 
   protected void parseDirSource(byte[] dirSourceBytes)
@@ -98,6 +155,51 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
   private long publishedMillis;
   public long getPublishedMillis() {
     return this.publishedMillis;
+  }
+
+  private long stableUptime;
+  public long getStableUptime() {
+    return this.stableUptime;
+  }
+
+  private long stableMtbf;
+  public long getStableMtbf() {
+    return this.stableMtbf;
+  }
+
+  private long fastBandwidth;
+  public long getFastBandwidth() {
+    return this.fastBandwidth;
+  }
+
+  private double guardWfu;
+  public double getGuardWfu() {
+    return this.guardWfu;
+  }
+
+  private long guardTk;
+  public long getGuardTk() {
+    return this.guardTk;
+  }
+
+  private long guardBandwidthIncludingExits;
+  public long getGuardBandwidthIncludingExits() {
+    return this.guardBandwidthIncludingExits;
+  }
+
+  private long guardBandwidthExcludingExits;
+  public long getGuardBandwidthExcludingExits() {
+    return this.guardBandwidthExcludingExits;
+  }
+
+  private int enoughMtbfInfo;
+  public int getEnoughMtbfInfo() {
+    return this.enoughMtbfInfo;
+  }
+
+  private int ignoringAdvertisedBws;
+  public int getIgnoringAdvertisedBws() {
+    return this.ignoringAdvertisedBws;
   }
 }
 

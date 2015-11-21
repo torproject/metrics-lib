@@ -72,6 +72,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.guardBandwidthIncludingExits = -1L;
     this.guardBandwidthExcludingExits = -1L;
     this.enoughMtbfInfo = -1;
+    this.ignoringAdvertisedBws = -1;
 
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
     boolean skipCrypto = false; /* TODO Parse crypto parts. */
@@ -276,6 +277,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
               Long.parseLong(e.getValue());
         } else if (e.getKey().equals("enough-mtbf")) {
           this.enoughMtbfInfo = Integer.parseInt(e.getValue());
+        } else if (e.getKey().equals("ignoring-advertised-bws")) {
+          this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
         }
       }
     } catch (NumberFormatException ex) {
@@ -540,6 +543,11 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   private int enoughMtbfInfo;
   public int getEnoughMtbfInfo() {
     return this.enoughMtbfInfo;
+  }
+
+  private int ignoringAdvertisedBws;
+  public int getIgnoringAdvertisedBws() {
+    return this.ignoringAdvertisedBws;
   }
 
   private SortedMap<String, Integer> consensusParams;

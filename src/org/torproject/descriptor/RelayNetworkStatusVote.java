@@ -85,6 +85,12 @@ public interface RelayNetworkStatusVote extends Descriptor {
    * information. */
   public int getEnoughMtbfInfo();
 
+  /* Return 1 if the authority has enough measured bandwidths that it'll
+   * ignore the advertised bandwidth claims of routers without measured
+   * bandwidth, 0 if not, or -1 if the authority doesn't report this
+   * information. */
+  public int getIgnoringAdvertisedBws();
+
   /* Return consensus parameters. */
   public SortedMap<String, Integer> getConsensusParams();
 
