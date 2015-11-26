@@ -27,6 +27,7 @@ public class TorperfResultImpl extends DescriptorImpl
     List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
     String descriptorString = new String(rawDescriptorBytes);
     Scanner s = new Scanner(descriptorString).useDelimiter("\n");
+    String typeAnnotation = "";
     while (s.hasNext()) {
       String line = s.next();
       if (line.startsWith("@type torperf ")) {
@@ -40,9 +41,12 @@ public class TorperfResultImpl extends DescriptorImpl
           throw new DescriptorParseException("Unsupported version in "
               + " line '" + line + "'.");
         }
+        typeAnnotation = line + "\n";
       } else {
-        parsedDescriptors.add(new TorperfResultImpl(line.getBytes(),
+        parsedDescriptors.add(new TorperfResultImpl(
+            (typeAnnotation + line).getBytes(),
             failUnrecognizedDescriptorLines));
+        typeAnnotation = "";
       }
     }
     return parsedDescriptors;
@@ -55,8 +59,12 @@ public class TorperfResultImpl extends DescriptorImpl
     this.parseTorperfResultLine(new String(rawDescriptorBytes));
   }
 
-  private void parseTorperfResultLine(String line)
+  private void parseTorperfResultLine(String inputLine)
       throws DescriptorParseException {
+    String line = inputLine;
+    while (line.startsWith("@") && line.contains("\n")) {
+      line = line.split("\n")[1];
+    }
     if (line.isEmpty()) {
       throw new DescriptorParseException("Blank lines are not allowed.");
     }
