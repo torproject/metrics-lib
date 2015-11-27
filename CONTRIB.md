@@ -50,10 +50,15 @@ dependencies, too.
 
 metrics-lib currently has the following dependencies to compile:
 
- - Apache Commons Compression 1.4.1
-   (https://commons.apache.org/proper/commons-compress/)
+ - Apache Commons Compression 1.4.1 (go to the project page at
+   https://commons.apache.org/proper/commons-compress/ and select
+   Download, Archives, Binaries, and then the tarball or zip file for
+   version 1.4.1.)
 
- - JUnit 4.10 (http://junit.org/)
+ - JUnit 4.10 and Hamcrest 1.2 (go to the JUnit project page at
+   http://junit.org/ and select Download and install, junit.jar, version
+   4.10, and hamcrest-core.jar, version 1.2.)
+
 
 Code style
 ----------
