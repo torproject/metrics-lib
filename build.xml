@@ -1,27 +1,37 @@
 <project default="jar" name="descriptor" basedir=".">
+  <property name="release.version" value="1.0.0" />
   <property name="sources" value="src"/>
   <property name="classes" value="classes"/>
   <property name="tests" value="test"/>
-  <property name="jarfile" value="descriptor.jar" />
+  <property name="libs" value="lib"/>
+  <property name="jarfile" value="descriptor-${release.version}.jar" />
+  <property name="jarsourcesfile"
+            value="descriptor-${release.version}-sources.jar" />
   <property name="source-and-target-java-version" value="1.6" />
+  <property name="release.tarball"
+            value="descriptor-${release.version}.tar.gz" />
+  <property file="build.properties" />
 
   <path id="classpath">
     <pathelement path="${classes}"/>
-    <fileset dir="/usr/share/java">
+    <fileset dir="${libs}">
       <include name="commons-compress-1.4.1.jar"/>
       <include name="junit4-4.10.jar"/>
+      <include name="hamcrest-core-1.2.jar"/>
     </fileset>
   </path>
-
-  <target name="init">
-    <mkdir dir="${classes}"/>
-  </target>
 
   <target name="clean" >
     <delete includeEmptyDirs="true">
       <fileset dir="${classes}" defaultexcludes="false" includes="**" />
     </delete>
     <delete file="${jarfile}"/>
+    <delete file="${jarsourcesfile}"/>
+    <delete file="${release.tarball}"/>
+  </target>
+
+  <target name="init">
+    <mkdir dir="${classes}"/>
   </target>
 
   <target name="compile"
@@ -38,10 +48,7 @@
       <classpath refid="classpath"/>
     </javac>
   </target>
-  <target name="jar" depends="compile">
-    <jar destfile="${jarfile}"
-         basedir="${classes}"/>
-  </target>
+
   <target name="test" depends="compile">
     <javac destdir="${classes}"
            srcdir="${tests}"
@@ -62,6 +69,65 @@
                  includes="**/*Test.class"/>
       </batchtest>
     </junit>
+  </target>
+
+  <target name="jar" depends="compile">
+    <exec executable="git" outputproperty="git.revision">
+      <arg value="rev-parse" />
+      <arg value="--short" />
+      <arg value="HEAD" />
+    </exec>
+    <jar destfile="${jarfile}"
+         basedir="${classes}">
+      <manifest>
+        <attribute name="Created-By" value="The Tor Project" />
+        <attribute name="Implementation-Title" value="DescripTor"/>
+        <attribute name="Implementation-Version"
+                   value="${release.version}-${git.revision}"/>
+      </manifest>
+    </jar>
+    <jar destfile="${jarsourcesfile}">
+      <fileset dir="${sources}" />
+      <fileset dir="${tests}"/>
+      <manifest>
+        <attribute name="Created-By" value="The Tor Project" />
+        <attribute name="Implementation-Title" value="DescripTor"/>
+        <attribute name="Implementation-Version"
+                   value="${release.version}-${git.revision}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="signjar" depends="jar">
+    <signjar alias="${jarsigner.alias}"
+             storepass="${jarsigner.storepass}"
+             sigalg="SHA256withRSA"
+             digestalg="SHA-256"
+             tsaurl="http://timestamp.digicert.com">
+      <path>
+        <pathelement path="${jarfile}"/>
+        <pathelement path="${jarsourcesfile}"/>
+      </path>
+    </signjar>
+  </target>
+
+  <target name="tar" depends="signjar">
+    <tar destfile="${release.tarball}" compression="gzip">
+      <tarfileset dir="." prefix="descriptor-${release.version}">
+        <include name="${jarfile}" />
+        <include name="${jarsourcesfile}" />
+        <include name="build.xml" />
+        <include name="LICENSE" />
+        <include name="CERT" />
+        <include name="*.md" />
+      </tarfileset>
+      <tarfileset dir="${sources}"
+                  prefix="descriptor-${release.version}/src" />
+      <tarfileset dir="${tests}"
+                  prefix="descriptor-${release.version}/test" />
+      <tarfileset dir="${libs}"
+                  prefix="descriptor-${release.version}/lib" />
+    </tar>
   </target>
 </project>
 

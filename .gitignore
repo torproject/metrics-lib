@@ -1,6 +1,8 @@
 classes/
 lib/
-descriptor.jar
+descriptor-*.jar
+descriptor-*.tar.gz
 .classpath
 .project
+build.properties
 
