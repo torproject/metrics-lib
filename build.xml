@@ -7,7 +7,7 @@
   <property name="jarfile" value="descriptor-${release.version}.jar" />
   <property name="jarsourcesfile"
             value="descriptor-${release.version}-sources.jar" />
-  <property name="source-and-target-java-version" value="1.6" />
+  <property name="source-and-target-java-version" value="1.7" />
   <property name="release.tarball"
             value="descriptor-${release.version}.tar.gz" />
   <property file="build.properties" />
