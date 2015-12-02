@@ -154,6 +154,90 @@ Regarding version numbers, we'll start with 1.0.0 and bump to 1.0.1,
 previously deprecated feature, making a backwards-incompatible change,
 we'll bump to 2.0.0.
 
+Releases are cryptographically signed on multiple levels: the Git tag
+created for the release is signed using GnuPG, the produced .jar files are
+signed using Java's jarsigner tool, and the produced tarball is again
+signed using GnuPG.  We'll assume that you're familiar with GnuPG and how
+to manage keys for it, but we're including some sample commands for
+managing keys for jarsigner using the less commonly known Java keytool
+below.
+
+First, generate a new key pair and create a certificate that expires after
+90 days using reasonable (yet compatible) cryptographic algorithms and
+parameters:
+
+```
+keytool -genkeypair -alias karsten -keyalg RSA -keysize 2048 \
+    -sigalg SHA256withRSA -validity 90 \
+    -dname "CN=Karsten Loesing, O=The Tor Project\, Inc, L=Cambridge, ST=MA, C=US"
+```
+
+Extend the certificate for the existing key pair when it expires:
+
+```
+keytool -selfcert -alias karsten
+```
+
+Export the certificate to a local file called CERT:
+
+```
+keytool -exportcert -alias karsten -rfc -file CERT
+```
+
+Also, in order to sign releases using Ant, you'll have to create a file
+`build.properties` with content similar to the content below (note that
+without such a file, the Ant targets starting at `signjar` won't work):
+
+```
+jarsigner.alias=karsten
+jarsigner.storepass=password
+```
+
+Putting out a new release requires a series of steps:
+
+Edit `build.xml` and raise the `release.version` property to the desired
+new release.
+
+Edit `CHANGELOG.md` and make sure it contains the correct date for the
+release.
+
+Commit these changes.
+
+Create a signed Git tag for the new release:
+
+```
+git tag -s descriptor-1.0.0 -m "DescripTor 1.0.0"
+```
+
+Push the branch.  Ideally, verify the tag signature by cloning it on
+another system and running the following command:
+
+```
+git verify-tag descriptor-1.0.0
+```
+
+Use Ant to first clean up and then create a tarball containing all sources
+and signed .jar files:
+
+```
+ant clean compile test jar signjar tar
+```
+
+Sign the produced tarball using GnuPG:
+
+```
+gpg --detach-sign --armor --local-user 0x4EFD4FDC3F46D41E \
+    descriptor-1.0.0.tar.gz
+```
+
+Verify the signed tarball, ideally on a different system, as described in
+`README.md`.
+
+Upload the tarball and signature file and announce the new version.
+
+Edit `build.xml` again and raise `release.version` to the current release
+plus `-dev`, e.g., `1.0.0-dev`.
+
 
 Packages
 --------
