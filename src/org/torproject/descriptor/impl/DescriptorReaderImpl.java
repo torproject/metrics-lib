@@ -24,6 +24,7 @@ import java.util.TreeMap;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorFile;
 import org.torproject.descriptor.DescriptorParser;
@@ -231,7 +232,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
           if (file.isDirectory()) {
             files.addAll(Arrays.asList(file.listFiles()));
           } else if (file.getName().endsWith(".tar") ||
-              file.getName().endsWith(".tar.bz2")) {
+              file.getName().endsWith(".tar.bz2") ||
+              file.getName().endsWith(".tar.xz")) {
             this.tarballs.add(file);
           } else {
             String absolutePath = file.getAbsolutePath();
@@ -268,7 +270,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
       while (!abortReading && !files.isEmpty()) {
         File tarball = files.remove(0);
         if (!tarball.getName().endsWith(".tar") &&
-            !tarball.getName().endsWith(".tar.bz2")) {
+            !tarball.getName().endsWith(".tar.bz2") &&
+            !tarball.getName().endsWith(".tar.xz")) {
           continue;
         }
         String absolutePath = tarball.getAbsolutePath();
@@ -287,6 +290,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
             if (tarball.getName().endsWith(".tar.bz2")) {
               tais = new TarArchiveInputStream(
                   new BZip2CompressorInputStream(in));
+            } else if (tarball.getName().endsWith(".tar.xz")) {
+              tais = new TarArchiveInputStream(
+                  new XZCompressorInputStream(in));
             } else if (tarball.getName().endsWith(".tar")) {
               tais = new TarArchiveInputStream(in);
             }

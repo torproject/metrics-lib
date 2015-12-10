@@ -55,6 +55,10 @@ metrics-lib currently has the following dependencies to compile:
    Download, Archives, Binaries, and then the tarball or zip file for
    version 1.4.1.)
 
+ - XZ for Java 1.0 (the project page at http://tukaani.org/xz/java.html
+   contains the most recent version, but older versions need to be
+   retrieved from http://mvnrepository.com/artifact/org.tukaani/xz.)
+
  - JUnit 4.10 and Hamcrest 1.2 (go to the JUnit project page at
    http://junit.org/ and select Download and install, junit.jar, version
    4.10, and hamcrest-core.jar, version 1.2.)
