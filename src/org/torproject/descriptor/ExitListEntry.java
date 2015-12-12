@@ -3,7 +3,9 @@
 package org.torproject.descriptor;
 
 /* Exit list entry containing results from a single exit scan. */
-public interface ExitListEntry {
+/* Use org.torproject.descriptor.ExitList.Entry instead. */
+@Deprecated
+public interface ExitListEntry extends ExitList.Entry {
 
   /* Return the scanned relay's fingerprint. */
   public String getFingerprint();

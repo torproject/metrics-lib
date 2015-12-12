@@ -15,7 +15,6 @@ import java.util.TimeZone;
 import org.torproject.descriptor.ExitList;
 import org.torproject.descriptor.ExitListEntry;
 
-/* TODO Add test class. */
 public class ExitListImpl extends DescriptorImpl implements ExitList {
 
   protected ExitListImpl(byte[] rawDescriptorBytes, String fileName,
@@ -52,36 +51,57 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
       throw new DescriptorParseException("Descriptor is empty.");
     }
     String descriptorString = new String(rawDescriptorBytes);
-    Scanner s = new Scanner(descriptorString).useDelimiter("\n");
+    Scanner s = new Scanner(descriptorString).useDelimiter(EOL);
     StringBuilder sb = new StringBuilder();
+    boolean firstEntry = true;
     while (s.hasNext()) {
       String line = s.next();
+      if (line.startsWith("@")) { /* Skip annotation. */
+        if (!s.hasNext()) {
+          throw new DescriptorParseException("Descriptor is empty.");
+        } else {
+          line = s.next();
+        }
+      }
       String[] parts = line.split(" ");
       String keyword = parts[0];
-      if (keyword.equals("Downloaded")) {
-        this.downloadedMillis = ParseHelper.parseTimestampAtIndex(line,
-            parts, 1, 2);
-      } else if (keyword.equals("ExitNode")) {
-        sb = new StringBuilder();
-        sb.append(line + "\n");
-      } else if (keyword.equals("Published")) {
-        sb.append(line + "\n");
-      } else if (keyword.equals("LastStatus")) {
-        sb.append(line + "\n");
-      } else if (keyword.equals("ExitAddress")) {
-        String exitListEntryString = sb.toString() + line + "\n";
-        byte[] exitListEntryBytes = exitListEntryString.getBytes();
-        this.parseExitListEntry(exitListEntryBytes);
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized line '" + line
-            + "' in exit list.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
-        }
-        this.unrecognizedLines.add(line);
+      switch (keyword) {
+        case "Downloaded":
+          this.downloadedMillis = ParseHelper.parseTimestampAtIndex(line,
+              parts, 1, 2);
+          break;
+        case "ExitNode":
+          if (!firstEntry) {
+            this.parseExitListEntry(sb.toString().getBytes());
+          } else {
+            firstEntry = false;
+          }
+          sb = new StringBuilder();
+          sb.append(line).append(ExitList.EOL);
+          break;
+        case "Published":
+          sb.append(line).append(ExitList.EOL);
+          break;
+        case "LastStatus":
+          sb.append(line).append(ExitList.EOL);
+          break;
+        case "ExitAddress":
+          sb.append(line).append(ExitList.EOL);
+          break;
+        default:
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in exit list.");
+          } else {
+            if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<String>();
+            }
+            this.unrecognizedLines.add(line);
+          }
       }
     }
+    /* Parse the last entry. */
+    this.parseExitListEntry(sb.toString().getBytes());
   }
 
   protected void parseExitListEntry(byte[] exitListEntryBytes)
@@ -89,6 +109,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
     ExitListEntryImpl exitListEntry = new ExitListEntryImpl(
         exitListEntryBytes, this.failUnrecognizedDescriptorLines);
     this.exitListEntries.add(exitListEntry);
+    this.oldExitListEntries.addAll(exitListEntry.oldEntries());
     List<String> unrecognizedExitListEntryLines = exitListEntry.
         getAndClearUnrecognizedLines();
     if (unrecognizedExitListEntryLines != null) {
@@ -104,10 +125,15 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
     return this.downloadedMillis;
   }
 
-  private Set<ExitListEntry> exitListEntries =
-      new HashSet<ExitListEntry>();
+  private Set<ExitListEntry> oldExitListEntries = new HashSet<>();
+  @Deprecated
   public Set<ExitListEntry> getExitListEntries() {
-    return new HashSet<ExitListEntry>(this.exitListEntries);
+    return new HashSet<>(this.oldExitListEntries);
+  }
+
+  private Set<ExitList.Entry> exitListEntries = new HashSet<>();
+  public Set<ExitList.Entry> getEntries() {
+    return new HashSet<ExitList.Entry>(this.exitListEntries);
   }
 }
 

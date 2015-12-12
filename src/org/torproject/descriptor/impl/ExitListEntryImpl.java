@@ -3,15 +3,19 @@
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.ExitList;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.torproject.descriptor.ExitListEntry;
 
-public class ExitListEntryImpl implements ExitListEntry {
+public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
 
   private byte[] exitListEntryBytes;
   public byte[] getExitListEntryBytes() {
@@ -26,6 +30,31 @@ public class ExitListEntryImpl implements ExitListEntry {
     return lines;
   }
 
+  @Deprecated
+  private ExitListEntryImpl(String fingerprint, long publishedMillis,
+      long lastStatusMillis, String exitAddress, long scanMillis) {
+    this.fingerprint = fingerprint;
+    this.publishedMillis = publishedMillis;
+    this.lastStatusMillis = lastStatusMillis;
+    this.exitAddresses.put(exitAddress, scanMillis);
+  }
+
+  @Deprecated
+  List<ExitListEntry> oldEntries() {
+    List<ExitListEntry> result = new ArrayList<>();
+    if (this.exitAddresses.size() > 1) {
+      for (Map.Entry<String, Long> entry :
+          this.exitAddresses.entrySet()) {
+        result.add(new ExitListEntryImpl(this.fingerprint,
+            this.publishedMillis, this.lastStatusMillis, entry.getKey(),
+            entry.getValue()));
+      }
+    } else {
+      result.add(this);
+    }
+    return result;
+  }
+
   protected ExitListEntryImpl(byte[] exitListEntryBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
@@ -37,56 +66,63 @@ public class ExitListEntryImpl implements ExitListEntry {
     this.checkAndClearKeywords();
   }
 
-  private SortedSet<String> exactlyOnceKeywords;
+  private SortedSet<String> keywordCountingSet;
   private void initializeKeywords() {
-    this.exactlyOnceKeywords = new TreeSet<String>();
-    this.exactlyOnceKeywords.add("ExitNode");
-    this.exactlyOnceKeywords.add("Published");
-    this.exactlyOnceKeywords.add("LastStatus");
-    this.exactlyOnceKeywords.add("ExitAddress");
+    this.keywordCountingSet = new TreeSet<String>();
+    this.keywordCountingSet.add("ExitNode");
+    this.keywordCountingSet.add("Published");
+    this.keywordCountingSet.add("LastStatus");
+    this.keywordCountingSet.add("ExitAddress");
   }
 
   private void parsedExactlyOnceKeyword(String keyword)
       throws DescriptorParseException {
-    if (!this.exactlyOnceKeywords.contains(keyword)) {
+    if (!this.keywordCountingSet.contains(keyword)) {
       throw new DescriptorParseException("Duplicate '" + keyword
           + "' line in exit list entry.");
     }
-    this.exactlyOnceKeywords.remove(keyword);
+    this.keywordCountingSet.remove(keyword);
   }
 
   private void checkAndClearKeywords() throws DescriptorParseException {
-    for (String missingKeyword : this.exactlyOnceKeywords) {
+    for (String missingKeyword : this.keywordCountingSet) {
       throw new DescriptorParseException("Missing '" + missingKeyword
           + "' line in exit list entry.");
     }
-    this.exactlyOnceKeywords = null;
+    this.keywordCountingSet = null;
   }
 
   private void parseExitListEntryBytes()
       throws DescriptorParseException {
     Scanner s = new Scanner(new String(this.exitListEntryBytes)).
-        useDelimiter("\n");
+        useDelimiter(ExitList.EOL);
     while (s.hasNext()) {
       String line = s.next();
       String[] parts = line.split(" ");
       String keyword = parts[0];
-      if (keyword.equals("ExitNode")) {
-        this.parseExitNodeLine(line, parts);
-      } else if (keyword.equals("Published")) {
-        this.parsePublishedLine(line, parts);
-      } else if (keyword.equals("LastStatus")) {
-        this.parseLastStatusLine(line, parts);
-      } else if (keyword.equals("ExitAddress")) {
-        this.parseExitAddressLine(line, parts);
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized line '" + line
-            + "' in exit list entry.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
-        }
-        this.unrecognizedLines.add(line);
+      switch (keyword) {
+        case "ExitNode":
+          this.parseExitNodeLine(line, parts);
+          break;
+        case "Published":
+          this.parsePublishedLine(line, parts);
+          break;
+        case "LastStatus":
+          this.parseLastStatusLine(line, parts);
+          break;
+        case "ExitAddress":
+          this.parseExitAddressLine(line, parts);
+          break;
+        default:
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in exit list entry.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
+          }
       }
     }
   }
@@ -130,10 +166,9 @@ public class ExitListEntryImpl implements ExitListEntry {
       throw new DescriptorParseException("Invalid line '" + line + "' in "
           + "exit list entry.");
     }
-    this.parsedExactlyOnceKeyword(parts[0]);
-    this.exitAddress = ParseHelper.parseIpv4Address(line, parts[1]);
-    this.scanMillis = ParseHelper.parseTimestampAtIndex(line, parts,
-        2, 3);
+    this.keywordCountingSet.remove(parts[0]);
+    this.exitAddresses.put(ParseHelper.parseIpv4Address(line, parts[1]),
+        ParseHelper.parseTimestampAtIndex(line, parts, 2, 3));
   }
 
   private String fingerprint;
@@ -153,12 +188,26 @@ public class ExitListEntryImpl implements ExitListEntry {
 
   private String exitAddress;
   public String getExitAddress() {
+    if (null == exitAddress) {
+      Map.Entry<String, Long> randomEntry =
+          this.exitAddresses.entrySet().iterator().next();
+      this.exitAddress = randomEntry.getKey();
+      this.scanMillis = randomEntry.getValue();
+    }
     return this.exitAddress;
+  }
+
+  private Map<String, Long> exitAddresses = new HashMap<>();
+  public Map<String, Long> getExitAddresses(){
+    return new HashMap<>(this.exitAddresses);
   }
 
   private long scanMillis;
   public long getScanMillis() {
-    return this.scanMillis;
+    if (null == exitAddress) {
+      getExitAddress();
+    }
+    return scanMillis;
   }
 }
 

@@ -7,6 +7,11 @@
    - Support parsing of .xz-compressed tarballs using Apache Commons
      Compress and XZ for Java.  Applications only need to add XZ for
      Java as dependency if they want to parse .xz-compressed tarballs.
+   - Introduce a new ExitList.Entry type for exit list entries instead
+     of the ExitListEntry type which is now deprecated.  The main
+     difference between the two is that ExitList.Entry can hold more
+     than one exit address and scan time which were previously parsed
+     as multiple ExitListEntry instances.
 
 
 # Changes in version 1.0.0 - 2015-12-05
