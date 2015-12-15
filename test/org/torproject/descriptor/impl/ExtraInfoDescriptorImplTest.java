@@ -30,14 +30,14 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.extraInfoLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String publishedLine = "published 2012-02-11 09:08:36";
     private static ExtraInfoDescriptor createWithPublishedLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.publishedLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String writeHistoryLine = "write-history 2012-02-11 09:03:39 "
         + "(900 s) 4713350144,4723824640,4710717440,4572675072";
@@ -45,7 +45,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.writeHistoryLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String readHistoryLine = "read-history 2012-02-11 09:03:39 "
         + "(900 s) 4707695616,4699666432,4650004480,4489718784";
@@ -53,7 +53,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.readHistoryLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String dirreqWriteHistoryLine = "dirreq-write-history "
         + "2012-02-11 09:03:39 (900 s) 81281024,64996352,60625920,"
@@ -62,7 +62,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.dirreqWriteHistoryLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String dirreqReadHistoryLine = "dirreq-read-history "
         + "2012-02-11 09:03:39 (900 s) 17074176,16235520,16005120,"
@@ -71,70 +71,70 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.dirreqReadHistoryLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String geoipDbDigestLine = null;
     private static ExtraInfoDescriptor createWithGeoipDbDigestLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.geoipDbDigestLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String geoip6DbDigestLine = null;
     private static ExtraInfoDescriptor createWithGeoip6DbDigestLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.geoip6DbDigestLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String geoipStatsLines = null;
     private static ExtraInfoDescriptor createWithGeoipStatsLines(
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.geoipStatsLines = lines;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String dirreqStatsLines = null;
     private static ExtraInfoDescriptor createWithDirreqStatsLines(
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.dirreqStatsLines = lines;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String entryStatsLines = null;
     private static ExtraInfoDescriptor createWithEntryStatsLines(
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.entryStatsLines = lines;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String cellStatsLines = null;
     private static ExtraInfoDescriptor createWithCellStatsLines(
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.cellStatsLines = lines;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String connBiDirectLine = null;
     private static ExtraInfoDescriptor createWithConnBiDirectLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.connBiDirectLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String exitStatsLines = null;
     private static ExtraInfoDescriptor createWithExitStatsLines(
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.exitStatsLines = lines;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String bridgeStatsLines = null;
     private static ExtraInfoDescriptor createWithBridgeStatsLines(
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.bridgeStatsLines = lines;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private String unrecognizedLine = null;
     private static ExtraInfoDescriptor createWithUnrecognizedLine(
@@ -142,7 +142,7 @@ public class ExtraInfoDescriptorImplTest {
         throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.unrecognizedLine = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(),
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(),
           failUnrecognizedDescriptorLines);
     }
     private byte[] nonAsciiLineBytes = null;
@@ -151,7 +151,7 @@ public class ExtraInfoDescriptorImplTest {
         throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.nonAsciiLineBytes = lineBytes;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(),
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(),
           failUnrecognizedDescriptorLines);
     }
     private String routerSignatureLines = "router-signature\n"
@@ -164,7 +164,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.routerSignatureLines = line;
-      return new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
     private byte[] buildDescriptor() {
       StringBuilder sb = new StringBuilder();
@@ -715,7 +715,7 @@ public class ExtraInfoDescriptorImplTest {
   public void testSampleDescriptor() throws DescriptorParseException {
     DescriptorBuilder db = new DescriptorBuilder();
     ExtraInfoDescriptor descriptor =
-        new ExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+        new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     assertEquals("chaoscomputerclub5", descriptor.getNickname());
     assertEquals("A9C039A5FD02FCA06303DCFAABE25C5912C63B26",
         descriptor.getFingerprint());

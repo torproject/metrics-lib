@@ -32,14 +32,14 @@ public class ServerDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.routerLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String bandwidthLine = "bandwidth 51200 51200 53470";
     private static ServerDescriptor createWithBandwidthLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.bandwidthLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String platformLine = "platform Tor 0.2.2.35 "
         + "(git-b04388f9e7546a9f) on Linux i686";
@@ -47,14 +47,14 @@ public class ServerDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.platformLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String publishedLine = "published 2012-01-01 04:03:19";
     private static ServerDescriptor createWithPublishedLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.publishedLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String fingerprintLine = "opt fingerprint D873 3048 FC8E "
         + "C910 2466 AD8F 3098 622B F1BF 71FD";
@@ -62,21 +62,21 @@ public class ServerDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.fingerprintLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String hibernatingLine = null;
     private static ServerDescriptor createWithHibernatingLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.hibernatingLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String uptimeLine = "uptime 48";
     private static ServerDescriptor createWithUptimeLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.uptimeLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String onionKeyLines = "onion-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"
@@ -89,7 +89,7 @@ public class ServerDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.onionKeyLines = lines;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String signingKeyLines = "signing-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"
@@ -102,14 +102,14 @@ public class ServerDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.signingKeyLines = lines;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String exitPolicyLines = "reject *:*";
     private static ServerDescriptor createWithExitPolicyLines(
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.exitPolicyLines = lines;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String contactLine = "contact Random Person <nobody AT "
         + "example dot com>";
@@ -117,42 +117,42 @@ public class ServerDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.contactLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String familyLine = null;
     private static ServerDescriptor createWithFamilyLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.familyLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String readHistoryLine = null;
     private static ServerDescriptor createWithReadHistoryLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.readHistoryLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String writeHistoryLine = null;
     private static ServerDescriptor createWithWriteHistoryLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.writeHistoryLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String eventdnsLine = null;
     private static ServerDescriptor createWithEventdnsLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.eventdnsLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String cachesExtraInfoLine = null;
     private static ServerDescriptor createWithCachesExtraInfoLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.cachesExtraInfoLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String extraInfoDigestLine = "opt extra-info-digest "
         + "1469D1550738A25B1E7B47CDDBCD7B2899F51B74";
@@ -160,21 +160,21 @@ public class ServerDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.extraInfoDigestLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String hiddenServiceDirLine = "opt hidden-service-dir";
     private static ServerDescriptor createWithHiddenServiceDirLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.hiddenServiceDirLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String protocolsLine = "opt protocols Link 1 2 Circuit 1";
     private static ServerDescriptor createWithProtocolsLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.protocolsLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String allowSingleHopExitsLine = null;
     private static ServerDescriptor
@@ -182,21 +182,21 @@ public class ServerDescriptorImplTest {
         throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.allowSingleHopExitsLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String ipv6PolicyLine = null;
     private static ServerDescriptor createWithIpv6PolicyLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.ipv6PolicyLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String ntorOnionKeyLine = null;
     private static ServerDescriptor createWithNtorOnionKeyLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.ntorOnionKeyLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String routerSignatureLines = "router-signature\n"
         + "-----BEGIN SIGNATURE-----\n"
@@ -208,7 +208,7 @@ public class ServerDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.routerSignatureLines = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(), true);
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
     private String unrecognizedLine = null;
     private static ServerDescriptor createWithUnrecognizedLine(
@@ -216,7 +216,7 @@ public class ServerDescriptorImplTest {
         throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.unrecognizedLine = line;
-      return new ServerDescriptorImpl(db.buildDescriptor(),
+      return new RelayServerDescriptorImpl(db.buildDescriptor(),
           failUnrecognizedDescriptorLines);
     }
     private byte[] nonAsciiLineBytes = null;
@@ -225,7 +225,7 @@ public class ServerDescriptorImplTest {
             throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.nonAsciiLineBytes = lineBytes;
-      return new ServerDescriptorImpl(db.buildDescriptor(),
+      return new RelayServerDescriptorImpl(db.buildDescriptor(),
           failUnrecognizedDescriptorLines);
     }
     private byte[] buildDescriptor() {
@@ -324,7 +324,7 @@ public class ServerDescriptorImplTest {
   public void testSampleDescriptor() throws DescriptorParseException {
     DescriptorBuilder db = new DescriptorBuilder();
     ServerDescriptor descriptor =
-        new ServerDescriptorImpl(db.buildDescriptor(), true);
+        new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     assertEquals("saberrider2008", descriptor.getNickname());
     assertEquals("94.134.192.243", descriptor.getAddress());
     assertEquals(9001, (int) descriptor.getOrPort());

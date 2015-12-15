@@ -48,18 +48,25 @@ public abstract class DescriptorImpl implements Descriptor {
         || firstLines.startsWith("r ")) {
       parsedDescriptors.add(new BridgeNetworkStatusImpl(
           rawDescriptorBytes, fileName, failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith(
+        "@type bridge-server-descriptor 1.")) {
+      parsedDescriptors.addAll(BridgeServerDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type server-descriptor 1.") ||
-        firstLines.startsWith("@type bridge-server-descriptor 1.") ||
         firstLines.startsWith("router ") ||
         firstLines.contains("\nrouter ")) {
-      parsedDescriptors.addAll(ServerDescriptorImpl.
+      parsedDescriptors.addAll(RelayServerDescriptorImpl.
+          parseDescriptors(rawDescriptorBytes,
+          failUnrecognizedDescriptorLines));
+    } else if (firstLines.startsWith("@type bridge-extra-info 1.")) {
+      parsedDescriptors.addAll(BridgeExtraInfoDescriptorImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type extra-info 1.") ||
-        firstLines.startsWith("@type bridge-extra-info 1.") ||
         firstLines.startsWith("extra-info ") ||
         firstLines.contains("\nextra-info ")) {
-      parsedDescriptors.addAll(ExtraInfoDescriptorImpl.
+      parsedDescriptors.addAll(RelayExtraInfoDescriptorImpl.
           parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type microdescriptor 1.") ||

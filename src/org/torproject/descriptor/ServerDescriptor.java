@@ -4,7 +4,7 @@ package org.torproject.descriptor;
 
 import java.util.List;
 
-/* Contains a relay server descriptor. */
+/* Contains a relay or bridge server descriptor. */
 public interface ServerDescriptor extends Descriptor {
 
   /* Return the descriptor digest that is used to reference this server

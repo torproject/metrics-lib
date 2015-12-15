@@ -18,26 +18,9 @@ import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ServerDescriptor;
 
-/* Contains a relay server descriptor. */
-public class ServerDescriptorImpl extends DescriptorImpl
+/* Contains a server descriptor. */
+public abstract class ServerDescriptorImpl extends DescriptorImpl
     implements ServerDescriptor {
-
-  protected static List<ServerDescriptor> parseDescriptors(
-      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<ServerDescriptor> parsedDescriptors =
-        new ArrayList<ServerDescriptor>();
-    List<byte[]> splitDescriptorsBytes =
-        DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        "router ");
-    for (byte[] descriptorBytes : splitDescriptorsBytes) {
-      ServerDescriptor parsedDescriptor =
-          new ServerDescriptorImpl(descriptorBytes,
-          failUnrecognizedDescriptorLines);
-      parsedDescriptors.add(parsedDescriptor);
-    }
-    return parsedDescriptors;
-  }
 
   protected ServerDescriptorImpl(byte[] descriptorBytes,
       boolean failUnrecognizedDescriptorLines)
@@ -53,7 +36,7 @@ public class ServerDescriptorImpl extends DescriptorImpl
         + "read-history,write-history,eventdns,caches-extra-info,"
         + "extra-info-digest,hidden-service-dir,protocols,"
         + "allow-single-hop-exits,onion-key,signing-key,ipv6-policy,"
-        + "ntor-onion-key,router-signature").split(",")));
+        + "ntor-onion-key,router-signature,router-digest").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("router");
     if (this.getKeywordCount("accept") == 0 &&

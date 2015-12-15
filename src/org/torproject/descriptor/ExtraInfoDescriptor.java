@@ -5,6 +5,7 @@ package org.torproject.descriptor;
 import java.util.List;
 import java.util.SortedMap;
 
+/* Contains a relay or bridge extra-info descriptor. */
 public interface ExtraInfoDescriptor extends Descriptor {
 
   /* Return the descriptor digest that is used to reference this

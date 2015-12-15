@@ -22,25 +22,8 @@ import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExtraInfoDescriptor;
 
-public class ExtraInfoDescriptorImpl extends DescriptorImpl
+public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     implements ExtraInfoDescriptor {
-
-  protected static List<ExtraInfoDescriptor> parseDescriptors(
-      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<ExtraInfoDescriptor> parsedDescriptors =
-        new ArrayList<ExtraInfoDescriptor>();
-    List<byte[]> splitDescriptorsBytes =
-        DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        "extra-info ");
-    for (byte[] descriptorBytes : splitDescriptorsBytes) {
-      ExtraInfoDescriptor parsedDescriptor =
-          new ExtraInfoDescriptorImpl(descriptorBytes,
-              failUnrecognizedDescriptorLines);
-      parsedDescriptors.add(parsedDescriptor);
-    }
-    return parsedDescriptors;
-  }
 
   protected ExtraInfoDescriptorImpl(byte[] descriptorBytes,
       boolean failUnrecognizedDescriptorLines)
@@ -70,8 +53,8 @@ public class ExtraInfoDescriptorImpl extends DescriptorImpl
         "bridge-stats-end,bridge-stats-ips".split(",")));
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
         "read-history,write-history,dirreq-read-history,"
-        + "dirreq-write-history,geoip-db-digest,router-signature").
-        split(",")));
+        + "dirreq-write-history,geoip-db-digest,router-signature,"
+        + "router-digest").split(",")));
     atMostOnceKeywords.addAll(dirreqStatsKeywords);
     atMostOnceKeywords.addAll(entryStatsKeywords);
     atMostOnceKeywords.addAll(cellStatsKeywords);

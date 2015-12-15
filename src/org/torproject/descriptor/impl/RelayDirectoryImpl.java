@@ -284,8 +284,9 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   protected void parseServerDescriptor(byte[] serverDescriptorBytes) {
     try {
-      ServerDescriptorImpl serverDescriptor = new ServerDescriptorImpl(
-          serverDescriptorBytes, this.failUnrecognizedDescriptorLines);
+      ServerDescriptorImpl serverDescriptor =
+          new RelayServerDescriptorImpl(serverDescriptorBytes,
+          this.failUnrecognizedDescriptorLines);
       this.serverDescriptors.add(serverDescriptor);
     } catch (DescriptorParseException e) {
       this.serverDescriptorParseExceptions.add(e);

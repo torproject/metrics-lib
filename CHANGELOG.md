@@ -12,6 +12,12 @@
      difference between the two is that ExitList.Entry can hold more
      than one exit address and scan time which were previously parsed
      as multiple ExitListEntry instances.
+   - Introduce four new types to distinguish between relay and bridge
+     descriptors: RelayServerDescriptor, RelayExtraInfoDescriptor,
+     BridgeServerDescriptor, and BridgeExtraInfoDescriptor.  The
+     existing types, ServerDescriptor and ExtraInfoDescriptor, are
+     still usable and will not be deprecated, because applications may
+     not care whether a relay or a bridge published a descriptor.
 
 
 # Changes in version 1.0.0 - 2015-12-05
