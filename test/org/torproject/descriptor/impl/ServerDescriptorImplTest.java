@@ -104,6 +104,20 @@ public class ServerDescriptorImplTest {
       db.signingKeyLines = lines;
       return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
+    private String onionKeyCrosscertLines = null;
+    private static ServerDescriptor createWithOnionKeyCrosscertLines(
+        String lines) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.onionKeyCrosscertLines = lines;
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
+    }
+    private String ntorOnionKeyCrosscertLines = null;
+    private static ServerDescriptor createWithNtorOnionKeyCrosscertLines(
+        String lines) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.ntorOnionKeyCrosscertLines = lines;
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
+    }
     private String exitPolicyLines = "reject *:*";
     private static ServerDescriptor createWithExitPolicyLines(
         String lines) throws DescriptorParseException {
@@ -273,6 +287,12 @@ public class ServerDescriptorImplTest {
       }
       if (this.signingKeyLines != null) {
         sb.append(this.signingKeyLines + "\n");
+      }
+      if (this.onionKeyCrosscertLines != null) {
+        sb.append(this.onionKeyCrosscertLines + "\n");
+      }
+      if (this.ntorOnionKeyCrosscertLines != null) {
+        sb.append(this.ntorOnionKeyCrosscertLines + "\n");
       }
       if (this.exitPolicyLines != null) {
         sb.append(this.exitPolicyLines + "\n");
@@ -1480,6 +1500,59 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE + "\n"
         + ROUTER_SIG_ED25519_LINE);
+  }
+
+  private static final String ONION_KEY_CROSSCERT_LINES =
+      "onion-key-crosscert\n"
+      + "-----BEGIN CROSSCERT-----\n"
+      + "gVWpiNgG2FekW1uonr4KKoqykjr4bqUBKGZfu6s9rvsV1TThnquZNP6ZhX2IPdQA"
+      + "\nlfKtzFggGu/4BiJ5oTSDj2sK2DMjY3rjrMQZ3I/wJ25yhc9gxjqYqUYO9MmJwA"
+      + "Lp\nfYkqp/t4WchJpyva/4hK8vITsI6eT2BfY/DWMy/suIE=\n"
+      + "-----END CROSSCERT-----";
+
+  private static final String NTOR_ONION_KEY_CROSSCERT_LINES =
+      "ntor-onion-key-crosscert 1\n"
+      + "-----BEGIN ED25519 CERT-----\n"
+      + "AQoABiUeAdauu1MxYGMmGLTCPaoes0RvW7udeLc1t8LZ4P3CDo5bAN4nrRfbCfOt"
+      + "\nz2Nwqn8tER1a+Ry6Vs+ilMZA55Rag4+f6Zdb1fmHWknCxbQlLHpqHACMtemPda"
+      + "Ka\nErPtMuiEqAc=\n"
+      + "-----END ED25519 CERT-----";
+
+  @Test()
+  public void testOnionKeyCrosscert() throws DescriptorParseException {
+    ServerDescriptor descriptor =
+        DescriptorBuilder.createWithOnionKeyCrosscertLines(
+        ONION_KEY_CROSSCERT_LINES);
+    assertEquals(ONION_KEY_CROSSCERT_LINES.substring(
+        ONION_KEY_CROSSCERT_LINES.indexOf("\n") + 1),
+        descriptor.getOnionKeyCrosscert());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testOnionKeyCrosscertDuplicate()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithOnionKeyCrosscertLines(
+    ONION_KEY_CROSSCERT_LINES + "\n" + ONION_KEY_CROSSCERT_LINES);
+  }
+
+  @Test()
+  public void testNtorOnionKeyCrosscert()
+      throws DescriptorParseException {
+    ServerDescriptor descriptor =
+        DescriptorBuilder.createWithNtorOnionKeyCrosscertLines(
+        NTOR_ONION_KEY_CROSSCERT_LINES);
+    assertEquals(NTOR_ONION_KEY_CROSSCERT_LINES.substring(
+        NTOR_ONION_KEY_CROSSCERT_LINES.indexOf("\n") + 1),
+        descriptor.getNtorOnionKeyCrosscert());
+    assertEquals(1, descriptor.getNtorOnionKeyCrosscertSign());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testNtorOnionKeyCrosscertDuplicate()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithOnionKeyCrosscertLines(
+        NTOR_ONION_KEY_CROSSCERT_LINES + "\n"
+        + NTOR_ONION_KEY_CROSSCERT_LINES);
   }
 }
 

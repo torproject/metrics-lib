@@ -37,9 +37,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         + "hibernating,uptime,contact,family,read-history,write-history,"
         + "eventdns,caches-extra-info,extra-info-digest,"
         + "hidden-service-dir,protocols,allow-single-hop-exits,onion-key,"
-        + "signing-key,ipv6-policy,ntor-onion-key,router-sig-ed25519,"
-        + "router-signature,router-digest-sha256,router-digest").
-        split(",")));
+        + "signing-key,ipv6-policy,ntor-onion-key,onion-key-crosscert,"
+        + "ntor-onion-key-crosscert,router-sig-ed25519,router-signature,"
+        + "router-digest-sha256,router-digest").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("router");
     if (this.getKeywordCount("accept") == 0 &&
@@ -131,6 +131,12 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("router-sig-ed25519")) {
         this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("onion-key-crosscert")) {
+        this.parseOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
+        nextCrypto = "onion-key-crosscert";
+      } else if (keyword.equals("ntor-onion-key-crosscert")) {
+        this.parseNtorOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
+        nextCrypto = "ntor-onion-key-crosscert";
       } else if (line.startsWith("-----BEGIN")) {
         cryptoLines = new ArrayList<String>();
         cryptoLines.add(line);
@@ -150,6 +156,10 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         } else if ("identity-ed25519".equals(nextCrypto)) {
           this.identityEd25519 = cryptoString;
           this.parseIdentityEd25519CryptoBlock(cryptoString);
+        } else if ("onion-key-crosscert".equals(nextCrypto)) {
+          this.onionKeyCrosscert = cryptoString;
+        } else if ("ntor-onion-key-crosscert".equals(nextCrypto)) {
+          this.ntorOnionKeyCrosscert = cryptoString;
         } else if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized crypto "
               + "block '" + cryptoString + "' in server descriptor.");
@@ -534,6 +544,25 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
+  private void parseOnionKeyCrosscert(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 1) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
+  private void parseNtorOnionKeyCrosscert(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    try {
+      this.ntorOnionKeyCrosscertSign = Integer.parseInt(partsNoOpt[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
   private void parseIdentityEd25519CryptoBlock(String cryptoString)
       throws DescriptorParseException {
     String masterKeyEd25519FromIdentityEd25519 =
@@ -833,6 +862,21 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   private String routerSignatureEd25519;
   public String getRouterSignatureEd25519() {
     return this.routerSignatureEd25519;
+  }
+
+  private String onionKeyCrosscert;
+  public String getOnionKeyCrosscert() {
+    return this.onionKeyCrosscert;
+  }
+
+  private String ntorOnionKeyCrosscert;
+  public String getNtorOnionKeyCrosscert() {
+    return this.ntorOnionKeyCrosscert;
+  }
+
+  private int ntorOnionKeyCrosscertSign = -1;
+  public int getNtorOnionKeyCrosscertSign() {
+    return ntorOnionKeyCrosscertSign;
   }
 }
 

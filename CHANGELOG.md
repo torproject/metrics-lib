@@ -24,6 +24,8 @@
    - Include RSA-1024 signatures of SHA-1 digests of extra-info
      descriptors, which were parsed and discarded before.
    - Support hidden-service statistics in extra-info descriptors.
+   - Support onion-key and ntor-onion-key cross certificates in server
+     descriptors.
 
 
 # Changes in version 1.0.0 - 2015-12-05

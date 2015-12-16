@@ -174,5 +174,22 @@ public interface ServerDescriptor extends Descriptor {
    * the first space after the "router-sig-ed25519" string, prefixed with
    * the string "Tor router descriptor signature v1". */
   public String getRouterSignatureEd25519();
+
+  /* Return an RSA signature, generated using the onion-key, that proves
+   * that the party creating the descriptor had control over the secret
+   * key corresponding to the onion-key, or null if the descriptor does
+   * not contain such a signature. */
+  public String getOnionKeyCrosscert();
+
+  /* Return an Ed25519 signature, generated using the ntor-onion-key, that
+   * proves that the party creating the descriptor had control over the
+   * secret key corresponding to the ntor-onion-key, or null if the
+   * descriptor does not contain such a signature. */
+  public String getNtorOnionKeyCrosscert();
+
+  /* Return the sign of the Ed25519 public key corresponding to the ntor
+   * onion key as 0 or 1, or -1 if the descriptor does not contain this
+   * information. */
+  public int getNtorOnionKeyCrosscertSign();
 }
 
