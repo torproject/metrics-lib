@@ -2,7 +2,6 @@
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
-import org.torproject.descriptor.DescriptorParseException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -16,7 +15,10 @@ import java.util.Map;
 import java.util.SortedMap;
 
 import org.junit.Test;
+import org.torproject.descriptor.BridgeExtraInfoDescriptor;
+import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExtraInfoDescriptor;
+import org.torproject.descriptor.RelayExtraInfoDescriptor;
 
 /* Test parsing of extra-info descriptors. */
 public class ExtraInfoDescriptorImplTest {
@@ -166,10 +168,27 @@ public class ExtraInfoDescriptorImplTest {
       db.routerSignatureLines = line;
       return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
+    private String identityEd25519Lines = null,
+        masterKeyEd25519Line = null, routerSigEd25519Line = null;
+    private static ExtraInfoDescriptor createWithEd25519Lines(
+        String identityEd25519Lines, String masterKeyEd25519Line,
+        String routerSigEd25519Line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.identityEd25519Lines = identityEd25519Lines;
+      db.masterKeyEd25519Line = masterKeyEd25519Line;
+      db.routerSigEd25519Line = routerSigEd25519Line;
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+    }
     private byte[] buildDescriptor() {
       StringBuilder sb = new StringBuilder();
       if (this.extraInfoLine != null) {
         sb.append(this.extraInfoLine + "\n");
+      }
+      if (this.identityEd25519Lines != null) {
+        sb.append(this.identityEd25519Lines + "\n");
+      }
+      if (this.masterKeyEd25519Line != null) {
+        sb.append(this.masterKeyEd25519Line + "\n");
       }
       if (this.publishedLine != null) {
         sb.append(this.publishedLine + "\n");
@@ -229,6 +248,9 @@ public class ExtraInfoDescriptorImplTest {
         } catch (IOException e) {
           return null;
         }
+      }
+      if (this.routerSigEd25519Line != null) {
+        sb.append(this.routerSigEd25519Line + "\n");
       }
       if (this.routerSignatureLines != null) {
         sb.append(this.routerSignatureLines + "\n");
@@ -1429,6 +1451,158 @@ public class ExtraInfoDescriptorImplTest {
     List<String> unrecognizedLines = new ArrayList<String>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, descriptor.getUnrecognizedLines());
+  }
+
+  private static final String IDENTITY_ED25519_LINES =
+      "identity-ed25519\n"
+      + "-----BEGIN ED25519 CERT-----\n"
+      + "AQQABiX1AVGv5BuzJroQXbOh6vv1nbwc5rh2S13PyRFuLhTiifK4AQAgBACBCMwr"
+      + "\n4qgIlFDIzoC9ieJOtSkwrK+yXJPKlP8ojvgkx8cGKvhokOwA1eYDombzfwHcJ1"
+      + "EV\nbhEn/6g8i7wzO3LoqefIUrSAeEExOAOmm5mNmUIzL8EtnT6JHCr/sqUTUgA="
+      + "\n"
+      + "-----END ED25519 CERT-----";
+
+  private static final String MASTER_KEY_ED25519_LINE =
+      "master-key-ed25519 gQjMK+KoCJRQyM6AvYniTrUpMKyvslyTypT/KI74JMc";
+
+  private static final String ROUTER_SIG_ED25519_LINE =
+      "router-sig-ed25519 y7WF9T2GFwkSDPZEhB55HgquIFOl5uXUFMYJPq3CXXUTKeJ"
+      + "kSrtaZUB5s34fWdHQNtl84mH4dVaFMunHnwgYAw";
+
+  @Test()
+  public void testEd25519() throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor =
+        DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
+        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
+    assertEquals(IDENTITY_ED25519_LINES.substring(
+        IDENTITY_ED25519_LINES.indexOf("\n") + 1),
+        descriptor.getIdentityEd25519());
+    assertEquals(MASTER_KEY_ED25519_LINE.substring(
+        MASTER_KEY_ED25519_LINE.indexOf(" ") + 1),
+        descriptor.getMasterKeyEd25519());
+    assertEquals(ROUTER_SIG_ED25519_LINE.substring(
+        ROUTER_SIG_ED25519_LINE.indexOf(" ") + 1),
+        descriptor.getRouterSignatureEd25519());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testEd25519IdentityMasterKeyMismatch()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
+        "master-key-ed25519 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        ROUTER_SIG_ED25519_LINE);
+  }
+
+  @Test()
+  public void testEd25519IdentityMissing()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines(null,
+        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testEd25519IdentityDuplicate()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES + "\n"
+        + IDENTITY_ED25519_LINES, MASTER_KEY_ED25519_LINE,
+        ROUTER_SIG_ED25519_LINE);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testEd25519IdentityEmptyCrypto()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines("identity-ed25519\n"
+        + "-----BEGIN ED25519 CERT-----\n-----END ED25519 CERT-----",
+        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
+  }
+
+  @Test()
+  public void testEd25519MasterKeyMissing()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor =
+        DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
+        null, ROUTER_SIG_ED25519_LINE);
+    assertEquals(MASTER_KEY_ED25519_LINE.substring(
+        MASTER_KEY_ED25519_LINE.indexOf(" ") + 1),
+        descriptor.getMasterKeyEd25519());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testEd25519MasterKeyDuplicate()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
+        MASTER_KEY_ED25519_LINE + "\n" + MASTER_KEY_ED25519_LINE,
+        ROUTER_SIG_ED25519_LINE);
+  }
+
+  @Test()
+  public void testEd25519RouterSigMissing()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
+        MASTER_KEY_ED25519_LINE, null);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testEd25519RouterSigDuplicate()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
+        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE + "\n"
+        + ROUTER_SIG_ED25519_LINE);
+  }
+
+  @Test()
+  public void testExtraInfoDigestSha256Relay()
+      throws DescriptorParseException {
+    byte[] descriptorBytes = ("extra-info Unnamed "
+        + "EA5B335055D2F03013FF030381F02B1C631EC723\n"
+        + "identity-ed25519\n"
+        + "-----BEGIN ED25519 CERT-----\n"
+        + "AQQABiZRAenzZorGtx6xapoEeaqcLLOk3uWwJXTvOVLluSXXbRSZAQAgBADLN5"
+        + "wp\nCEOrRbshSbj1NDAUgc6cxU65M/Vx1x+b5+EXbkQZ5uiyB4pphVF5kPPT1P"
+        + "SleYqM\n8j+tlKh2i6+Xr0xScSPpmtG00/D0MoRlT7ZdaaaT5iw1DWDQCZ8BHG"
+        + "lAZwU=\n"
+        + "-----END ED25519 CERT-----\n"
+        + "published 2015-12-01 04:38:12\n"
+        + "write-history 2015-12-01 01:40:37 (14400 s) 88704000,60825600,"
+        + "61747200,76953600,61516800,59443200\n"
+        + "read-history 2015-12-01 01:40:37 (14400 s) 87321600,59443200,"
+        + "59904000,74880000,60364800,58060800\n"
+        + "router-sig-ed25519 c6eUeJs/SVjun3JhmjByEeWdRDyunSMAnGVhx71JiRj"
+        + "YzR8x5IcPebylG7m10wiolFxinvw78UhrrGo9Sq5ZBw\n"
+        + "router-signature\n"
+        + "-----BEGIN SIGNATURE-----\n"
+        + "oC2qFHCDOKSRoIPR86jdRxEYia390Z4d8fT0yr/1mg4RQ7lHmxlzFT6QxCswdX"
+        + "Ry\nvGNGR0wARySgyE+YKKWYn/Hp547JhhWd9Oc7BuFMY0XMvl/HOo+B9VjW+l"
+        + "nv6UBE\niqxx3C3Iw0ymohvOenyCUa/7TmsT7eVotDO57uIoGEc=\n"
+        + "-----END SIGNATURE-----\n"
+        + "").getBytes();
+    RelayExtraInfoDescriptor descriptor =
+        new RelayExtraInfoDescriptorImpl(descriptorBytes, true);
+    assertEquals("Pt1BtzfRwhYqGCDo8jjchS8nJP3ovrDyHGn+dqPbMgw",
+        descriptor.getExtraInfoDigestSha256());
+  }
+
+  @Test()
+  public void testExtraInfoDigestSha256Bridge()
+      throws DescriptorParseException {
+    byte[] descriptorBytes = ("extra-info idideditheconfig "
+        + "DC28749EC9E26E61DE492E46CD830379E9931B09\n"
+        + "master-key-ed25519 "
+        + "38FzmOIE6Mm85Ytx0MhFM6X9EuxWRUgb6HjyMGuO2AU\n"
+        + "published 2015-12-03 13:23:19\n"
+        + "write-history 2015-12-03 09:59:32 (14400 s) 53913600,52992000,"
+        + "53222400,53222400,53452800,53222400\n"
+        + "read-history 2015-12-03 09:59:32 (14400 s) 61056000,60364800,"
+        + "60364800,60134400,60595200,60364800\n"
+        + "geoip-db-digest 5BF366AD4A0572D82A1A0F6628AF8EF7725E3AB9\n"
+        + "geoip6-db-digest 212DE17D5A368DCAFA19B95F168BFFA101145A93\n"
+        + "router-digest-sha256 "
+        + "TvrqpjI7OmCtwGwair/NHUxg5ROVVQYz6/EDyXsDHR4\n"
+        + "router-digest 00B98F076B586272C3172B7F3DA29ADEE75F2ED8\n").getBytes();
+    BridgeExtraInfoDescriptor descriptor =
+        new BridgeExtraInfoDescriptorImpl(descriptorBytes, true);
+    assertEquals("TvrqpjI7OmCtwGwair/NHUxg5ROVVQYz6/EDyXsDHR4",
+        descriptor.getExtraInfoDigestSha256());
   }
 }
 

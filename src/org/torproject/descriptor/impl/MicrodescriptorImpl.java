@@ -48,7 +48,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
         "onion-key".split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
-        "ntor-onion-key,family,p,p6").split(",")));
+        "ntor-onion-key,family,p,p6,id").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("onion-key");
     this.clearParsedKeywords();
@@ -80,6 +80,8 @@ public class MicrodescriptorImpl extends DescriptorImpl
         this.parsePLine(line, parts);
       } else if (keyword.equals("p6")) {
         this.parseP6Line(line, parts);
+      } else if (keyword.equals("id")) {
+        this.parseIdLine(line, parts);
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
         crypto.append(line + "\n");
@@ -196,6 +198,21 @@ public class MicrodescriptorImpl extends DescriptorImpl
     }
   }
 
+  private void parseIdLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 3) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    } else if ("ed25519".equals(parts[1])) {
+      ParseHelper.parseThirtyTwoByteBase64String(line, parts[2]);
+      this.ed25519Identity = parts[2];
+    } else if ("rsa1024".equals(parts[1])) {
+      ParseHelper.parseTwentyByteBase64String(line, parts[2]);
+      this.rsa1024Identity = parts[2];
+    } else {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
   private void calculateDigest() throws DescriptorParseException {
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
@@ -264,6 +281,16 @@ public class MicrodescriptorImpl extends DescriptorImpl
   private String ipv6PortList;
   public String getIpv6PortList() {
     return this.ipv6PortList;
+  }
+
+  private String rsa1024Identity;
+  public String getRsa1024Identity() {
+    return this.rsa1024Identity;
+  }
+
+  private String ed25519Identity;
+  public String getEd25519Identity() {
+    return this.ed25519Identity;
   }
 }
 

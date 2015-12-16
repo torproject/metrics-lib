@@ -43,5 +43,15 @@ public interface Microdescriptor extends Descriptor {
   /* Return the port list of the IPv6 port summary or null if the
    * microdescriptor didn't contain an IPv6 port summary line. */
   public String getIpv6PortList();
+
+  /* Return the optional, base64-encoded RSA-1024 identity that is only
+   * included to prevent collisions between microdescriptors, or null if
+   * no such identity is included. */
+  public String getRsa1024Identity();
+
+  /* Return the optional, base64-encoded Ed25519 identity that is only
+   * included to prevent collisions between microdescriptors, or null if
+   * no such identity is included. */
+  public String getEd25519Identity();
 }
 

@@ -12,6 +12,10 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * extra-info descriptor in a server descriptor. */
   public String getExtraInfoDigest();
 
+  /* Return the base64-encoded SHA-256 descriptor digest that may be used
+   * to reference this extra-info descriptor in a server descriptor. */
+  public String getExtraInfoDigestSha256();
+
   /* Return the relay's nickname. */
   public String getNickname();
 
@@ -260,5 +264,27 @@ public interface ExtraInfoDescriptor extends Descriptor {
   /* Return the (possibly empty) list of transports supported by this
    * bridge. */
   public List<String> getTransports();
+
+  /* Return the signature of the PKCS1-padded extra-info descriptor
+   * digest, or null if the descriptor doesn't contain a signature (which
+   * is the case in sanitized bridge descriptors). */
+  public String getRouterSignature();
+
+  /* Return the base64-encoded Ed25519 certificate, or null if the
+   * descriptor doesn't contain one. */
+  public String getIdentityEd25519();
+
+  /* Return the base64-encoded Ed25519 master key, which may either be
+   * parsed from the optional "master-key-ed25519" line or derived from
+   * the (likewise optional) Ed25519 certificate following the
+   * "identity-ed25519" line, or null if the descriptor contains neither
+   * Ed25519 master key nor Ed25519 certificate. */
+  public String getMasterKeyEd25519();
+
+  /* Return the base64-encoded Ed25519 signature of a SHA-256 digest of
+   * the entire descriptor, from the first character up to and including
+   * the first space after the "router-sig-ed25519" string, prefixed with
+   * the string "Tor router descriptor signature v1". */
+  public String getRouterSignatureEd25519();
 }
 

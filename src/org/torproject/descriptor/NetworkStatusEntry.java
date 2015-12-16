@@ -75,5 +75,10 @@ public interface NetworkStatusEntry {
   /* Return the port list of the port summary or null if the status entry
    * didn't contain a port summary line. */
   public String getPortList();
+
+  /* Return the relay's base64-encoded Ed25519 master key, "none" if the
+   * relay doesn't have an Ed25519 identity, or null if the status entry
+   * didn't contain this information.  Only included in votes. */
+  public String getMasterKeyEd25519();
 }
 

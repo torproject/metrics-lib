@@ -31,6 +31,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
+    this.calculateDigestSha256();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
         "extra-info,published").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
@@ -52,8 +53,9 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     Set<String> bridgeStatsKeywords = new HashSet<String>(Arrays.asList(
         "bridge-stats-end,bridge-stats-ips".split(",")));
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
-        "read-history,write-history,dirreq-read-history,"
-        + "dirreq-write-history,geoip-db-digest,router-signature,"
+        "identity-ed25519,master-key-ed25519,read-history,write-history,"
+        + "dirreq-read-history,dirreq-write-history,geoip-db-digest,"
+        + "router-sig-ed25519,router-signature,router-digest-sha256,"
         + "router-digest").split(",")));
     atMostOnceKeywords.addAll(dirreqStatsKeywords);
     atMostOnceKeywords.addAll(entryStatsKeywords);
@@ -75,7 +77,8 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
         useDelimiter("\n");
-    boolean skipCrypto = false;
+    String nextCrypto = null;
+    List<String> cryptoLines = null;
     while (s.hasNext()) {
       String line = s.next();
       String lineNoOpt = line.startsWith("opt ") ?
@@ -162,15 +165,49 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         this.parseBridgeIpTransportsLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("transport")) {
         this.parseTransportLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("identity-ed25519")) {
+        this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
+        nextCrypto = "identity-ed25519";
+      } else if (keyword.equals("master-key-ed25519")) {
+        this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("router-sig-ed25519")) {
+        this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("router-signature")) {
         this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
+        nextCrypto = "router-signature";
       } else if (keyword.equals("router-digest")) {
         this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("router-digest-sha256")) {
+        this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
-        skipCrypto = true;
+        cryptoLines = new ArrayList<String>();
+        cryptoLines.add(line);
       } else if (line.startsWith("-----END")) {
-        skipCrypto = false;
-      } else if (!skipCrypto) {
+        cryptoLines.add(line);
+        StringBuilder sb = new StringBuilder();
+        for (String cryptoLine : cryptoLines) {
+          sb.append("\n" + cryptoLine);
+        }
+        String cryptoString = sb.toString().substring(1);
+        if ("router-signature".equals(nextCrypto)) {
+          this.routerSignature = cryptoString;
+        } else if ("identity-ed25519".equals(nextCrypto)) {
+          this.identityEd25519 = cryptoString;
+          this.parseIdentityEd25519CryptoBlock(cryptoString);
+        } else if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized crypto "
+              + "block '" + cryptoString + "' in extra-info descriptor.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<String>();
+          }
+          this.unrecognizedLines.addAll(cryptoLines);
+        }
+        cryptoLines = null;
+        nextCrypto = null;
+      } else if (cryptoLines != null) {
+        cryptoLines.add(line);
+      } else {
         ParseHelper.parseKeyword(line, partsNoOpt[0]);
         if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '"
@@ -610,7 +647,6 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     if (!lineNoOpt.equals("router-signature")) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    /* Not parsing crypto parts (yet). */
   }
 
   private void parseRouterDigestLine(String line, String lineNoOpt,
@@ -620,6 +656,57 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     }
     this.extraInfoDigest = ParseHelper.parseTwentyByteHexString(line,
         partsNoOpt[1]);
+  }
+
+  private void parseIdentityEd25519Line(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 1) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
+  private void parseIdentityEd25519CryptoBlock(String cryptoString)
+      throws DescriptorParseException {
+    String masterKeyEd25519FromIdentityEd25519 =
+        ParseHelper.parseMasterKeyEd25519FromIdentityEd25519CryptoBlock(
+        cryptoString);
+    if (this.masterKeyEd25519 != null && !this.masterKeyEd25519.equals(
+        masterKeyEd25519FromIdentityEd25519)) {
+      throw new DescriptorParseException("Mismatch between "
+          + "identity-ed25519 and master-key-ed25519.");
+    }
+    this.masterKeyEd25519 = masterKeyEd25519FromIdentityEd25519;
+  }
+
+  private void parseMasterKeyEd25519Line(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    String masterKeyEd25519FromMasterKeyEd25519Line = partsNoOpt[1];
+    if (this.masterKeyEd25519 != null && !masterKeyEd25519.equals(
+        masterKeyEd25519FromMasterKeyEd25519Line)) {
+      throw new DescriptorParseException("Mismatch between "
+          + "identity-ed25519 and master-key-ed25519.");
+    }
+    this.masterKeyEd25519 = masterKeyEd25519FromMasterKeyEd25519Line;
+  }
+
+  private void parseRouterSigEd25519Line(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.routerSignatureEd25519 = partsNoOpt[1];
+  }
+
+  private void parseRouterDigestSha256Line(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    ParseHelper.parseThirtyTwoByteBase64String(line, partsNoOpt[1]);
+    this.extraInfoDigestSha256 = partsNoOpt[1];
   }
 
   private void calculateDigest() throws DescriptorParseException {
@@ -653,9 +740,45 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     }
   }
 
+  private void calculateDigestSha256() throws DescriptorParseException {
+    if (this.extraInfoDigestSha256 != null) {
+      /* We already learned the descriptor digest of this bridge
+       * descriptor from a "router-digest-sha256" line. */
+      return;
+    }
+    try {
+      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
+      String startToken = "extra-info ";
+      String sigToken = "\n-----END SIGNATURE-----\n";
+      int start = ascii.indexOf(startToken);
+      int sig = ascii.indexOf(sigToken) + sigToken.length();
+      if (start >= 0 && sig >= 0 && sig > start) {
+        byte[] forDigest = new byte[sig - start];
+        System.arraycopy(this.getRawDescriptorBytes(), start, forDigest,
+            0, sig - start);
+        this.extraInfoDigestSha256 = DatatypeConverter.printBase64Binary(
+            MessageDigest.getInstance("SHA-256").digest(forDigest)).
+            replaceAll("=", "");
+      }
+    } catch (UnsupportedEncodingException e) {
+      /* Handle below. */
+    } catch (NoSuchAlgorithmException e) {
+      /* Handle below. */
+    }
+    if (this.extraInfoDigestSha256 == null) {
+      throw new DescriptorParseException("Could not calculate extra-info "
+          + "descriptor SHA-256 digest.");
+    }
+  }
+
   private String extraInfoDigest;
   public String getExtraInfoDigest() {
     return this.extraInfoDigest;
+  }
+
+  private String extraInfoDigestSha256;
+  public String getExtraInfoDigestSha256() {
+    return this.extraInfoDigestSha256;
   }
 
   private String nickname;
@@ -932,6 +1055,26 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private List<String> transports = new ArrayList<String>();
   public List<String> getTransports() {
     return new ArrayList<String>(this.transports);
+  }
+
+  private String routerSignature;
+  public String getRouterSignature() {
+    return this.routerSignature;
+  }
+
+  private String identityEd25519;
+  public String getIdentityEd25519() {
+    return this.identityEd25519;
+  }
+
+  private String masterKeyEd25519;
+  public String getMasterKeyEd25519() {
+    return this.masterKeyEd25519;
+  }
+
+  private String routerSignatureEd25519;
+  public String getRouterSignatureEd25519() {
+    return this.routerSignatureEd25519;
   }
 }
 

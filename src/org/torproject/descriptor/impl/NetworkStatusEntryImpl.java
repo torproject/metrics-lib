@@ -91,6 +91,8 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
         this.parsePLine(line, parts);
       } else if (keyword.equals("m")) {
         this.parseMLine(line, parts);
+      } else if (keyword.equals("id")) {
+        this.parseIdLine(line, parts);
       } else if (this.failUnrecognizedDescriptorLines) {
         throw new DescriptorParseException("Unrecognized line '" + line
             + "' in status entry.");
@@ -237,6 +239,18 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     }
   }
 
+  private void parseIdLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 3 || !"ed25519".equals(parts[1])) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    } else if ("none".equals(parts[2])) {
+      this.masterKeyEd25519 = "none";
+    } else {
+      ParseHelper.parseThirtyTwoByteBase64String(line, parts[2]);
+      this.masterKeyEd25519 = parts[2];
+    }
+  }
+
   private void clearAtMostOnceKeywords() {
     this.atMostOnceKeywords = null;
   }
@@ -327,6 +341,11 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private String portList;
   public String getPortList() {
     return this.portList;
+  }
+
+  private String masterKeyEd25519;
+  public String getMasterKeyEd25519() {
+    return this.masterKeyEd25519;
   }
 }
 

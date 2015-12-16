@@ -434,5 +434,78 @@ public class ParseHelper {
     }
     return result;
   }
+
+  public static String
+      parseMasterKeyEd25519FromIdentityEd25519CryptoBlock(
+      String identityEd25519CryptoBlock) throws DescriptorParseException {
+    String identityEd25519CryptoBlockNoNewlines =
+        identityEd25519CryptoBlock.replaceAll("\n", "");
+    String beginEd25519CertLine = "-----BEGIN ED25519 CERT-----",
+        endEd25519CertLine = "-----END ED25519 CERT-----";
+    if (!identityEd25519CryptoBlockNoNewlines.startsWith(
+        beginEd25519CertLine)) {
+      throw new DescriptorParseException("Illegal start of "
+          + "identity-ed25519 crypto block '" + identityEd25519CryptoBlock
+          + "'.");
+    }
+    if (!identityEd25519CryptoBlockNoNewlines.endsWith(
+        endEd25519CertLine)) {
+      throw new DescriptorParseException("Illegal end of "
+          + "identity-ed25519 crypto block '" + identityEd25519CryptoBlock
+          + "'.");
+    }
+    String identityEd25519Base64 = identityEd25519CryptoBlockNoNewlines.
+        substring(beginEd25519CertLine.length(),
+        identityEd25519CryptoBlock.length()
+        - endEd25519CertLine.length()).replaceAll("=", "");
+    byte[] identityEd25519 = DatatypeConverter.parseBase64Binary(
+        identityEd25519Base64);
+    if (identityEd25519.length < 40) {
+      throw new DescriptorParseException("Invalid length of "
+          + "identity-ed25519 (in bytes): " + identityEd25519.length);
+    } else if (identityEd25519[0] != 0x01) {
+      throw new DescriptorParseException("Unknown version in "
+          + "identity-ed25519: " + identityEd25519[0]);
+    } else if (identityEd25519[1] != 0x04) {
+      throw new DescriptorParseException("Unknown cert type in "
+          + "identity-ed25519: " + identityEd25519[1]);
+    } else if (identityEd25519[6] != 0x01) {
+      throw new DescriptorParseException("Unknown certified key type in "
+          + "identity-ed25519: " + identityEd25519[1]);
+    } else if (identityEd25519[39] == 0x00) {
+      throw new DescriptorParseException("No extensions in "
+          + "identity-ed25519 (which would contain the encoded "
+          + "master-key-ed25519): " + identityEd25519[39]);
+    } else {
+      int extensionStart = 40;
+      for (int i = 0; i < (int) identityEd25519[39]; i++) {
+        if (identityEd25519.length < extensionStart + 4) {
+          throw new DescriptorParseException("Invalid extension with id "
+              + i + " in identity-ed25519.");
+        }
+        int extensionLength = identityEd25519[extensionStart];
+        extensionLength <<= 8;
+        extensionLength += identityEd25519[extensionStart + 1];
+        int extensionType = identityEd25519[extensionStart + 2];
+        if (extensionLength == 32 && extensionType == 4) {
+          if (identityEd25519.length < extensionStart + 4 + 32) {
+            throw new DescriptorParseException("Invalid extension with "
+                + "id " + i + " in identity-ed25519.");
+          }
+          byte[] masterKeyEd25519 = new byte[32];
+          System.arraycopy(identityEd25519, extensionStart + 4,
+              masterKeyEd25519, 0, masterKeyEd25519.length);
+          String masterKeyEd25519Base64 = DatatypeConverter.
+              printBase64Binary(masterKeyEd25519).replaceAll("=", "");
+          String masterKeyEd25519Base64NoTrailingEqualSigns =
+              masterKeyEd25519Base64.replaceAll("=", "");
+          return masterKeyEd25519Base64NoTrailingEqualSigns;
+        }
+        extensionStart += 4 + extensionLength;
+      }
+    }
+    throw new DescriptorParseException("Unable to locate "
+        + "master-key-ed25519 in identity-ed25519.");
+  }
 }
 

@@ -11,6 +11,10 @@ public interface ServerDescriptor extends Descriptor {
    * descriptor in a network status. */
   public String getServerDescriptorDigest();
 
+  /* Return the base64-encoded SHA-256 descriptor digest that may be used
+   * to reference this server descriptor in a network status. */
+  public String getServerDescriptorDigestSha256();
+
   /* Return the relay's nickname. */
   public String getNickname();
 
@@ -119,6 +123,12 @@ public interface ServerDescriptor extends Descriptor {
    * the relay did not upload a corresponding extra-info descriptor. */
   public String getExtraInfoDigest();
 
+  /* Return the base64-encoded SHA-256 digest of the extra-info descriptor
+   * referenced from this server descriptor, or null if the relay either
+   * did not upload a corresponding extra-info descriptor or did not refer
+   * to it using a SHA-256 digest. */
+  public String getExtraInfoDigestSha256();
+
   /* Return the hidden service descriptor version(s) that this relay
    * stores and serves, or null if it doesn't store and serve any hidden
    * service descriptors. */
@@ -147,5 +157,22 @@ public interface ServerDescriptor extends Descriptor {
   /* Return the ntor onion key base64 string with padding omitted, or null
    * if the server descriptors didn't contain an ntor onion key line. */
   public String getNtorOnionKey();
+
+  /* Return the base64-encoded Ed25519 certificate, or null if the
+   * descriptor doesn't contain one. */
+  public String getIdentityEd25519();
+
+  /* Return the base64-encoded Ed25519 master key, which may either be
+   * parsed from the optional "master-key-ed25519" line or derived from
+   * the (likewise optional) Ed25519 certificate following the
+   * "identity-ed25519" line, or null if the descriptor contains neither
+   * Ed25519 master key nor Ed25519 certificate. */
+  public String getMasterKeyEd25519();
+
+  /* Return the base64-encoded Ed25519 signature of a SHA-256 digest of
+   * the entire descriptor, from the first character up to and including
+   * the first space after the "router-sig-ed25519" string, prefixed with
+   * the string "Tor router descriptor signature v1". */
+  public String getRouterSignatureEd25519();
 }
 

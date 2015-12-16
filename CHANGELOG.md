@@ -18,6 +18,11 @@
      existing types, ServerDescriptor and ExtraInfoDescriptor, are
      still usable and will not be deprecated, because applications may
      not care whether a relay or a bridge published a descriptor.
+   - Support Ed25519 certificates, Ed25519 master keys, SHA-256
+     digests, and Ed25519 signatures thereof in server descriptors and
+     extra-info descriptors, and support Ed25519 master keys in votes.
+   - Include RSA-1024 signatures of SHA-1 digests of extra-info
+     descriptors, which were parsed and discarded before.
 
 
 # Changes in version 1.0.0 - 2015-12-05

@@ -267,7 +267,13 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirKeyCertificationLines = lines;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
-    private List<String> statusEntries = new ArrayList<String>();
+    private List<String> statusEntries = null;
+    private static RelayNetworkStatusVote createWithStatusEntries(
+        List<String> statusEntries) throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.statusEntries = statusEntries;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
     private String directoryFooterLine = "directory-footer";
     private static RelayNetworkStatusVote
         createWithDirectoryFooterLine(String line)
@@ -343,6 +349,10 @@ public class RelayNetworkStatusVoteImplTest {
     }
 
     private VoteBuilder() {
+      if (this.statusEntries != null) {
+        return;
+      }
+      this.statusEntries = new ArrayList<>();
       this.statusEntries.add("r right2privassy3 "
           + "ADQ6gCT3DiFHKPDFr3rODBUI8HM lJY5Vf7kXec+VdkGW2flEsfkFC8 "
           + "2011-11-12 00:03:40 50.63.8.215 9023 0\n"
@@ -1180,6 +1190,48 @@ public class RelayNetworkStatusVoteImplTest {
     List<String> unrecognizedLines = new ArrayList<String>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
+  }
+
+  @Test()
+  public void testIdEd25519MasterKey()
+      throws DescriptorParseException {
+    String masterKey25519 = "8RH34kO07Pp+XYwzdoATVyCibIvmbslUjRkAm7J4IA8";
+    List<String> statusEntries = new ArrayList<>();
+    statusEntries.add("r PDrelay1 AAFJ5u9xAqrKlpDW6N0pMhJLlKs "
+        + "bgJiI/la3e9u0K7cQ5pMSXhigHI 2015-12-01 04:54:30 95.215.44.189 "
+        + "8080 0\n"
+        + "id ed25519 " + masterKey25519);
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithStatusEntries(statusEntries);
+    String fingerprint = vote.getStatusEntries().firstKey();
+    assertEquals(masterKey25519,
+        vote.getStatusEntry(fingerprint).getMasterKeyEd25519());
+  }
+
+  @Test()
+  public void testIdEd25519None()
+      throws DescriptorParseException {
+    List<String> statusEntries = new ArrayList<>();
+    statusEntries.add("r MathematicalApology AAPJIrV9nhfgTYQs0vsTghFaP2A "
+        + "uA7p0m68O8ILXsf3aLZUj0EvDNE 2015-12-01 18:01:49 172.99.69.177 "
+        + "443 9030\n"
+        + "id ed25519 none");
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithStatusEntries(statusEntries);
+    String fingerprint = vote.getStatusEntries().firstKey();
+    assertEquals("none",
+        vote.getStatusEntry(fingerprint).getMasterKeyEd25519());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testIdRsa1024None()
+      throws DescriptorParseException {
+    List<String> statusEntries = new ArrayList<>();
+    statusEntries.add("r MathematicalApology AAPJIrV9nhfgTYQs0vsTghFaP2A "
+        + "uA7p0m68O8ILXsf3aLZUj0EvDNE 2015-12-01 18:01:49 172.99.69.177 "
+        + "443 9030\n"
+        + "id rsa1024 none");
+    VoteBuilder.createWithStatusEntries(statusEntries);
   }
 }
 

@@ -28,15 +28,18 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
+    this.calculateDigestSha256();
     Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(
         "router,bandwidth,published".split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
-        "platform,fingerprint,hibernating,uptime,contact,family,"
-        + "read-history,write-history,eventdns,caches-extra-info,"
-        + "extra-info-digest,hidden-service-dir,protocols,"
-        + "allow-single-hop-exits,onion-key,signing-key,ipv6-policy,"
-        + "ntor-onion-key,router-signature,router-digest").split(",")));
+        "identity-ed25519,master-key-ed25519,platform,fingerprint,"
+        + "hibernating,uptime,contact,family,read-history,write-history,"
+        + "eventdns,caches-extra-info,extra-info-digest,"
+        + "hidden-service-dir,protocols,allow-single-hop-exits,onion-key,"
+        + "signing-key,ipv6-policy,ntor-onion-key,router-sig-ed25519,"
+        + "router-signature,router-digest-sha256,router-digest").
+        split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("router");
     if (this.getKeywordCount("accept") == 0 &&
@@ -115,10 +118,19 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         this.parseDircacheportLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("router-digest")) {
         this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("router-digest-sha256")) {
+        this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("ipv6-policy")) {
         this.parseIpv6PolicyLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("ntor-onion-key")) {
         this.parseNtorOnionKeyLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("identity-ed25519")) {
+        this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
+        nextCrypto = "identity-ed25519";
+      } else if (keyword.equals("master-key-ed25519")) {
+        this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("router-sig-ed25519")) {
+        this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
         cryptoLines = new ArrayList<String>();
         cryptoLines.add(line);
@@ -135,6 +147,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           this.signingKey = cryptoString;
         } else if ("router-signature".equals(nextCrypto)) {
           this.routerSignature = cryptoString;
+        } else if ("identity-ed25519".equals(nextCrypto)) {
+          this.identityEd25519 = cryptoString;
+          this.parseIdentityEd25519CryptoBlock(cryptoString);
         } else if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized crypto "
               + "block '" + cryptoString + "' in server descriptor.");
@@ -392,6 +407,10 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
     this.extraInfoDigest = ParseHelper.parseTwentyByteHexString(line,
         partsNoOpt[1]);
+    if (partsNoOpt.length >= 3) {
+      ParseHelper.parseThirtyTwoByteBase64String(line, partsNoOpt[2]);
+      this.extraInfoDigestSha256 = partsNoOpt[2];
+    }
   }
 
   private void parseHiddenServiceDirLine(String line, String lineNoOpt,
@@ -508,6 +527,57 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.ntorOnionKey = partsNoOpt[1].replaceAll("=", "");
   }
 
+  private void parseIdentityEd25519Line(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 1) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
+  private void parseIdentityEd25519CryptoBlock(String cryptoString)
+      throws DescriptorParseException {
+    String masterKeyEd25519FromIdentityEd25519 =
+        ParseHelper.parseMasterKeyEd25519FromIdentityEd25519CryptoBlock(
+        cryptoString);
+    if (this.masterKeyEd25519 != null && !this.masterKeyEd25519.equals(
+        masterKeyEd25519FromIdentityEd25519)) {
+      throw new DescriptorParseException("Mismatch between "
+          + "identity-ed25519 and master-key-ed25519.");
+    }
+    this.masterKeyEd25519 = masterKeyEd25519FromIdentityEd25519;
+  }
+
+  private void parseMasterKeyEd25519Line(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    String masterKeyEd25519FromMasterKeyEd25519Line = partsNoOpt[1];
+    if (this.masterKeyEd25519 != null && !masterKeyEd25519.equals(
+        masterKeyEd25519FromMasterKeyEd25519Line)) {
+      throw new DescriptorParseException("Mismatch between "
+          + "identity-ed25519 and master-key-ed25519.");
+    }
+    this.masterKeyEd25519 = masterKeyEd25519FromMasterKeyEd25519Line;
+  }
+
+  private void parseRouterSigEd25519Line(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.routerSignatureEd25519 = partsNoOpt[1];
+  }
+
+  private void parseRouterDigestSha256Line(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length != 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    ParseHelper.parseThirtyTwoByteBase64String(line, partsNoOpt[1]);
+    this.serverDescriptorDigestSha256 = partsNoOpt[1];
+  }
+
   private void calculateDigest() throws DescriptorParseException {
     if (this.serverDescriptorDigest != null) {
       /* We already learned the descriptor digest of this bridge
@@ -539,9 +609,46 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
+  private void calculateDigestSha256() throws DescriptorParseException {
+    if (this.serverDescriptorDigestSha256 != null) {
+      /* We already learned the descriptor digest of this bridge
+       * descriptor from a "router-digest-sha256" line. */
+      return;
+    }
+    try {
+      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
+      String startToken = "router ";
+      String sigToken = "\n-----END SIGNATURE-----\n";
+      int start = ascii.indexOf(startToken);
+      int sig = ascii.indexOf(sigToken) + sigToken.length();
+      if (start >= 0 && sig >= 0 && sig > start) {
+        byte[] forDigest = new byte[sig - start];
+        System.arraycopy(this.getRawDescriptorBytes(), start, forDigest,
+            0, sig - start);
+        this.serverDescriptorDigestSha256 =
+            DatatypeConverter.printBase64Binary(
+            MessageDigest.getInstance("SHA-256").digest(forDigest)).
+            replaceAll("=", "");
+      }
+    } catch (UnsupportedEncodingException e) {
+      /* Handle below. */
+    } catch (NoSuchAlgorithmException e) {
+      /* Handle below. */
+    }
+    if (this.serverDescriptorDigestSha256 == null) {
+      throw new DescriptorParseException("Could not calculate server "
+          + "descriptor SHA-256 digest.");
+    }
+  }
+
   private String serverDescriptorDigest;
   public String getServerDescriptorDigest() {
     return this.serverDescriptorDigest;
+  }
+
+  private String serverDescriptorDigestSha256;
+  public String getServerDescriptorDigestSha256() {
+    return this.serverDescriptorDigestSha256;
   }
 
   private String nickname;
@@ -670,6 +777,11 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     return this.extraInfoDigest;
   }
 
+  private String extraInfoDigestSha256;
+  public String getExtraInfoDigestSha256() {
+    return this.extraInfoDigestSha256;
+  }
+
   private Integer[] hiddenServiceDirVersions;
   public List<Integer> getHiddenServiceDirVersions() {
     return this.hiddenServiceDirVersions == null ? null :
@@ -706,6 +818,21 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   private String ntorOnionKey;
   public String getNtorOnionKey() {
     return this.ntorOnionKey;
+  }
+
+  private String identityEd25519;
+  public String getIdentityEd25519() {
+    return this.identityEd25519;
+  }
+
+  private String masterKeyEd25519;
+  public String getMasterKeyEd25519() {
+    return this.masterKeyEd25519;
+  }
+
+  private String routerSignatureEd25519;
+  public String getRouterSignatureEd25519() {
+    return this.routerSignatureEd25519;
   }
 }
 
