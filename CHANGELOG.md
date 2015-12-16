@@ -23,6 +23,7 @@
      extra-info descriptors, and support Ed25519 master keys in votes.
    - Include RSA-1024 signatures of SHA-1 digests of extra-info
      descriptors, which were parsed and discarded before.
+   - Support hidden-service statistics in extra-info descriptors.
 
 
 # Changes in version 1.0.0 - 2015-12-05

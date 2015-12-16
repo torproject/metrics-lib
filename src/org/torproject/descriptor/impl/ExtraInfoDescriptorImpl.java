@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
@@ -165,6 +167,13 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         this.parseBridgeIpTransportsLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("transport")) {
         this.parseTransportLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("hidserv-stats-end")) {
+        this.parseHidservStatsEndLine(line, lineNoOpt, partsNoOpt);
+      } else if (keyword.equals("hidserv-rend-relayed-cells")) {
+        this.parseHidservRendRelayedCellsLine(line, lineNoOpt,
+            partsNoOpt);
+      } else if (keyword.equals("hidserv-dir-onions-seen")) {
+        this.parseHidservDirOnionsSeenLine(line, lineNoOpt, partsNoOpt);
       } else if (keyword.equals("identity-ed25519")) {
         this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
         nextCrypto = "identity-ed25519";
@@ -642,6 +651,46 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.transports.add(partsNoOpt[1]);
   }
 
+  private void parseHidservStatsEndLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        5);
+    this.hidservStatsEndMillis = parsedStatsEndData[0];
+    this.hidservStatsIntervalLength = parsedStatsEndData[1];
+  }
+
+  private void parseHidservRendRelayedCellsLine(String line,
+      String lineNoOpt, String[] partsNoOpt)
+      throws DescriptorParseException {
+    if (partsNoOpt.length < 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    try {
+      this.hidservRendRelayedCells = Double.parseDouble(partsNoOpt[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.hidservRendRelayedCellsParameters =
+        ParseHelper.parseSpaceSeparatedStringKeyDoubleValueMap(line,
+        partsNoOpt, 2);
+  }
+
+  private void parseHidservDirOnionsSeenLine(String line,
+      String lineNoOpt, String[] partsNoOpt)
+      throws DescriptorParseException {
+    if (partsNoOpt.length < 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    try {
+      this.hidservDirOnionsSeen = Double.parseDouble(partsNoOpt[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.hidservDirOnionsSeenParameters =
+        ParseHelper.parseSpaceSeparatedStringKeyDoubleValueMap(line,
+        partsNoOpt, 2);
+  }
+
   private void parseRouterSignatureLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
     if (!lineNoOpt.equals("router-signature")) {
@@ -1055,6 +1104,38 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private List<String> transports = new ArrayList<String>();
   public List<String> getTransports() {
     return new ArrayList<String>(this.transports);
+  }
+
+  private long hidservStatsEndMillis = -1L;
+  public long getHidservStatsEndMillis() {
+    return this.hidservStatsEndMillis;
+  }
+
+  private long hidservStatsIntervalLength = -1L;
+  public long getHidservStatsIntervalLength() {
+    return this.hidservStatsIntervalLength;
+  }
+
+  private Double hidservRendRelayedCells;
+  public Double getHidservRendRelayedCells() {
+    return this.hidservRendRelayedCells;
+  }
+
+  private Map<String, Double> hidservRendRelayedCellsParameters;
+  public Map<String, Double> getHidservRendRelayedCellsParameters() {
+    return this.hidservRendRelayedCellsParameters == null ? null :
+        new HashMap<>(this.hidservRendRelayedCellsParameters);
+  }
+
+  private Double hidservDirOnionsSeen;
+  public Double getHidservDirOnionsSeen() {
+    return this.hidservDirOnionsSeen;
+  }
+
+  private Map<String, Double> hidservDirOnionsSeenParameters;
+  public Map<String, Double> getHidservDirOnionsSeenParameters() {
+    return this.hidservDirOnionsSeenParameters == null ? null :
+      new HashMap<>(this.hidservDirOnionsSeenParameters);
   }
 
   private String routerSignature;

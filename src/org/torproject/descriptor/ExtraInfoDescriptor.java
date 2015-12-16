@@ -3,6 +3,7 @@
 package org.torproject.descriptor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 
 /* Contains a relay or bridge extra-info descriptor. */
@@ -264,6 +265,37 @@ public interface ExtraInfoDescriptor extends Descriptor {
   /* Return the (possibly empty) list of transports supported by this
    * bridge. */
   public List<String> getTransports();
+
+  /* Return the end of the included hidden-service statistics, or -1 if no
+   * hidden-service statistics are included. */
+  public long getHidservStatsEndMillis();
+
+  /* Return the interval length of the included hidden-service statistics
+  * in seconds, or -1 if no hidden-service statistics are included. */
+  public long getHidservStatsIntervalLength();
+
+  /* Return the approximate number of RELAY cells seen in either direction
+   * on a circuit after receiving and successfully processing a
+   * RENDEZVOUS1 cell, or null if no hidden-service statistics are
+   * included. */
+  public Double getHidservRendRelayedCells();
+
+  /* Return the obfuscation parameters applied to the original measurement
+   * value of RELAY cells seen in either direction on a circuit after
+   * receiving and successfully processing a RENDEZVOUS1 cell, or null if
+   * no hidden-service statistics are included.. */
+  public Map<String, Double> getHidservRendRelayedCellsParameters();
+
+  /* Return the approximate number of unique hidden-service identities
+   * seen in descriptors published to and accepted by this hidden-service
+   * directory, or null if no hidden-service statistics are included. */
+  public Double getHidservDirOnionsSeen();
+
+  /* Return the obfuscation parameters applied to the original measurement
+   * value of unique hidden-service identities seen in descriptors
+   * published to and accepted by this hidden-service directory, or null
+   * if no hidden-service statistics are included. */
+  public Map<String, Double> getHidservDirOnionsSeenParameters();
 
   /* Return the signature of the PKCS1-padded extra-info descriptor
    * digest, or null if the descriptor doesn't contain a signature (which

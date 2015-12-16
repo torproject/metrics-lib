@@ -138,6 +138,13 @@ public class ExtraInfoDescriptorImplTest {
       db.bridgeStatsLines = lines;
       return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
+    private String hidservStatsLines = null;
+    private static ExtraInfoDescriptor createWithHidservStatsLines(
+        String lines) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.hidservStatsLines = lines;
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+    }
     private String unrecognizedLine = null;
     private static ExtraInfoDescriptor createWithUnrecognizedLine(
         String line, boolean failUnrecognizedDescriptorLines)
@@ -231,6 +238,9 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.bridgeStatsLines != null) {
         sb.append(this.bridgeStatsLines + "\n");
+      }
+      if (this.hidservStatsLines != null) {
+        sb.append(this.hidservStatsLines + "\n");
       }
       if (this.unrecognizedLine != null) {
         sb.append(this.unrecognizedLine + "\n");
@@ -724,6 +734,62 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.bridgeIpTransportsLine != null) {
         sb.append(this.bridgeIpTransportsLine + "\n");
+      }
+      String lines = sb.toString();
+      if (lines.endsWith("\n")) {
+        lines = lines.substring(0, lines.length() - 1);
+      }
+      return lines;
+    }
+  }
+
+  /* Helper class to build a set of hidserv-stats lines based on default
+   * data and modifications requested by test methods. */
+  private static class HidservStatsBuilder {
+    private String hidservStatsEndLine = "hidserv-stats-end 2015-12-03 "
+        + "14:26:56 (86400 s)";
+    private static ExtraInfoDescriptor createWithHidservStatsEndLine(
+        String line) throws DescriptorParseException {
+      HidservStatsBuilder hsb = new HidservStatsBuilder();
+      hsb.hidservStatsEndLine = line;
+      return DescriptorBuilder.createWithHidservStatsLines(
+          hsb.buildHidservStatsLines());
+    }
+    private String hidservRendRelayedCellsLine =
+        "hidserv-rend-relayed-cells 36474281 delta_f=2048 epsilon=0.30 "
+        + "bin_size=1024";
+    private static ExtraInfoDescriptor
+        createWithHidservRendRelayedCellsLine(String line)
+        throws DescriptorParseException {
+      HidservStatsBuilder hsb = new HidservStatsBuilder();
+      hsb.hidservRendRelayedCellsLine = line;
+      return DescriptorBuilder.createWithHidservStatsLines(
+          hsb.buildHidservStatsLines());
+    }
+    private String hidservDirOnionsSeenLine = "hidserv-dir-onions-seen "
+        + "-3 delta_f=8 epsilon=0.30 bin_size=8";
+    private static ExtraInfoDescriptor createWithHidservDirOnionsSeenLine(
+        String line) throws DescriptorParseException {
+      HidservStatsBuilder hsb = new HidservStatsBuilder();
+      hsb.hidservDirOnionsSeenLine = line;
+      return DescriptorBuilder.createWithHidservStatsLines(
+          hsb.buildHidservStatsLines());
+    }
+    private static ExtraInfoDescriptor createWithDefaultLines()
+        throws DescriptorParseException {
+      return DescriptorBuilder.createWithHidservStatsLines(
+          new HidservStatsBuilder().buildHidservStatsLines());
+    }
+    private String buildHidservStatsLines() {
+      StringBuilder sb = new StringBuilder();
+      if (this.hidservStatsEndLine != null) {
+        sb.append(this.hidservStatsEndLine + "\n");
+      }
+      if (this.hidservRendRelayedCellsLine != null) {
+        sb.append(this.hidservRendRelayedCellsLine + "\n");
+      }
+      if (this.hidservDirOnionsSeenLine != null) {
+        sb.append(this.hidservDirOnionsSeenLine + "\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -1412,6 +1478,69 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpTransportsLine(
         "bridge-ip-transports meek=32,obfs3_websocket=8,websocket=64");
+  }
+
+  @Test()
+  public void testHidservStatsValid() throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = HidservStatsBuilder.
+        createWithDefaultLines();
+    assertEquals(1449152816000L, descriptor.getHidservStatsEndMillis());
+    assertEquals(86400L, descriptor.getHidservStatsIntervalLength());
+    assertEquals(36474281.0, descriptor.getHidservRendRelayedCells(),
+        0.0001);
+    Map<String, Double> params =
+        descriptor.getHidservRendRelayedCellsParameters();
+    assertTrue(params.containsKey("delta_f"));
+    assertEquals(2048.0, params.remove("delta_f"), 0.0001);
+    assertTrue(params.containsKey("epsilon"));
+    assertEquals(0.3, params.remove("epsilon"), 0.0001);
+    assertTrue(params.containsKey("bin_size"));
+    assertEquals(1024.0, params.remove("bin_size"), 0.0001);
+    assertTrue(params.isEmpty());
+    assertEquals(-3.0, descriptor.getHidservDirOnionsSeen(), 0.0001);
+    params = descriptor.getHidservDirOnionsSeenParameters();
+    assertTrue(params.containsKey("delta_f"));
+    assertEquals(8.0, params.remove("delta_f"), 0.0001);
+    assertTrue(params.containsKey("epsilon"));
+    assertEquals(0.3, params.remove("epsilon"), 0.0001);
+    assertTrue(params.containsKey("bin_size"));
+    assertEquals(8.0, params.remove("bin_size"), 0.0001);
+    assertTrue(params.isEmpty());
+  }
+
+  @Test()
+  public void testHidservStatsEndLineMissing()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor =
+        HidservStatsBuilder.createWithHidservStatsEndLine(null);
+    assertEquals(-1L, descriptor.getHidservStatsEndMillis());
+    assertEquals(-1L, descriptor.getHidservStatsIntervalLength());
+  }
+
+  @Test()
+  public void testHidservRendRelayedCellsNoParams()
+        throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor =
+        HidservStatsBuilder.createWithHidservRendRelayedCellsLine(
+        "hidserv-rend-relayed-cells 36474281");
+    assertEquals(36474281.0, descriptor.getHidservRendRelayedCells(),
+        0.0001);
+    assertTrue(
+        descriptor.getHidservRendRelayedCellsParameters().isEmpty());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testHidservDirOnionsSeenCommaSeparatedParams()
+      throws DescriptorParseException {
+    HidservStatsBuilder.createWithHidservDirOnionsSeenLine(
+        "hidserv-dir-onions-seen -3 delta_f=8,epsilon=0.30,bin_size=8");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testHidservDirOnionsSeenNoDoubleParams()
+      throws DescriptorParseException {
+    HidservStatsBuilder.createWithHidservDirOnionsSeenLine(
+        "hidserv-dir-onions-seen -3 delta_f=A epsilon=B bin_size=C");
   }
 
   @Test()

@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
@@ -431,6 +432,39 @@ public class ParseHelper {
               + listElements[i] + "'.");
         }
       }
+    }
+    return result;
+  }
+
+  protected static Map<String, Double>
+      parseSpaceSeparatedStringKeyDoubleValueMap(String line,
+      String[] partsNoOpt, int startIndex)
+      throws DescriptorParseException {
+    Map<String, Double> result = new LinkedHashMap<>();
+    if (partsNoOpt.length < startIndex) {
+      throw new DescriptorParseException("Line '" + line + "' does not "
+          + "contain a key-value list starting at index " + startIndex
+          + ".");
+    }
+    for (int i = startIndex; i < partsNoOpt.length; i++) {
+      String listElement = partsNoOpt[i];
+      String[] keyAndValue = listElement.split("=");
+      String key = null;
+      Double value = null;
+      if (keyAndValue.length == 2) {
+        try {
+          value = Double.parseDouble(keyAndValue[1]);
+          key = keyAndValue[0];
+        } catch (NumberFormatException e) {
+          /* Handle below. */
+        }
+      }
+      if (key == null) {
+        throw new DescriptorParseException("Line '" + line + "' contains "
+            + "an illegal key or value in list element '" + listElement
+            + "'.");
+      }
+      result.put(key, value);
     }
     return result;
   }
