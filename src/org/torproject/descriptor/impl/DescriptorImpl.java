@@ -19,7 +19,7 @@ public abstract class DescriptorImpl implements Descriptor {
       byte[] rawDescriptorBytes, String fileName,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
+    List<Descriptor> parsedDescriptors = new ArrayList<>();
     if (rawDescriptorBytes == null) {
       return parsedDescriptors;
     }
@@ -114,7 +114,7 @@ public abstract class DescriptorImpl implements Descriptor {
 
   protected static List<byte[]> splitRawDescriptorBytes(
       byte[] rawDescriptorBytes, String startToken) {
-    List<byte[]> rawDescriptors = new ArrayList<byte[]>();
+    List<byte[]> rawDescriptors = new ArrayList<>();
     String splitToken = "\n" + startToken;
     String ascii;
     try {
@@ -168,7 +168,7 @@ public abstract class DescriptorImpl implements Descriptor {
   protected List<String> unrecognizedLines;
   public List<String> getUnrecognizedLines() {
     return this.unrecognizedLines == null ? new ArrayList<String>() :
-        new ArrayList<String>(this.unrecognizedLines);
+        new ArrayList<>(this.unrecognizedLines);
   }
 
   protected DescriptorImpl(byte[] rawDescriptorBytes,
@@ -182,7 +182,7 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   /* Parse annotation lines from the descriptor bytes. */
-  private List<String> annotations = new ArrayList<String>();
+  private List<String> annotations = new ArrayList<>();
   private void cutOffAnnotations(byte[] rawDescriptorBytes)
       throws DescriptorParseException {
     String ascii = new String(rawDescriptorBytes);
@@ -206,13 +206,12 @@ public abstract class DescriptorImpl implements Descriptor {
     }
   }
   public List<String> getAnnotations() {
-    return new ArrayList<String>(this.annotations);
+    return new ArrayList<>(this.annotations);
   }
 
   /* Count parsed keywords for consistency checks by subclasses. */
   private String firstKeyword, lastKeyword;
-  private Map<String, Integer> parsedKeywords =
-      new HashMap<String, Integer>();
+  private Map<String, Integer> parsedKeywords = new HashMap<>();
   private void countKeywords(byte[] rawDescriptorBytes,
       boolean blankLinesAllowed) throws DescriptorParseException {
     if (rawDescriptorBytes.length == 0) {

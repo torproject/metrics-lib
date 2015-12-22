@@ -29,10 +29,10 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.parseDescriptorBytes();
     this.calculateDigest();
     this.calculateDigestSha256();
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList(
         "router,bandwidth,published".split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
         "identity-ed25519,master-key-ed25519,platform,fingerprint,"
         + "hibernating,uptime,contact,family,read-history,write-history,"
         + "eventdns,caches-extra-info,extra-info-digest,"
@@ -138,7 +138,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         this.parseNtorOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
         nextCrypto = "ntor-onion-key-crosscert";
       } else if (line.startsWith("-----BEGIN")) {
-        cryptoLines = new ArrayList<String>();
+        cryptoLines = new ArrayList<>();
         cryptoLines.add(line);
       } else if (line.startsWith("-----END")) {
         cryptoLines.add(line);
@@ -165,7 +165,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
               + "block '" + cryptoString + "' in server descriptor.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.addAll(cryptoLines);
         }
@@ -180,7 +180,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
               + line + "' in server descriptor.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }
@@ -705,9 +705,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     return this.dirPort;
   }
 
-  private List<String> orAddresses = new ArrayList<String>();
+  private List<String> orAddresses = new ArrayList<>();
   public List<String> getOrAddresses() {
-    return new ArrayList<String>(this.orAddresses);
+    return new ArrayList<>(this.orAddresses);
   }
 
   private int bandwidthRate;
@@ -760,9 +760,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     return this.signingKey;
   }
 
-  private List<String> exitPolicyLines = new ArrayList<String>();
+  private List<String> exitPolicyLines = new ArrayList<>();
   public List<String> getExitPolicyLines() {
-    return new ArrayList<String>(this.exitPolicyLines);
+    return new ArrayList<>(this.exitPolicyLines);
   }
 
   private String routerSignature;

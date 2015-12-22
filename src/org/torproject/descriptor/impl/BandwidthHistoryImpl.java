@@ -82,7 +82,7 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
 
   private long[] bandwidthValues;
   public SortedMap<Long, Long> getBandwidthValues() {
-    SortedMap<Long, Long> result = new TreeMap<Long, Long>();
+    SortedMap<Long, Long> result = new TreeMap<>();
     if (this.bandwidthValues != null) {
       long endMillis = this.historyEndMillis;
       for (int i = this.bandwidthValues.length - 1; i >= 0; i--) {

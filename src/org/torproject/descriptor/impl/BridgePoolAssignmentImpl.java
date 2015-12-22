@@ -21,8 +21,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
   protected static List<BridgePoolAssignment> parseDescriptors(
       byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<BridgePoolAssignment> parsedDescriptors =
-        new ArrayList<BridgePoolAssignment>();
+    List<BridgePoolAssignment> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "bridge-pool-assignment ");
@@ -40,7 +39,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList(
         new String[] { "bridge-pool-assignment" }));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     this.checkFirstKeyword("bridge-pool-assignment");
@@ -90,10 +89,9 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
     return this.publishedMillis;
   }
 
-  private SortedMap<String, String> entries =
-      new TreeMap<String, String>();
+  private SortedMap<String, String> entries = new TreeMap<>();
   public SortedMap<String, String> getEntries() {
-    return new TreeMap<String, String>(this.entries);
+    return new TreeMap<>(this.entries);
   }
 }
 

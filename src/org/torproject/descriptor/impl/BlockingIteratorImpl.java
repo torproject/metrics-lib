@@ -13,7 +13,7 @@ import java.util.Queue;
 public class BlockingIteratorImpl<T> implements Iterator<T> {
 
   /* Queue containing produced elemnts waiting for consumers. */
-  private Queue<T> queue = new LinkedList<T>();
+  private Queue<T> queue = new LinkedList<>();
 
   /* Maximum number of elements in queue. */
   private int maxQueueSize = 100;

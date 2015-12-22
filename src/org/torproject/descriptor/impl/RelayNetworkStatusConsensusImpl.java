@@ -29,7 +29,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       byte[] consensusesBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     List<RelayNetworkStatusConsensus> parsedConsensuses =
-        new ArrayList<RelayNetworkStatusConsensus>();
+        new ArrayList<>();
     List<byte[]> splitConsensusBytes =
         DescriptorImpl.splitRawDescriptorBytes(consensusesBytes,
         "network-status-version 3");
@@ -46,11 +46,11 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(consensusBytes, failUnrecognizedDescriptorLines, true, false);
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
         "vote-status,consensus-method,valid-after,fresh-until,"
         + "valid-until,voting-delay,known-flags").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
         "client-versions,server-versions,params,directory-footer,"
         + "bandwidth-weights").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
@@ -122,7 +122,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
             + "' in consensus.");
       } else {
         if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
+          this.unrecognizedLines = new ArrayList<>();
         }
         this.unrecognizedLines.add(line);
       }
@@ -140,7 +140,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         getAndClearUnrecognizedLines();
     if (unrecognizedStatusEntryLines != null) {
       if (this.unrecognizedLines == null) {
-        this.unrecognizedLines = new ArrayList<String>();
+        this.unrecognizedLines = new ArrayList<>();
       }
       this.unrecognizedLines.addAll(unrecognizedStatusEntryLines);
     }
@@ -161,7 +161,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
             + "' in consensus.");
       } else {
         if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
+          this.unrecognizedLines = new ArrayList<>();
         }
         this.unrecognizedLines.add(line);
       }
@@ -341,19 +341,19 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   private String[] knownFlags;
   public SortedSet<String> getKnownFlags() {
-    return new TreeSet<String>(Arrays.asList(this.knownFlags));
+    return new TreeSet<>(Arrays.asList(this.knownFlags));
   }
 
   private SortedMap<String, Integer> consensusParams;
   public SortedMap<String, Integer> getConsensusParams() {
     return this.consensusParams == null ? null:
-        new TreeMap<String, Integer>(this.consensusParams);
+        new TreeMap<>(this.consensusParams);
   }
 
   private SortedMap<String, Integer> bandwidthWeights;
   public SortedMap<String, Integer> getBandwidthWeights() {
     return this.bandwidthWeights == null ? null :
-        new TreeMap<String, Integer>(this.bandwidthWeights);
+        new TreeMap<>(this.bandwidthWeights);
   }
 }
 

@@ -24,7 +24,7 @@ public class TorperfResultImpl extends DescriptorImpl
     if (rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
-    List<Descriptor> parsedDescriptors = new ArrayList<Descriptor>();
+    List<Descriptor> parsedDescriptors = new ArrayList<>();
     String descriptorString = new String(rawDescriptorBytes);
     Scanner s = new Scanner(descriptorString).useDelimiter("\n");
     String typeAnnotation = "";
@@ -130,7 +130,7 @@ public class TorperfResultImpl extends DescriptorImpl
             + "' in line '" + line + "'.");
       } else {
         if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
+          this.unrecognizedLines = new ArrayList<>();
         }
         this.unrecognizedLines.add(line);
       }
@@ -138,8 +138,8 @@ public class TorperfResultImpl extends DescriptorImpl
     this.checkAllRequiredKeysParsed(line);
   }
 
-  private Set<String> parsedKeys = new HashSet<String>();
-  private Set<String> requiredKeys = new HashSet<String>(Arrays.asList(
+  private Set<String> parsedKeys = new HashSet<>();
+  private Set<String> requiredKeys = new HashSet<>(Arrays.asList(
       ("SOURCE,FILESIZE,START,SOCKET,CONNECT,NEGOTIATE,REQUEST,RESPONSE,"
       + "DATAREQUEST,DATARESPONSE,DATACOMPLETE,WRITEBYTES,READBYTES").
       split(",")));
@@ -244,7 +244,7 @@ public class TorperfResultImpl extends DescriptorImpl
     }
   }
 
-  private Set<String> unparsedPercentiles = new HashSet<String>(
+  private Set<String> unparsedPercentiles = new HashSet<>(
       Arrays.asList("10,20,30,40,50,60,70,80,90".split(",")));
   private void parseDataPercentile(String value, String keyValue,
       String line) throws DescriptorParseException {
@@ -431,7 +431,7 @@ public class TorperfResultImpl extends DescriptorImpl
     if (this.dataDeciles == null) {
       return null;
     }
-    SortedMap<Integer, Long> result = new TreeMap<Integer, Long>();
+    SortedMap<Integer, Long> result = new TreeMap<>();
     for (int i = 0; i < dataDeciles.length; i++) {
       if (dataDeciles[i] > 0L) {
         result.put(10 * (i + 1), dataDeciles[i]);

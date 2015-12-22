@@ -1150,7 +1150,7 @@ public class RelayNetworkStatusVoteImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusVote vote = VoteBuilder.
         createWithUnrecognizedHeaderLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
   }
@@ -1169,7 +1169,7 @@ public class RelayNetworkStatusVoteImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusVote vote = VoteBuilder.
         createWithUnrecognizedDirSourceLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
   }
@@ -1187,7 +1187,7 @@ public class RelayNetworkStatusVoteImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusVote vote = VoteBuilder.
         createWithUnrecognizedFooterLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
   }

@@ -34,7 +34,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
   private boolean hasStartedReading = false;
 
-  private List<File> directories = new ArrayList<File>();
+  private List<File> directories = new ArrayList<>();
   public void addDirectory(File directory) {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -43,7 +43,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.directories.add(directory);
   }
 
-  private List<File> tarballs = new ArrayList<File>();
+  private List<File> tarballs = new ArrayList<>();
   public void addTarball(File tarball) {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -75,7 +75,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
       throw new IllegalStateException("Operation is not permitted before "
           + "finishing to read.");
     }
-    return new TreeMap<String, Long>(this.reader.excludedFilesAfter);
+    return new TreeMap<>(this.reader.excludedFilesAfter);
   }
 
   public SortedMap<String, Long> getParsedFiles() {
@@ -83,7 +83,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
       throw new IllegalStateException("Operation is not permitted before "
           + "finishing to read.");
     }
-    return new TreeMap<String, Long>(this.reader.parsedFilesAfter);
+    return new TreeMap<>(this.reader.parsedFilesAfter);
   }
 
   private boolean failUnrecognizedDescriptorLines = false;
@@ -128,10 +128,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
     private List<File> tarballs;
     private BlockingIteratorImpl<DescriptorFile> descriptorQueue;
     private File historyFile;
-    private SortedMap<String, Long>
-        excludedFilesBefore = new TreeMap<String, Long>(),
-        excludedFilesAfter = new TreeMap<String, Long>(),
-        parsedFilesAfter = new TreeMap<String, Long>();
+    private SortedMap<String, Long> excludedFilesBefore = new TreeMap<>(),
+        excludedFilesAfter = new TreeMap<>(),
+        parsedFilesAfter = new TreeMap<>();
     private DescriptorParser descriptorParser;
     private boolean hasFinishedReading = false;
     private DescriptorReaderRunnable(List<File> directories,
@@ -205,7 +204,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
         }
         BufferedWriter bw = new BufferedWriter(new FileWriter(
             this.historyFile));
-        SortedMap<String, Long> newHistory = new TreeMap<String, Long>();
+        SortedMap<String, Long> newHistory = new TreeMap<>();
         newHistory.putAll(this.excludedFilesAfter);
         newHistory.putAll(this.parsedFilesAfter);
         for (Map.Entry<String, Long> e : newHistory.entrySet()) {
@@ -224,7 +223,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
         if (!directory.exists() || !directory.isDirectory()) {
           continue;
         }
-        Stack<File> files = new Stack<File>();
+        Stack<File> files = new Stack<>();
         files.add(directory);
         boolean abortReading = false;
         while (!abortReading && !files.isEmpty()) {
@@ -265,7 +264,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
       }
     }
     private void readTarballs() {
-      List<File> files = new ArrayList<File>(this.tarballs);
+      List<File> files = new ArrayList<>(this.tarballs);
       boolean abortReading = false;
       while (!abortReading && !files.isEmpty()) {
         File tarball = files.remove(0);

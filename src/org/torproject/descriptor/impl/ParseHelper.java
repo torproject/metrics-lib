@@ -146,7 +146,7 @@ public class ParseHelper {
       return super.get();
     }
     protected Map<String, DateFormat> initialValue() {
-      return new HashMap<String, DateFormat>();
+      return new HashMap<>();
     }
     public void remove() {
       super.remove();
@@ -221,7 +221,7 @@ public class ParseHelper {
   public static SortedMap<String, String> parseKeyValueStringPairs(
       String line, String[] parts, int startIndex, String separatorString)
       throws DescriptorParseException {
-    SortedMap<String, String> result = new TreeMap<String, String>();
+    SortedMap<String, String> result = new TreeMap<>();
     for (int i = startIndex; i < parts.length; i++) {
       String pair = parts[i];
       String[] pairParts = pair.split(separatorString);
@@ -237,7 +237,7 @@ public class ParseHelper {
   public static SortedMap<String, Integer> parseKeyValueIntegerPairs(
       String line, String[] parts, int startIndex, String separatorString)
       throws DescriptorParseException {
-    SortedMap<String, Integer> result = new TreeMap<String, Integer>();
+    SortedMap<String, Integer> result = new TreeMap<>();
     SortedMap<String, String> keyValueStringPairs =
         ParseHelper.parseKeyValueStringPairs(line, parts, startIndex,
         separatorString);
@@ -292,8 +292,7 @@ public class ParseHelper {
   }
 
   private static Map<Integer, Pattern>
-      commaSeparatedKeyValueListPatterns =
-      new HashMap<Integer, Pattern>();
+      commaSeparatedKeyValueListPatterns = new HashMap<>();
   public static String parseCommaSeparatedKeyIntegerValueList(
       String line, String[] partsNoOpt, int index, int keyLength)
       throws DescriptorParseException {
@@ -331,7 +330,7 @@ public class ParseHelper {
       convertCommaSeparatedKeyIntegerValueList(String validatedString) {
     SortedMap<String, Integer> result = null;
     if (validatedString != null) {
-      result = new TreeMap<String, Integer>();
+      result = new TreeMap<>();
       if (validatedString.contains("=")) {
         for (String listElement : validatedString.split(",", -1)) {
           String[] keyAndValue = listElement.split("=");
@@ -346,7 +345,7 @@ public class ParseHelper {
       parseCommaSeparatedKeyLongValueList(String line,
       String[] partsNoOpt, int index, int keyLength)
       throws DescriptorParseException {
-    SortedMap<String, Long> result = new TreeMap<String, Long>();
+    SortedMap<String, Long> result = new TreeMap<>();
     if (partsNoOpt.length < index) {
       throw new DescriptorParseException("Line '" + line + "' does not "
           + "contain a key-value list at index " + index + ".");

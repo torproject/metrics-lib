@@ -20,7 +20,7 @@ import org.torproject.descriptor.RelayNetworkStatusConsensus;
 public class DownloadCoordinatorImpl implements DownloadCoordinator {
 
   private BlockingIteratorImpl<DescriptorRequest> descriptorQueue =
-      new BlockingIteratorImpl<DescriptorRequest>();
+      new BlockingIteratorImpl<>();
   protected Iterator<DescriptorRequest> getDescriptorQueue() {
     return this.descriptorQueue;
   }
@@ -45,7 +45,7 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
       long globalTimeoutMillis, boolean failUnrecognizedDescriptorLines) {
     this.directoryAuthorities = directoryAuthorities;
     this.directoryMirrors = directoryMirrors;
-    this.runningDirectories = new TreeSet<String>();
+    this.runningDirectories = new TreeSet<>();
     this.runningDirectories.addAll(directoryAuthorities.keySet());
     this.runningDirectories.addAll(directoryMirrors.keySet());
     this.missingConsensus = downloadConsensus;
@@ -120,24 +120,22 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
 
   /* Which directories are currently attempting to download the
    * consensus? */
-  private Set<String> requestingConsensuses = new HashSet<String>();
+  private Set<String> requestingConsensuses = new HashSet<>();
 
   /* Which directories have attempted to download the consensus so far,
    * including those directories that are currently attempting it? */
-  private Set<String> requestedConsensuses = new HashSet<String>();
+  private Set<String> requestedConsensuses = new HashSet<>();
 
   /* Which votes are we currently missing? */
-  private Set<String> missingVotes = new HashSet<String>();
+  private Set<String> missingVotes = new HashSet<>();
 
   /* Which vote (map value) is a given directory (map key) currently
    * attempting to download? */
-  private Map<String, String> requestingVotes =
-      new HashMap<String, String>();
+  private Map<String, String> requestingVotes = new HashMap<>();
 
   /* Which votes (map value) has a given directory (map key) attempted or
    * is currently attempting to download? */
-  private Map<String, Set<String>> requestedVotes =
-      new HashMap<String, Set<String>>();
+  private Map<String, Set<String>> requestedVotes = new HashMap<>();
 
   private boolean hasFinishedDownloading = false;
 

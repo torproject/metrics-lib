@@ -25,8 +25,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   protected static List<DirectoryKeyCertificate> parseDescriptors(
       byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<DirectoryKeyCertificate> parsedDescriptors =
-        new ArrayList<DirectoryKeyCertificate>();
+    List<DirectoryKeyCertificate> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DirectoryKeyCertificateImpl.splitRawDescriptorBytes(
             descriptorsBytes, "dir-key-certificate-version ");
@@ -45,12 +44,12 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
         "dir-key-certificate-version,fingerprint,dir-identity-key,"
         + "dir-key-published,dir-key-expires,dir-signing-key,"
         + "dir-key-certification").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
         "dir-address,dir-key-crosscert").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("dir-key-certificate-version");
@@ -117,7 +116,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
               + line + "' in directory key certificate.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }

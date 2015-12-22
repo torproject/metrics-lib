@@ -49,8 +49,8 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
         this.statLocalDirectory(localDirectory);
     SortedMap<String, String> fetchedDirectoryListings =
         this.fetchRemoteDirectories(collecTorBaseUrl, remoteDirectories);
-    SortedSet<String> parsedDirectories = new TreeSet<String>();
-    SortedMap<String, Long> remoteFiles = new TreeMap<String, Long>();
+    SortedSet<String> parsedDirectories = new TreeSet<>();
+    SortedMap<String, Long> remoteFiles = new TreeMap<>();
     for (Map.Entry<String, String> e :
         fetchedDirectoryListings.entrySet()) {
       String remoteDirectory = e.getKey();
@@ -73,11 +73,11 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
 
   SortedMap<String, Long> statLocalDirectory(
       File localDirectory) {
-    SortedMap<String, Long> localFiles = new TreeMap<String, Long>();
+    SortedMap<String, Long> localFiles = new TreeMap<>();
     if (!localDirectory.exists()) {
       return localFiles;
     }
-    Stack<File> files = new Stack<File>();
+    Stack<File> files = new Stack<>();
     files.add(localDirectory);
     while (!files.isEmpty()) {
       File file = files.pop();
@@ -94,8 +94,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
 
   SortedMap<String, String> fetchRemoteDirectories(
       String collecTorBaseUrl, String[] remoteDirectories) {
-    SortedMap<String, String> fetchedDirectoryListings =
-        new TreeMap<String, String>();
+    SortedMap<String, String> fetchedDirectoryListings = new TreeMap<>();
     for (String remoteDirectory : remoteDirectories) {
       String remoteDirectoryWithSlashAtBeginAndEnd =
           (remoteDirectory.startsWith("/") ? "" : "/") + remoteDirectory
@@ -145,7 +144,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
 
   SortedMap<String, Long> parseDirectoryListing(
       String remoteDirectory, String directoryListing) {
-    SortedMap<String, Long> remoteFiles = new TreeMap<String, Long>();
+    SortedMap<String, Long> remoteFiles = new TreeMap<>();
     DateFormat dateTimeFormat = ParseHelper.getDateFormat(
         "dd-MMM-yyyy HH:mm");
     try {

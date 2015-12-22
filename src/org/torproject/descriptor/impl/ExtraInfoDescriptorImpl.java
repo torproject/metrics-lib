@@ -34,27 +34,27 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.parseDescriptorBytes();
     this.calculateDigest();
     this.calculateDigestSha256();
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
         "extra-info,published").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> dirreqStatsKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> dirreqStatsKeywords = new HashSet<>(Arrays.asList((
         "dirreq-stats-end,dirreq-v2-ips,dirreq-v3-ips,dirreq-v2-reqs,"
         + "dirreq-v3-reqs,dirreq-v2-share,dirreq-v3-share,dirreq-v2-resp,"
         + "dirreq-v3-resp,dirreq-v2-direct-dl,dirreq-v3-direct-dl,"
         + "dirreq-v2-tunneled-dl,dirreq-v3-tunneled-dl,").split(",")));
-    Set<String> entryStatsKeywords = new HashSet<String>(Arrays.asList(
+    Set<String> entryStatsKeywords = new HashSet<>(Arrays.asList(
         "entry-stats-end,entry-ips".split(",")));
-    Set<String> cellStatsKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> cellStatsKeywords = new HashSet<>(Arrays.asList((
         "cell-stats-end,cell-processed-cells,cell-queued-cells,"
         + "cell-time-in-queue,cell-circuits-per-decile").split(",")));
-    Set<String> connBiDirectStatsKeywords = new HashSet<String>(
+    Set<String> connBiDirectStatsKeywords = new HashSet<>(
         Arrays.asList("conn-bi-direct".split(",")));
-    Set<String> exitStatsKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> exitStatsKeywords = new HashSet<>(Arrays.asList((
         "exit-stats-end,exit-kibibytes-written,exit-kibibytes-read,"
         + "exit-streams-opened").split(",")));
-    Set<String> bridgeStatsKeywords = new HashSet<String>(Arrays.asList(
+    Set<String> bridgeStatsKeywords = new HashSet<>(Arrays.asList(
         "bridge-stats-end,bridge-stats-ips".split(",")));
-    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
         "identity-ed25519,master-key-ed25519,read-history,write-history,"
         + "dirreq-read-history,dirreq-write-history,geoip-db-digest,"
         + "router-sig-ed25519,router-signature,router-digest-sha256,"
@@ -189,7 +189,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
       } else if (keyword.equals("router-digest-sha256")) {
         this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
       } else if (line.startsWith("-----BEGIN")) {
-        cryptoLines = new ArrayList<String>();
+        cryptoLines = new ArrayList<>();
         cryptoLines.add(line);
       } else if (line.startsWith("-----END")) {
         cryptoLines.add(line);
@@ -208,7 +208,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
               + "block '" + cryptoString + "' in extra-info descriptor.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.addAll(cryptoLines);
         }
@@ -223,7 +223,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
               + line + "' in extra-info descriptor.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }
@@ -1047,19 +1047,19 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private SortedMap<String, Long> exitKibibytesWritten;
   public SortedMap<String, Long> getExitKibibytesWritten() {
     return this.exitKibibytesWritten == null ? null :
-        new TreeMap<String, Long>(this.exitKibibytesWritten);
+        new TreeMap<>(this.exitKibibytesWritten);
   }
 
   private SortedMap<String, Long> exitKibibytesRead;
   public SortedMap<String, Long> getExitKibibytesRead() {
     return this.exitKibibytesRead == null ? null :
-        new TreeMap<String, Long>(this.exitKibibytesRead);
+        new TreeMap<>(this.exitKibibytesRead);
   }
 
   private SortedMap<String, Long> exitStreamsOpened;
   public SortedMap<String, Long> getExitStreamsOpened() {
     return this.exitStreamsOpened == null ? null :
-        new TreeMap<String, Long>(this.exitStreamsOpened);
+        new TreeMap<>(this.exitStreamsOpened);
   }
 
   private long geoipStartTimeMillis = -1L;
@@ -1101,9 +1101,9 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         this.bridgeIpTransports);
   }
 
-  private List<String> transports = new ArrayList<String>();
+  private List<String> transports = new ArrayList<>();
   public List<String> getTransports() {
-    return new ArrayList<String>(this.transports);
+    return new ArrayList<>(this.transports);
   }
 
   private long hidservStatsEndMillis = -1L;

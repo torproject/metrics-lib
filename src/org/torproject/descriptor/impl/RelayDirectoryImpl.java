@@ -27,8 +27,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
   protected static List<RelayDirectory> parseDirectories(
       byte[] directoriesBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<RelayDirectory> parsedDirectories =
-        new ArrayList<RelayDirectory>();
+    List<RelayDirectory> parsedDirectories = new ArrayList<>();
     List<byte[]> splitDirectoriesBytes =
         DescriptorImpl.splitRawDescriptorBytes(directoriesBytes,
         "signed-directory\n");
@@ -47,11 +46,11 @@ public class RelayDirectoryImpl extends DescriptorImpl
     super(directoryBytes, failUnrecognizedDescriptorLines, true);
     this.splitAndParseParts(rawDescriptorBytes);
     this.calculateDigest();
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
         "signed-directory,recommended-software,"
         + "directory-signature").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList(
+    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList(
         "dir-signing-key,running-routers,router-status".split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("signed-directory");
@@ -161,7 +160,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   private List<byte[]> splitByKeyword(String descriptorString,
       String keyword, int start, int end) {
-    List<byte[]> splitParts = new ArrayList<byte[]>();
+    List<byte[]> splitParts = new ArrayList<>();
     int from = start;
     while (from < end) {
       int to = descriptorString.indexOf("\n" + keyword + " ", from);
@@ -244,7 +243,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
               + line + "' in v1 directory.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }
@@ -329,7 +328,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
             + "' in v2 network status.");
       } else {
         if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
+          this.unrecognizedLines = new ArrayList<>();
         }
         this.unrecognizedLines.add(line);
       }
@@ -374,7 +373,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   private void parseRecommendedSoftwareLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     if (partsNoOpt.length > 2) {
       throw new DescriptorParseException("Illegal versions line '" + line
           + "'.");
@@ -485,7 +484,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
   private List<String> recommendedSoftware;
   public List<String> getRecommendedSoftware() {
     return this.recommendedSoftware == null ? null :
-        new ArrayList<String>(this.recommendedSoftware);
+        new ArrayList<>(this.recommendedSoftware);
   }
 
   private String directorySignature;
@@ -493,22 +492,20 @@ public class RelayDirectoryImpl extends DescriptorImpl
     return this.directorySignature;
   }
 
-  private List<RouterStatusEntry> statusEntries =
-      new ArrayList<RouterStatusEntry>();
+  private List<RouterStatusEntry> statusEntries = new ArrayList<>();
   public List<RouterStatusEntry> getRouterStatusEntries() {
-    return new ArrayList<RouterStatusEntry>(this.statusEntries);
+    return new ArrayList<>(this.statusEntries);
   }
 
-  private List<ServerDescriptor> serverDescriptors =
-      new ArrayList<ServerDescriptor>();
+  private List<ServerDescriptor> serverDescriptors = new ArrayList<>();
   public List<ServerDescriptor> getServerDescriptors() {
-    return new ArrayList<ServerDescriptor>(this.serverDescriptors);
+    return new ArrayList<>(this.serverDescriptors);
   }
 
   private List<Exception> serverDescriptorParseExceptions =
-      new ArrayList<Exception>();
+      new ArrayList<>();
   public List<Exception> getServerDescriptorParseExceptions() {
-    return new ArrayList<Exception>(this.serverDescriptorParseExceptions);
+    return new ArrayList<>(this.serverDescriptorParseExceptions);
   }
 
   private String nickname;

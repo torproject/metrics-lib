@@ -94,7 +94,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
                 + line + "' in exit list.");
           } else {
             if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<String>();
+              this.unrecognizedLines = new ArrayList<>();
             }
             this.unrecognizedLines.add(line);
           }
@@ -114,7 +114,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
         getAndClearUnrecognizedLines();
     if (unrecognizedExitListEntryLines != null) {
       if (this.unrecognizedLines == null) {
-        this.unrecognizedLines = new ArrayList<String>();
+        this.unrecognizedLines = new ArrayList<>();
       }
       this.unrecognizedLines.addAll(unrecognizedExitListEntryLines);
     }
@@ -133,7 +133,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
 
   private Set<ExitList.Entry> exitListEntries = new HashSet<>();
   public Set<ExitList.Entry> getEntries() {
-    return new HashSet<ExitList.Entry>(this.exitListEntries);
+    return new HashSet<>(this.exitListEntries);
   }
 }
 

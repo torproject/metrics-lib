@@ -39,10 +39,10 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   private SortedSet<String> exactlyOnceKeywords, atMostOnceKeywords;
   private void initializeKeywords() {
-    this.exactlyOnceKeywords = new TreeSet<String>();
+    this.exactlyOnceKeywords = new TreeSet<>();
     this.exactlyOnceKeywords.add("dir-source");
     this.exactlyOnceKeywords.add("vote-digest");
-    this.atMostOnceKeywords = new TreeSet<String>();
+    this.atMostOnceKeywords = new TreeSet<>();
     this.atMostOnceKeywords.add("contact");
   }
 
@@ -96,7 +96,7 @@ public class DirSourceEntryImpl implements DirSourceEntry {
               + line + "' in dir-source entry.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }

@@ -51,7 +51,7 @@ public class BridgeNetworkStatusTest {
       return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
           true);
     }
-    private List<String> statusEntries = new ArrayList<String>();
+    private List<String> statusEntries = new ArrayList<>();
     private String unrecognizedHeaderLine = null;
     protected static BridgeNetworkStatus
         createWithUnrecognizedHeaderLine(String line,

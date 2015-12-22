@@ -134,7 +134,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   private List<byte[]> splitByKeyword(String descriptorString,
       String keyword, int start, int end) {
-    List<byte[]> splitParts = new ArrayList<byte[]>();
+    List<byte[]> splitParts = new ArrayList<>();
     int from = start;
     while (from < end) {
       int to = descriptorString.indexOf("\n" + keyword + " ", from);
@@ -168,7 +168,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
         getAndClearUnrecognizedLines();
     if (unrecognizedDirSourceLines != null) {
       if (this.unrecognizedLines == null) {
-        this.unrecognizedLines = new ArrayList<String>();
+        this.unrecognizedLines = new ArrayList<>();
       }
       this.unrecognizedLines.addAll(unrecognizedDirSourceLines);
     }
@@ -203,7 +203,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
         getAndClearUnrecognizedLines();
     if (unrecognizedStatusEntryLines != null) {
       if (this.unrecognizedLines == null) {
-        this.unrecognizedLines = new ArrayList<String>();
+        this.unrecognizedLines = new ArrayList<>();
       }
       this.unrecognizedLines.addAll(unrecognizedStatusEntryLines);
     }
@@ -215,8 +215,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   protected void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
     if (this.directorySignatures == null) {
-      this.directorySignatures = new TreeMap<String,
-          DirectorySignature>();
+      this.directorySignatures = new TreeMap<>();
     }
     DirectorySignatureImpl signature = new DirectorySignatureImpl(
         directorySignatureBytes, failUnrecognizedDescriptorLines);
@@ -225,22 +224,22 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
         getAndClearUnrecognizedLines();
     if (unrecognizedStatusEntryLines != null) {
       if (this.unrecognizedLines == null) {
-        this.unrecognizedLines = new ArrayList<String>();
+        this.unrecognizedLines = new ArrayList<>();
       }
       this.unrecognizedLines.addAll(unrecognizedStatusEntryLines);
     }
   }
 
   protected SortedMap<String, DirSourceEntry> dirSourceEntries =
-      new TreeMap<String, DirSourceEntry>();
+      new TreeMap<>();
   public SortedMap<String, DirSourceEntry> getDirSourceEntries() {
-    return new TreeMap<String, DirSourceEntry>(this.dirSourceEntries);
+    return new TreeMap<>(this.dirSourceEntries);
   }
 
   protected SortedMap<String, NetworkStatusEntry> statusEntries =
-      new TreeMap<String, NetworkStatusEntry>();
+      new TreeMap<>();
   public SortedMap<String, NetworkStatusEntry> getStatusEntries() {
-    return new TreeMap<String, NetworkStatusEntry>(this.statusEntries);
+    return new TreeMap<>(this.statusEntries);
   }
   public boolean containsStatusEntry(String fingerprint) {
     return this.statusEntries.containsKey(fingerprint);
@@ -252,7 +251,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   protected SortedMap<String, DirectorySignature> directorySignatures;
   public SortedMap<String, DirectorySignature> getDirectorySignatures() {
     return this.directorySignatures == null ? null :
-        new TreeMap<String, DirectorySignature>(this.directorySignatures);
+        new TreeMap<>(this.directorySignatures);
   }
 }
 

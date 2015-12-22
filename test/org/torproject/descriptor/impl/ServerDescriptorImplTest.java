@@ -1358,14 +1358,14 @@ public class ServerDescriptorImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithUnrecognizedLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, descriptor.getUnrecognizedLines());
   }
 
   @Test()
   public void testSomeOtherKey() throws DescriptorParseException {
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add("some-other-key");
     unrecognizedLines.add("-----BEGIN RSA PUBLIC KEY-----");
     unrecognizedLines.add("MIGJAoGBAKM+iiHhO6eHsvd6Xjws9z9EQB1V/Bpuy5ciGJ"
@@ -1387,7 +1387,7 @@ public class ServerDescriptorImplTest {
   @Test()
   public void testUnrecognizedCryptoBlockNoKeyword()
       throws DescriptorParseException {
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add("-----BEGIN RSA PUBLIC KEY-----");
     unrecognizedLines.add("MIGJAoGBAKM+iiHhO6eHsvd6Xjws9z9EQB1V/Bpuy5ciGJ"
         + "1U4V9SeiKooSo5BpPL");

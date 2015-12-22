@@ -48,7 +48,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private SortedSet<String> atMostOnceKeywords;
   private void initializeKeywords() {
-    this.atMostOnceKeywords = new TreeSet<String>();
+    this.atMostOnceKeywords = new TreeSet<>();
     this.atMostOnceKeywords.add("s");
     this.atMostOnceKeywords.add("v");
     this.atMostOnceKeywords.add("w");
@@ -98,7 +98,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
             + "' in status entry.");
       } else {
         if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
+          this.unrecognizedLines = new ArrayList<>();
         }
         this.unrecognizedLines.add(line);
       }
@@ -142,10 +142,8 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.orAddresses.add(parts[1]);
   }
 
-  private static Map<String, Integer> flagIndexes =
-      new HashMap<String, Integer>();
-  private static Map<Integer, String> flagStrings =
-      new HashMap<Integer, String>();
+  private static Map<String, Integer> flagIndexes = new HashMap<>();
+  private static Map<Integer, String> flagStrings = new HashMap<>();
 
   private void parseSLine(String line, String[] parts)
       throws DescriptorParseException {
@@ -226,7 +224,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private void parseMLine(String line, String[] parts)
       throws DescriptorParseException {
     if (this.microdescriptorDigests == null) {
-      this.microdescriptorDigests = new HashSet<String>();
+      this.microdescriptorDigests = new HashSet<>();
     }
     if (parts.length == 2) {
       this.microdescriptorDigests.add(
@@ -293,17 +291,17 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private Set<String> microdescriptorDigests;
   public Set<String> getMicrodescriptorDigests() {
     return this.microdescriptorDigests == null ? null :
-        new HashSet<String>(this.microdescriptorDigests);
+        new HashSet<>(this.microdescriptorDigests);
   }
 
-  private List<String> orAddresses = new ArrayList<String>();
+  private List<String> orAddresses = new ArrayList<>();
   public List<String> getOrAddresses() {
-    return new ArrayList<String>(this.orAddresses);
+    return new ArrayList<>(this.orAddresses);
   }
 
   private BitSet flags;
   public SortedSet<String> getFlags() {
-    SortedSet<String> result = new TreeSet<String>();
+    SortedSet<String> result = new TreeSet<>();
     if (this.flags != null) {
       for (int i = this.flags.nextSetBit(0); i >= 0;
           i = this.flags.nextSetBit(i + 1)) {

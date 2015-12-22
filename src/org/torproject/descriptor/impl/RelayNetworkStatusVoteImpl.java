@@ -24,8 +24,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   protected static List<RelayNetworkStatusVote> parseVotes(
       byte[] votesBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<RelayNetworkStatusVote> parsedVotes =
-        new ArrayList<RelayNetworkStatusVote>();
+    List<RelayNetworkStatusVote> parsedVotes = new ArrayList<>();
     List<byte[]> splitVotesBytes =
         DescriptorImpl.splitRawDescriptorBytes(votesBytes,
         "network-status-version 3");
@@ -42,14 +41,14 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(voteBytes, failUnrecognizedDescriptorLines, false, false);
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
         "vote-status,consensus-methods,published,valid-after,fresh-until,"
         + "valid-until,voting-delay,known-flags,dir-source,"
         + "dir-key-certificate-version,fingerprint,dir-key-published,"
         + "dir-key-expires,dir-identity-key,dir-signing-key,"
         + "dir-key-certification,directory-signature").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
         "client-versions,server-versions,flag-thresholds,params,contact,"
         + "legacy-key,dir-key-crosscert,dir-address,directory-footer").
         split(",")));
@@ -136,7 +135,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
               + line + "' in vote.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }
@@ -385,7 +384,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
               + line + "' in vote.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }
@@ -502,7 +501,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   private String[] knownFlags;
   public SortedSet<String> getKnownFlags() {
-    return new TreeSet<String>(Arrays.asList(this.knownFlags));
+    return new TreeSet<>(Arrays.asList(this.knownFlags));
   }
 
   private long stableUptime;
@@ -553,7 +552,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   private SortedMap<String, Integer> consensusParams;
   public SortedMap<String, Integer> getConsensusParams() {
     return this.consensusParams == null ? null:
-        new TreeMap<String, Integer>(this.consensusParams);
+        new TreeMap<>(this.consensusParams);
   }
 }
 

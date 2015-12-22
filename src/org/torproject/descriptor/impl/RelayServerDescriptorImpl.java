@@ -15,8 +15,7 @@ public class RelayServerDescriptorImpl extends ServerDescriptorImpl
   protected static List<ServerDescriptor> parseDescriptors(
       byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<ServerDescriptor> parsedDescriptors =
-        new ArrayList<ServerDescriptor>();
+    List<ServerDescriptor> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "router ");

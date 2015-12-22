@@ -1577,7 +1577,7 @@ public class ExtraInfoDescriptorImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     ExtraInfoDescriptor descriptor = DescriptorBuilder.
         createWithUnrecognizedLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, descriptor.getUnrecognizedLines());
   }

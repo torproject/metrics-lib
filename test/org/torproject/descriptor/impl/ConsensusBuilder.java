@@ -106,8 +106,8 @@ public class ConsensusBuilder {
     cb.paramsLine = line;
     return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
-  List<String> dirSources = new ArrayList<String>();
-  List<String> statusEntries = new ArrayList<String>();
+  List<String> dirSources = new ArrayList<>();
+  List<String> statusEntries = new ArrayList<>();
   private String directoryFooterLine = "directory-footer";
   protected void setDirectoryFooterLine(String line) {
     this.directoryFooterLine = line;
@@ -133,7 +133,7 @@ public class ConsensusBuilder {
     cb.bandwidthWeightsLine = line;
     return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
-  private List<String> directorySignatures = new ArrayList<String>();
+  private List<String> directorySignatures = new ArrayList<>();
   protected void addDirectorySignature(String directorySignatureString) {
     this.directorySignatures.add(directorySignatureString);
   }

@@ -57,7 +57,7 @@ public class DescriptorFileImpl implements DescriptorFile {
   }
   public List<Descriptor> getDescriptors() {
     return this.descriptors == null ? new ArrayList<Descriptor>() :
-      new ArrayList<Descriptor>(this.descriptors);
+      new ArrayList<>(this.descriptors);
   }
 
   private Exception exception;

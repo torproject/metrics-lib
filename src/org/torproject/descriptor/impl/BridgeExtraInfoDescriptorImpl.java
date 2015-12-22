@@ -15,8 +15,7 @@ public class BridgeExtraInfoDescriptorImpl
   protected static List<ExtraInfoDescriptor> parseDescriptors(
       byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<ExtraInfoDescriptor> parsedDescriptors =
-        new ArrayList<ExtraInfoDescriptor>();
+    List<ExtraInfoDescriptor> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "extra-info ");

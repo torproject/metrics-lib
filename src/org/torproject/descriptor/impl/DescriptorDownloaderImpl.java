@@ -17,7 +17,7 @@ public class DescriptorDownloaderImpl
   private boolean hasStartedDownloading = false;
 
   private SortedMap<String, DirectoryDownloader> directoryAuthorities =
-      new TreeMap<String, DirectoryDownloader>();
+      new TreeMap<>();
   public void addDirectoryAuthority(String nickname, String ip,
       int dirPort) {
     if (this.hasStartedDownloading) {
@@ -31,7 +31,7 @@ public class DescriptorDownloaderImpl
   }
 
   private SortedMap<String, DirectoryDownloader> directoryMirrors =
-      new TreeMap<String, DirectoryDownloader>();
+      new TreeMap<>();
   public void addDirectoryMirror(String nickname, String ip,
       int dirPort) {
     if (this.hasStartedDownloading) {
@@ -99,7 +99,7 @@ public class DescriptorDownloaderImpl
     this.includeCurrentReferencedVotes = true;
   }
 
-  private Set<String> downloadVotes = new HashSet<String>();
+  private Set<String> downloadVotes = new HashSet<>();
   public void setIncludeCurrentVote(String fingerprint) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "

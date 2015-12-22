@@ -24,8 +24,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
   protected static List<Microdescriptor> parseDescriptors(
       byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<Microdescriptor> parsedDescriptors =
-        new ArrayList<Microdescriptor>();
+    List<Microdescriptor> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
         "onion-key\n");
@@ -44,10 +43,10 @@ public class MicrodescriptorImpl extends DescriptorImpl
     super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList(
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList(
         "onion-key".split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
         "ntor-onion-key,family,p,p6,id").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("onion-key");
@@ -105,7 +104,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
               + line + "' in microdescriptor.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }
@@ -253,9 +252,9 @@ public class MicrodescriptorImpl extends DescriptorImpl
     return this.ntorOnionKey;
   }
 
-  private List<String> orAddresses = new ArrayList<String>();
+  private List<String> orAddresses = new ArrayList<>();
   public List<String> getOrAddresses() {
-    return new ArrayList<String>(this.orAddresses);
+    return new ArrayList<>(this.orAddresses);
   }
 
   private String[] familyEntries;

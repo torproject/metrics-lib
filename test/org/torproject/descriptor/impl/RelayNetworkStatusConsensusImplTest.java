@@ -1121,7 +1121,7 @@ public class RelayNetworkStatusConsensusImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder.
         createWithUnrecognizedHeaderLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }
@@ -1140,7 +1140,7 @@ public class RelayNetworkStatusConsensusImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder.
         createWithUnrecognizedDirSourceLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }
@@ -1159,7 +1159,7 @@ public class RelayNetworkStatusConsensusImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder.
         createWithUnrecognizedStatusEntryLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }
@@ -1178,7 +1178,7 @@ public class RelayNetworkStatusConsensusImplTest {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder.
         createWithUnrecognizedFooterLine(unrecognizedLine, false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }
@@ -1198,7 +1198,7 @@ public class RelayNetworkStatusConsensusImplTest {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder.
         createWithUnrecognizedDirectorySignatureLine(unrecognizedLine,
         false);
-    List<String> unrecognizedLines = new ArrayList<String>();
+    List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }

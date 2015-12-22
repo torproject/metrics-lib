@@ -27,8 +27,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
   protected static List<RelayNetworkStatus> parseStatuses(
       byte[] statusesBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<RelayNetworkStatus> parsedStatuses =
-        new ArrayList<RelayNetworkStatus>();
+    List<RelayNetworkStatus> parsedStatuses = new ArrayList<>();
     List<byte[]> splitStatusBytes =
         DescriptorImpl.splitRawDescriptorBytes(statusesBytes,
         "network-status-version 2");
@@ -44,11 +43,11 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(statusBytes, failUnrecognizedDescriptorLines, false, true);
-    Set<String> exactlyOnceKeywords = new HashSet<String>(Arrays.asList((
+    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
         "network-status-version,dir-source,fingerprint,contact,"
         + "dir-signing-key,published").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<String>(Arrays.asList(
+    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList(
         "dir-options,client-versions,server-versions".split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
@@ -138,7 +137,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
             + "' in v2 network status.");
       } else {
         if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
+          this.unrecognizedLines = new ArrayList<>();
         }
         this.unrecognizedLines.add(line);
       }
@@ -185,7 +184,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
             + "' in v2 network status.");
       } else {
         if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<String>();
+          this.unrecognizedLines = new ArrayList<>();
         }
         this.unrecognizedLines.add(line);
       }
@@ -336,7 +335,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   private String[] dirOptions;
   public SortedSet<String> getDirOptions() {
-    return new TreeSet<String>(Arrays.asList(this.dirOptions));
+    return new TreeSet<>(Arrays.asList(this.dirOptions));
   }
 
   private String nickname;

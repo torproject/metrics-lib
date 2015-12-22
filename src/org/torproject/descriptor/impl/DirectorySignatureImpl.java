@@ -70,7 +70,7 @@ public class DirectorySignatureImpl implements DirectorySignature {
               + line + "' in dir-source entry.");
         } else {
           if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<String>();
+            this.unrecognizedLines = new ArrayList<>();
           }
           this.unrecognizedLines.add(line);
         }

@@ -68,7 +68,7 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
 
   private SortedSet<String> keywordCountingSet;
   private void initializeKeywords() {
-    this.keywordCountingSet = new TreeSet<String>();
+    this.keywordCountingSet = new TreeSet<>();
     this.keywordCountingSet.add("ExitNode");
     this.keywordCountingSet.add("Published");
     this.keywordCountingSet.add("LastStatus");
