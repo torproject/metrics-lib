@@ -238,40 +238,42 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
       case "router-digest-sha256":
         this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
         break;
-      default:
-        if (line.startsWith("-----BEGIN")) {
-          cryptoLines = new ArrayList<>();
-          cryptoLines.add(line);
-        } else if (line.startsWith("-----END")) {
-          cryptoLines.add(line);
-          StringBuilder sb = new StringBuilder();
-          for (String cryptoLine : cryptoLines) {
-            sb.append("\n").append(cryptoLine);
-          }
-          String cryptoString = sb.toString().substring(1);
-          switch (nextCrypto) {
-          case "router-signature":
-            this.routerSignature = cryptoString;
-            break;
-          case "identity-ed25519":
-            this.identityEd25519 = cryptoString;
-            this.parseIdentityEd25519CryptoBlock(cryptoString);
-            break;
-          default:
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized crypto "
-                  + "block '" + cryptoString + "' in extra-info "
-                  + "descriptor.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.addAll(cryptoLines);
+      case "-----BEGIN":
+        cryptoLines = new ArrayList<>();
+        cryptoLines.add(line);
+        break;
+      case "-----END":
+        cryptoLines.add(line);
+        StringBuilder sb = new StringBuilder();
+        for (String cryptoLine : cryptoLines) {
+          sb.append("\n").append(cryptoLine);
+        }
+        String cryptoString = sb.toString().substring(1);
+        switch (nextCrypto) {
+        case "router-signature":
+          this.routerSignature = cryptoString;
+          break;
+        case "identity-ed25519":
+          this.identityEd25519 = cryptoString;
+          this.parseIdentityEd25519CryptoBlock(cryptoString);
+          break;
+        default:
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block '" + cryptoString + "' in extra-info "
+                + "descriptor.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.addAll(cryptoLines);
           }
           cryptoLines = null;
           nextCrypto = "";
-        } else if (cryptoLines != null) {
+        }
+        break;
+      default:
+        if (cryptoLines != null) {
           cryptoLines.add(line);
         } else {
           ParseHelper.parseKeyword(line, partsNoOpt[0]);

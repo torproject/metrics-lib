@@ -80,25 +80,34 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     boolean skipCrypto = false;
     while (s.hasNext()) {
       String line = s.next();
-      if (line.startsWith("dir-source")) {
+      String[] parts = line.split(" ");
+      switch (parts[0]) {
+      case "dir-source":
         this.parseDirSourceLine(line);
-      } else if (line.startsWith("contact")) {
+        break;
+      case "contact":
         this.parseContactLine(line);
-      } else if (line.startsWith("vote-digest")) {
+        break;
+      case "vote-digest":
         this.parseVoteDigestLine(line);
-      } else if (line.startsWith("-----BEGIN")) {
+        break;
+      case "-----BEGIN":
         skipCrypto = true;
-      } else if (line.startsWith("-----END")) {
+        break;
+      case "-----END":
         skipCrypto = false;
-      } else if (!skipCrypto) {
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in dir-source entry.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (!skipCrypto) {
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in dir-source entry.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
           }
-          this.unrecognizedLines.add(line);
         }
       }
     }

@@ -148,12 +148,14 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       case "dir-key-crosscert":
       case "dir-key-certification":
         break;
+      case "-----BEGIN":
+        skipCrypto = true;
+        break;
+      case "-----END":
+        skipCrypto = false;
+        break;
       default:
-        if (line.startsWith("-----BEGIN")) {
-          skipCrypto = true;
-        } else if (line.startsWith("-----END")) {
-          skipCrypto = false;
-        } else if (!skipCrypto) {
+        if (!skipCrypto) {
           if (this.failUnrecognizedDescriptorLines) {
             throw new DescriptorParseException("Unrecognized line '"
                 + line + "' in vote.");
@@ -313,6 +315,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         case "ignoring-advertised-bws":
           this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
           break;
+        default:
+          // empty
         }
       }
     } catch (NumberFormatException ex) {

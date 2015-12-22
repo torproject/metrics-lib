@@ -89,22 +89,24 @@ public class MicrodescriptorImpl extends DescriptorImpl
       case "id":
         this.parseIdLine(line, parts);
         break;
+      case "-----BEGIN":
+        crypto = new StringBuilder();
+        crypto.append(line).append("\n");
+        break;
+      case "-----END":
+        crypto.append(line).append("\n");
+        String cryptoString = crypto.toString();
+        crypto = null;
+        if (nextCrypto.equals("onion-key")) {
+          this.onionKey = cryptoString;
+        } else {
+          throw new DescriptorParseException("Unrecognized crypto "
+              + "block in microdescriptor.");
+        }
+        nextCrypto = "";
+        break;
       default:
-        if (line.startsWith("-----BEGIN")) {
-          crypto = new StringBuilder();
-          crypto.append(line).append("\n");
-        } else if (line.startsWith("-----END")) {
-          crypto.append(line).append("\n");
-          String cryptoString = crypto.toString();
-          crypto = null;
-          if (nextCrypto.equals("onion-key")) {
-            this.onionKey = cryptoString;
-          } else {
-            throw new DescriptorParseException("Unrecognized crypto "
-                + "block in microdescriptor.");
-          }
-          nextCrypto = "";
-        } else if (crypto != null) {
+        if (crypto != null) {
           crypto.append(line).append("\n");
         } else {
           ParseHelper.parseKeyword(line, parts[0]);
@@ -191,15 +193,20 @@ public class MicrodescriptorImpl extends DescriptorImpl
     boolean isValid = true;
     if (parts.length != 3) {
       isValid = false;
-    } else if (!parts[1].equals("accept") && !parts[1].equals("reject")) {
-      isValid = false;
-    } else {
-      String[] ports = parts[2].split(",", -1);
-      for (int i = 0; i < ports.length; i++) {
-        if (ports[i].length() < 1) {
-          isValid = false;
-          break;
+    } else  {
+      switch (parts[1]) {
+      case "accept":
+      case "reject":
+        String[] ports = parts[2].split(",", -1);
+        for (int i = 0; i < ports.length; i++) {
+          if (ports[i].length() < 1) {
+            isValid = false;
+            break;
+          }
         }
+        break;
+      default:
+        isValid = false;
       }
     }
     if (!isValid) {
@@ -211,14 +218,19 @@ public class MicrodescriptorImpl extends DescriptorImpl
       throws DescriptorParseException {
     if (parts.length != 3) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
-    } else if ("ed25519".equals(parts[1])) {
-      ParseHelper.parseThirtyTwoByteBase64String(line, parts[2]);
-      this.ed25519Identity = parts[2];
-    } else if ("rsa1024".equals(parts[1])) {
-      ParseHelper.parseTwentyByteBase64String(line, parts[2]);
-      this.rsa1024Identity = parts[2];
     } else {
-      throw new DescriptorParseException("Illegal line '" + line + "'.");
+        switch (parts[1]) {
+        case "ed25519":
+          ParseHelper.parseThirtyTwoByteBase64String(line, parts[2]);
+          this.ed25519Identity = parts[2];
+          break;
+        case "rsa1024":
+          ParseHelper.parseTwentyByteBase64String(line, parts[2]);
+          this.rsa1024Identity = parts[2];
+          break;
+        default:
+          throw new DescriptorParseException("Illegal line '" + line + "'.");
+        }
     }
   }
 

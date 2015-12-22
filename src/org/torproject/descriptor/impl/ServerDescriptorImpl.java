@@ -171,51 +171,53 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         this.parseNtorOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
         nextCrypto = "ntor-onion-key-crosscert";
         break;
-      default:
-        if (line.startsWith("-----BEGIN")) {
-          cryptoLines = new ArrayList<>();
-          cryptoLines.add(line);
-        } else if (line.startsWith("-----END")) {
-          cryptoLines.add(line);
-          StringBuilder sb = new StringBuilder();
-          for (String cryptoLine : cryptoLines) {
-            sb.append("\n").append(cryptoLine);
-          }
-          String cryptoString = sb.toString().substring(1);
-          switch (nextCrypto) {
-          case "onion-key":
-            this.onionKey = cryptoString;
-            break;
-          case "signing-key":
-            this.signingKey = cryptoString;
-            break;
-          case "router-signature":
-            this.routerSignature = cryptoString;
-            break;
-          case "identity-ed25519":
-            this.identityEd25519 = cryptoString;
-            this.parseIdentityEd25519CryptoBlock(cryptoString);
-            break;
-          case "onion-key-crosscert":
-            this.onionKeyCrosscert = cryptoString;
-            break;
-          case "ntor-onion-key-crosscert":
-            this.ntorOnionKeyCrosscert = cryptoString;
-            break;
-          default:
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized crypto "
-                  + "block '" + cryptoString + "' in server descriptor.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.addAll(cryptoLines);
+      case "-----BEGIN":
+        cryptoLines = new ArrayList<>();
+        cryptoLines.add(line);
+        break;
+      case "-----END":
+        cryptoLines.add(line);
+        StringBuilder sb = new StringBuilder();
+        for (String cryptoLine : cryptoLines) {
+          sb.append("\n").append(cryptoLine);
+        }
+        String cryptoString = sb.toString().substring(1);
+        switch (nextCrypto) {
+        case "onion-key":
+          this.onionKey = cryptoString;
+          break;
+        case "signing-key":
+          this.signingKey = cryptoString;
+          break;
+        case "router-signature":
+          this.routerSignature = cryptoString;
+          break;
+        case "identity-ed25519":
+          this.identityEd25519 = cryptoString;
+          this.parseIdentityEd25519CryptoBlock(cryptoString);
+          break;
+        case "onion-key-crosscert":
+          this.onionKeyCrosscert = cryptoString;
+          break;
+        case "ntor-onion-key-crosscert":
+          this.ntorOnionKeyCrosscert = cryptoString;
+          break;
+        default:
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block '" + cryptoString + "' in server descriptor.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.addAll(cryptoLines);
           }
-          cryptoLines = null;
-          nextCrypto = "";
-        } else if (cryptoLines != null) {
+        }
+        cryptoLines = null;
+        nextCrypto = "";
+        break;
+      default:
+        if (cryptoLines != null) {
           cryptoLines.add(line);
         } else {
           ParseHelper.parseKeyword(line, partsNoOpt[0]);
@@ -317,13 +319,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    if (partsNoOpt[1].equals("1")) {
-      this.hibernating = true;
-    } else if (partsNoOpt[1].equals("0")) {
-      this.hibernating = false;
-    } else {
-      throw new DescriptorParseException("Illegal line '" + line + "'.");
-    }
+    this.hibernating = ParseHelper.parseBoolean(partsNoOpt[1], line);
   }
 
   private void parseUptimeLine(String line, String lineNoOpt,
@@ -438,13 +434,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    if (partsNoOpt[1].equals("1")) {
-      this.usesEnhancedDnsLogic = true;
-    } else if (partsNoOpt[1].equals("0")) {
-      this.usesEnhancedDnsLogic = false;
-    } else {
-      throw new DescriptorParseException("Illegal line '" + line + "'.");
-    }
+    this.usesEnhancedDnsLogic = ParseHelper.parseBoolean(partsNoOpt[1], line);
   }
 
   private void parseCachesExtraInfoLine(String line, String lineNoOpt,
@@ -490,10 +480,15 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
       String[] partsNoOpt) throws DescriptorParseException {
     int linkIndex = -1, circuitIndex = -1;
     for (int i = 1; i < partsNoOpt.length; i++) {
-      if (partsNoOpt[i].equals("Link")) {
+      switch (partsNoOpt[i]) {
+      case "Link":
         linkIndex = i;
-      } else if (partsNoOpt[i].equals("Circuit")) {
+        break;
+      case "Circuit":
         circuitIndex = i;
+        break;
+      default:
+        // empty
       }
     }
     if (linkIndex < 0 || circuitIndex < 0 || circuitIndex < linkIndex) {
@@ -555,19 +550,23 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     boolean isValid = true;
     if (partsNoOpt.length != 3) {
       isValid = false;
-    } else if (!partsNoOpt[1].equals("accept") &&
-        !partsNoOpt[1].equals("reject")) {
-      isValid = false;
     } else {
-      this.ipv6DefaultPolicy = partsNoOpt[1];
-      this.ipv6PortList = partsNoOpt[2];
-      String[] ports = partsNoOpt[2].split(",", -1);
-      for (int i = 0; i < ports.length; i++) {
-        if (ports[i].length() < 1) {
-          isValid = false;
+        switch (partsNoOpt[1]) {
+        case "accept":
+        case "reject":
+          this.ipv6DefaultPolicy = partsNoOpt[1];
+          this.ipv6PortList = partsNoOpt[2];
+          String[] ports = partsNoOpt[2].split(",", -1);
+          for (int i = 0; i < ports.length; i++) {
+            if (ports[i].length() < 1) {
+              isValid = false;
+              break;
+            }
+          }
           break;
+        default:
+          isValid = false;
         }
-      }
     }
     if (!isValid) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");

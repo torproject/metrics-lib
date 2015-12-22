@@ -213,18 +213,23 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     boolean isValid = true;
     if (parts.length != 3) {
       isValid = false;
-    } else if (!parts[1].equals("accept") && !parts[1].equals("reject")) {
-      isValid = false;
     } else {
-      this.defaultPolicy = parts[1];
-      this.portList = parts[2];
-      String[] ports = parts[2].split(",", -1);
-      for (int i = 0; i < ports.length; i++) {
-        if (ports[i].length() < 1) {
-          isValid = false;
-          break;
+        switch (parts[1]) {
+          case "accept":
+          case "reject":
+            this.defaultPolicy = parts[1];
+            this.portList = parts[2];
+            String[] ports = parts[2].split(",", -1);
+            for (int i = 0; i < ports.length; i++) {
+              if (ports[i].length() < 1) {
+                isValid = false;
+                break;
+              }
+            }
+            break;
+          default:
+            isValid = false;
         }
-      }
     }
     if (!isValid) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");

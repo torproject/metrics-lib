@@ -203,48 +203,51 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     if (response.getException() != null) {
       this.runningDirectories.remove(nickname);
     }
-    if (response.getDescriptorType().equals("consensus")) {
-      this.requestingConsensuses.remove(nickname);
-      if (response.getResponseCode() == 200 &&
-          response.getDescriptors() != null) {
-        if (this.includeCurrentReferencedVotes) {
-          /* TODO Only add votes if the consensus is not older than one
-           * hour.  Or does that make no sense? */
-          for (Descriptor parsedDescriptor : response.getDescriptors()) {
-            if (!(parsedDescriptor instanceof
-                RelayNetworkStatusConsensus)) {
-              continue;
-            }
-            RelayNetworkStatusConsensus parsedConsensus =
-                (RelayNetworkStatusConsensus) parsedDescriptor;
-            for (DirSourceEntry dirSource :
-                parsedConsensus.getDirSourceEntries().values()) {
-              String identity = dirSource.getIdentity();
-              if (!this.missingVotes.contains(identity)) {
-                boolean alreadyRequested = false;
-                for (Set<String> requestedBefore :
-                    this.requestedVotes.values()) {
-                  if (requestedBefore.contains(identity)) {
-                    alreadyRequested = true;
-                    break;
+    switch (response.getDescriptorType()) {
+      case "consensus":
+        this.requestingConsensuses.remove(nickname);
+        if (response.getResponseCode() == 200 &&
+            response.getDescriptors() != null) {
+          if (this.includeCurrentReferencedVotes) {
+            /* TODO Only add votes if the consensus is not older than one
+             * hour.  Or does that make no sense? */
+            for (Descriptor parsedDescriptor :
+                response.getDescriptors()) {
+              if (!(parsedDescriptor instanceof
+                  RelayNetworkStatusConsensus)) {
+                continue;
+              }
+              RelayNetworkStatusConsensus parsedConsensus =
+                  (RelayNetworkStatusConsensus) parsedDescriptor;
+              for (DirSourceEntry dirSource :
+                  parsedConsensus.getDirSourceEntries().values()) {
+                String identity = dirSource.getIdentity();
+                if (!this.missingVotes.contains(identity)) {
+                  boolean alreadyRequested = false;
+                  for (Set<String> requestedBefore :
+                      this.requestedVotes.values()) {
+                    if (requestedBefore.contains(identity)) {
+                      alreadyRequested = true;
+                      break;
+                    }
                   }
-                }
-                if (!alreadyRequested) {
-                  this.missingVotes.add(identity);
+                  if (!alreadyRequested) {
+                    this.missingVotes.add(identity);
+                  }
                 }
               }
             }
+            /* TODO Later, add referenced server descriptors. */
           }
-          /* TODO Later, add referenced server descriptors. */
+        } else {
+          this.missingConsensus = true;
         }
-      } else {
-        this.missingConsensus = true;
-      }
-    } else if (response.getDescriptorType().equals("vote")) {
-      String requestedVote = requestingVotes.remove(nickname);
-      if (response.getResponseCode() != 200) {
-        this.missingVotes.add(requestedVote);
-      }
+        break;
+      case "vote":
+        String requestedVote = requestingVotes.remove(nickname);
+        if (response.getResponseCode() != 200) {
+          this.missingVotes.add(requestedVote);
+        }
     }
     if (response.getRequestEnd() != 0L) {
       this.descriptorQueue.add(response);

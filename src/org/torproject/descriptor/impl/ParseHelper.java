@@ -263,6 +263,18 @@ public class ParseHelper {
     return nickname;
   }
 
+  public static boolean parseBoolean(String b, String line)
+      throws DescriptorParseException {
+    switch (b) {
+    case "1":
+      return true;
+    case "0":
+      return false;
+    default:
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
   private static Pattern twentyByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{27}$");
   public static String parseTwentyByteBase64String(String line,

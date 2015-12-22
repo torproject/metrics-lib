@@ -40,13 +40,19 @@ public class DirectorySignatureImpl implements DirectorySignature {
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
-      if (line.startsWith("directory-signature ")) {
-        String[] parts = line.split(" ", -1);
+      String[] parts = line.split(" ", -1);
+      String keyword = parts[0];
+      switch (keyword) {
+      case "directory-signature":
         int algorithmOffset = 0;
-        if (parts.length == 4) {
+        switch (parts.length) {
+        case 4:
           this.algorithm = parts[1];
           algorithmOffset = 1;
-        } else if (parts.length != 3) {
+          break;
+        case 3:
+          break;
+        default:
           throw new DescriptorParseException("Illegal line '" + line
               + "'.");
         }
@@ -54,25 +60,30 @@ public class DirectorySignatureImpl implements DirectorySignature {
             parts[1 + algorithmOffset]);
         this.signingKeyDigest = ParseHelper.parseTwentyByteHexString(
             line, parts[2 + algorithmOffset]);
-      } else if (line.startsWith("-----BEGIN")) {
+        break;
+      case "-----BEGIN":
         crypto = new StringBuilder();
         crypto.append(line).append("\n");
-      } else if (line.startsWith("-----END")) {
+        break;
+      case "-----END":
         crypto.append(line).append("\n");
         String cryptoString = crypto.toString();
         crypto = null;
         this.signature = cryptoString;
-      } else if (crypto != null) {
-        crypto.append(line).append("\n");
-      } else {
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in dir-source entry.");
+        break;
+      default:
+        if (crypto != null) {
+          crypto.append(line).append("\n");
         } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in dir-source entry.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
           }
-          this.unrecognizedLines.add(line);
         }
       }
     }

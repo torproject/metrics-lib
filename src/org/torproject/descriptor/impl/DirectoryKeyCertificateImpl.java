@@ -98,33 +98,34 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
         this.parseDirKeyCertificationLine(line, parts);
         nextCrypto = "dir-key-certification";
         break;
+      case "-----BEGIN":
+        crypto = new StringBuilder();
+        crypto.append(line).append("\n");
+        break;
+      case "-----END":
+        crypto.append(line).append("\n");
+        String cryptoString = crypto.toString();
+        crypto = null;
+        switch (nextCrypto) {
+        case "dir-identity-key":
+          this.dirIdentityKey = cryptoString;
+          break;
+        case "dir-signing-key":
+          this.dirSigningKey = cryptoString;
+          break;
+        case "dir-key-crosscert":
+          this.dirKeyCrosscert = cryptoString;
+          break;
+        case "dir-key-certification":
+          this.dirKeyCertification = cryptoString;
+          break;
+        default:
+          throw new DescriptorParseException("Unrecognized crypto "
+              + "block in directory key certificate.");
+        }
+        nextCrypto = "";
       default:
-        if (line.startsWith("-----BEGIN")) {
-          crypto = new StringBuilder();
-          crypto.append(line).append("\n");
-        } else if (line.startsWith("-----END")) {
-          crypto.append(line).append("\n");
-          String cryptoString = crypto.toString();
-          crypto = null;
-          switch (nextCrypto) {
-          case "dir-identity-key":
-            this.dirIdentityKey = cryptoString;
-            break;
-          case "dir-signing-key":
-            this.dirSigningKey = cryptoString;
-            break;
-          case "dir-key-crosscert":
-            this.dirKeyCrosscert = cryptoString;
-            break;
-          case "dir-key-certification":
-            this.dirKeyCertification = cryptoString;
-            break;
-          default:
-            throw new DescriptorParseException("Unrecognized crypto "
-                + "block in directory key certificate.");
-          }
-          nextCrypto = "";
-        } else if (crypto != null) {
+        if (crypto != null) {
           crypto.append(line).append("\n");
         } else {
           if (this.failUnrecognizedDescriptorLines) {
