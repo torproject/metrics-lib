@@ -230,9 +230,9 @@ public class RelayDirectoryImpl extends DescriptorImpl
       default:
         if (line.startsWith("-----BEGIN")) {
           crypto = new StringBuilder();
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
         } else if (line.startsWith("-----END")) {
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
           String cryptoString = crypto.toString();
           crypto = null;
           if (nextCrypto.equals("dir-signing-key") &&
@@ -244,7 +244,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
           }
           nextCrypto = "";
         } else if (crypto != null) {
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
         } else {
           if (this.failUnrecognizedDescriptorLines) {
             throw new DescriptorParseException("Unrecognized line '"
@@ -318,9 +318,9 @@ public class RelayDirectoryImpl extends DescriptorImpl
         nextCrypto = "directory-signature";
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
       } else if (line.startsWith("-----END")) {
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
         String cryptoString = crypto.toString();
         crypto = null;
         if (nextCrypto.equals("directory-signature")) {
@@ -331,7 +331,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
         }
         nextCrypto = "";
       } else if (crypto != null) {
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
       } else if (this.failUnrecognizedDescriptorLines) {
         throw new DescriptorParseException("Unrecognized line '" + line
             + "' in v2 network status.");
@@ -369,11 +369,11 @@ public class RelayDirectoryImpl extends DescriptorImpl
       sb.append("-----BEGIN RSA PUBLIC KEY-----\n");
       String keyString = partsNoOpt[1];
       while (keyString.length() > 64) {
-        sb.append(keyString.substring(0, 64) + "\n");
+        sb.append(keyString.substring(0, 64)).append("\n");
         keyString = keyString.substring(64);
       }
       if (keyString.length() > 0) {
-        sb.append(keyString + "\n");
+        sb.append(keyString).append("\n");
       }
       sb.append("-----END RSA PUBLIC KEY-----\n");
       this.dirSigningKey = sb.toString();

@@ -87,21 +87,21 @@ public class BridgeNetworkStatusTest {
     }
     private void appendHeader(StringBuilder sb) {
       if (this.publishedLine != null) {
-        sb.append(this.publishedLine + "\n");
+        sb.append(this.publishedLine).append("\n");
       }
       if (this.flagThresholdsLine != null) {
-        sb.append(this.flagThresholdsLine + "\n");
+        sb.append(this.flagThresholdsLine).append("\n");
       }
       if (this.unrecognizedHeaderLine != null) {
-        sb.append(this.unrecognizedHeaderLine + "\n");
+        sb.append(this.unrecognizedHeaderLine).append("\n");
       }
     }
     private void appendStatusEntries(StringBuilder sb) {
       for (String statusEntry : this.statusEntries) {
-        sb.append(statusEntry + "\n");
+        sb.append(statusEntry).append("\n");
       }
       if (this.unrecognizedStatusEntryLine != null) {
-        sb.append(this.unrecognizedStatusEntryLine + "\n");
+        sb.append(this.unrecognizedStatusEntryLine).append("\n");
       }
     }
   }

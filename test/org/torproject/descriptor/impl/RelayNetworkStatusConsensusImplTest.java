@@ -107,12 +107,12 @@ public class RelayNetworkStatusConsensusImplTest {
       String dirSourceLine = "dir-source " + this.nickname + " "
           + this.identity + " " + this.hostName + " " + this.address + " "
           + this.dirPort + " " + this.orPort;
-      sb.append(dirSourceLine + "\n");
+      sb.append(dirSourceLine).append("\n");
       if (this.contactLine != null) {
-        sb.append(this.contactLine + "\n");
+        sb.append(this.contactLine).append("\n");
       }
       if (this.voteDigestLine != null) {
-        sb.append(this.voteDigestLine + "\n");
+        sb.append(this.voteDigestLine).append("\n");
       }
       String dirSourceWithTrailingNewLine = sb.toString();
       String dirSource = dirSourceWithTrailingNewLine.substring(0,
@@ -218,18 +218,18 @@ public class RelayNetworkStatusConsensusImplTest {
       String rLine = "r " + nickname + " " + fingerprintBase64 + " "
           + descriptorBase64 + " " + publishedString + " " + address + " "
           + orPort + " " + dirPort;
-      sb.append(rLine + "\n");
+      sb.append(rLine).append("\n");
       if (this.sLine != null) {
-        sb.append(this.sLine + "\n");
+        sb.append(this.sLine).append("\n");
       }
       if (this.vLine != null) {
-        sb.append(this.vLine + "\n");
+        sb.append(this.vLine).append("\n");
       }
       if (this.wLine != null) {
-        sb.append(this.wLine + "\n");
+        sb.append(this.wLine).append("\n");
       }
       if (this.pLine != null) {
-        sb.append(this.pLine + "\n");
+        sb.append(this.pLine).append("\n");
       }
       String statusEntryWithTrailingNewLine = sb.toString();
       String statusEntry = statusEntryWithTrailingNewLine.substring(0,

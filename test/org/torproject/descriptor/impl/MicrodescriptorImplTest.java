@@ -39,13 +39,13 @@ public class MicrodescriptorImplTest {
     private byte[] buildDescriptor() {
       StringBuilder sb = new StringBuilder();
       if (this.onionKeyLines != null) {
-        sb.append(this.onionKeyLines + "\n");
+        sb.append(this.onionKeyLines).append("\n");
       }
       if (this.ntorOnionKeyLine != null) {
-        sb.append(this.ntorOnionKeyLine + "\n");
+        sb.append(this.ntorOnionKeyLine).append("\n");
       }
       if (this.idLine != null) {
-        sb.append(this.idLine + "\n");
+        sb.append(this.idLine).append("\n");
       }
       return sb.toString().getBytes();
     }

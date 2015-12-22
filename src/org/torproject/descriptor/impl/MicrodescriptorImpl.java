@@ -92,9 +92,9 @@ public class MicrodescriptorImpl extends DescriptorImpl
       default:
         if (line.startsWith("-----BEGIN")) {
           crypto = new StringBuilder();
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
         } else if (line.startsWith("-----END")) {
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
           String cryptoString = crypto.toString();
           crypto = null;
           if (nextCrypto.equals("onion-key")) {
@@ -105,7 +105,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
           }
           nextCrypto = "";
         } else if (crypto != null) {
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
         } else {
           ParseHelper.parseKeyword(line, parts[0]);
           if (this.failUnrecognizedDescriptorLines) {

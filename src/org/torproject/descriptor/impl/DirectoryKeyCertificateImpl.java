@@ -101,9 +101,9 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
       default:
         if (line.startsWith("-----BEGIN")) {
           crypto = new StringBuilder();
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
         } else if (line.startsWith("-----END")) {
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
           String cryptoString = crypto.toString();
           crypto = null;
           switch (nextCrypto) {
@@ -125,7 +125,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
           }
           nextCrypto = "";
         } else if (crypto != null) {
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
         } else {
           if (this.failUnrecognizedDescriptorLines) {
             throw new DescriptorParseException("Unrecognized line '"

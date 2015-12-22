@@ -179,7 +179,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           cryptoLines.add(line);
           StringBuilder sb = new StringBuilder();
           for (String cryptoLine : cryptoLines) {
-            sb.append("\n" + cryptoLine);
+            sb.append("\n").append(cryptoLine);
           }
           String cryptoString = sb.toString().substring(1);
           switch (nextCrypto) {

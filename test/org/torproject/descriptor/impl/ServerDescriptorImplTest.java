@@ -256,85 +256,85 @@ public class ServerDescriptorImplTest {
     private byte[] buildDescriptor() {
       StringBuilder sb = new StringBuilder();
       if (this.routerLine != null) {
-        sb.append(this.routerLine + "\n");
+        sb.append(this.routerLine).append("\n");
       }
       if (this.identityEd25519Lines != null) {
-        sb.append(this.identityEd25519Lines + "\n");
+        sb.append(this.identityEd25519Lines).append("\n");
       }
       if (this.masterKeyEd25519Line != null) {
-        sb.append(this.masterKeyEd25519Line + "\n");
+        sb.append(this.masterKeyEd25519Line).append("\n");
       }
       if (this.bandwidthLine != null) {
-        sb.append(this.bandwidthLine + "\n");
+        sb.append(this.bandwidthLine).append("\n");
       }
       if (this.platformLine != null) {
-        sb.append(this.platformLine + "\n");
+        sb.append(this.platformLine).append("\n");
       }
       if (this.publishedLine != null) {
-        sb.append(this.publishedLine + "\n");
+        sb.append(this.publishedLine).append("\n");
       }
       if (this.fingerprintLine != null) {
-        sb.append(this.fingerprintLine + "\n");
+        sb.append(this.fingerprintLine).append("\n");
       }
       if (this.hibernatingLine != null) {
-        sb.append(this.hibernatingLine + "\n");
+        sb.append(this.hibernatingLine).append("\n");
       }
       if (this.uptimeLine != null) {
-        sb.append(this.uptimeLine + "\n");
+        sb.append(this.uptimeLine).append("\n");
       }
       if (this.onionKeyLines != null) {
-        sb.append(this.onionKeyLines + "\n");
+        sb.append(this.onionKeyLines).append("\n");
       }
       if (this.signingKeyLines != null) {
-        sb.append(this.signingKeyLines + "\n");
+        sb.append(this.signingKeyLines).append("\n");
       }
       if (this.onionKeyCrosscertLines != null) {
-        sb.append(this.onionKeyCrosscertLines + "\n");
+        sb.append(this.onionKeyCrosscertLines).append("\n");
       }
       if (this.ntorOnionKeyCrosscertLines != null) {
-        sb.append(this.ntorOnionKeyCrosscertLines + "\n");
+        sb.append(this.ntorOnionKeyCrosscertLines).append("\n");
       }
       if (this.exitPolicyLines != null) {
-        sb.append(this.exitPolicyLines + "\n");
+        sb.append(this.exitPolicyLines).append("\n");
       }
       if (this.contactLine != null) {
-        sb.append(this.contactLine + "\n");
+        sb.append(this.contactLine).append("\n");
       }
       if (this.familyLine != null) {
-        sb.append(this.familyLine + "\n");
+        sb.append(this.familyLine).append("\n");
       }
       if (this.readHistoryLine != null) {
-        sb.append(this.readHistoryLine + "\n");
+        sb.append(this.readHistoryLine).append("\n");
       }
       if (this.writeHistoryLine != null) {
-        sb.append(this.writeHistoryLine + "\n");
+        sb.append(this.writeHistoryLine).append("\n");
       }
       if (this.eventdnsLine != null) {
-        sb.append(this.eventdnsLine + "\n");
+        sb.append(this.eventdnsLine).append("\n");
       }
       if (this.cachesExtraInfoLine != null) {
-        sb.append(this.cachesExtraInfoLine + "\n");
+        sb.append(this.cachesExtraInfoLine).append("\n");
       }
       if (this.extraInfoDigestLine != null) {
-        sb.append(this.extraInfoDigestLine + "\n");
+        sb.append(this.extraInfoDigestLine).append("\n");
       }
       if (this.hiddenServiceDirLine != null) {
-        sb.append(this.hiddenServiceDirLine + "\n");
+        sb.append(this.hiddenServiceDirLine).append("\n");
       }
       if (this.protocolsLine != null) {
-        sb.append(this.protocolsLine + "\n");
+        sb.append(this.protocolsLine).append("\n");
       }
       if (this.allowSingleHopExitsLine != null) {
-        sb.append(this.allowSingleHopExitsLine + "\n");
+        sb.append(this.allowSingleHopExitsLine).append("\n");
       }
       if (this.ipv6PolicyLine != null) {
-        sb.append(this.ipv6PolicyLine + "\n");
+        sb.append(this.ipv6PolicyLine).append("\n");
       }
       if (this.ntorOnionKeyLine != null) {
-        sb.append(this.ntorOnionKeyLine + "\n");
+        sb.append(this.ntorOnionKeyLine).append("\n");
       }
       if (this.unrecognizedLine != null) {
-        sb.append(this.unrecognizedLine + "\n");
+        sb.append(this.unrecognizedLine).append("\n");
       }
       if (this.nonAsciiLineBytes != null) {
         try {
@@ -351,10 +351,10 @@ public class ServerDescriptorImplTest {
         }
       }
       if (this.routerSigEd25519Line != null) {
-        sb.append(this.routerSigEd25519Line + "\n");
+        sb.append(this.routerSigEd25519Line).append("\n");
       }
       if (this.routerSignatureLines != null) {
-        sb.append(this.routerSignatureLines + "\n");
+        sb.append(this.routerSignatureLines).append("\n");
       }
       return sb.toString().getBytes();
     }
@@ -1377,7 +1377,7 @@ public class ServerDescriptorImplTest {
     unrecognizedLines.add("-----END RSA PUBLIC KEY-----");
     StringBuilder sb = new StringBuilder();
     for (String line : unrecognizedLines) {
-      sb.append("\n" + line);
+      sb.append("\n").append(line);
     }
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithUnrecognizedLine(sb.toString().substring(1), false);
@@ -1398,7 +1398,7 @@ public class ServerDescriptorImplTest {
     unrecognizedLines.add("-----END RSA PUBLIC KEY-----");
     StringBuilder sb = new StringBuilder();
     for (String line : unrecognizedLines) {
-      sb.append("\n" + line);
+      sb.append("\n").append(line);
     }
     ServerDescriptor descriptor = DescriptorBuilder.
         createWithUnrecognizedLine(sb.toString().substring(1), false);

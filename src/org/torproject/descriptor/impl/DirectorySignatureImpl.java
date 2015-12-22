@@ -56,14 +56,14 @@ public class DirectorySignatureImpl implements DirectorySignature {
             line, parts[2 + algorithmOffset]);
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
       } else if (line.startsWith("-----END")) {
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
         String cryptoString = crypto.toString();
         crypto = null;
         this.signature = cryptoString;
       } else if (crypto != null) {
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
       } else {
         if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '"

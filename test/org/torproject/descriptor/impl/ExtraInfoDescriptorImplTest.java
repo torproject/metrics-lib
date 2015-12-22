@@ -189,61 +189,61 @@ public class ExtraInfoDescriptorImplTest {
     private byte[] buildDescriptor() {
       StringBuilder sb = new StringBuilder();
       if (this.extraInfoLine != null) {
-        sb.append(this.extraInfoLine + "\n");
+        sb.append(this.extraInfoLine).append("\n");
       }
       if (this.identityEd25519Lines != null) {
-        sb.append(this.identityEd25519Lines + "\n");
+        sb.append(this.identityEd25519Lines).append("\n");
       }
       if (this.masterKeyEd25519Line != null) {
-        sb.append(this.masterKeyEd25519Line + "\n");
+        sb.append(this.masterKeyEd25519Line).append("\n");
       }
       if (this.publishedLine != null) {
-        sb.append(this.publishedLine + "\n");
+        sb.append(this.publishedLine).append("\n");
       }
       if (this.writeHistoryLine != null) {
-        sb.append(this.writeHistoryLine + "\n");
+        sb.append(this.writeHistoryLine).append("\n");
       }
       if (this.readHistoryLine != null) {
-        sb.append(this.readHistoryLine + "\n");
+        sb.append(this.readHistoryLine).append("\n");
       }
       if (this.dirreqWriteHistoryLine != null) {
-        sb.append(this.dirreqWriteHistoryLine + "\n");
+        sb.append(this.dirreqWriteHistoryLine).append("\n");
       }
       if (this.dirreqReadHistoryLine != null) {
-        sb.append(this.dirreqReadHistoryLine + "\n");
+        sb.append(this.dirreqReadHistoryLine).append("\n");
       }
       if (this.geoipDbDigestLine != null) {
-        sb.append(this.geoipDbDigestLine + "\n");
+        sb.append(this.geoipDbDigestLine).append("\n");
       }
       if (this.geoip6DbDigestLine != null) {
-        sb.append(this.geoip6DbDigestLine + "\n");
+        sb.append(this.geoip6DbDigestLine).append("\n");
       }
       if (this.geoipStatsLines != null) {
-        sb.append(this.geoipStatsLines + "\n");
+        sb.append(this.geoipStatsLines).append("\n");
       }
       if (this.dirreqStatsLines != null) {
-        sb.append(this.dirreqStatsLines + "\n");
+        sb.append(this.dirreqStatsLines).append("\n");
       }
       if (this.entryStatsLines != null) {
-        sb.append(this.entryStatsLines + "\n");
+        sb.append(this.entryStatsLines).append("\n");
       }
       if (this.cellStatsLines != null) {
-        sb.append(this.cellStatsLines + "\n");
+        sb.append(this.cellStatsLines).append("\n");
       }
       if (this.connBiDirectLine != null) {
-        sb.append(this.connBiDirectLine + "\n");
+        sb.append(this.connBiDirectLine).append("\n");
       }
       if (this.exitStatsLines != null) {
-        sb.append(this.exitStatsLines + "\n");
+        sb.append(this.exitStatsLines).append("\n");
       }
       if (this.bridgeStatsLines != null) {
-        sb.append(this.bridgeStatsLines + "\n");
+        sb.append(this.bridgeStatsLines).append("\n");
       }
       if (this.hidservStatsLines != null) {
-        sb.append(this.hidservStatsLines + "\n");
+        sb.append(this.hidservStatsLines).append("\n");
       }
       if (this.unrecognizedLine != null) {
-        sb.append(this.unrecognizedLine + "\n");
+        sb.append(this.unrecognizedLine).append("\n");
       }
       if (this.nonAsciiLineBytes != null) {
         try {
@@ -260,10 +260,10 @@ public class ExtraInfoDescriptorImplTest {
         }
       }
       if (this.routerSigEd25519Line != null) {
-        sb.append(this.routerSigEd25519Line + "\n");
+        sb.append(this.routerSigEd25519Line).append("\n");
       }
       if (this.routerSignatureLines != null) {
-        sb.append(this.routerSignatureLines + "\n");
+        sb.append(this.routerSignatureLines).append("\n");
       }
       return sb.toString().getBytes();
     }
@@ -298,10 +298,10 @@ public class ExtraInfoDescriptorImplTest {
     private String buildGeoipStatsLines() {
       StringBuilder sb = new StringBuilder();
       if (this.geoipStartTimeLine != null) {
-        sb.append(this.geoipStartTimeLine + "\n");
+        sb.append(this.geoipStartTimeLine).append("\n");
       }
       if (this.geoipClientOriginsLine != null) {
-        sb.append(this.geoipClientOriginsLine + "\n");
+        sb.append(this.geoipClientOriginsLine).append("\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -440,43 +440,43 @@ public class ExtraInfoDescriptorImplTest {
     private String buildDirreqStatsLines() {
       StringBuilder sb = new StringBuilder();
       if (this.dirreqStatsEndLine != null) {
-        sb.append(this.dirreqStatsEndLine + "\n");
+        sb.append(this.dirreqStatsEndLine).append("\n");
       }
       if (this.dirreqV3IpsLine != null) {
-        sb.append(this.dirreqV3IpsLine + "\n");
+        sb.append(this.dirreqV3IpsLine).append("\n");
       }
       if (this.dirreqV2IpsLine != null) {
-        sb.append(this.dirreqV2IpsLine + "\n");
+        sb.append(this.dirreqV2IpsLine).append("\n");
       }
       if (this.dirreqV3ReqsLine != null) {
-        sb.append(this.dirreqV3ReqsLine + "\n");
+        sb.append(this.dirreqV3ReqsLine).append("\n");
       }
       if (this.dirreqV2ReqsLine != null) {
-        sb.append(this.dirreqV2ReqsLine + "\n");
+        sb.append(this.dirreqV2ReqsLine).append("\n");
       }
       if (this.dirreqV3RespLine != null) {
-        sb.append(this.dirreqV3RespLine + "\n");
+        sb.append(this.dirreqV3RespLine).append("\n");
       }
       if (this.dirreqV2RespLine != null) {
-        sb.append(this.dirreqV2RespLine + "\n");
+        sb.append(this.dirreqV2RespLine).append("\n");
       }
       if (this.dirreqV2ShareLine != null) {
-        sb.append(this.dirreqV2ShareLine + "\n");
+        sb.append(this.dirreqV2ShareLine).append("\n");
       }
       if (this.dirreqV3ShareLine != null) {
-        sb.append(this.dirreqV3ShareLine + "\n");
+        sb.append(this.dirreqV3ShareLine).append("\n");
       }
       if (this.dirreqV3DirectDlLine != null) {
-        sb.append(this.dirreqV3DirectDlLine + "\n");
+        sb.append(this.dirreqV3DirectDlLine).append("\n");
       }
       if (this.dirreqV2DirectDlLine != null) {
-        sb.append(this.dirreqV2DirectDlLine + "\n");
+        sb.append(this.dirreqV2DirectDlLine).append("\n");
       }
       if (this.dirreqV3TunneledDlLine != null) {
-        sb.append(this.dirreqV3TunneledDlLine + "\n");
+        sb.append(this.dirreqV3TunneledDlLine).append("\n");
       }
       if (this.dirreqV2TunneledDlLine != null) {
-        sb.append(this.dirreqV2TunneledDlLine + "\n");
+        sb.append(this.dirreqV2TunneledDlLine).append("\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -516,10 +516,10 @@ public class ExtraInfoDescriptorImplTest {
     private String buildEntryStatsLines() {
       StringBuilder sb = new StringBuilder();
       if (this.entryStatsEndLine != null) {
-        sb.append(this.entryStatsEndLine + "\n");
+        sb.append(this.entryStatsEndLine).append("\n");
       }
       if (this.entryIpsLine != null) {
-        sb.append(this.entryIpsLine + "\n");
+        sb.append(this.entryIpsLine).append("\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -586,19 +586,19 @@ public class ExtraInfoDescriptorImplTest {
     private String buildCellStatsLines() {
       StringBuilder sb = new StringBuilder();
       if (this.cellStatsEndLine != null) {
-        sb.append(this.cellStatsEndLine + "\n");
+        sb.append(this.cellStatsEndLine).append("\n");
       }
       if (this.cellProcessedCellsLine != null) {
-        sb.append(this.cellProcessedCellsLine + "\n");
+        sb.append(this.cellProcessedCellsLine).append("\n");
       }
       if (this.cellQueuedCellsLine != null) {
-        sb.append(this.cellQueuedCellsLine + "\n");
+        sb.append(this.cellQueuedCellsLine).append("\n");
       }
       if (this.cellTimeInQueueLine != null) {
-        sb.append(this.cellTimeInQueueLine + "\n");
+        sb.append(this.cellTimeInQueueLine).append("\n");
       }
       if (this.cellCircuitsPerDecileLine != null) {
-        sb.append(this.cellCircuitsPerDecileLine + "\n");
+        sb.append(this.cellCircuitsPerDecileLine).append("\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -659,16 +659,16 @@ public class ExtraInfoDescriptorImplTest {
     private String buildExitStatsLines() {
       StringBuilder sb = new StringBuilder();
       if (this.exitStatsEndLine != null) {
-        sb.append(this.exitStatsEndLine + "\n");
+        sb.append(this.exitStatsEndLine).append("\n");
       }
       if (this.exitKibibytesWrittenLine != null) {
-        sb.append(this.exitKibibytesWrittenLine + "\n");
+        sb.append(this.exitKibibytesWrittenLine).append("\n");
       }
       if (this.exitKibibytesReadLine != null) {
-        sb.append(this.exitKibibytesReadLine + "\n");
+        sb.append(this.exitKibibytesReadLine).append("\n");
       }
       if (this.exitStreamsOpenedLine != null) {
-        sb.append(this.exitStreamsOpenedLine + "\n");
+        sb.append(this.exitStreamsOpenedLine).append("\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -724,16 +724,16 @@ public class ExtraInfoDescriptorImplTest {
     private String buildBridgeStatsLines() {
       StringBuilder sb = new StringBuilder();
       if (this.bridgeStatsEndLine != null) {
-        sb.append(this.bridgeStatsEndLine + "\n");
+        sb.append(this.bridgeStatsEndLine).append("\n");
       }
       if (this.bridgeIpsLine != null) {
-        sb.append(this.bridgeIpsLine + "\n");
+        sb.append(this.bridgeIpsLine).append("\n");
       }
       if (this.bridgeIpVersionsLine != null) {
-        sb.append(this.bridgeIpVersionsLine + "\n");
+        sb.append(this.bridgeIpVersionsLine).append("\n");
       }
       if (this.bridgeIpTransportsLine != null) {
-        sb.append(this.bridgeIpTransportsLine + "\n");
+        sb.append(this.bridgeIpTransportsLine).append("\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -783,13 +783,13 @@ public class ExtraInfoDescriptorImplTest {
     private String buildHidservStatsLines() {
       StringBuilder sb = new StringBuilder();
       if (this.hidservStatsEndLine != null) {
-        sb.append(this.hidservStatsEndLine + "\n");
+        sb.append(this.hidservStatsEndLine).append("\n");
       }
       if (this.hidservRendRelayedCellsLine != null) {
-        sb.append(this.hidservRendRelayedCellsLine + "\n");
+        sb.append(this.hidservRendRelayedCellsLine).append("\n");
       }
       if (this.hidservDirOnionsSeenLine != null) {
-        sb.append(this.hidservDirOnionsSeenLine + "\n");
+        sb.append(this.hidservDirOnionsSeenLine).append("\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {

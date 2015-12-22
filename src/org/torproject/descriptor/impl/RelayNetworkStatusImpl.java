@@ -129,9 +129,9 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       default:
         if (line.startsWith("-----BEGIN")) {
           crypto = new StringBuilder();
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
         } else if (line.startsWith("-----END")) {
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
           String cryptoString = crypto.toString();
           crypto = null;
           if (nextCrypto.equals("dir-signing-key")) {
@@ -142,7 +142,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
           }
           nextCrypto = "";
         } else if (crypto != null) {
-          crypto.append(line + "\n");
+          crypto.append(line).append("\n");
         } else if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '" + line
               + "' in v2 network status.");
@@ -177,9 +177,9 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         nextCrypto = "directory-signature";
       } else if (line.startsWith("-----BEGIN")) {
         crypto = new StringBuilder();
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
       } else if (line.startsWith("-----END")) {
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
         String cryptoString = crypto.toString();
         crypto = null;
         if (nextCrypto.equals("directory-signature")) {
@@ -190,7 +190,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         }
         nextCrypto = "";
       } else if (crypto != null) {
-        crypto.append(line + "\n");
+        crypto.append(line).append("\n");
       } else if (this.failUnrecognizedDescriptorLines) {
         throw new DescriptorParseException("Unrecognized line '" + line
             + "' in v2 network status.");

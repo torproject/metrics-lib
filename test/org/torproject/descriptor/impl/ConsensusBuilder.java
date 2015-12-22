@@ -235,75 +235,75 @@ public class ConsensusBuilder {
   }
   private void appendHeader(StringBuilder sb) {
     if (this.networkStatusVersionLine != null) {
-      sb.append(this.networkStatusVersionLine + "\n");
+      sb.append(this.networkStatusVersionLine).append("\n");
     }
     if (this.voteStatusLine != null) {
-      sb.append(this.voteStatusLine + "\n");
+      sb.append(this.voteStatusLine).append("\n");
     }
     if (this.consensusMethodLine != null) {
-      sb.append(this.consensusMethodLine + "\n");
+      sb.append(this.consensusMethodLine).append("\n");
     }
     if (this.validAfterLine != null) {
-      sb.append(this.validAfterLine + "\n");
+      sb.append(this.validAfterLine).append("\n");
     }
     if (this.freshUntilLine != null) {
-      sb.append(this.freshUntilLine + "\n");
+      sb.append(this.freshUntilLine).append("\n");
     }
     if (this.validUntilLine != null) {
-      sb.append(this.validUntilLine + "\n");
+      sb.append(this.validUntilLine).append("\n");
     }
     if (this.votingDelayLine != null) {
-      sb.append(this.votingDelayLine + "\n");
+      sb.append(this.votingDelayLine).append("\n");
     }
     if (this.clientVersionsLine != null) {
-      sb.append(this.clientVersionsLine + "\n");
+      sb.append(this.clientVersionsLine).append("\n");
     }
     if (this.serverVersionsLine != null) {
-      sb.append(this.serverVersionsLine + "\n");
+      sb.append(this.serverVersionsLine).append("\n");
     }
     if (this.knownFlagsLine != null) {
-      sb.append(this.knownFlagsLine + "\n");
+      sb.append(this.knownFlagsLine).append("\n");
     }
     if (this.paramsLine != null) {
-      sb.append(this.paramsLine + "\n");
+      sb.append(this.paramsLine).append("\n");
     }
     if (this.unrecognizedHeaderLine != null) {
-      sb.append(this.unrecognizedHeaderLine + "\n");
+      sb.append(this.unrecognizedHeaderLine).append("\n");
     }
   }
   private void appendDirSources(StringBuilder sb) {
     for (String dirSource : this.dirSources) {
-      sb.append(dirSource + "\n");
+      sb.append(dirSource).append("\n");
     }
     if (this.unrecognizedDirSourceLine != null) {
-      sb.append(this.unrecognizedDirSourceLine + "\n");
+      sb.append(this.unrecognizedDirSourceLine).append("\n");
     }
   }
   private void appendStatusEntries(StringBuilder sb) {
     for (String statusEntry : this.statusEntries) {
-      sb.append(statusEntry + "\n");
+      sb.append(statusEntry).append("\n");
     }
     if (this.unrecognizedStatusEntryLine != null) {
-      sb.append(this.unrecognizedStatusEntryLine + "\n");
+      sb.append(this.unrecognizedStatusEntryLine).append("\n");
     }
   }
   private void appendFooter(StringBuilder sb) {
     if (this.directoryFooterLine != null) {
-      sb.append(this.directoryFooterLine + "\n");
+      sb.append(this.directoryFooterLine).append("\n");
     }
     if (this.bandwidthWeightsLine != null) {
-      sb.append(this.bandwidthWeightsLine + "\n");
+      sb.append(this.bandwidthWeightsLine).append("\n");
     }
     if (this.unrecognizedFooterLine != null) {
-      sb.append(this.unrecognizedFooterLine + "\n");
+      sb.append(this.unrecognizedFooterLine).append("\n");
     }
   }
   private void appendDirectorySignatures(StringBuilder sb) {
     for (String directorySignature : this.directorySignatures) {
-      sb.append(directorySignature + "\n");
+      sb.append(directorySignature).append("\n");
     }
     if (this.unrecognizedDirectorySignatureLine != null) {
-      sb.append(this.unrecognizedDirectorySignatureLine + "\n");
+      sb.append(this.unrecognizedDirectorySignatureLine).append("\n");
     }
   }
 }
