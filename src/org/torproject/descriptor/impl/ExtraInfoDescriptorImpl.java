@@ -79,7 +79,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
         useDelimiter("\n");
-    String nextCrypto = null;
+    String nextCrypto = "";
     List<String> cryptoLines = null;
     while (s.hasNext()) {
       String line = s.next();
@@ -87,145 +87,203 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
           line.substring("opt ".length()) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");
       String keyword = partsNoOpt[0];
-      if (keyword.equals("extra-info")) {
+      switch (keyword) {
+      case "extra-info":
         this.parseExtraInfoLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("published")) {
+        break;
+      case "published":
         this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("read-history")) {
+        break;
+      case "read-history":
         this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("write-history")) {
+        break;
+      case "write-history":
         this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("geoip-db-digest")) {
+        break;
+      case "geoip-db-digest":
         this.parseGeoipDbDigestLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("geoip6-db-digest")) {
+        break;
+      case "geoip6-db-digest":
         this.parseGeoip6DbDigestLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("geoip-start-time")) {
+        break;
+      case "geoip-start-time":
         this.parseGeoipStartTimeLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("geoip-client-origins")) {
+        break;
+      case "geoip-client-origins":
         this.parseGeoipClientOriginsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-stats-end")) {
+        break;
+      case "dirreq-stats-end":
         this.parseDirreqStatsEndLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v2-ips")) {
+        break;
+      case "dirreq-v2-ips":
         this.parseDirreqV2IpsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v3-ips")) {
+        break;
+      case "dirreq-v3-ips":
         this.parseDirreqV3IpsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v2-reqs")) {
+        break;
+      case "dirreq-v2-reqs":
         this.parseDirreqV2ReqsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v3-reqs")) {
+        break;
+      case "dirreq-v3-reqs":
         this.parseDirreqV3ReqsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v2-share")) {
+        break;
+      case "dirreq-v2-share":
         this.parseDirreqV2ShareLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v3-share")) {
+        break;
+      case "dirreq-v3-share":
         this.parseDirreqV3ShareLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v2-resp")) {
+        break;
+      case "dirreq-v2-resp":
         this.parseDirreqV2RespLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v3-resp")) {
+        break;
+      case "dirreq-v3-resp":
         this.parseDirreqV3RespLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v2-direct-dl")) {
+        break;
+      case "dirreq-v2-direct-dl":
         this.parseDirreqV2DirectDlLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v3-direct-dl")) {
+        break;
+      case "dirreq-v3-direct-dl":
         this.parseDirreqV3DirectDlLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v2-tunneled-dl")) {
+        break;
+      case "dirreq-v2-tunneled-dl":
         this.parseDirreqV2TunneledDlLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-v3-tunneled-dl")) {
+        break;
+      case "dirreq-v3-tunneled-dl":
         this.parseDirreqV3TunneledDlLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-read-history")) {
+        break;
+      case "dirreq-read-history":
         this.parseDirreqReadHistoryLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dirreq-write-history")) {
+        break;
+      case "dirreq-write-history":
         this.parseDirreqWriteHistoryLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("entry-stats-end")) {
+        break;
+      case "entry-stats-end":
         this.parseEntryStatsEndLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("entry-ips")) {
+        break;
+      case "entry-ips":
         this.parseEntryIpsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("cell-stats-end")) {
+        break;
+      case "cell-stats-end":
         this.parseCellStatsEndLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("cell-processed-cells")) {
+        break;
+      case "cell-processed-cells":
         this.parseCellProcessedCellsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("cell-queued-cells")) {
+        break;
+      case "cell-queued-cells":
         this.parseCellQueuedCellsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("cell-time-in-queue")) {
+        break;
+      case "cell-time-in-queue":
         this.parseCellTimeInQueueLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("cell-circuits-per-decile")) {
+        break;
+      case "cell-circuits-per-decile":
         this.parseCellCircuitsPerDecileLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("conn-bi-direct")) {
+        break;
+      case "conn-bi-direct":
         this.parseConnBiDirectLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("exit-stats-end")) {
+        break;
+      case "exit-stats-end":
         this.parseExitStatsEndLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("exit-kibibytes-written")) {
+        break;
+      case "exit-kibibytes-written":
         this.parseExitKibibytesWrittenLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("exit-kibibytes-read")) {
+        break;
+      case "exit-kibibytes-read":
         this.parseExitKibibytesReadLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("exit-streams-opened")) {
+        break;
+      case "exit-streams-opened":
         this.parseExitStreamsOpenedLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("bridge-stats-end")) {
+        break;
+      case "bridge-stats-end":
         this.parseBridgeStatsEndLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("bridge-ips")) {
+        break;
+      case "bridge-ips":
         this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("bridge-ip-versions")) {
+        break;
+      case "bridge-ip-versions":
         this.parseBridgeIpVersionsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("bridge-ip-transports")) {
+        break;
+      case "bridge-ip-transports":
         this.parseBridgeIpTransportsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("transport")) {
+        break;
+      case "transport":
         this.parseTransportLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("hidserv-stats-end")) {
+        break;
+      case "hidserv-stats-end":
         this.parseHidservStatsEndLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("hidserv-rend-relayed-cells")) {
+        break;
+      case "hidserv-rend-relayed-cells":
         this.parseHidservRendRelayedCellsLine(line, lineNoOpt,
             partsNoOpt);
-      } else if (keyword.equals("hidserv-dir-onions-seen")) {
+        break;
+      case "hidserv-dir-onions-seen":
         this.parseHidservDirOnionsSeenLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("identity-ed25519")) {
+        break;
+      case "identity-ed25519":
         this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
         nextCrypto = "identity-ed25519";
-      } else if (keyword.equals("master-key-ed25519")) {
+        break;
+      case "master-key-ed25519":
         this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("router-sig-ed25519")) {
+        break;
+      case "router-sig-ed25519":
         this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("router-signature")) {
+        break;
+      case "router-signature":
         this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
         nextCrypto = "router-signature";
-      } else if (keyword.equals("router-digest")) {
+        break;
+      case "router-digest":
         this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("router-digest-sha256")) {
+        break;
+      case "router-digest-sha256":
         this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
-      } else if (line.startsWith("-----BEGIN")) {
-        cryptoLines = new ArrayList<>();
-        cryptoLines.add(line);
-      } else if (line.startsWith("-----END")) {
-        cryptoLines.add(line);
-        StringBuilder sb = new StringBuilder();
-        for (String cryptoLine : cryptoLines) {
-          sb.append("\n" + cryptoLine);
-        }
-        String cryptoString = sb.toString().substring(1);
-        if ("router-signature".equals(nextCrypto)) {
-          this.routerSignature = cryptoString;
-        } else if ("identity-ed25519".equals(nextCrypto)) {
-          this.identityEd25519 = cryptoString;
-          this.parseIdentityEd25519CryptoBlock(cryptoString);
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block '" + cryptoString + "' in extra-info descriptor.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (line.startsWith("-----BEGIN")) {
+          cryptoLines = new ArrayList<>();
+          cryptoLines.add(line);
+        } else if (line.startsWith("-----END")) {
+          cryptoLines.add(line);
+          StringBuilder sb = new StringBuilder();
+          for (String cryptoLine : cryptoLines) {
+            sb.append("\n" + cryptoLine);
           }
-          this.unrecognizedLines.addAll(cryptoLines);
-        }
-        cryptoLines = null;
-        nextCrypto = null;
-      } else if (cryptoLines != null) {
-        cryptoLines.add(line);
-      } else {
-        ParseHelper.parseKeyword(line, partsNoOpt[0]);
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in extra-info descriptor.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+          String cryptoString = sb.toString().substring(1);
+          switch (nextCrypto) {
+          case "router-signature":
+            this.routerSignature = cryptoString;
+            break;
+          case "identity-ed25519":
+            this.identityEd25519 = cryptoString;
+            this.parseIdentityEd25519CryptoBlock(cryptoString);
+            break;
+          default:
+            if (this.failUnrecognizedDescriptorLines) {
+              throw new DescriptorParseException("Unrecognized crypto "
+                  + "block '" + cryptoString + "' in extra-info "
+                  + "descriptor.");
+            } else {
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
+              }
+              this.unrecognizedLines.addAll(cryptoLines);
+            }
           }
-          this.unrecognizedLines.add(line);
+          cryptoLines = null;
+          nextCrypto = "";
+        } else if (cryptoLines != null) {
+          cryptoLines.add(line);
+        } else {
+          ParseHelper.parseKeyword(line, partsNoOpt[0]);
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in extra-info descriptor.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
+          }
         }
       }
     }

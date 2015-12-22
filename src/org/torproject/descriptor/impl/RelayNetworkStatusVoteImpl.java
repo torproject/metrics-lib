@@ -79,65 +79,90 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       String line = s.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
-      if (keyword.equals("network-status-version")) {
+      switch (keyword) {
+      case "network-status-version":
         this.parseNetworkStatusVersionLine(line, parts);
-      } else if (keyword.equals("vote-status")) {
+        break;
+      case "vote-status":
         this.parseVoteStatusLine(line, parts);
-      } else if (keyword.equals("consensus-methods")) {
+        break;
+      case "consensus-methods":
         this.parseConsensusMethodsLine(line, parts);
-      } else if (keyword.equals("published")) {
+        break;
+      case "published":
         this.parsePublishedLine(line, parts);
-      } else if (keyword.equals("valid-after")) {
+        break;
+      case "valid-after":
         this.parseValidAfterLine(line, parts);
-      } else if (keyword.equals("fresh-until")) {
+        break;
+      case "fresh-until":
         this.parseFreshUntilLine(line, parts);
-      } else if (keyword.equals("valid-until")) {
+        break;
+      case "valid-until":
         this.parseValidUntilLine(line, parts);
-      } else if (keyword.equals("voting-delay")) {
+        break;
+      case "voting-delay":
         this.parseVotingDelayLine(line, parts);
-      } else if (keyword.equals("client-versions")) {
+        break;
+      case "client-versions":
         this.parseClientVersionsLine(line, parts);
-      } else if (keyword.equals("server-versions")) {
+        break;
+      case "server-versions":
         this.parseServerVersionsLine(line, parts);
-      } else if (keyword.equals("known-flags")) {
+        break;
+      case "known-flags":
         this.parseKnownFlagsLine(line, parts);
-      } else if (keyword.equals("flag-thresholds")) {
+        break;
+      case "flag-thresholds":
         this.parseFlagThresholdsLine(line, parts);
-      } else if (keyword.equals("params")) {
+        break;
+      case "params":
         this.parseParamsLine(line, parts);
-      } else if (keyword.equals("dir-source")) {
+        break;
+      case "dir-source":
         this.parseDirSourceLine(line, parts);
-      } else if (keyword.equals("contact")) {
+        break;
+      case "contact":
         this.parseContactLine(line, parts);
-      } else if (keyword.equals("dir-key-certificate-version")) {
+        break;
+      case "dir-key-certificate-version":
         this.parseDirKeyCertificateVersionLine(line, parts);
-      } else if (keyword.equals("dir-address")) {
+        break;
+      case "dir-address":
         this.parseDirAddressLine(line, parts);
-      } else if (keyword.equals("fingerprint")) {
+        break;
+      case "fingerprint":
         this.parseFingerprintLine(line, parts);
-      } else if (keyword.equals("legacy-dir-key")) {
+        break;
+      case "legacy-dir-key":
         this.parseLegacyDirKeyLine(line, parts);
-      } else if (keyword.equals("dir-key-published")) {
+        break;
+      case "dir-key-published":
         this.parseDirKeyPublished(line, parts);
-      } else if (keyword.equals("dir-key-expires")) {
+        break;
+      case "dir-key-expires":
         this.parseDirKeyExpiresLine(line, parts);
-      } else if (keyword.equals("dir-identity-key") ||
-          keyword.equals("dir-signing-key") ||
-          keyword.equals("dir-key-crosscert") ||
-          keyword.equals("dir-key-certification")) {
-      } else if (line.startsWith("-----BEGIN")) {
-        skipCrypto = true;
-      } else if (line.startsWith("-----END")) {
-        skipCrypto = false;
-      } else if (!skipCrypto) {
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in vote.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        break;
+      case "dir-identity-key":
+      case "dir-signing-key":
+      case "dir-key-crosscert":
+      case "dir-key-certification":
+        break;
+      default:
+        if (line.startsWith("-----BEGIN")) {
+          skipCrypto = true;
+        } else if (line.startsWith("-----END")) {
+          skipCrypto = false;
+        } else if (!skipCrypto) {
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in vote.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
           }
-          this.unrecognizedLines.add(line);
         }
       }
     }
@@ -257,27 +282,37 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         ParseHelper.parseKeyValueStringPairs(line, parts, 1, "=");
     try {
       for (Map.Entry<String, String> e : flagThresholds.entrySet()) {
-        if (e.getKey().equals("stable-uptime")) {
+        switch (e.getKey()) {
+        case "stable-uptime":
           this.stableUptime = Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("stable-mtbf")) {
+          break;
+        case "stable-mtbf":
           this.stableMtbf = Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("fast-speed")) {
+          break;
+        case "fast-speed":
           this.fastBandwidth = Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("guard-wfu")) {
+          break;
+        case "guard-wfu":
           this.guardWfu = Double.parseDouble(e.getValue().
               replaceAll("%", ""));
-        } else if (e.getKey().equals("guard-tk")) {
+          break;
+        case "guard-tk":
           this.guardTk = Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("guard-bw-inc-exits")) {
+          break;
+        case "guard-bw-inc-exits":
           this.guardBandwidthIncludingExits =
               Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("guard-bw-exc-exits")) {
+          break;
+        case "guard-bw-exc-exits":
           this.guardBandwidthExcludingExits =
               Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("enough-mtbf")) {
+          break;
+        case "enough-mtbf":
           this.enoughMtbfInfo = Integer.parseInt(e.getValue());
-        } else if (e.getKey().equals("ignoring-advertised-bws")) {
+          break;
+        case "ignoring-advertised-bws":
           this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
+          break;
         }
       }
     } catch (NumberFormatException ex) {

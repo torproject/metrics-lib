@@ -54,7 +54,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
         useDelimiter("\n");
-    String nextCrypto = null;
+    String nextCrypto = "";
     List<String> cryptoLines = null;
     while (s.hasNext()) {
       String line = s.next();
@@ -65,124 +65,169 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           line.substring("opt ".length()) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");
       String keyword = partsNoOpt[0];
-      if (keyword.equals("router")) {
+      switch (keyword) {
+      case "router":
         this.parseRouterLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("or-address")) {
+        break;
+      case "or-address":
         this.parseOrAddressLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("bandwidth")) {
+        break;
+      case "bandwidth":
         this.parseBandwidthLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("platform")) {
+        break;
+      case "platform":
         this.parsePlatformLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("published")) {
+        break;
+      case "published":
         this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("fingerprint")) {
+        break;
+      case "fingerprint":
         this.parseFingerprintLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("hibernating")) {
+        break;
+      case "hibernating":
         this.parseHibernatingLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("uptime")) {
+        break;
+      case "uptime":
         this.parseUptimeLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("onion-key")) {
+        break;
+      case "onion-key":
         this.parseOnionKeyLine(line, lineNoOpt, partsNoOpt);
         nextCrypto = "onion-key";
-      } else if (keyword.equals("signing-key")) {
+        break;
+      case "signing-key":
         this.parseSigningKeyLine(line, lineNoOpt, partsNoOpt);
         nextCrypto = "signing-key";
-      } else if (keyword.equals("accept")) {
+        break;
+      case "accept":
         this.parseAcceptLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("reject")) {
+        break;
+      case "reject":
         this.parseRejectLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("router-signature")) {
+        break;
+      case "router-signature":
         this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
         nextCrypto = "router-signature";
-      } else if (keyword.equals("contact")) {
+        break;
+      case "contact":
         this.parseContactLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("family")) {
+        break;
+      case "family":
         this.parseFamilyLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("read-history")) {
+        break;
+      case "read-history":
         this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("write-history")) {
+        break;
+      case "write-history":
         this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("eventdns")) {
+        break;
+      case "eventdns":
         this.parseEventdnsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("caches-extra-info")) {
+        break;
+      case "caches-extra-info":
         this.parseCachesExtraInfoLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("extra-info-digest")) {
+        break;
+      case "extra-info-digest":
         this.parseExtraInfoDigestLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("hidden-service-dir")) {
+        break;
+      case "hidden-service-dir":
         this.parseHiddenServiceDirLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("protocols")) {
+        break;
+      case "protocols":
         this.parseProtocolsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("allow-single-hop-exits")) {
+        break;
+      case "allow-single-hop-exits":
         this.parseAllowSingleHopExitsLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("dircacheport")) {
+        break;
+      case "dircacheport":
         this.parseDircacheportLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("router-digest")) {
+        break;
+      case "router-digest":
         this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("router-digest-sha256")) {
+        break;
+      case "router-digest-sha256":
         this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("ipv6-policy")) {
+        break;
+      case "ipv6-policy":
         this.parseIpv6PolicyLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("ntor-onion-key")) {
+        break;
+      case "ntor-onion-key":
         this.parseNtorOnionKeyLine(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("identity-ed25519")) {
+        break;
+      case "identity-ed25519":
         this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
         nextCrypto = "identity-ed25519";
-      } else if (keyword.equals("master-key-ed25519")) {
+        break;
+      case "master-key-ed25519":
         this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("router-sig-ed25519")) {
+        break;
+      case "router-sig-ed25519":
         this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
-      } else if (keyword.equals("onion-key-crosscert")) {
+        break;
+      case "onion-key-crosscert":
         this.parseOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
         nextCrypto = "onion-key-crosscert";
-      } else if (keyword.equals("ntor-onion-key-crosscert")) {
+        break;
+      case "ntor-onion-key-crosscert":
         this.parseNtorOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
         nextCrypto = "ntor-onion-key-crosscert";
-      } else if (line.startsWith("-----BEGIN")) {
-        cryptoLines = new ArrayList<>();
-        cryptoLines.add(line);
-      } else if (line.startsWith("-----END")) {
-        cryptoLines.add(line);
-        StringBuilder sb = new StringBuilder();
-        for (String cryptoLine : cryptoLines) {
-          sb.append("\n" + cryptoLine);
-        }
-        String cryptoString = sb.toString().substring(1);
-        if ("onion-key".equals(nextCrypto)) {
-          this.onionKey = cryptoString;
-        } else if ("signing-key".equals(nextCrypto)) {
-          this.signingKey = cryptoString;
-        } else if ("router-signature".equals(nextCrypto)) {
-          this.routerSignature = cryptoString;
-        } else if ("identity-ed25519".equals(nextCrypto)) {
-          this.identityEd25519 = cryptoString;
-          this.parseIdentityEd25519CryptoBlock(cryptoString);
-        } else if ("onion-key-crosscert".equals(nextCrypto)) {
-          this.onionKeyCrosscert = cryptoString;
-        } else if ("ntor-onion-key-crosscert".equals(nextCrypto)) {
-          this.ntorOnionKeyCrosscert = cryptoString;
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block '" + cryptoString + "' in server descriptor.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (line.startsWith("-----BEGIN")) {
+          cryptoLines = new ArrayList<>();
+          cryptoLines.add(line);
+        } else if (line.startsWith("-----END")) {
+          cryptoLines.add(line);
+          StringBuilder sb = new StringBuilder();
+          for (String cryptoLine : cryptoLines) {
+            sb.append("\n" + cryptoLine);
           }
-          this.unrecognizedLines.addAll(cryptoLines);
-        }
-        cryptoLines = null;
-        nextCrypto = null;
-      } else if (cryptoLines != null) {
-        cryptoLines.add(line);
-      } else {
-        ParseHelper.parseKeyword(line, partsNoOpt[0]);
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in server descriptor.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+          String cryptoString = sb.toString().substring(1);
+          switch (nextCrypto) {
+          case "onion-key":
+            this.onionKey = cryptoString;
+            break;
+          case "signing-key":
+            this.signingKey = cryptoString;
+            break;
+          case "router-signature":
+            this.routerSignature = cryptoString;
+            break;
+          case "identity-ed25519":
+            this.identityEd25519 = cryptoString;
+            this.parseIdentityEd25519CryptoBlock(cryptoString);
+            break;
+          case "onion-key-crosscert":
+            this.onionKeyCrosscert = cryptoString;
+            break;
+          case "ntor-onion-key-crosscert":
+            this.ntorOnionKeyCrosscert = cryptoString;
+            break;
+          default:
+            if (this.failUnrecognizedDescriptorLines) {
+              throw new DescriptorParseException("Unrecognized crypto "
+                  + "block '" + cryptoString + "' in server descriptor.");
+            } else {
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
+              }
+              this.unrecognizedLines.addAll(cryptoLines);
+            }
           }
-          this.unrecognizedLines.add(line);
+          cryptoLines = null;
+          nextCrypto = "";
+        } else if (cryptoLines != null) {
+          cryptoLines.add(line);
+        } else {
+          ParseHelper.parseKeyword(line, partsNoOpt[0]);
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in server descriptor.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
+          }
         }
       }
     }

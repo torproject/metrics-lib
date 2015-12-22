@@ -73,18 +73,23 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
       String line = s.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
-      if (keyword.equals("published")) {
+      switch (keyword) {
+      case "published":
         this.parsePublishedLine(line, parts);
-      } else if (keyword.equals("flag-thresholds")) {
+        break;
+      case "flag-thresholds":
         this.parseFlagThresholdsLine(line, parts);
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized line '" + line
-            + "' in bridge network status.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '" + line
+              + "' in bridge network status.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
+          }
+          this.unrecognizedLines.add(line);
         }
-        this.unrecognizedLines.add(line);
       }
     }
   }
@@ -105,27 +110,37 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
         ParseHelper.parseKeyValueStringPairs(line, parts, 1, "=");
     try {
       for (Map.Entry<String, String> e : flagThresholds.entrySet()) {
-        if (e.getKey().equals("stable-uptime")) {
+        switch (e.getKey()) {
+        case "stable-uptime":
           this.stableUptime = Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("stable-mtbf")) {
+          break;
+        case "stable-mtbf":
           this.stableMtbf = Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("fast-speed")) {
+          break;
+        case "fast-speed":
           this.fastBandwidth = Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("guard-wfu")) {
+          break;
+        case "guard-wfu":
           this.guardWfu = Double.parseDouble(e.getValue().
               replaceAll("%", ""));
-        } else if (e.getKey().equals("guard-tk")) {
+          break;
+        case "guard-tk":
           this.guardTk = Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("guard-bw-inc-exits")) {
+          break;
+        case "guard-bw-inc-exits":
           this.guardBandwidthIncludingExits =
               Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("guard-bw-exc-exits")) {
+          break;
+        case "guard-bw-exc-exits":
           this.guardBandwidthExcludingExits =
               Long.parseLong(e.getValue());
-        } else if (e.getKey().equals("enough-mtbf")) {
+          break;
+        case "enough-mtbf":
           this.enoughMtbfInfo = Integer.parseInt(e.getValue());
-        } else if (e.getKey().equals("ignoring-advertised-bws")) {
+          break;
+        case "ignoring-advertised-bws":
           this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
+          break;
         }
       }
     } catch (NumberFormatException ex) {

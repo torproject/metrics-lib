@@ -88,7 +88,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
-    String nextCrypto = null;
+    String nextCrypto = "";
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
@@ -97,49 +97,61 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       }
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
-      if (keyword.equals("network-status-version")) {
+      switch (keyword) {
+      case "network-status-version":
         this.parseNetworkStatusVersionLine(line, parts);
-      } else if (keyword.equals("dir-source")) {
+        break;
+      case "dir-source":
         this.parseDirSourceLine(line, parts);
-      } else if (keyword.equals("fingerprint")) {
+        break;
+      case "fingerprint":
         this.parseFingerprintLine(line, parts);
-      } else if (keyword.equals("contact")) {
+        break;
+      case "contact":
         this.parseContactLine(line, parts);
-      } else if (keyword.equals("dir-signing-key")) {
+        break;
+      case "dir-signing-key":
         this.parseDirSigningKeyLine(line, parts);
         nextCrypto = "dir-signing-key";
-      } else if (keyword.equals("client-versions")) {
+        break;
+      case "client-versions":
         this.parseClientVersionsLine(line, parts);
-      } else if (keyword.equals("server-versions")) {
+        break;
+      case "server-versions":
         this.parseServerVersionsLine(line, parts);
-      } else if (keyword.equals("published")) {
+        break;
+      case "published":
         this.parsePublishedLine(line, parts);
-      } else if (keyword.equals("dir-options")) {
+        break;
+      case "dir-options":
         this.parseDirOptionsLine(line, parts);
-      } else if (line.startsWith("-----BEGIN")) {
-        crypto = new StringBuilder();
-        crypto.append(line + "\n");
-      } else if (line.startsWith("-----END")) {
-        crypto.append(line + "\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        if (nextCrypto.equals("dir-signing-key")) {
-          this.dirSigningKey = cryptoString;
+        break;
+      default:
+        if (line.startsWith("-----BEGIN")) {
+          crypto = new StringBuilder();
+          crypto.append(line + "\n");
+        } else if (line.startsWith("-----END")) {
+          crypto.append(line + "\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          if (nextCrypto.equals("dir-signing-key")) {
+            this.dirSigningKey = cryptoString;
+          } else {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block in v2 network status.");
+          }
+          nextCrypto = "";
+        } else if (crypto != null) {
+          crypto.append(line + "\n");
+        } else if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '" + line
+              + "' in v2 network status.");
         } else {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in v2 network status.");
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
+          }
+          this.unrecognizedLines.add(line);
         }
-        nextCrypto = null;
-      } else if (crypto != null) {
-        crypto.append(line + "\n");
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized line '" + line
-            + "' in v2 network status.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<>();
-        }
-        this.unrecognizedLines.add(line);
       }
     }
   }
@@ -154,7 +166,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       throws DescriptorParseException {
     Scanner s = new Scanner(new String(directorySignatureBytes)).
         useDelimiter("\n");
-    String nextCrypto = null;
+    String nextCrypto = "";
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
@@ -176,7 +188,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
           throw new DescriptorParseException("Unrecognized crypto "
               + "block in v2 network status.");
         }
-        nextCrypto = null;
+        nextCrypto = "";
       } else if (crypto != null) {
         crypto.append(line + "\n");
       } else if (this.failUnrecognizedDescriptorLines) {

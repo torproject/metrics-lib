@@ -57,7 +57,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
         useDelimiter("\n");
-    String nextCrypto = null;
+    String nextCrypto = "";
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
@@ -66,47 +66,57 @@ public class MicrodescriptorImpl extends DescriptorImpl
       }
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
-      if (keyword.equals("onion-key")) {
+      switch (keyword) {
+      case "onion-key":
         this.parseOnionKeyLine(line, parts);
         nextCrypto = "onion-key";
-      } else if (keyword.equals("ntor-onion-key")) {
+        break;
+      case "ntor-onion-key":
         this.parseNtorOnionKeyLine(line, parts);
-      } else if (keyword.equals("a")) {
+        break;
+      case "a":
         this.parseALine(line, parts);
-      } else if (keyword.equals("family")) {
+        break;
+      case "family":
         this.parseFamilyLine(line, parts);
-      } else if (keyword.equals("p")) {
+        break;
+      case "p":
         this.parsePLine(line, parts);
-      } else if (keyword.equals("p6")) {
+        break;
+      case "p6":
         this.parseP6Line(line, parts);
-      } else if (keyword.equals("id")) {
+        break;
+      case "id":
         this.parseIdLine(line, parts);
-      } else if (line.startsWith("-----BEGIN")) {
-        crypto = new StringBuilder();
-        crypto.append(line + "\n");
-      } else if (line.startsWith("-----END")) {
-        crypto.append(line + "\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        if (nextCrypto.equals("onion-key")) {
-          this.onionKey = cryptoString;
-        } else {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in microdescriptor.");
-        }
-        nextCrypto = null;
-      } else if (crypto != null) {
-        crypto.append(line + "\n");
-      } else {
-        ParseHelper.parseKeyword(line, parts[0]);
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in microdescriptor.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (line.startsWith("-----BEGIN")) {
+          crypto = new StringBuilder();
+          crypto.append(line + "\n");
+        } else if (line.startsWith("-----END")) {
+          crypto.append(line + "\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          if (nextCrypto.equals("onion-key")) {
+            this.onionKey = cryptoString;
+          } else {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block in microdescriptor.");
           }
-          this.unrecognizedLines.add(line);
+          nextCrypto = "";
+        } else if (crypto != null) {
+          crypto.append(line + "\n");
+        } else {
+          ParseHelper.parseKeyword(line, parts[0]);
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in microdescriptor.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
+          }
         }
       }
     }

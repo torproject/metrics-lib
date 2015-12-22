@@ -79,28 +79,38 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
       String[] parts = !line.startsWith("opt ") ? line.split("[ \t]+") :
           line.substring("opt ".length()).split("[ \t]+");
       String keyword = parts[0];
-      if (keyword.equals("a")) {
+      switch (keyword) {
+      case "a":
         this.parseALine(line, parts);
-      } else if (keyword.equals("s")) {
+        break;
+      case "s":
         this.parseSLine(line, parts);
-      } else if (keyword.equals("v")) {
+        break;
+      case "v":
         this.parseVLine(line, parts);
-      } else if (keyword.equals("w")) {
+        break;
+      case "w":
         this.parseWLine(line, parts);
-      } else if (keyword.equals("p")) {
+        break;
+      case "p":
         this.parsePLine(line, parts);
-      } else if (keyword.equals("m")) {
+        break;
+      case "m":
         this.parseMLine(line, parts);
-      } else if (keyword.equals("id")) {
+        break;
+      case "id":
         this.parseIdLine(line, parts);
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized line '" + line
-            + "' in status entry.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '" + line
+              + "' in status entry.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
+          }
+          this.unrecognizedLines.add(line);
         }
-        this.unrecognizedLines.add(line);
       }
     }
   }

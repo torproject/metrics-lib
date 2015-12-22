@@ -79,60 +79,85 @@ public class TorperfResultImpl extends DescriptorImpl
       String key = keyValueParts[0];
       this.markKeyAsParsed(key, line);
       String value = keyValueParts[1];
-      if (key.equals("SOURCE")) {
+      switch (key) {
+      case "SOURCE":
         this.parseSource(value, keyValue, line);
-      } else if (key.equals("FILESIZE")) {
+        break;
+      case "FILESIZE":
         this.parseFileSize(value, keyValue, line);
-      } else if (key.equals("START")) {
+        break;
+      case "START":
         this.parseStart(value, keyValue, line);
-      } else if (key.equals("SOCKET")) {
+        break;
+      case "SOCKET":
         this.parseSocket(value, keyValue, line);
-      } else if (key.equals("CONNECT")) {
+        break;
+      case "CONNECT":
         this.parseConnect(value, keyValue, line);
-      } else if (key.equals("NEGOTIATE")) {
+        break;
+      case "NEGOTIATE":
         this.parseNegotiate(value, keyValue, line);
-      } else if (key.equals("REQUEST")) {
+        break;
+      case "REQUEST":
         this.parseRequest(value, keyValue, line);
-      } else if (key.equals("RESPONSE")) {
+        break;
+      case "RESPONSE":
         this.parseResponse(value, keyValue, line);
-      } else if (key.equals("DATAREQUEST")) {
+        break;
+      case "DATAREQUEST":
         this.parseDataRequest(value, keyValue, line);
-      } else if (key.equals("DATARESPONSE")) {
+        break;
+      case "DATARESPONSE":
         this.parseDataResponse(value, keyValue, line);
-      } else if (key.equals("DATACOMPLETE")) {
+        break;
+      case "DATACOMPLETE":
         this.parseDataComplete(value, keyValue, line);
-      } else if (key.equals("WRITEBYTES")) {
+        break;
+      case "WRITEBYTES":
         this.parseWriteBytes(value, keyValue, line);
-      } else if (key.equals("READBYTES")) {
+        break;
+      case "READBYTES":
         this.parseReadBytes(value, keyValue, line);
-      } else if (key.equals("DIDTIMEOUT")) {
+        break;
+      case "DIDTIMEOUT":
         this.parseDidTimeout(value, keyValue, line);
-      } else if (key.startsWith("DATAPERC")) {
-        this.parseDataPercentile(value, keyValue, line);
-      } else if (key.equals("LAUNCH")) {
+        break;
+      case "LAUNCH":
         this.parseLaunch(value, keyValue, line);
-      } else if (key.equals("USED_AT")) {
+        break;
+      case "USED_AT":
         this.parseUsedAt(value, keyValue, line);
-      } else if (key.equals("PATH")) {
+        break;
+      case "PATH":
         this.parsePath(value, keyValue, line);
-      } else if (key.equals("BUILDTIMES")) {
+        break;
+      case "BUILDTIMES":
         this.parseBuildTimes(value, keyValue, line);
-      } else if (key.equals("TIMEOUT")) {
+        break;
+      case "TIMEOUT":
         this.parseTimeout(value, keyValue, line);
-      } else if (key.equals("QUANTILE")) {
+        break;
+      case "QUANTILE":
         this.parseQuantile(value, keyValue, line);
-      } else if (key.equals("CIRC_ID")) {
+        break;
+      case "CIRC_ID":
         this.parseCircId(value, keyValue, line);
-      } else if (key.equals("USED_BY")) {
+        break;
+      case "USED_BY":
         this.parseUsedBy(value, keyValue, line);
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized key '" + key
-            + "' in line '" + line + "'.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (key.startsWith("DATAPERC")) {
+          this.parseDataPercentile(value, keyValue, line);
+        } else if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized key '" + key
+              + "' in line '" + line + "'.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
+          }
+          this.unrecognizedLines.add(line);
         }
-        this.unrecognizedLines.add(line);
       }
     }
     this.checkAllRequiredKeysParsed(line);

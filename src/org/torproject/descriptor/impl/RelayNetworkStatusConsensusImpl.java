@@ -95,36 +95,50 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       String line = s.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
-      if (keyword.equals("network-status-version")) {
+      switch (keyword) {
+      case "network-status-version":
         this.parseNetworkStatusVersionLine(line, parts);
-      } else if (keyword.equals("vote-status")) {
+        break;
+      case "vote-status":
         this.parseVoteStatusLine(line, parts);
-      } else if (keyword.equals("consensus-method")) {
+        break;
+      case "consensus-method":
         this.parseConsensusMethodLine(line, parts);
-      } else if (keyword.equals("valid-after")) {
+        break;
+      case "valid-after":
         this.parseValidAfterLine(line, parts);
-      } else if (keyword.equals("fresh-until")) {
+        break;
+      case "fresh-until":
         this.parseFreshUntilLine(line, parts);
-      } else if (keyword.equals("valid-until")) {
+        break;
+      case "valid-until":
         this.parseValidUntilLine(line, parts);
-      } else if (keyword.equals("voting-delay")) {
+        break;
+      case "voting-delay":
         this.parseVotingDelayLine(line, parts);
-      } else if (keyword.equals("client-versions")) {
+        break;
+      case "client-versions":
         this.parseClientVersionsLine(line, parts);
-      } else if (keyword.equals("server-versions")) {
+        break;
+      case "server-versions":
         this.parseServerVersionsLine(line, parts);
-      } else if (keyword.equals("known-flags")) {
+        break;
+      case "known-flags":
         this.parseKnownFlagsLine(line, parts);
-      } else if (keyword.equals("params")) {
+        break;
+      case "params":
         this.parseParamsLine(line, parts);
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized line '" + line
-            + "' in consensus.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '" + line
+              + "' in consensus.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
+          }
+          this.unrecognizedLines.add(line);
         }
-        this.unrecognizedLines.add(line);
       }
     }
   }
@@ -153,17 +167,22 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       String line = s.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
-      if (keyword.equals("directory-footer")) {
-      } else if (keyword.equals("bandwidth-weights")) {
+      switch (keyword) {
+      case "directory-footer":
+        break;
+      case "bandwidth-weights":
         this.parseBandwidthWeightsLine(line, parts);
-      } else if (this.failUnrecognizedDescriptorLines) {
-        throw new DescriptorParseException("Unrecognized line '" + line
-            + "' in consensus.");
-      } else {
-        if (this.unrecognizedLines == null) {
-          this.unrecognizedLines = new ArrayList<>();
+        break;
+      default:
+        if (this.failUnrecognizedDescriptorLines) {
+          throw new DescriptorParseException("Unrecognized line '" + line
+              + "' in consensus.");
+        } else {
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
+          }
+          this.unrecognizedLines.add(line);
         }
-        this.unrecognizedLines.add(line);
       }
     }
   }

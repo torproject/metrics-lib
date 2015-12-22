@@ -53,14 +53,19 @@ public final class DescriptorSourceFactory {
     Object object;
     String clazzName = null;
     try {
-      if (PARSER_PROPERTY.equals(type)) {
+      switch (type) {
+      case PARSER_PROPERTY:
         clazzName = System.getProperty(type, PARSER_DEFAULT);
-      } else if (LOADER_PROPERTY.equals(type)) {
+        break;
+      case LOADER_PROPERTY:
         clazzName = System.getProperty(type, LOADER_DEFAULT);
-      } else if (READER_PROPERTY.equals(type)) {
+        break;
+      case READER_PROPERTY:
         clazzName = System.getProperty(type, READER_DEFAULT);
-      } else if (COLLECTOR_PROPERTY.equals(type)) {
+        break;
+      case COLLECTOR_PROPERTY:
         clazzName = System.getProperty(type, COLLECTOR_DEFAULT);
+        break;
       }
       object = ClassLoader.getSystemClassLoader().loadClass(clazzName).
           newInstance();
