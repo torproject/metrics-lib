@@ -27,6 +27,10 @@
    - Support onion-key and ntor-onion-key cross certificates in server
      descriptors.
 
+ * Minor changes
+   - Start using Java 7 features like the diamond operator and switch
+     on String, and use StringBuilder correctly in many places.
+
 
 # Changes in version 1.0.0 - 2015-12-05
 
