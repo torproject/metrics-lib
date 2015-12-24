@@ -26,6 +26,8 @@
    - Support hidden-service statistics in extra-info descriptors.
    - Support onion-key and ntor-onion-key cross certificates in server
      descriptors.
+   - Include the hostname in directory source entries of consensuses
+     and votes.
 
  * Minor changes
    - Start using Java 7 features like the diamond operator and switch

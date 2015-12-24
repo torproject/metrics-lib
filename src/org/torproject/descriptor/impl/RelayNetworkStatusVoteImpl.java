@@ -343,6 +343,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       throw new DescriptorParseException("Illegal hostname in '" + line
           + "'.");
     }
+    this.hostname = parts[3];
     this.address = ParseHelper.parseIpv4Address(line, parts[4]);
     this.dirPort = ParseHelper.parsePort(line, parts[5]);
     this.orPort = ParseHelper.parsePort(line, parts[6]);
@@ -439,6 +440,11 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   private String identity;
   public String getIdentity() {
     return this.identity;
+  }
+
+  private String hostname;
+  public String getHostname() {
+    return this.hostname;
   }
 
   private String address;

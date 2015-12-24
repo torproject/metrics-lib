@@ -129,6 +129,11 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     }
     this.nickname = ParseHelper.parseNickname(line, nickname);
     this.identity = ParseHelper.parseTwentyByteHexString(line, parts[2]);
+    if (parts[3].length() < 1) {
+      throw new DescriptorParseException("Illegal hostname in '" + line
+          + "'.");
+    }
+    this.hostname = parts[3];
     this.ip = ParseHelper.parseIpv4Address(line, parts[4]);
     this.dirPort = ParseHelper.parsePort(line, parts[5]);
     this.orPort = ParseHelper.parsePort(line, parts[6]);
@@ -168,6 +173,11 @@ public class DirSourceEntryImpl implements DirSourceEntry {
   private boolean isLegacy;
   public boolean isLegacy() {
     return this.isLegacy;
+  }
+
+  private String hostname;
+  public String getHostname() {
+    return this.hostname;
   }
 
   private String ip;

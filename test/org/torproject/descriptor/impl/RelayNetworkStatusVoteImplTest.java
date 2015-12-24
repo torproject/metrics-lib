@@ -905,9 +905,11 @@ public class RelayNetworkStatusVoteImplTest {
   public void testHostname256()
       throws DescriptorParseException {
     /* This test doesn't fail, because we're not parsing the hostname. */
-    VoteBuilder.createWithDirSourceLine("dir-source urras "
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithDirSourceLine("dir-source urras "
         + "80550987E1D626E3EBA5E5E75A458DE0626D088C 256.256.256.256 "
         + "208.83.223.34 443 80");
+    assertEquals("256.256.256.256", vote.getHostname());
   }
 
   @Test(expected = DescriptorParseException.class)

@@ -13,6 +13,9 @@ public interface DirSourceEntry {
   /* Return the identity fingerprint. */
   public String getIdentity();
 
+  /* Return the hostname. */
+  public String getHostname();
+
   /* Return the IP address. */
   public String getIp();
 

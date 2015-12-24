@@ -100,6 +100,9 @@ public interface RelayNetworkStatusVote extends Descriptor {
   /* Return the directory identity. */
   public String getIdentity();
 
+  /* Return the hostname. */
+  public String getHostname();
+
   /* Return the IP address. */
   public String getAddress();
 

@@ -300,6 +300,8 @@ public class RelayNetworkStatusConsensusImplTest {
     assertEquals(30000, (int) consensus.getConsensusParams().get(
         "CircuitPriorityHalflifeMsec"));
     assertEquals("86.59.21.38", consensus.getDirSourceEntries().get(
+        "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4").getHostname());
+    assertEquals("86.59.21.38", consensus.getDirSourceEntries().get(
         "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4").getIp());
     assertTrue(consensus.containsStatusEntry(
         "00795A6E8D91C270FC23B30F388A495553E01894"));
@@ -720,6 +722,12 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     DirSourceBuilder.createWithIdentity("ED03BB616EB2F60BEC8015111"
         + "4BB25CEF515B226ED03BB616EB2F60BEC8");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testDirSourceHostnameMissing()
+      throws DescriptorParseException {
+    DirSourceBuilder.createWithHostName("");
   }
 
   @Test(expected = DescriptorParseException.class)
