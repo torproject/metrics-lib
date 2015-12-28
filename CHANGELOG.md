@@ -1,4 +1,4 @@
-# Changes in version 1.x.x - 201x-xx-xx
+# Changes in version 1.1.0 - 2015-12-28
 
  * Medium changes
    - Parse flag thresholds in bridge network statuses, and parse the
