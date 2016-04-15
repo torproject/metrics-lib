@@ -4,6 +4,8 @@
    - Include the hostname in directory source entries of consensuses
      and votes.
    - Also accept \r\n as newline in Torperf results files.
+   - Make unrecognized keys of Torperf results available together with
+     the corresponding values, rather than just the whole line.
 
  * Minor changes
    - Include a Torperf results line with more than one unrecognized

@@ -1,4 +1,4 @@
-/* Copyright 2012--2015 The Tor Project
+/* Copyright 2012--2016 The Tor Project
  * See LICENSE for licensing information */
 package org.torproject.descriptor;
 
@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.SortedMap;
 
 public interface TorperfResult extends Descriptor {
+
+  /* Return all unrecognized keys together with their values, or null if
+   * all keys were recognized. */
+  public SortedMap<String, String> getUnrecognizedKeys();
 
   /* Return the configured name of the data source. */
   public String getSource();

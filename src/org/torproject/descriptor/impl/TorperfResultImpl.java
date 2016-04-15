@@ -153,6 +153,10 @@ public class TorperfResultImpl extends DescriptorImpl
           throw new DescriptorParseException("Unrecognized key '" + key
               + "' in line '" + line + "'.");
         } else {
+          if (this.unrecognizedKeys == null) {
+            this.unrecognizedKeys = new TreeMap<>();
+          }
+          this.unrecognizedKeys.put(key, value);
           if (this.unrecognizedLines == null) {
             this.unrecognizedLines = new ArrayList<>();
           }
@@ -275,16 +279,19 @@ public class TorperfResultImpl extends DescriptorImpl
       Arrays.asList("10,20,30,40,50,60,70,80,90".split(",")));
   private void parseDataPercentile(String value, String keyValue,
       String line) throws DescriptorParseException {
-    String percentileString = keyValue.substring("DATAPERC".length(),
-        keyValue.indexOf("="));
+    String key = keyValue.substring(0, keyValue.indexOf("="));
+    String percentileString = key.substring("DATAPERC".length());
     if (!this.unparsedPercentiles.contains(percentileString)) {
-      throw new DescriptorParseException("Illegal value in '" + keyValue
-          + "' in line '" + line + "'.");
+      if (this.unrecognizedKeys == null) {
+        this.unrecognizedKeys = new TreeMap<>();
+      }
+      this.unrecognizedKeys.put(key, value);
+    } else {
+      this.unparsedPercentiles.remove(percentileString);
+      int decileIndex = (Integer.parseInt(percentileString) / 10) - 1;
+      long timestamp = this.parseTimestamp(value, keyValue, line);
+      this.dataDeciles[decileIndex] = timestamp;
     }
-    this.unparsedPercentiles.remove(percentileString);
-    int decileIndex = (Integer.parseInt(percentileString) / 10) - 1;
-    long timestamp = this.parseTimestamp(value, keyValue, line);
-    this.dataDeciles[decileIndex] = timestamp;
   }
 
   private void parseLaunch(String value, String keyValue, String line)
@@ -381,6 +388,12 @@ public class TorperfResultImpl extends DescriptorImpl
       throw new DescriptorParseException("Illegal value in '" + keyValue
           + "' in line '" + line + "'.");
     }
+  }
+
+  private SortedMap<String, String> unrecognizedKeys;
+  public SortedMap<String, String> getUnrecognizedKeys() {
+    return this.unrecognizedKeys == null ? null
+        : new TreeMap<>(this.unrecognizedKeys);
   }
 
   private String source;
