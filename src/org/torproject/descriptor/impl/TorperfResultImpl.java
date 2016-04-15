@@ -1,4 +1,4 @@
-/* Copyright 2012--2015 The Tor Project
+/* Copyright 2012--2016 The Tor Project
  * See LICENSE for licensing information */
 package org.torproject.descriptor.impl;
 
@@ -355,8 +355,8 @@ public class TorperfResultImpl extends DescriptorImpl
       }
     }
     if (timestamp < 0L) {
-      throw new DescriptorParseException("Illegal timestamp '" + value + "' in '"
-          + keyValue + "' in line '" + line + "'.");
+      throw new DescriptorParseException("Illegal timestamp '" + value
+          + "' in '" + keyValue + "' in line '" + line + "'.");
     }
     return timestamp;
   }
@@ -367,7 +367,7 @@ public class TorperfResultImpl extends DescriptorImpl
       return Integer.parseInt(value);
     } catch (NumberFormatException e) {
       throw new DescriptorParseException("Illegal value in '" + keyValue
-          + " in line '" + line + "'.");
+          + "' in line '" + line + "'.");
     }
   }
 
