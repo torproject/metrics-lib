@@ -6,6 +6,8 @@
    - Also accept \r\n as newline in Torperf results files.
    - Make unrecognized keys of Torperf results available together with
      the corresponding values, rather than just the whole line.
+   - In Torperf results, recognize all percentiles of expected bytes
+     read for 0 <= x <= 100 rather than just x = { 10, 20, ..., 90 }.
 
  * Minor changes
    - Include a Torperf results line with more than one unrecognized

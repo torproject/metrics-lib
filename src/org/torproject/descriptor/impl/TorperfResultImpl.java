@@ -275,22 +275,28 @@ public class TorperfResultImpl extends DescriptorImpl
     }
   }
 
-  private Set<String> unparsedPercentiles = new HashSet<>(
-      Arrays.asList("10,20,30,40,50,60,70,80,90".split(",")));
   private void parseDataPercentile(String value, String keyValue,
       String line) throws DescriptorParseException {
     String key = keyValue.substring(0, keyValue.indexOf("="));
     String percentileString = key.substring("DATAPERC".length());
-    if (!this.unparsedPercentiles.contains(percentileString)) {
+    int percentile = -1;
+    try {
+      percentile = Integer.parseInt(percentileString);
+    } catch (NumberFormatException e) {
+      /* Treat key as unrecognized below. */
+      percentile = -1;
+    }
+    if (percentile < 0 || percentile > 100) {
       if (this.unrecognizedKeys == null) {
         this.unrecognizedKeys = new TreeMap<>();
       }
       this.unrecognizedKeys.put(key, value);
     } else {
-      this.unparsedPercentiles.remove(percentileString);
-      int decileIndex = (Integer.parseInt(percentileString) / 10) - 1;
       long timestamp = this.parseTimestamp(value, keyValue, line);
-      this.dataDeciles[decileIndex] = timestamp;
+      if (this.dataPercentiles == null) {
+        this.dataPercentiles = new TreeMap<>();
+      }
+      this.dataPercentiles.put(percentile, timestamp);
     }
   }
 
@@ -466,18 +472,10 @@ public class TorperfResultImpl extends DescriptorImpl
     return this.didTimeout;
   }
 
-  private Long[] dataDeciles = new Long[9];
+  private SortedMap<Integer, Long> dataPercentiles;
   public SortedMap<Integer, Long> getDataPercentiles() {
-    if (this.dataDeciles == null) {
-      return null;
-    }
-    SortedMap<Integer, Long> result = new TreeMap<>();
-    for (int i = 0; i < dataDeciles.length; i++) {
-      if (dataDeciles[i] > 0L) {
-        result.put(10 * (i + 1), dataDeciles[i]);
-      }
-    }
-    return result;
+    return this.dataPercentiles == null ? null
+        : new TreeMap<>(this.dataPercentiles);
   }
 
   private long launchMillis = -1L;

@@ -55,9 +55,9 @@ public interface TorperfResult extends Descriptor {
    * if the torperf line didn't contain that information. */
   public Boolean didTimeout();
 
-  /* Return the times when x% of expected bytes were read for x = { 10,
-   * 20, 30, 40, 50, 60, 70, 80, 90 }, or null if the torperf line didn't
-   * contain that information. */
+  /* Return the times when x% of expected bytes were read for
+   * 0 <= x <= 100, or null if the torperf line didn't contain that
+   * information. */
   public SortedMap<Integer, Long> getDataPercentiles();
 
   /* Return the time when the circuit was launched, or -1 if the torperf

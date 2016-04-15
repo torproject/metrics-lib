@@ -44,7 +44,7 @@ public class TorperfResultImplTest {
   }
 
   @Test()
-  public void testAllAnnotatedInput() throws Exception{
+  public void testAllAnnotatedInput() throws Exception {
     byte[] asciiBytes = (torperfAnnotation + input
         + torperfAnnotation + input
         + torperfAnnotation + input).getBytes("US-ASCII");
@@ -82,5 +82,16 @@ public class TorperfResultImplTest {
       + "READBYTES=51416 REQUEST=1441065601.86 RESPONSE=1441065602.38 "
       + "SOCKET=1441065601.86 SOURCE=moria START=1441065601.86 "
       + "TIMEOUT=1500 USED_AT=1441065603.40 USED_BY=2475 WRITEBYTES=75\n";
+
+  @Test()
+  public void testDatapercNonNumeric() throws Exception {
+    List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
+        ("DATAPERMILLE=2.0 " + input).getBytes(), false);
+    assertEquals(1, result.size());
+    TorperfResultImpl torperfResult = (TorperfResultImpl) result.get(0);
+    assertEquals(1, torperfResult.getUnrecognizedKeys().size());
+    assertEquals("DATAPERMILLE",
+        torperfResult.getUnrecognizedKeys().firstKey());
+  }
 }
 
