@@ -156,7 +156,9 @@ public class TorperfResultImpl extends DescriptorImpl
           if (this.unrecognizedLines == null) {
             this.unrecognizedLines = new ArrayList<>();
           }
-          this.unrecognizedLines.add(line);
+          if (!this.unrecognizedLines.contains(line)) {
+            this.unrecognizedLines.add(line);
+          }
         }
       }
     }

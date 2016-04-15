@@ -5,6 +5,10 @@
      and votes.
    - Also accept \r\n as newline in Torperf results files.
 
+ * Minor changes
+   - Include a Torperf results line with more than one unrecognized
+     key only once in the unrecognized lines.
+
 
 # Changes in version 1.1.0 - 2015-12-28
 
