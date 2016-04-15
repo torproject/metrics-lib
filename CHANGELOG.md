@@ -3,6 +3,7 @@
  * Medium changes
    - Include the hostname in directory source entries of consensuses
      and votes.
+   - Also accept \r\n as newline in Torperf results files.
 
 
 # Changes in version 1.1.0 - 2015-12-28
