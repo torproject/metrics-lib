@@ -68,7 +68,7 @@
     </javadoc>
   </target>
 
-  <target name="test" depends="compile">
+  <target name="testcompile" depends="init">
     <javac destdir="${classes}"
            srcdir="${tests}"
            source="${source-and-target-java-version}"
@@ -80,6 +80,9 @@
            includeantruntime="false">
       <classpath refid="classpath"/>
     </javac>
+  </target>
+
+  <target name="test" depends="compile,testcompile">
     <junit fork="true" haltonfailure="true" printsummary="off">
       <classpath refid="classpath"/>
       <formatter type="plain" usefile="false"/>
@@ -88,6 +91,14 @@
                  includes="**/*Test.class"/>
       </batchtest>
     </junit>
+  </target>
+
+  <target name="benchmark" depends="compile,testcompile">
+    <java fork="true"
+          maxmemory="2048m"
+          classname="org.torproject.descriptor.benchmark.MeasurePerformance">
+      <classpath refid="classpath"/>
+    </java>
   </target>
 
   <target name="jar" depends="compile">

@@ -22,6 +22,7 @@
      which would mean that only method 1 is supported.
    - Stop reporting "-----END .*-----" lines in directory key
      certificates as unrecognized.
+   - Add code used for benchmarking.
 
 
 # Changes in version 1.1.0 - 2015-12-28
