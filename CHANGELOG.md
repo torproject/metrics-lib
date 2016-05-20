@@ -14,6 +14,8 @@
  * Minor changes
    - Include a Torperf results line with more than one unrecognized
      key only once in the unrecognized lines.
+   - Make "consensus-methods" line optional in network statuses votes,
+     which would mean that only method 1 is supported.
    - Stop reporting "-----END .*-----" lines in directory key
      certificates as unrecognized.
 

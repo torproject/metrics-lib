@@ -42,14 +42,15 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       throws DescriptorParseException {
     super(voteBytes, failUnrecognizedDescriptorLines, false, false);
     Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
-        "vote-status,consensus-methods,published,valid-after,fresh-until,"
+        "vote-status,published,valid-after,fresh-until,"
         + "valid-until,voting-delay,known-flags,dir-source,"
         + "dir-key-certificate-version,fingerprint,dir-key-published,"
         + "dir-key-expires,dir-identity-key,dir-signing-key,"
         + "dir-key-certification,directory-signature").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "client-versions,server-versions,flag-thresholds,params,contact,"
+        "consensus-methods,client-versions,server-versions,"
+        + "flag-thresholds,params,contact,"
         + "legacy-key,dir-key-crosscert,dir-address,directory-footer").
         split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
@@ -499,7 +500,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   private Integer[] consensusMethods;
   public List<Integer> getConsensusMethods() {
-    return Arrays.asList(this.consensusMethods);
+    return this.consensusMethods == null ? null :
+        Arrays.asList(this.consensusMethods);
   }
 
   private long publishedMillis;

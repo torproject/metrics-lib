@@ -4,6 +4,7 @@ package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -622,10 +623,12 @@ public class RelayNetworkStatusVoteImplTest {
         "vote-status TheMagicVoteStatus");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testConsensusMethodNoLine()
       throws DescriptorParseException {
-    VoteBuilder.createWithConsensusMethodsLine(null);
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithConsensusMethodsLine(null);
+    assertNull(vote.getConsensusMethods());
   }
 
   @Test(expected = DescriptorParseException.class)
