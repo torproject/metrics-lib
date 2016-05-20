@@ -506,6 +506,21 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals("Tor 0.2.1.29 (r8e9b25e6c7a2e70c)",
         vote.getStatusEntry("00343A8024F70E214728F0C5AF7ACE0C1508F073").
         getVersion());
+    assertEquals(3, vote.getDirKeyCertificateVersion());
+    assertEquals("80550987E1D626E3EBA5E5E75A458DE0626D088C",
+        vote.getIdentity());
+    assertEquals(1303882477000L, /* 2011-04-27 05:34:37 */
+        vote.getDirKeyPublishedMillis());
+    assertEquals(1335504877000L, /* 2012-04-27 05:34:37 */
+        vote.getDirKeyExpiresMillis());
+    assertEquals("-----BEGIN RSA PUBLIC KEY-----",
+        vote.getDirIdentityKey().split("\n")[0]);
+    assertEquals("-----BEGIN RSA PUBLIC KEY-----",
+        vote.getDirSigningKey().split("\n")[0]);
+    assertEquals("-----BEGIN ID SIGNATURE-----",
+        vote.getDirKeyCrosscert().split("\n")[0]);
+    assertEquals("-----BEGIN SIGNATURE-----",
+        vote.getDirKeyCertification().split("\n")[0]);
     assertTrue(vote.getUnrecognizedLines().isEmpty());
   }
 

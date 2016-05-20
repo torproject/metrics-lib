@@ -11,6 +11,7 @@
    - Rename properties for overriding default descriptor source
      implementation classes.
    - Actually return the signing key digest in network status votes.
+   - Parse crypto parts in network status votes.
 
  * Minor changes
    - Include a Torperf results line with more than one unrecognized

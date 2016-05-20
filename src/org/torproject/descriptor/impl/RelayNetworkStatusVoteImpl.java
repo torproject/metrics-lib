@@ -3,6 +3,7 @@
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -75,7 +76,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.ignoringAdvertisedBws = -1;
 
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
-    boolean skipCrypto = false; /* TODO Parse crypto parts. */
+    String nextCrypto = "";
+    StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
       String[] parts = line.split("[ \t]+");
@@ -145,18 +147,52 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         this.parseDirKeyExpiresLine(line, parts);
         break;
       case "dir-identity-key":
+        this.parseDirIdentityKeyLine(line, parts);
+        nextCrypto = "dir-identity-key";
+        break;
       case "dir-signing-key":
+        this.parseDirSigningKeyLine(line, parts);
+        nextCrypto = "dir-signing-key";
+        break;
       case "dir-key-crosscert":
+        this.parseDirKeyCrosscertLine(line, parts);
+        nextCrypto = "dir-key-crosscert";
+        break;
       case "dir-key-certification":
+        this.parseDirKeyCertificationLine(line, parts);
+        nextCrypto = "dir-key-certification";
         break;
       case "-----BEGIN":
-        skipCrypto = true;
+        crypto = new StringBuilder();
+        crypto.append(line).append("\n");
         break;
       case "-----END":
-        skipCrypto = false;
+        crypto.append(line).append("\n");
+        String cryptoString = crypto.toString();
+        crypto = null;
+        switch (nextCrypto) {
+        case "dir-identity-key":
+          this.dirIdentityKey = cryptoString;
+          break;
+        case "dir-signing-key":
+          this.dirSigningKey = cryptoString;
+          break;
+        case "dir-key-crosscert":
+          this.dirKeyCrosscert = cryptoString;
+          break;
+        case "dir-key-certification":
+          this.dirKeyCertification = cryptoString;
+          break;
+        default:
+          throw new DescriptorParseException("Unrecognized crypto "
+              + "block in vote.");
+        }
+        nextCrypto = "";
         break;
       default:
-        if (!skipCrypto) {
+        if (crypto != null) {
+          crypto.append(line).append("\n");
+        } else {
           if (this.failUnrecognizedDescriptorLines) {
             throw new DescriptorParseException("Unrecognized line '"
                 + line + "' in vote.");
@@ -414,6 +450,34 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         parts, 1, 2);
   }
 
+  private void parseDirIdentityKeyLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (!line.equals("dir-identity-key")) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
+  private void parseDirSigningKeyLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (!line.equals("dir-signing-key")) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
+  private void parseDirKeyCrosscertLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (!line.equals("dir-key-crosscert")) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
+  private void parseDirKeyCertificationLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (!line.equals("dir-key-certification")) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+  }
+
   protected void parseFooter(byte[] footerBytes)
       throws DescriptorParseException {
     Scanner s = new Scanner(new String(footerBytes)).useDelimiter("\n");
@@ -486,6 +550,26 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   private long dirKeyExpiresMillis;
   public long getDirKeyExpiresMillis() {
     return this.dirKeyExpiresMillis;
+  }
+
+  private String dirIdentityKey;
+  public String getDirIdentityKey() {
+    return this.dirIdentityKey;
+  }
+
+  private String dirSigningKey;
+  public String getDirSigningKey() {
+    return this.dirSigningKey;
+  }
+
+  private String dirKeyCrosscert;
+  public String getDirKeyCrosscert() {
+    return this.dirKeyCrosscert;
+  }
+
+  private String dirKeyCertification;
+  public String getDirKeyCertification() {
+    return this.dirKeyCertification;
   }
 
   public String getSigningKeyDigest() {
