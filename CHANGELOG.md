@@ -1,4 +1,4 @@
-# Changes in version ?.?.? - 2016-??-??
+# Changes in version 1.2.0 - 2016-05-??
 
  * Medium changes
    - Include the hostname in directory source entries of consensuses
@@ -8,6 +8,8 @@
      the corresponding values, rather than just the whole line.
    - In Torperf results, recognize all percentiles of expected bytes
      read for 0 <= x <= 100 rather than just x = { 10, 20, ..., 90 }.
+   - Rename properties for overriding default descriptor source
+     implementation classes.
 
  * Minor changes
    - Include a Torperf results line with more than one unrecognized

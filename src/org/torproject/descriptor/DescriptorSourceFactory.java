@@ -16,10 +16,10 @@ public final class DescriptorSourceFactory {
       "org.torproject.descriptor.impl.DescriptorCollectorImpl";
 
   /* property names */
-  public final static String PARSER_PROPERTY = "onionoo.parser";
-  public final static String READER_PROPERTY = "onionoo.property";
-  public final static String LOADER_PROPERTY = "onionoo.downloader";
-  public final static String COLLECTOR_PROPERTY = "onionoo.collector";
+  public final static String PARSER_PROPERTY = "descriptor.parser";
+  public final static String READER_PROPERTY = "descriptor.reader";
+  public final static String LOADER_PROPERTY = "descriptor.downloader";
+  public final static String COLLECTOR_PROPERTY = "descriptor.collector";
 
   /**
    * Create a descriptor parser.
