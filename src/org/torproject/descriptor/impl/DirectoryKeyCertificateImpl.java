@@ -124,6 +124,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
               + "block in directory key certificate.");
         }
         nextCrypto = "";
+        break;
       default:
         if (crypto != null) {
           crypto.append(line).append("\n");

@@ -14,6 +14,8 @@
  * Minor changes
    - Include a Torperf results line with more than one unrecognized
      key only once in the unrecognized lines.
+   - Stop reporting "-----END .*-----" lines in directory key
+     certificates as unrecognized.
 
 
 # Changes in version 1.1.0 - 2015-12-28
