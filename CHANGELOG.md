@@ -10,6 +10,7 @@
      read for 0 <= x <= 100 rather than just x = { 10, 20, ..., 90 }.
    - Rename properties for overriding default descriptor source
      implementation classes.
+   - Actually return the signing key digest in network status votes.
 
  * Minor changes
    - Include a Torperf results line with more than one unrecognized

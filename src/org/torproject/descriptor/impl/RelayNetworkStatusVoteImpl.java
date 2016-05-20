@@ -488,9 +488,13 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     return this.dirKeyExpiresMillis;
   }
 
-  private String signingKeyDigest;
   public String getSigningKeyDigest() {
-    return this.signingKeyDigest;
+    String signingKeyDigest = null;
+    if (!this.directorySignatures.isEmpty()) {
+      signingKeyDigest = this.directorySignatures.get(
+          this.directorySignatures.firstKey()).getSigningKeyDigest();
+    }
+    return signingKeyDigest;
   }
 
   private int networkStatusVersion;
