@@ -1,7 +1,9 @@
 <project default="jar" name="descriptor" basedir=".">
   <property name="release.version" value="1.1.0-dev" />
   <property name="sources" value="src"/>
+  <property name="resources" value="resources"/>
   <property name="classes" value="classes"/>
+  <property name="docs" value="javadoc"/>
   <property name="tests" value="test"/>
   <property name="libs" value="lib"/>
   <property name="jarfile" value="descriptor-${release.version}.jar" />
@@ -25,6 +27,7 @@
   <target name="clean" >
     <delete includeEmptyDirs="true">
       <fileset dir="${classes}" defaultexcludes="false" includes="**" />
+      <fileset dir="${docs}" defaultexcludes="false" includes="**" />
     </delete>
     <delete file="${jarfile}"/>
     <delete file="${jarsourcesfile}"/>
@@ -33,6 +36,7 @@
 
   <target name="init">
     <mkdir dir="${classes}"/>
+    <mkdir dir="${docs}"/>
   </target>
 
   <target name="compile"
@@ -48,6 +52,20 @@
            includeantruntime="false">
       <classpath refid="classpath"/>
     </javac>
+  </target>
+
+  <target name="docs">
+    <javadoc destdir="${docs}"
+             footer="&amp;copy; 2016 The Tor Project"
+             doctitle="DescripTor API Documentation"
+             overview="${basedir}/${resources}/overview.html"
+             use="true"
+             windowtitle="DescripTor API Documentation">
+      <classpath refid="classpath"/>
+      <fileset dir="${sources}">
+        <exclude name="**/impl/**"/>
+      </fileset>
+    </javadoc>
   </target>
 
   <target name="test" depends="compile">

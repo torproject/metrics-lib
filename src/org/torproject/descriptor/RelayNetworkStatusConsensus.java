@@ -1,76 +1,201 @@
-/* Copyright 2011--2015 The Tor Project
+/* Copyright 2011--2016 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor;
 
 import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
 
-/* Contains a network status consensus. */
+/**
+ * Contains a network status consensus in the version 3 directory protocol.
+ *
+ * <p>Directory authorities in the version 3 of the directory protocol
+ * periodically generate a view of the current descriptors and status for
+ * known relays and send a signed summary of this view to the other
+ * authorities ({@link RelayNetworkStatusVote}).  The authorities compute
+ * the result of this vote and sign a network status consensus containing
+ * the result of the vote, which is this document.</p>
+ *
+ * <p>Clients use consensus documents to find out when their list of
+ * relays is out-of-date by looking at the contained network status
+ * entries ({@link NetworkStatusEntry}).  If it is, they download any
+ * missing server descriptors ({@link ServerDescriptor}).</p>
+ *
+ * @since 1.0.0
+ */
 public interface RelayNetworkStatusConsensus extends Descriptor {
 
-  /* Return the network status version. */
+  /**
+   * Return the document format version of this descriptor which is 3 or
+   * higher.
+   *
+   * @since 1.0.0
+   */
   public int getNetworkStatusVersion();
 
-  /* Return the flavor name, or null if this consensus is unflavored. */
+  /**
+   * Return the consensus flavor name, which denotes the variant of the
+   * original, unflavored consensus, encoded as a string of alphanumeric
+   * characters and dashes, or null if this descriptor is the unflavored
+   * consensus.
+   *
+   * @since 1.0.0
+   */
   public String getConsensusFlavor();
 
-  /* Return the consensus method. */
+  /**
+   * Return the consensus method number of this descriptor, which is the
+   * highest consensus method supported by more than 2/3 of voting
+   * authorities, or 0 if no consensus method is contained in the
+   * descriptor.
+   *
+   * @since 1.0.0
+   */
   public int getConsensusMethod();
 
-  /* Return the valid-after time in milliseconds. */
+  /**
+   * Return the time in milliseconds since the epoch at which this
+   * descriptor became valid.
+   *
+   * @since 1.0.0
+   */
   public long getValidAfterMillis();
 
-  /* Return the fresh-until time in milliseconds. */
+  /**
+   * Return the time in milliseconds since the epoch until which this
+   * descriptor is the freshest that is available.
+   *
+   * @since 1.0.0
+   */
   public long getFreshUntilMillis();
 
-  /* Return the valid-until time in milliseconds. */
+  /**
+   * Return the time in milliseconds since the epoch until which this
+   * descriptor was valid.
+   *
+   * @since 1.0.0
+   */
   public long getValidUntilMillis();
 
-  /* Return the VoteSeconds time in seconds. */
+  /**
+   * Return the number of seconds that the directory authorities will
+   * allow to collect votes from the other authorities when producing the
+   * next consensus.
+   *
+   * @since 1.0.0
+   */
   public long getVoteSeconds();
 
-  /* Return the DistSeconds time in seconds. */
+  /**
+   * Return the number of seconds that the directory authorities will
+   * allow to collect signatures from the other authorities when producing
+   * the next consensus.
+   *
+   * @since 1.0.0
+   */
   public long getDistSeconds();
 
-  /* Return recommended server versions or null if the consensus doesn't
-   * contain recommended server versions. */
+  /**
+   * Return recommended Tor versions for server usage, or null if the
+   * consensus does not contain an opinion about server versions.
+   *
+   * @since 1.0.0
+   */
   public List<String> getRecommendedServerVersions();
 
-  /* Return recommended client versions or null if the consensus doesn't
-   * contain recommended client versions. */
+  /**
+   * Return recommended Tor versions for client usage, or null if the
+   * consensus does not contain an opinion about client versions.
+   *
+   * @since 1.0.0
+   */
   public List<String> getRecommendedClientVersions();
 
-  /* Return known relay flags. */
+  /**
+   * Return known relay flags in this descriptor that were contained in
+   * enough votes for this consensus to be an authoritative opinion for
+   * these relay flags.
+   *
+   * @since 1.0.0
+   */
   public SortedSet<String> getKnownFlags();
 
-  /* Return consensus parameters or null if the consensus doesn't contain
-   * consensus parameters. */
+  /**
+   * Return consensus parameters contained in this descriptor with map
+   * keys being case-sensitive parameter identifiers and map values being
+   * parameter values, or null if the consensus doesn't contain consensus
+   * parameters.
+   *
+   * @since 1.0.0
+   */
   public SortedMap<String, Integer> getConsensusParams();
 
-  /* Return dir-source entries representing the directories of which
-   * votes are contained in this consensus. */
+  /**
+   * Return directory source entries for each directory authority that
+   * contributed to the consensus, with map keys being SHA-1 digests of
+   * the authorities' identity keys in the version 3 directory protocol,
+   * encoded as 40 upper-case hexadecimal characters.
+   *
+   * @since 1.0.0
+   */
   public SortedMap<String, DirSourceEntry> getDirSourceEntries();
 
-  /* Return status entries, one for each contained relay. */
+  /**
+   * Return status entries for each contained server, with map keys being
+   * SHA-1 digests of the servers' public identity keys, encoded as 40
+   * upper-case hexadecimal characters.
+   *
+   * @since 1.0.0
+   */
   public SortedMap<String, NetworkStatusEntry> getStatusEntries();
 
-  /* Return whether a status entry with the given fingerprint exists. */
+  /**
+   * Return whether a status entry with the given relay fingerprint
+   * (SHA-1 digest of the server's public identity key, encoded as 40
+   * upper-case hexadecimal characters) exists; convenience method for
+   * {@code getStatusEntries().containsKey(fingerprint)}.
+   *
+   * @since 1.0.0
+   */
   public boolean containsStatusEntry(String fingerprint);
 
-  /* Return a status entry by fingerprint or null if no such status entry
-   * exists. */
+  /**
+   * Return a status entry by relay fingerprint (SHA-1 digest of the
+   * server's public identity key, encoded as 40 upper-case hexadecimal
+   * characters), or null if no such status entry exists; convenience
+   * method for {@code getStatusEntries().get(fingerprint)}.
+   *
+   * @since 1.0.0
+   */
   public NetworkStatusEntry getStatusEntry(String fingerprint);
 
-  /* Return directory signatures. */
+  /**
+   * Return directory signatures of this consensus, with map keys being
+   * SHA-1 digests of the authorities' identity keys in the version 3
+   * directory protocol, encoded as 40 upper-case hexadecimal characters.
+   *
+   * @since 1.0.0
+   */
   public SortedMap<String, DirectorySignature> getDirectorySignatures();
 
-  /* Return bandwidth weights or null if the consensus doesn't contain
-   * bandwidth weights. */
+  /**
+   * Return optional weights to be applied to router bandwidths during
+   * path selection with map keys being case-sensitive weight identifiers
+   * and map values being weight values, or null if the consensus doesn't
+   * contain such weights.
+   *
+   * @since 1.0.0
+   */
   public SortedMap<String, Integer> getBandwidthWeights();
 
-  /* Return the consensus digest that directory authorities use to sign
-   * the consensus. */
+  /**
+   * Return the SHA-1 digest of this consensus, encoded as 40 upper-case
+   * hexadecimal characters that directory authorities use to sign the
+   * consensus.
+   *
+   * @since 1.0.0
+   */
   public String getConsensusDigest();
 }
 

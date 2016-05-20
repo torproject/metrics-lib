@@ -1,45 +1,109 @@
-/* Copyright 2012--2015 The Tor Project
+/* Copyright 2012--2016 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor;
 
+/**
+ * Contains a key certificate in the version 3 directory protocol.
+ *
+ * <p>Every directory authority in the version 3 directory protocol uses
+ * two keys: a medium-term signing key, and a long-term authority identity
+ * key.  (Authorities also have a relay identity key used in their role as
+ * a relay and by earlier versions of the directory protocol.)  The
+ * identity key is used from time to time to sign new key certificates
+ * containing signing keys.  The contained signing key is used to sign key
+ * certificates and status documents.</p>
+ *
+ * @since 1.0.0
+ */
 public interface DirectoryKeyCertificate extends Descriptor {
 
-  /* Return the directory key certificate version. */
+  /**
+   * Return the version of this descriptor, which must be 3 or higher.
+   *
+   * @since 1.0.0
+   */
   public int getDirKeyCertificateVersion();
 
-  /* Return the IP address, or null if the certificate does not contain an
-   * address. */
+  /**
+   * Return the authority's primary IPv4 address in dotted-quad format,
+   * or null if the certificate does not contain an address.
+   *
+   * @since 1.0.0
+   */
   public String getAddress();
 
-  /* Return the directory port, or -1 if the certificate does not contain
-   * one. */
+  /**
+   * Return the TCP port where this authority accepts directory-related
+   * HTTP connections, or -1 if the certificate does not contain a port.
+   *
+   * @since 1.0.0
+   */
   public int getPort();
 
-  /* Return the directory identity fingerprint. */
+  /**
+   * Return a SHA-1 digest of the authority's long-term authority
+   * identity key used for the version 3 directory protocol, encoded as
+   * 40 upper-case hexadecimal characters.
+   *
+   * @since 1.0.0
+   */
   public String getFingerprint();
 
-  /* Return the directory identity key. */
+  /**
+   * Return the authority's identity key in PEM format.
+   *
+   * @since 1.0.0
+   */
   public String getDirIdentityKey();
 
-  /* Return the directory key certificate publication timestamp. */
+  /**
+   * Return the time in milliseconds since the epoch when the authority's
+   * signing key and this key certificate were generated.
+   *
+   * @since 1.0.0
+   */
   public long getDirKeyPublishedMillis();
 
-  /* Return the directory key certificate expiration timestamp. */
+  /**
+   * Return the time in milliseconds since the epoch after which the
+   * authority's signing key is no longer valid.
+   *
+   * @since 1.0.0
+   */
   public long getDirKeyExpiresMillis();
 
-  /* Return the directory signing key digest. */
+  /**
+   * Return the authority's signing key in PEM format.
+   *
+   * @since 1.0.0
+   */
   public String getDirSigningKey();
 
-  /* Return the signature of the directory identity key made using the
-   * directory signing key, or null if the certificate does not contain
-   * this signature. */
+  /**
+   * Return the signature of the authority's identity key made using the
+   * authority's signing key, or null if the certificate does not contain
+   * such a signature.
+   *
+   * @since 1.0.0
+   */
   public String getDirKeyCrosscert();
 
-  /* Return the certificate signature made using the directory identity
-   * key. */
+  /**
+   * Return the certificate signature from the initial item
+   * "dir-key-certificate-version" until the final item
+   * "dir-key-certification", signed with the authority identity key.
+   *
+   * @since 1.0.0
+   */
   public String getDirKeyCertification();
 
-  /* Return the calculated certificate digest. */
+  /**
+   * Return the SHA-1 certificate digest, encoded as 40 lower-case
+   * hexadecimal characters.
+   *
+   * @since 1.0.0
+   */
   public String getCertificateDigest();
 }
 

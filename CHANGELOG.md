@@ -12,6 +12,8 @@
      implementation classes.
    - Actually return the signing key digest in network status votes.
    - Parse crypto parts in network status votes.
+   - Document all public parts in org.torproject.descriptor and add
+     an Ant target to generate Javadocs.
 
  * Minor changes
    - Include a Torperf results line with more than one unrecognized

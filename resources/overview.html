@@ -1,0 +1,69 @@
+<html>
+<body>
+<p>DescripTor API, which is provided and supported by Tor's Metrics
+Team, is a library to obtain and process descriptors containing Tor
+network data.  It is the main Java tool for processing Tor descriptors
+and provides a standard API consisting of interfaces and a reference
+implementation for all of them.</p>
+
+<p>Most Tor descriptors understood by this library are specified in the
+<a href="https://gitweb.torproject.org/torspec.git/tree/dir-spec.txt">Tor
+directory protocol, version 3</a> or in the earlier
+<a href="https://gitweb.torproject.org/torspec.git/tree/attic/dir-spec-v2.txt">version 2</a> or
+<a href="https://gitweb.torproject.org/torspec.git/tree/attic/dir-spec-v1.txt">version 1</a>
+of that document.
+Other descriptors are specified on the
+<a href="https://collector.torproject.org/">CollecTor website</a>.</p>
+
+<p>The interfaces in
+<a href="./org/torproject/descriptor/package-summary.html">{@code org.torproject.descriptor}</a>
+as well as their implementations in the
+{@code org.torproject.descriptor.impl} package were driven by two main
+goals originating from the primary use case to make Tor network data
+accessible for statistical analysis:</p>
+
+<ul>
+<li><em>Complete coverage:</em> This library is supposed to cover the
+complete range of Tor descriptors made available by the
+<a href="https://collector.torproject.org">CollecTor</a> service.</li>
+<li><em>Runtime and memory efficiency:</em> Processing large amounts of
+descriptors in bulk is supposed to be efficient in terms of runtime and
+required memory.</li>
+</ul>
+
+<p>At the same time the current design and implementation were done with a
+number of non-goals in mind, even though some of these might turn into
+goals in the future:</p>
+
+<p><ul>
+<li><em>Verification:</em> The descriptor parser performs some basic
+verifications of descriptor formats, but no cryptographic verifications.
+It may not even be possible to write a cryptographic verification tool
+using parsed descriptor contents, though this has not been attempted
+yet.</li>
+<li><em>Potentially lossy conversion:</em> Descriptor contents may be
+converted to a format that is easier to process, even if that conversion
+makes it harder or impossible to re-create the original descriptor
+contents from a parsed descriptor.</li>
+<li><em>Generating descriptors:</em> This library does not contain any
+functionality to generate new descriptors for testing or related purposes,
+neither from previously set data nor randomly.</li>
+<li><em>Writing descriptors:</em> This library does not support writing
+descriptors to the file system or a database, both of which are left to
+the application.  Stated differently, there are no descriptor sinks that
+would correspond to the provided descriptor sources.</li>
+</ul></p>
+
+<p>Hints about using DescripTor can be found in the
+<a href="./org/torproject/descriptor/package-summary.html#package.description">{@code org.torproject.descriptor} package description</a>.
+</p>
+
+<p>Contact and further information:
+<ul>
+<li><a href="https://trac.torproject.org/projects/tor/query?status=!closed&component=Metrics%2Fmetrics-lib">DescripTor Bug Tracker</a></li>
+<li><a href="https://lists.torproject.org/cgi-bin/mailman/listinfo/metrics-team">Metrics Team Mailing List</a></li>
+<li><a href="https://trac.torproject.org/projects/tor/wiki/org/teams/MetricsTeam">Metrics Team Website</a></li>
+</ul>
+</body>
+</html>
+

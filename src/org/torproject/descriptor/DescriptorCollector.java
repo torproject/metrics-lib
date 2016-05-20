@@ -1,12 +1,39 @@
-/* Copyright 2015 The Tor Project
+/* Copyright 2015--2016 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor;
 
 import java.io.File;
 
-/** Fetch descriptors from the CollecTor service available at
- * https://collector.torproject.org/ and store them to a local
- * directory. */
+/**
+ * Descriptor source that synchronizes descriptors from the CollecTor
+ * service to a given local directory.
+ *
+ * <p>This type is not a descriptor source in the proper sense, because it
+ * does not produce descriptors by itself.  But it often creates the
+ * prerequisites for reading descriptors from disk using
+ * {@link DescriptorReader}.</p>
+ *
+ * <p>Code sample:</p>
+ * <pre>{@code
+ * DescriptorCollector descriptorCollector =
+ *     DescriptorSourceFactory.createDescriptorCollector();
+ * descriptorCollector.collectDescriptors(
+ *     // Download from Tor's main CollecTor instance,
+ *     "https://collector.torproject.org",
+ *     // include network status consensuses and relay server descriptors
+ *     new String[] { "/recent/relay-descriptors/consensuses/",
+ *     "/recent/relay-descriptors/server-descriptors/" },
+ *     // regardless of last-modified time,
+ *     0L,
+ *     // write to the local directory called in/,
+ *     new File("in"),
+ *     // and delete extraneous files that do not exist remotely anymore.
+ *     true);
+ * }</pre>
+ *
+ * @since 1.0.0
+ */
 public interface DescriptorCollector {
 
   /**
@@ -15,17 +42,18 @@ public interface DescriptorCollector {
    * anymore.
    *
    * @param collecTorBaseUrl CollecTor base URL without trailing slash,
-   * e.g., "https://collector.torproject.org".
+   *     e.g., {@code "https://collector.torproject.org"}
    * @param remoteDirectories Remote directories to collect descriptors
-   * from, e.g., "/recent/relay-descriptors/server-descriptors/".  Only
-   * files in this directory will be collected, no files in its sub
-   * directories.
+   *     from, e.g.,
+   *     {@code "/recent/relay-descriptors/server-descriptors/"}, without
+   *     processing subdirectories unless they are explicitly listed
    * @param minLastModified Minimum last-modified time in milliseconds of
-   * files to be collected.  Set to 0 for collecting all files.
-   * @param localDirectory Directory where collected files will be
-   * written.
+   *     files to be collected, or 0 for collecting all files
+   * @param localDirectory Directory where collected files will be written
    * @param deleteExtraneousLocalFiles Whether to delete all local files
-   * that do not exist remotely anymore.
+   *     that do not exist remotely anymore
+   *
+   * @since 1.0.0
    */
   public void collectDescriptors(String collecTorBaseUrl,
       String[] remoteDirectories, long minLastModified,
