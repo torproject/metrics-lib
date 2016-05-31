@@ -1,5 +1,5 @@
 <project default="jar" name="descriptor" basedir=".">
-  <property name="release.version" value="1.2.0" />
+  <property name="release.version" value="1.2.0-dev" />
   <property name="sources" value="src"/>
   <property name="resources" value="resources"/>
   <property name="classes" value="classes"/>
