@@ -1,4 +1,4 @@
-# Changes in version 1.2.0 - 2016-05-??
+# Changes in version 1.2.0 - 2016-05-31
 
  * Medium changes
    - Include the hostname in directory source entries of consensuses
