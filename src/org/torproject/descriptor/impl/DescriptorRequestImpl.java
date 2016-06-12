@@ -34,6 +34,7 @@ public class DescriptorRequestImpl implements DescriptorRequest {
   }
 
   private String requestUrl;
+  @Override
   public String getRequestUrl() {
     return this.requestUrl;
   }
@@ -42,6 +43,7 @@ public class DescriptorRequestImpl implements DescriptorRequest {
   protected void setDirectoryNickname(String directoryNickname) {
     this.directoryNickname = directoryNickname;
   }
+  @Override
   public String getDirectoryNickname() {
     return this.directoryNickname;
   }
@@ -50,6 +52,7 @@ public class DescriptorRequestImpl implements DescriptorRequest {
   protected void setResponseCode(int responseCode) {
     this.responseCode = responseCode;
   }
+  @Override
   public int getResponseCode() {
     return this.responseCode;
   }
@@ -58,6 +61,7 @@ public class DescriptorRequestImpl implements DescriptorRequest {
   protected void setRequestStart(long requestStart) {
     this.requestStart = requestStart;
   }
+  @Override
   public long getRequestStart() {
     return this.requestStart;
   }
@@ -66,21 +70,25 @@ public class DescriptorRequestImpl implements DescriptorRequest {
   protected void setRequestEnd(long requestEnd) {
     this.requestEnd = requestEnd;
   }
+  @Override
   public long getRequestEnd() {
     return this.requestEnd;
   }
 
   private boolean connectTimeoutHasExpired;
+  @Override
   public boolean connectTimeoutHasExpired() {
     return this.connectTimeoutHasExpired;
   }
 
   private boolean readTimeoutHasExpired;
+  @Override
   public boolean readTimeoutHasExpired() {
     return this.readTimeoutHasExpired;
   }
 
   private boolean globalTimeoutHasExpired;
+  @Override
   public boolean globalTimeoutHasExpired() {
     return this.globalTimeoutHasExpired;
   }
@@ -89,6 +97,7 @@ public class DescriptorRequestImpl implements DescriptorRequest {
   protected void setDescriptors(List<Descriptor> descriptors) {
     this.descriptors = descriptors;
   }
+  @Override
   public List<Descriptor> getDescriptors() {
     return this.descriptors;
   }
@@ -97,6 +106,7 @@ public class DescriptorRequestImpl implements DescriptorRequest {
   protected void setException(Exception exception) {
     this.exception = exception;
   }
+  @Override
   public Exception getException() {
     return this.exception;
   }

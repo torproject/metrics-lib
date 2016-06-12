@@ -18,7 +18,7 @@ import org.torproject.descriptor.TorperfResult;
 public class TorperfResultImpl extends DescriptorImpl
     implements TorperfResult {
 
-  public static List<Descriptor> parseTorperfResults(
+  protected static List<Descriptor> parseTorperfResults(
       byte[] rawDescriptorBytes, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     if (rawDescriptorBytes.length == 0) {
@@ -397,124 +397,148 @@ public class TorperfResultImpl extends DescriptorImpl
   }
 
   private SortedMap<String, String> unrecognizedKeys;
+  @Override
   public SortedMap<String, String> getUnrecognizedKeys() {
     return this.unrecognizedKeys == null ? null
         : new TreeMap<>(this.unrecognizedKeys);
   }
 
   private String source;
+  @Override
   public String getSource() {
     return this.source;
   }
 
   private int fileSize;
+  @Override
   public int getFileSize() {
     return this.fileSize;
   }
 
   private long startMillis;
+  @Override
   public long getStartMillis() {
     return this.startMillis;
   }
 
   private long socketMillis;
+  @Override
   public long getSocketMillis() {
     return this.socketMillis;
   }
 
   private long connectMillis;
+  @Override
   public long getConnectMillis() {
     return this.connectMillis;
   }
 
   private long negotiateMillis;
+  @Override
   public long getNegotiateMillis() {
     return this.negotiateMillis;
   }
 
   private long requestMillis;
+  @Override
   public long getRequestMillis() {
     return this.requestMillis;
   }
 
   private long responseMillis;
+  @Override
   public long getResponseMillis() {
     return this.responseMillis;
   }
 
   private long dataRequestMillis;
+  @Override
   public long getDataRequestMillis() {
     return this.dataRequestMillis;
   }
 
   private long dataResponseMillis;
+  @Override
   public long getDataResponseMillis() {
     return this.dataResponseMillis;
   }
 
   private long dataCompleteMillis;
+  @Override
   public long getDataCompleteMillis() {
     return this.dataCompleteMillis;
   }
 
   private int writeBytes;
+  @Override
   public int getWriteBytes() {
     return this.writeBytes;
   }
 
   private int readBytes;
+  @Override
   public int getReadBytes() {
     return this.readBytes;
   }
 
   private boolean didTimeout;
+  @Override
   public Boolean didTimeout() {
     return this.didTimeout;
   }
 
   private SortedMap<Integer, Long> dataPercentiles;
+  @Override
   public SortedMap<Integer, Long> getDataPercentiles() {
     return this.dataPercentiles == null ? null
         : new TreeMap<>(this.dataPercentiles);
   }
 
   private long launchMillis = -1L;
+  @Override
   public long getLaunchMillis() {
     return this.launchMillis;
   }
 
   private long usedAtMillis = -1L;
+  @Override
   public long getUsedAtMillis() {
     return this.usedAtMillis;
   }
 
   private String[] path;
+  @Override
   public List<String> getPath() {
     return this.path == null ? null : Arrays.asList(this.path);
   }
 
   private Long[] buildTimes;
+  @Override
   public List<Long> getBuildTimes() {
     return this.buildTimes == null ? null :
         Arrays.asList(this.buildTimes);
   }
 
   private long timeout = -1L;
+  @Override
   public long getTimeout() {
     return this.timeout;
   }
 
   private double quantile = -1.0;
+  @Override
   public double getQuantile() {
     return this.quantile;
   }
 
   private int circId = -1;
+  @Override
   public int getCircId() {
     return this.circId;
   }
 
   private int usedBy = -1;
+  @Override
   public int getUsedBy() {
     return this.usedBy;
   }

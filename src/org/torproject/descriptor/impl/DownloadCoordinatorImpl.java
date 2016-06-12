@@ -142,6 +142,7 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
   /* Look up what request a directory should make next.  If there is
    * nothing to do right now, but maybe later, block the caller.  If
    * we're done downloading, return null to notify the caller. */
+  @Override
   public synchronized DescriptorRequestImpl createRequest(
       String nickname) {
     while (!this.hasFinishedDownloading) {
@@ -197,6 +198,7 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
    * or a failure response code.  Update the lists of missing descriptors,
    * decide if there are more descriptors to download, and wake up any
    * waiting downloader threads. */
+  @Override
   public synchronized void deliverResponse(
       DescriptorRequestImpl response) {
     String nickname = response.getDirectoryNickname();

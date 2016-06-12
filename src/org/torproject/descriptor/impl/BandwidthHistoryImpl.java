@@ -66,21 +66,25 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
   }
 
   private String line;
+  @Override
   public String getLine() {
     return this.line;
   }
 
   private long historyEndMillis;
+  @Override
   public long getHistoryEndMillis() {
     return this.historyEndMillis;
   }
 
   private long intervalLength;
+  @Override
   public long getIntervalLength() {
     return this.intervalLength;
   }
 
   private long[] bandwidthValues;
+  @Override
   public SortedMap<Long, Long> getBandwidthValues() {
     SortedMap<Long, Long> result = new TreeMap<>();
     if (this.bandwidthValues != null) {

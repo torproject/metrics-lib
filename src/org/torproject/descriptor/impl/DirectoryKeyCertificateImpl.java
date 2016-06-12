@@ -240,56 +240,67 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   }
 
   private int dirKeyCertificateVersion;
+  @Override
   public int getDirKeyCertificateVersion() {
     return this.dirKeyCertificateVersion;
   }
 
   private String address;
+  @Override
   public String getAddress() {
     return this.address;
   }
 
   private int port = -1;
+  @Override
   public int getPort() {
     return this.port;
   }
 
   private String fingerprint;
+  @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private String dirIdentityKey;
+  @Override
   public String getDirIdentityKey() {
     return this.dirIdentityKey;
   }
 
   private long dirKeyPublishedMillis;
+  @Override
   public long getDirKeyPublishedMillis() {
     return this.dirKeyPublishedMillis;
   }
 
   private long dirKeyExpiresMillis;
+  @Override
   public long getDirKeyExpiresMillis() {
     return this.dirKeyExpiresMillis;
   }
 
   private String dirSigningKey;
+  @Override
   public String getDirSigningKey() {
     return this.dirSigningKey;
   }
 
   private String dirKeyCrosscert;
+  @Override
   public String getDirKeyCrosscert() {
     return this.dirKeyCrosscert;
   }
 
   private String dirKeyCertification;
+  @Override
   public String getDirKeyCertification() {
     return this.dirKeyCertification;
   }
 
   private String certificateDigest;
+  @Override
   public String getCertificateDigest() {
     return this.certificateDigest;
   }

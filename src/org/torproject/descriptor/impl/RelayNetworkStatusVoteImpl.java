@@ -513,80 +513,96 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   }
 
   private String nickname;
+  @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String identity;
+  @Override
   public String getIdentity() {
     return this.identity;
   }
 
   private String hostname;
+  @Override
   public String getHostname() {
     return this.hostname;
   }
 
   private String address;
+  @Override
   public String getAddress() {
     return this.address;
   }
 
   private int dirPort;
+  @Override
   public int getDirport() {
     return this.dirPort;
   }
 
   private int orPort;
+  @Override
   public int getOrport() {
     return this.orPort;
   }
 
   private String contactLine;
+  @Override
   public String getContactLine() {
     return this.contactLine;
   }
 
   private int dirKeyCertificateVersion;
+  @Override
   public int getDirKeyCertificateVersion() {
     return this.dirKeyCertificateVersion;
   }
 
   private String legacyDirKey;
+  @Override
   public String getLegacyDirKey() {
     return this.legacyDirKey;
   }
 
   private long dirKeyPublishedMillis;
+  @Override
   public long getDirKeyPublishedMillis() {
     return this.dirKeyPublishedMillis;
   }
 
   private long dirKeyExpiresMillis;
+  @Override
   public long getDirKeyExpiresMillis() {
     return this.dirKeyExpiresMillis;
   }
 
   private String dirIdentityKey;
+  @Override
   public String getDirIdentityKey() {
     return this.dirIdentityKey;
   }
 
   private String dirSigningKey;
+  @Override
   public String getDirSigningKey() {
     return this.dirSigningKey;
   }
 
   private String dirKeyCrosscert;
+  @Override
   public String getDirKeyCrosscert() {
     return this.dirKeyCrosscert;
   }
 
   private String dirKeyCertification;
+  @Override
   public String getDirKeyCertification() {
     return this.dirKeyCertification;
   }
 
+  @Override
   public String getSigningKeyDigest() {
     String signingKeyDigest = null;
     if (!this.directorySignatures.isEmpty()) {
@@ -597,115 +613,137 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   }
 
   private int networkStatusVersion;
+  @Override
   public int getNetworkStatusVersion() {
     return this.networkStatusVersion;
   }
 
   private Integer[] consensusMethods;
+  @Override
   public List<Integer> getConsensusMethods() {
     return this.consensusMethods == null ? null :
         Arrays.asList(this.consensusMethods);
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private long validAfterMillis;
+  @Override
   public long getValidAfterMillis() {
     return this.validAfterMillis;
   }
 
   private long freshUntilMillis;
+  @Override
   public long getFreshUntilMillis() {
     return this.freshUntilMillis;
   }
 
   private long validUntilMillis;
+  @Override
   public long getValidUntilMillis() {
     return this.validUntilMillis;
   }
 
   private long voteSeconds;
+  @Override
   public long getVoteSeconds() {
     return this.voteSeconds;
   }
 
   private long distSeconds;
+  @Override
   public long getDistSeconds() {
     return this.distSeconds;
   }
 
   private String[] recommendedClientVersions;
+  @Override
   public List<String> getRecommendedClientVersions() {
     return this.recommendedClientVersions == null ? null :
         Arrays.asList(this.recommendedClientVersions);
   }
 
   private String[] recommendedServerVersions;
+  @Override
   public List<String> getRecommendedServerVersions() {
     return this.recommendedServerVersions == null ? null :
         Arrays.asList(this.recommendedServerVersions);
   }
 
   private List<String> packageLines;
+  @Override
   public List<String> getPackageLines() {
     return this.packageLines == null ? null
         : new ArrayList<>(this.packageLines);
   }
 
   private String[] knownFlags;
+  @Override
   public SortedSet<String> getKnownFlags() {
     return new TreeSet<>(Arrays.asList(this.knownFlags));
   }
 
   private long stableUptime;
+  @Override
   public long getStableUptime() {
     return this.stableUptime;
   }
 
   private long stableMtbf;
+  @Override
   public long getStableMtbf() {
     return this.stableMtbf;
   }
 
   private long fastBandwidth;
+  @Override
   public long getFastBandwidth() {
     return this.fastBandwidth;
   }
 
   private double guardWfu;
+  @Override
   public double getGuardWfu() {
     return this.guardWfu;
   }
 
   private long guardTk;
+  @Override
   public long getGuardTk() {
     return this.guardTk;
   }
 
   private long guardBandwidthIncludingExits;
+  @Override
   public long getGuardBandwidthIncludingExits() {
     return this.guardBandwidthIncludingExits;
   }
 
   private long guardBandwidthExcludingExits;
+  @Override
   public long getGuardBandwidthExcludingExits() {
     return this.guardBandwidthExcludingExits;
   }
 
   private int enoughMtbfInfo;
+  @Override
   public int getEnoughMtbfInfo() {
     return this.enoughMtbfInfo;
   }
 
   private int ignoringAdvertisedBws;
+  @Override
   public int getIgnoringAdvertisedBws() {
     return this.ignoringAdvertisedBws;
   }
 
   private SortedMap<String, Integer> consensusParams;
+  @Override
   public SortedMap<String, Integer> getConsensusParams() {
     return this.consensusParams == null ? null:
         new TreeMap<>(this.consensusParams);

@@ -296,73 +296,87 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
   }
 
   private String statusDigest;
+  @Override
   public String getStatusDigest() {
     return this.statusDigest;
   }
 
   private int networkStatusVersion;
+  @Override
   public int getNetworkStatusVersion() {
     return this.networkStatusVersion;
   }
 
   private String hostname;
+  @Override
   public String getHostname() {
     return this.hostname;
   }
 
   private String address;
+  @Override
   public String getAddress() {
     return this.address;
   }
 
   private int dirPort;
+  @Override
   public int getDirport() {
     return this.dirPort;
   }
 
   private String fingerprint;
+  @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private String contactLine;
+  @Override
   public String getContactLine() {
     return this.contactLine;
   }
 
   private String dirSigningKey;
+  @Override
   public String getDirSigningKey() {
     return this.dirSigningKey;
   }
 
   private String[] recommendedClientVersions;
+  @Override
   public List<String> getRecommendedClientVersions() {
     return this.recommendedClientVersions == null ? null :
         Arrays.asList(this.recommendedClientVersions);
   }
 
   private String[] recommendedServerVersions;
+  @Override
   public List<String> getRecommendedServerVersions() {
     return this.recommendedServerVersions == null ? null :
         Arrays.asList(this.recommendedServerVersions);
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private String[] dirOptions;
+  @Override
   public SortedSet<String> getDirOptions() {
     return new TreeSet<>(Arrays.asList(this.dirOptions));
   }
 
   private String nickname;
+  @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String directorySignature;
+  @Override
   public String getDirectorySignature() {
     return this.directorySignature;
   }

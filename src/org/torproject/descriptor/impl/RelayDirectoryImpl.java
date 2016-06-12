@@ -489,48 +489,57 @@ public class RelayDirectoryImpl extends DescriptorImpl
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private String dirSigningKey;
+  @Override
   public String getDirSigningKey() {
     return this.dirSigningKey;
   }
 
   private List<String> recommendedSoftware;
+  @Override
   public List<String> getRecommendedSoftware() {
     return this.recommendedSoftware == null ? null :
         new ArrayList<>(this.recommendedSoftware);
   }
 
   private String directorySignature;
+  @Override
   public String getDirectorySignature() {
     return this.directorySignature;
   }
 
   private List<RouterStatusEntry> statusEntries = new ArrayList<>();
+  @Override
   public List<RouterStatusEntry> getRouterStatusEntries() {
     return new ArrayList<>(this.statusEntries);
   }
 
   private List<ServerDescriptor> serverDescriptors = new ArrayList<>();
+  @Override
   public List<ServerDescriptor> getServerDescriptors() {
     return new ArrayList<>(this.serverDescriptors);
   }
 
   private List<Exception> serverDescriptorParseExceptions =
       new ArrayList<>();
+  @Override
   public List<Exception> getServerDescriptorParseExceptions() {
     return new ArrayList<>(this.serverDescriptorParseExceptions);
   }
 
   private String nickname;
+  @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String directoryDigest;
+  @Override
   public String getDirectoryDigest() {
     return this.directoryDigest;
   }

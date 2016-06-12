@@ -20,6 +20,7 @@ import org.torproject.descriptor.NetworkStatusEntry;
 public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private byte[] statusEntryBytes;
+  @Override
   public byte[] getStatusEntryBytes() {
     return this.statusEntryBytes;
   }
@@ -269,52 +270,62 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private String nickname;
+  @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String fingerprint;
+  @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private String descriptor;
+  @Override
   public String getDescriptor() {
     return this.descriptor;
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private String address;
+  @Override
   public String getAddress() {
     return this.address;
   }
 
   private int orPort;
+  @Override
   public int getOrPort() {
     return this.orPort;
   }
 
   private int dirPort;
+  @Override
   public int getDirPort() {
     return this.dirPort;
   }
 
   private Set<String> microdescriptorDigests;
+  @Override
   public Set<String> getMicrodescriptorDigests() {
     return this.microdescriptorDigests == null ? null :
         new HashSet<>(this.microdescriptorDigests);
   }
 
   private List<String> orAddresses = new ArrayList<>();
+  @Override
   public List<String> getOrAddresses() {
     return new ArrayList<>(this.orAddresses);
   }
 
   private BitSet flags;
+  @Override
   public SortedSet<String> getFlags() {
     SortedSet<String> result = new TreeSet<>();
     if (this.flags != null) {
@@ -327,36 +338,43 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private String version;
+  @Override
   public String getVersion() {
     return this.version;
   }
 
   private long bandwidth = -1L;
+  @Override
   public long getBandwidth() {
     return this.bandwidth;
   }
 
   private long measured = -1L;
+  @Override
   public long getMeasured() {
     return this.measured;
   }
 
   private boolean unmeasured = false;
+  @Override
   public boolean getUnmeasured() {
     return this.unmeasured;
   }
 
   private String defaultPolicy;
+  @Override
   public String getDefaultPolicy() {
     return this.defaultPolicy;
   }
 
   private String portList;
+  @Override
   public String getPortList() {
     return this.portList;
   }
 
   private String masterKeyEd25519;
+  @Override
   public String getMasterKeyEd25519() {
     return this.masterKeyEd25519;
   }

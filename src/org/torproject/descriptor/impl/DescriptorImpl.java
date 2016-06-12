@@ -159,6 +159,7 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   protected byte[] rawDescriptorBytes;
+  @Override
   public byte[] getRawDescriptorBytes() {
     return this.rawDescriptorBytes;
   }
@@ -166,6 +167,7 @@ public abstract class DescriptorImpl implements Descriptor {
   protected boolean failUnrecognizedDescriptorLines = false;
 
   protected List<String> unrecognizedLines;
+  @Override
   public List<String> getUnrecognizedLines() {
     return this.unrecognizedLines == null ? new ArrayList<String>() :
         new ArrayList<>(this.unrecognizedLines);
@@ -205,6 +207,7 @@ public abstract class DescriptorImpl implements Descriptor {
       this.rawDescriptorBytes = rawDescriptor;
     }
   }
+  @Override
   public List<String> getAnnotations() {
     return new ArrayList<>(this.annotations);
   }

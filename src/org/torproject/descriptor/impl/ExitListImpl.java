@@ -121,17 +121,20 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
   }
 
   private long downloadedMillis;
+  @Override
   public long getDownloadedMillis() {
     return this.downloadedMillis;
   }
 
   private Set<ExitListEntry> oldExitListEntries = new HashSet<>();
   @Deprecated
+  @Override
   public Set<ExitListEntry> getExitListEntries() {
     return new HashSet<>(this.oldExitListEntries);
   }
 
   private Set<ExitList.Entry> exitListEntries = new HashSet<>();
+  @Override
   public Set<ExitList.Entry> getEntries() {
     return new HashSet<>(this.exitListEntries);
   }

@@ -35,6 +35,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
   private boolean hasStartedReading = false;
 
   private List<File> directories = new ArrayList<>();
+  @Override
   public void addDirectory(File directory) {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -44,6 +45,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
   }
 
   private List<File> tarballs = new ArrayList<>();
+  @Override
   public void addTarball(File tarball) {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -53,6 +55,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
   }
 
   private File historyFile;
+  @Override
   public void setExcludeFiles(File historyFile) {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -62,6 +65,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
   }
 
   private SortedMap<String, Long> excludedFiles;
+  @Override
   public void setExcludedFiles(SortedMap<String, Long> excludedFiles) {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -70,6 +74,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.excludedFiles = excludedFiles;
   }
 
+  @Override
   public SortedMap<String, Long> getExcludedFiles() {
     if (this.reader == null || !this.reader.hasFinishedReading) {
       throw new IllegalStateException("Operation is not permitted before "
@@ -78,6 +83,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
     return new TreeMap<>(this.reader.excludedFilesAfter);
   }
 
+  @Override
   public SortedMap<String, Long> getParsedFiles() {
     if (this.reader == null || !this.reader.hasFinishedReading) {
       throw new IllegalStateException("Operation is not permitted before "
@@ -87,6 +93,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
   }
 
   private boolean failUnrecognizedDescriptorLines = false;
+  @Override
   public void setFailUnrecognizedDescriptorLines() {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -96,6 +103,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
   }
 
   private Integer maxDescriptorFilesInQueue = null;
+  @Override
   public void setMaxDescriptorFilesInQueue(int max) {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -105,6 +113,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
   }
 
   private DescriptorReaderRunnable reader;
+  @Override
   public Iterator<DescriptorFile> readDescriptors() {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Initiating reading is only "

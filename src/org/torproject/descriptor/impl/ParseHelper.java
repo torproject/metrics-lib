@@ -22,7 +22,7 @@ public class ParseHelper {
 
   private static Pattern keywordPattern =
       Pattern.compile("^[A-Za-z0-9-]+$");
-  public static String parseKeyword(String line, String keyword)
+  protected static String parseKeyword(String line, String keyword)
       throws DescriptorParseException {
     if (!keywordPattern.matcher(keyword).matches()) {
       throw new DescriptorParseException("Unrecognized character in "
@@ -33,7 +33,7 @@ public class ParseHelper {
 
   private static Pattern ipv4Pattern =
       Pattern.compile("^[0-9\\.]{7,15}$");
-  public static String parseIpv4Address(String line, String address)
+  protected static String parseIpv4Address(String line, String address)
       throws DescriptorParseException {
     boolean isValid = true;
     if (!ipv4Pattern.matcher(address).matches()) {
@@ -62,7 +62,7 @@ public class ParseHelper {
     return address;
   }
 
-  public static int parsePort(String line, String portString)
+  protected static int parsePort(String line, String portString)
       throws DescriptorParseException {
     int port = -1;
     try {
@@ -78,7 +78,7 @@ public class ParseHelper {
     return port;
   }
 
-  public static long parseSeconds(String line, String secondsString)
+  protected static long parseSeconds(String line, String secondsString)
       throws DescriptorParseException {
     try {
       return Long.parseLong(secondsString);
@@ -88,7 +88,7 @@ public class ParseHelper {
     }
   }
 
-  public static String parseExitPattern(String line, String exitPattern)
+  protected static String parseExitPattern(String line, String exitPattern)
       throws DescriptorParseException {
     if (!exitPattern.contains(":")) {
       throw new DescriptorParseException("'" + exitPattern + "' in line '"
@@ -166,7 +166,7 @@ public class ParseHelper {
     return threadDateFormats.get(format);
   }
 
-  public static long parseTimestampAtIndex(String line, String[] parts,
+  protected static long parseTimestampAtIndex(String line, String[] parts,
       int dateIndex, int timeIndex) throws DescriptorParseException {
     if (dateIndex >= parts.length || timeIndex >= parts.length) {
       throw new DescriptorParseException("Line '" + line + "' does not "
@@ -187,7 +187,7 @@ public class ParseHelper {
     return result;
   }
 
-  public static long parseDateAtIndex(String line, String[] parts,
+  protected static long parseDateAtIndex(String line, String[] parts,
       int dateIndex) throws DescriptorParseException {
     if (dateIndex >= parts.length) {
       throw new DescriptorParseException("Line '" + line + "' does not "
@@ -209,7 +209,7 @@ public class ParseHelper {
 
   private static Pattern twentyByteHexPattern =
       Pattern.compile("^[0-9a-fA-F]{40}$");
-  public static String parseTwentyByteHexString(String line,
+  protected static String parseTwentyByteHexString(String line,
       String hexString) throws DescriptorParseException {
     if (!twentyByteHexPattern.matcher(hexString).matches()) {
       throw new DescriptorParseException("Illegal hex string in line '"
@@ -218,7 +218,7 @@ public class ParseHelper {
     return hexString.toUpperCase();
   }
 
-  public static SortedMap<String, String> parseKeyValueStringPairs(
+  protected static SortedMap<String, String> parseKeyValueStringPairs(
       String line, String[] parts, int startIndex, String separatorString)
       throws DescriptorParseException {
     SortedMap<String, String> result = new TreeMap<>();
@@ -234,7 +234,7 @@ public class ParseHelper {
     return result;
   }
 
-  public static SortedMap<String, Integer> parseKeyValueIntegerPairs(
+  protected static SortedMap<String, Integer> parseKeyValueIntegerPairs(
       String line, String[] parts, int startIndex, String separatorString)
       throws DescriptorParseException {
     SortedMap<String, Integer> result = new TreeMap<>();
@@ -254,7 +254,7 @@ public class ParseHelper {
 
   private static Pattern nicknamePattern =
       Pattern.compile("^[0-9a-zA-Z]{1,19}$");
-  public static String parseNickname(String line, String nickname)
+  protected static String parseNickname(String line, String nickname)
       throws DescriptorParseException {
     if (!nicknamePattern.matcher(nickname).matches()) {
       throw new DescriptorParseException("Illegal nickname in line '"
@@ -263,7 +263,7 @@ public class ParseHelper {
     return nickname;
   }
 
-  public static boolean parseBoolean(String b, String line)
+  protected static boolean parseBoolean(String b, String line)
       throws DescriptorParseException {
     switch (b) {
     case "1":
@@ -277,7 +277,7 @@ public class ParseHelper {
 
   private static Pattern twentyByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{27}$");
-  public static String parseTwentyByteBase64String(String line,
+  protected static String parseTwentyByteBase64String(String line,
       String base64String) throws DescriptorParseException {
     if (!twentyByteBase64Pattern.matcher(base64String).matches()) {
       throw new DescriptorParseException("'" + base64String
@@ -291,7 +291,7 @@ public class ParseHelper {
 
   private static Pattern thirtyTwoByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{43}$");
-  public static String parseThirtyTwoByteBase64String(String line,
+  protected static String parseThirtyTwoByteBase64String(String line,
       String base64String) throws DescriptorParseException {
     if (!thirtyTwoByteBase64Pattern.matcher(base64String).matches()) {
       throw new DescriptorParseException("'" + base64String
@@ -305,7 +305,7 @@ public class ParseHelper {
 
   private static Map<Integer, Pattern>
       commaSeparatedKeyValueListPatterns = new HashMap<>();
-  public static String parseCommaSeparatedKeyIntegerValueList(
+  protected static String parseCommaSeparatedKeyIntegerValueList(
       String line, String[] partsNoOpt, int index, int keyLength)
       throws DescriptorParseException {
     String result = "";
@@ -338,7 +338,7 @@ public class ParseHelper {
     return result;
   }
 
-  public static SortedMap<String, Integer>
+  protected static SortedMap<String, Integer>
       convertCommaSeparatedKeyIntegerValueList(String validatedString) {
     SortedMap<String, Integer> result = null;
     if (validatedString != null) {
@@ -353,7 +353,7 @@ public class ParseHelper {
     return result;
   }
 
-  public static SortedMap<String, Long>
+  protected static SortedMap<String, Long>
       parseCommaSeparatedKeyLongValueList(String line,
       String[] partsNoOpt, int index, int keyLength)
       throws DescriptorParseException {
@@ -391,7 +391,7 @@ public class ParseHelper {
     return result;
   }
 
-  public static Integer[] parseCommaSeparatedIntegerValueList(
+  protected static Integer[] parseCommaSeparatedIntegerValueList(
       String line, String[] partsNoOpt, int index)
       throws DescriptorParseException {
     Integer[] result = null;
@@ -419,7 +419,7 @@ public class ParseHelper {
     return result;
   }
 
-  public static Double[] parseCommaSeparatedDoubleValueList(
+  protected static Double[] parseCommaSeparatedDoubleValueList(
       String line, String[] partsNoOpt, int index)
       throws DescriptorParseException {
     Double[] result = null;
@@ -480,7 +480,7 @@ public class ParseHelper {
     return result;
   }
 
-  public static String
+  protected static String
       parseMasterKeyEd25519FromIdentityEd25519CryptoBlock(
       String identityEd25519CryptoBlock) throws DescriptorParseException {
     String identityEd25519CryptoBlockNoNewlines =

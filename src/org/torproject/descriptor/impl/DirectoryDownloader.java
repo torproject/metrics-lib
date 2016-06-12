@@ -49,6 +49,7 @@ public class DirectoryDownloader implements Runnable {
         failUnrecognizedDescriptorLines);
   }
 
+  @Override
   public void run() {
     boolean keepRunning = true;
     do {

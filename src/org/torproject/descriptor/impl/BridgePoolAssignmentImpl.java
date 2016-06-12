@@ -85,11 +85,13 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private SortedMap<String, String> entries = new TreeMap<>();
+  @Override
   public SortedMap<String, String> getEntries() {
     return new TreeMap<>(this.entries);
   }

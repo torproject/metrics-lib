@@ -15,6 +15,7 @@ public class DescriptorFileImpl implements DescriptorFile {
   protected void setDirectory(File directory) {
     this.directory = directory;
   }
+  @Override
   public File getDirectory() {
     return this.directory;
   }
@@ -23,6 +24,7 @@ public class DescriptorFileImpl implements DescriptorFile {
   protected void setTarball(File tarball) {
     this.tarball = tarball;
   }
+  @Override
   public File getTarball() {
     return this.tarball;
   }
@@ -31,6 +33,7 @@ public class DescriptorFileImpl implements DescriptorFile {
   protected void setFile(File file) {
     this.file = file;
   }
+  @Override
   public File getFile() {
     return this.file;
   }
@@ -39,6 +42,7 @@ public class DescriptorFileImpl implements DescriptorFile {
   protected void setFileName(String fileName) {
     this.fileName = fileName;
   }
+  @Override
   public String getFileName() {
     return this.fileName;
   }
@@ -47,6 +51,7 @@ public class DescriptorFileImpl implements DescriptorFile {
   protected void setLastModified(long lastModified) {
     this.lastModified = lastModified;
   }
+  @Override
   public long getLastModified() {
     return this.lastModified;
   }
@@ -55,6 +60,7 @@ public class DescriptorFileImpl implements DescriptorFile {
   protected void setDescriptors(List<Descriptor> descriptors) {
     this.descriptors = descriptors;
   }
+  @Override
   public List<Descriptor> getDescriptors() {
     return this.descriptors == null ? new ArrayList<Descriptor>() :
       new ArrayList<>(this.descriptors);
@@ -64,6 +70,7 @@ public class DescriptorFileImpl implements DescriptorFile {
   protected void setException(Exception exception) {
     this.exception = exception;
   }
+  @Override
   public Exception getException() {
     return this.exception;
   }

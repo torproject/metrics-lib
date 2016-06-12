@@ -168,51 +168,61 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private long stableUptime;
+  @Override
   public long getStableUptime() {
     return this.stableUptime;
   }
 
   private long stableMtbf;
+  @Override
   public long getStableMtbf() {
     return this.stableMtbf;
   }
 
   private long fastBandwidth;
+  @Override
   public long getFastBandwidth() {
     return this.fastBandwidth;
   }
 
   private double guardWfu;
+  @Override
   public double getGuardWfu() {
     return this.guardWfu;
   }
 
   private long guardTk;
+  @Override
   public long getGuardTk() {
     return this.guardTk;
   }
 
   private long guardBandwidthIncludingExits;
+  @Override
   public long getGuardBandwidthIncludingExits() {
     return this.guardBandwidthIncludingExits;
   }
 
   private long guardBandwidthExcludingExits;
+  @Override
   public long getGuardBandwidthExcludingExits() {
     return this.guardBandwidthExcludingExits;
   }
 
   private int enoughMtbfInfo;
+  @Override
   public int getEnoughMtbfInfo() {
     return this.enoughMtbfInfo;
   }
 
   private int ignoringAdvertisedBws;
+  @Override
   public int getIgnoringAdvertisedBws() {
     return this.ignoringAdvertisedBws;
   }

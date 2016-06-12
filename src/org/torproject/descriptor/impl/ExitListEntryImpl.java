@@ -18,9 +18,6 @@ import org.torproject.descriptor.ExitListEntry;
 public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
 
   private byte[] exitListEntryBytes;
-  public byte[] getExitListEntryBytes() {
-    return this.exitListEntryBytes;
-  }
 
   private boolean failUnrecognizedDescriptorLines;
   private List<String> unrecognizedLines;
@@ -172,21 +169,25 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
   }
 
   private String fingerprint;
+  @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private long lastStatusMillis;
+  @Override
   public long getLastStatusMillis() {
     return this.lastStatusMillis;
   }
 
   private String exitAddress;
+  @Override
   public String getExitAddress() {
     if (null == exitAddress) {
       Map.Entry<String, Long> randomEntry =
@@ -198,11 +199,13 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
   }
 
   private Map<String, Long> exitAddresses = new HashMap<>();
+  @Override
   public Map<String, Long> getExitAddresses(){
     return new HashMap<>(this.exitAddresses);
   }
 
   private long scanMillis;
+  @Override
   public long getScanMillis() {
     if (null == exitAddress) {
       getExitAddress();

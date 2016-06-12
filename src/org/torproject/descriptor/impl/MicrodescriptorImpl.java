@@ -260,56 +260,67 @@ public class MicrodescriptorImpl extends DescriptorImpl
   }
 
   private String microdescriptorDigest;
+  @Override
   public String getMicrodescriptorDigest() {
     return this.microdescriptorDigest;
   }
 
   private String onionKey;
+  @Override
   public String getOnionKey() {
     return this.onionKey;
   }
 
   private String ntorOnionKey;
+  @Override
   public String getNtorOnionKey() {
     return this.ntorOnionKey;
   }
 
   private List<String> orAddresses = new ArrayList<>();
+  @Override
   public List<String> getOrAddresses() {
     return new ArrayList<>(this.orAddresses);
   }
 
   private String[] familyEntries;
+  @Override
   public List<String> getFamilyEntries() {
     return this.familyEntries == null ? null :
         Arrays.asList(this.familyEntries);
   }
   private String defaultPolicy;
+  @Override
   public String getDefaultPolicy() {
     return this.defaultPolicy;
   }
 
   private String portList;
+  @Override
   public String getPortList() {
     return this.portList;
   }
 
   private String ipv6DefaultPolicy;
+  @Override
   public String getIpv6DefaultPolicy() {
     return this.ipv6DefaultPolicy;
   }
 
   private String ipv6PortList;
+  @Override
   public String getIpv6PortList() {
     return this.ipv6PortList;
   }
 
   private String rsa1024Identity;
+  @Override
   public String getRsa1024Identity() {
     return this.rsa1024Identity;
   }
 
   private String ed25519Identity;
+  @Override
   public String getEd25519Identity() {
     return this.ed25519Identity;
   }

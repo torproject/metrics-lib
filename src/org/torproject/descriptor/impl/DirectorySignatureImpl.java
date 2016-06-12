@@ -12,9 +12,6 @@ import org.torproject.descriptor.DirectorySignature;
 public class DirectorySignatureImpl implements DirectorySignature {
 
   private byte[] directorySignatureBytes;
-  public byte[] getDirectorySignatureBytes() {
-    return this.directorySignatureBytes;
-  }
 
   private boolean failUnrecognizedDescriptorLines;
   private List<String> unrecognizedLines;
@@ -90,21 +87,25 @@ public class DirectorySignatureImpl implements DirectorySignature {
   }
 
   private String algorithm = "sha1";
+  @Override
   public String getAlgorithm() {
     return this.algorithm;
   }
 
   private String identity;
+  @Override
   public String getIdentity() {
     return this.identity;
   }
 
   private String signingKeyDigest;
+  @Override
   public String getSigningKeyDigest() {
     return this.signingKeyDigest;
   }
 
   private String signature;
+  @Override
   public String getSignature() {
     return this.signature;
   }

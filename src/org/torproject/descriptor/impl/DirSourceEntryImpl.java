@@ -14,6 +14,7 @@ import org.torproject.descriptor.DirSourceEntry;
 public class DirSourceEntryImpl implements DirSourceEntry {
 
   private byte[] dirSourceEntryBytes;
+  @Override
   public byte[] getDirSourceEntryBytes() {
     return this.dirSourceEntryBytes;
   }
@@ -161,46 +162,55 @@ public class DirSourceEntryImpl implements DirSourceEntry {
   }
 
   private String nickname;
+  @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String identity;
+  @Override
   public String getIdentity() {
     return this.identity;
   }
 
   private boolean isLegacy;
+  @Override
   public boolean isLegacy() {
     return this.isLegacy;
   }
 
   private String hostname;
+  @Override
   public String getHostname() {
     return this.hostname;
   }
 
   private String ip;
+  @Override
   public String getIp() {
     return this.ip;
   }
 
   private int dirPort;
+  @Override
   public int getDirPort() {
     return this.dirPort;
   }
 
   private int orPort;
+  @Override
   public int getOrPort() {
     return this.orPort;
   }
 
   private String contactLine;
+  @Override
   public String getContactLine() {
     return this.contactLine;
   }
 
   private String voteDigest;
+  @Override
   public String getVoteDigest() {
     return this.voteDigest;
   }

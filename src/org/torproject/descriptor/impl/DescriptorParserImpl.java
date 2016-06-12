@@ -12,12 +12,14 @@ public class DescriptorParserImpl implements DescriptorParser {
 
   private boolean failUnrecognizedDescriptorLines;
 
+  @Override
   public void setFailUnrecognizedDescriptorLines(
       boolean failUnrecognizedDescriptorLines) {
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
   }
 
+  @Override
   public List<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
       String fileName) throws DescriptorParseException {
     return DescriptorImpl.parseDescriptors(rawDescriptorBytes, fileName,

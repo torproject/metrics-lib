@@ -881,339 +881,402 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private String extraInfoDigest;
+  @Override
   public String getExtraInfoDigest() {
     return this.extraInfoDigest;
   }
 
   private String extraInfoDigestSha256;
+  @Override
   public String getExtraInfoDigestSha256() {
     return this.extraInfoDigestSha256;
   }
 
   private String nickname;
+  @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String fingerprint;
+  @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private BandwidthHistory readHistory;
+  @Override
   public BandwidthHistory getReadHistory() {
     return this.readHistory;
   }
 
   private BandwidthHistory writeHistory;
+  @Override
   public BandwidthHistory getWriteHistory() {
     return this.writeHistory;
   }
 
   private String geoipDbDigest;
+  @Override
   public String getGeoipDbDigest() {
     return this.geoipDbDigest;
   }
 
   private String geoip6DbDigest;
+  @Override
   public String getGeoip6DbDigest() {
     return this.geoip6DbDigest;
   }
 
   private long dirreqStatsEndMillis = -1L;
+  @Override
   public long getDirreqStatsEndMillis() {
     return this.dirreqStatsEndMillis;
   }
 
   private long dirreqStatsIntervalLength = -1L;
+  @Override
   public long getDirreqStatsIntervalLength() {
     return this.dirreqStatsIntervalLength;
   }
 
   private String dirreqV2Ips;
+  @Override
   public SortedMap<String, Integer> getDirreqV2Ips() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV2Ips);
   }
 
   private String dirreqV3Ips;
+  @Override
   public SortedMap<String, Integer> getDirreqV3Ips() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV3Ips);
   }
 
   private String dirreqV2Reqs;
+  @Override
   public SortedMap<String, Integer> getDirreqV2Reqs() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV2Reqs);
   }
 
   private String dirreqV3Reqs;
+  @Override
   public SortedMap<String, Integer> getDirreqV3Reqs() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV3Reqs);
   }
 
   private double dirreqV2Share = -1.0;
+  @Override
   public double getDirreqV2Share() {
     return this.dirreqV2Share;
   }
 
   private double dirreqV3Share = -1.0;
+  @Override
   public double getDirreqV3Share() {
     return this.dirreqV3Share;
   }
 
   private String dirreqV2Resp;
+  @Override
   public SortedMap<String, Integer> getDirreqV2Resp() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV2Resp);
   }
 
   private String dirreqV3Resp;
+  @Override
   public SortedMap<String, Integer> getDirreqV3Resp() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV3Resp);
   }
 
   private String dirreqV2DirectDl;
+  @Override
   public SortedMap<String, Integer> getDirreqV2DirectDl() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV2DirectDl);
   }
 
   private String dirreqV3DirectDl;
+  @Override
   public SortedMap<String, Integer> getDirreqV3DirectDl() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV3DirectDl);
   }
 
   private String dirreqV2TunneledDl;
+  @Override
   public SortedMap<String, Integer> getDirreqV2TunneledDl() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV2TunneledDl);
   }
 
   private String dirreqV3TunneledDl;
+  @Override
   public SortedMap<String, Integer> getDirreqV3TunneledDl() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.dirreqV3TunneledDl);
   }
 
   private BandwidthHistory dirreqReadHistory;
+  @Override
   public BandwidthHistory getDirreqReadHistory() {
     return this.dirreqReadHistory;
   }
 
   private BandwidthHistory dirreqWriteHistory;
+  @Override
   public BandwidthHistory getDirreqWriteHistory() {
     return this.dirreqWriteHistory;
   }
 
   private long entryStatsEndMillis = -1L;
+  @Override
   public long getEntryStatsEndMillis() {
     return this.entryStatsEndMillis;
   }
 
   private long entryStatsIntervalLength = -1L;
+  @Override
   public long getEntryStatsIntervalLength() {
     return this.entryStatsIntervalLength;
   }
 
   private String entryIps;
+  @Override
   public SortedMap<String, Integer> getEntryIps() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.entryIps);
   }
 
   private long cellStatsEndMillis = -1L;
+  @Override
   public long getCellStatsEndMillis() {
     return this.cellStatsEndMillis;
   }
 
   private long cellStatsIntervalLength = -1L;
+  @Override
   public long getCellStatsIntervalLength() {
     return this.cellStatsIntervalLength;
   }
 
   private Integer[] cellProcessedCells;
+  @Override
   public List<Integer> getCellProcessedCells() {
     return this.cellProcessedCells == null ? null :
         Arrays.asList(this.cellProcessedCells);
   }
 
   private Double[] cellQueuedCells;
+  @Override
   public List<Double> getCellQueuedCells() {
     return this.cellQueuedCells == null ? null :
         Arrays.asList(this.cellQueuedCells);
   }
 
   private Integer[] cellTimeInQueue;
+  @Override
   public List<Integer> getCellTimeInQueue() {
     return this.cellTimeInQueue == null ? null :
         Arrays.asList(this.cellTimeInQueue);
   }
 
   private int cellCircuitsPerDecile = -1;
+  @Override
   public int getCellCircuitsPerDecile() {
     return this.cellCircuitsPerDecile;
   }
 
   private long connBiDirectStatsEndMillis = -1L;
+  @Override
   public long getConnBiDirectStatsEndMillis() {
     return this.connBiDirectStatsEndMillis;
   }
 
   private long connBiDirectStatsIntervalLength = -1L;
+  @Override
   public long getConnBiDirectStatsIntervalLength() {
     return this.connBiDirectStatsIntervalLength;
   }
 
   private int connBiDirectBelow = -1;
+  @Override
   public int getConnBiDirectBelow() {
     return this.connBiDirectBelow;
   }
 
   private int connBiDirectRead = -1;
+  @Override
   public int getConnBiDirectRead() {
     return this.connBiDirectRead;
   }
 
   private int connBiDirectWrite = -1;
+  @Override
   public int getConnBiDirectWrite() {
     return this.connBiDirectWrite;
   }
 
   private int connBiDirectBoth = -1;
+  @Override
   public int getConnBiDirectBoth() {
     return this.connBiDirectBoth;
   }
 
   private long exitStatsEndMillis = -1L;
+  @Override
   public long getExitStatsEndMillis() {
     return this.exitStatsEndMillis;
   }
 
   private long exitStatsIntervalLength = -1L;
+  @Override
   public long getExitStatsIntervalLength() {
     return this.exitStatsIntervalLength;
   }
 
   private SortedMap<String, Long> exitKibibytesWritten;
+  @Override
   public SortedMap<String, Long> getExitKibibytesWritten() {
     return this.exitKibibytesWritten == null ? null :
         new TreeMap<>(this.exitKibibytesWritten);
   }
 
   private SortedMap<String, Long> exitKibibytesRead;
+  @Override
   public SortedMap<String, Long> getExitKibibytesRead() {
     return this.exitKibibytesRead == null ? null :
         new TreeMap<>(this.exitKibibytesRead);
   }
 
   private SortedMap<String, Long> exitStreamsOpened;
+  @Override
   public SortedMap<String, Long> getExitStreamsOpened() {
     return this.exitStreamsOpened == null ? null :
         new TreeMap<>(this.exitStreamsOpened);
   }
 
   private long geoipStartTimeMillis = -1L;
+  @Override
   public long getGeoipStartTimeMillis() {
     return this.geoipStartTimeMillis;
   }
 
   private String geoipClientOrigins;
+  @Override
   public SortedMap<String, Integer> getGeoipClientOrigins() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.geoipClientOrigins);
   }
 
   private long bridgeStatsEndMillis = -1L;
+  @Override
   public long getBridgeStatsEndMillis() {
     return this.bridgeStatsEndMillis;
   }
 
   private long bridgeStatsIntervalLength = -1L;
+  @Override
   public long getBridgeStatsIntervalLength() {
     return this.bridgeStatsIntervalLength;
   }
 
   private String bridgeIps;
+  @Override
   public SortedMap<String, Integer> getBridgeIps() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.bridgeIps);
   }
 
   private String bridgeIpVersions;
+  @Override
   public SortedMap<String, Integer> getBridgeIpVersions() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.bridgeIpVersions);
   }
 
   private String bridgeIpTransports;
+  @Override
   public SortedMap<String, Integer> getBridgeIpTransports() {
     return ParseHelper.convertCommaSeparatedKeyIntegerValueList(
         this.bridgeIpTransports);
   }
 
   private List<String> transports = new ArrayList<>();
+  @Override
   public List<String> getTransports() {
     return new ArrayList<>(this.transports);
   }
 
   private long hidservStatsEndMillis = -1L;
+  @Override
   public long getHidservStatsEndMillis() {
     return this.hidservStatsEndMillis;
   }
 
   private long hidservStatsIntervalLength = -1L;
+  @Override
   public long getHidservStatsIntervalLength() {
     return this.hidservStatsIntervalLength;
   }
 
   private Double hidservRendRelayedCells;
+  @Override
   public Double getHidservRendRelayedCells() {
     return this.hidservRendRelayedCells;
   }
 
   private Map<String, Double> hidservRendRelayedCellsParameters;
+  @Override
   public Map<String, Double> getHidservRendRelayedCellsParameters() {
     return this.hidservRendRelayedCellsParameters == null ? null :
         new HashMap<>(this.hidservRendRelayedCellsParameters);
   }
 
   private Double hidservDirOnionsSeen;
+  @Override
   public Double getHidservDirOnionsSeen() {
     return this.hidservDirOnionsSeen;
   }
 
   private Map<String, Double> hidservDirOnionsSeenParameters;
+  @Override
   public Map<String, Double> getHidservDirOnionsSeenParameters() {
     return this.hidservDirOnionsSeenParameters == null ? null :
       new HashMap<>(this.hidservDirOnionsSeenParameters);
   }
 
   private String routerSignature;
+  @Override
   public String getRouterSignature() {
     return this.routerSignature;
   }
 
   private String identityEd25519;
+  @Override
   public String getIdentityEd25519() {
     return this.identityEd25519;
   }
 
   private String masterKeyEd25519;
+  @Override
   public String getMasterKeyEd25519() {
     return this.masterKeyEd25519;
   }
 
   private String routerSignatureEd25519;
+  @Override
   public String getRouterSignatureEd25519() {
     return this.routerSignatureEd25519;
   }

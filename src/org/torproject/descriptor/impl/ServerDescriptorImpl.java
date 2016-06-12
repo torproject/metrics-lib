@@ -715,210 +715,251 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   }
 
   private String serverDescriptorDigest;
+  @Override
   public String getServerDescriptorDigest() {
     return this.serverDescriptorDigest;
   }
 
   private String serverDescriptorDigestSha256;
+  @Override
   public String getServerDescriptorDigestSha256() {
     return this.serverDescriptorDigestSha256;
   }
 
   private String nickname;
+  @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String address;
+  @Override
   public String getAddress() {
     return this.address;
   }
 
   private int orPort;
+  @Override
   public int getOrPort() {
     return this.orPort;
   }
 
   private int socksPort;
+  @Override
   public int getSocksPort() {
     return this.socksPort;
   }
 
   private int dirPort;
+  @Override
   public int getDirPort() {
     return this.dirPort;
   }
 
   private List<String> orAddresses = new ArrayList<>();
+  @Override
   public List<String> getOrAddresses() {
     return new ArrayList<>(this.orAddresses);
   }
 
   private int bandwidthRate;
+  @Override
   public int getBandwidthRate() {
     return this.bandwidthRate;
   }
 
   private int bandwidthBurst;
+  @Override
   public int getBandwidthBurst() {
     return this.bandwidthBurst;
   }
 
   private int bandwidthObserved;
+  @Override
   public int getBandwidthObserved() {
     return this.bandwidthObserved;
   }
 
   private String platform;
+  @Override
   public String getPlatform() {
     return this.platform;
   }
 
   private long publishedMillis;
+  @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private String fingerprint;
+  @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private boolean hibernating;
+  @Override
   public boolean isHibernating() {
     return this.hibernating;
   }
 
   private Long uptime;
+  @Override
   public Long getUptime() {
     return this.uptime;
   }
 
   private String onionKey;
+  @Override
   public String getOnionKey() {
     return this.onionKey;
   }
 
   private String signingKey;
+  @Override
   public String getSigningKey() {
     return this.signingKey;
   }
 
   private List<String> exitPolicyLines = new ArrayList<>();
+  @Override
   public List<String> getExitPolicyLines() {
     return new ArrayList<>(this.exitPolicyLines);
   }
 
   private String routerSignature;
+  @Override
   public String getRouterSignature() {
     return this.routerSignature;
   }
 
   private String contact;
+  @Override
   public String getContact() {
     return this.contact;
   }
 
   private String[] familyEntries;
+  @Override
   public List<String> getFamilyEntries() {
     return this.familyEntries == null ? null :
         Arrays.asList(this.familyEntries);
   }
 
   private BandwidthHistory readHistory;
+  @Override
   public BandwidthHistory getReadHistory() {
     return this.readHistory;
   }
 
   private BandwidthHistory writeHistory;
+  @Override
   public BandwidthHistory getWriteHistory() {
     return this.writeHistory;
   }
 
   private boolean usesEnhancedDnsLogic;
+  @Override
   public boolean getUsesEnhancedDnsLogic() {
     return this.usesEnhancedDnsLogic;
   }
 
   private boolean cachesExtraInfo;
+  @Override
   public boolean getCachesExtraInfo() {
     return this.cachesExtraInfo;
   }
 
   private String extraInfoDigest;
+  @Override
   public String getExtraInfoDigest() {
     return this.extraInfoDigest;
   }
 
   private String extraInfoDigestSha256;
+  @Override
   public String getExtraInfoDigestSha256() {
     return this.extraInfoDigestSha256;
   }
 
   private Integer[] hiddenServiceDirVersions;
+  @Override
   public List<Integer> getHiddenServiceDirVersions() {
     return this.hiddenServiceDirVersions == null ? null :
         Arrays.asList(this.hiddenServiceDirVersions);
   }
 
   private Integer[] linkProtocolVersions;
+  @Override
   public List<Integer> getLinkProtocolVersions() {
     return this.linkProtocolVersions == null ? null :
         Arrays.asList(this.linkProtocolVersions);
   }
 
   private Integer[] circuitProtocolVersions;
+  @Override
   public List<Integer> getCircuitProtocolVersions() {
     return this.circuitProtocolVersions == null ? null :
         Arrays.asList(this.circuitProtocolVersions);
   }
 
   private boolean allowSingleHopExits;
+  @Override
   public boolean getAllowSingleHopExits() {
     return this.allowSingleHopExits;
   }
 
   private String ipv6DefaultPolicy;
+  @Override
   public String getIpv6DefaultPolicy() {
     return this.ipv6DefaultPolicy;
   }
 
   private String ipv6PortList;
+  @Override
   public String getIpv6PortList() {
     return this.ipv6PortList;
   }
 
   private String ntorOnionKey;
+  @Override
   public String getNtorOnionKey() {
     return this.ntorOnionKey;
   }
 
   private String identityEd25519;
+  @Override
   public String getIdentityEd25519() {
     return this.identityEd25519;
   }
 
   private String masterKeyEd25519;
+  @Override
   public String getMasterKeyEd25519() {
     return this.masterKeyEd25519;
   }
 
   private String routerSignatureEd25519;
+  @Override
   public String getRouterSignatureEd25519() {
     return this.routerSignatureEd25519;
   }
 
   private String onionKeyCrosscert;
+  @Override
   public String getOnionKeyCrosscert() {
     return this.onionKeyCrosscert;
   }
 
   private String ntorOnionKeyCrosscert;
+  @Override
   public String getNtorOnionKeyCrosscert() {
     return this.ntorOnionKeyCrosscert;
   }
 
   private int ntorOnionKeyCrosscertSign = -1;
+  @Override
   public int getNtorOnionKeyCrosscertSign() {
     return ntorOnionKeyCrosscertSign;
   }

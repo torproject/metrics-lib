@@ -18,6 +18,7 @@ public class DescriptorDownloaderImpl
 
   private SortedMap<String, DirectoryDownloader> directoryAuthorities =
       new TreeMap<>();
+  @Override
   public void addDirectoryAuthority(String nickname, String ip,
       int dirPort) {
     if (this.hasStartedDownloading) {
@@ -32,6 +33,7 @@ public class DescriptorDownloaderImpl
 
   private SortedMap<String, DirectoryDownloader> directoryMirrors =
       new TreeMap<>();
+  @Override
   public void addDirectoryMirror(String nickname, String ip,
       int dirPort) {
     if (this.hasStartedDownloading) {
@@ -73,6 +75,7 @@ public class DescriptorDownloaderImpl
   }
 
   private boolean downloadConsensus = false;
+  @Override
   public void setIncludeCurrentConsensus() {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -82,6 +85,7 @@ public class DescriptorDownloaderImpl
   }
 
   private boolean downloadConsensusFromAllAuthorities = false;
+  @Override
   public void setIncludeCurrentConsensusFromAllDirectoryAuthorities() {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -91,6 +95,7 @@ public class DescriptorDownloaderImpl
   }
 
   private boolean includeCurrentReferencedVotes = false;
+  @Override
   public void setIncludeCurrentReferencedVotes() {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -100,6 +105,7 @@ public class DescriptorDownloaderImpl
   }
 
   private Set<String> downloadVotes = new HashSet<>();
+  @Override
   public void setIncludeCurrentVote(String fingerprint) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -109,6 +115,7 @@ public class DescriptorDownloaderImpl
     this.downloadVotes.add(fingerprint);
   }
 
+  @Override
   public void setIncludeCurrentVotes(Set<String> fingerprints) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -133,6 +140,7 @@ public class DescriptorDownloaderImpl
     }
   }
 
+  @Override
   public void setIncludeReferencedServerDescriptors() {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -143,6 +151,7 @@ public class DescriptorDownloaderImpl
         + "descriptors is not implemented yet.");
   }
 
+  @Override
   public void setExcludeServerDescriptor(String identifier) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -153,6 +162,7 @@ public class DescriptorDownloaderImpl
         + "descriptors is not implemented yet.");
   }
 
+  @Override
   public void setExcludeServerDescriptors(Set<String> identifier) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -163,6 +173,7 @@ public class DescriptorDownloaderImpl
         + "descriptors is not implemented yet.");
   }
 
+  @Override
   public void setIncludeReferencedExtraInfoDescriptors() {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -173,6 +184,7 @@ public class DescriptorDownloaderImpl
         + "descriptors is not implemented yet.");
   }
 
+  @Override
   public void setExcludeExtraInfoDescriptor(String identifier) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -183,6 +195,7 @@ public class DescriptorDownloaderImpl
         + "descriptors is not implemented yet.");
   }
 
+  @Override
   public void setExcludeExtraInfoDescriptors(Set<String> identifiers) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -194,6 +207,7 @@ public class DescriptorDownloaderImpl
   }
 
   private long readTimeoutMillis = 60L * 1000L;
+  @Override
   public void setReadTimeout(long readTimeoutMillis) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -208,6 +222,7 @@ public class DescriptorDownloaderImpl
   }
 
   private long connectTimeoutMillis = 60L * 1000L;
+  @Override
   public void setConnectTimeout(long connectTimeoutMillis) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -222,6 +237,7 @@ public class DescriptorDownloaderImpl
   }
 
   private long globalTimeoutMillis = 60L * 60L * 1000L;
+  @Override
   public void setGlobalTimeout(long globalTimeoutMillis) {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -236,6 +252,7 @@ public class DescriptorDownloaderImpl
   }
 
   private boolean failUnrecognizedDescriptorLines = false;
+  @Override
   public void setFailUnrecognizedDescriptorLines() {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Reconfiguration is not permitted "
@@ -244,6 +261,7 @@ public class DescriptorDownloaderImpl
     this.failUnrecognizedDescriptorLines = true;
   }
 
+  @Override
   public Iterator<DescriptorRequest> downloadDescriptors() {
     if (this.hasStartedDownloading) {
       throw new IllegalStateException("Initiating downloads is only "

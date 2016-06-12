@@ -58,6 +58,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
   /* Return whether there are more objects.  Block if there are currently
    * no objects, but the producer hasn't signalized that there won't be
    * further objects. */
+  @Override
   public synchronized boolean hasNext() {
     while (!this.outOfDescriptors && this.queue.isEmpty()) {
       try {
@@ -72,6 +73,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
    * are no further objects.  Block if there are currently no objects, but
    * the producer hasn't signalized that there won't be further
    * objects. */
+  @Override
   public synchronized T next() {
     while (!this.outOfDescriptors && this.queue.isEmpty()) {
       try {
@@ -88,6 +90,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
 
   /* Don't support explicitly removing objects.  They are removed
    * anyway. */
+  @Override
   public void remove() {
     throw new UnsupportedOperationException();
   }

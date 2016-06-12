@@ -317,80 +317,95 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   }
 
   private String consensusDigest;
+  @Override
   public String getConsensusDigest() {
     return this.consensusDigest;
   }
 
   private int networkStatusVersion;
+  @Override
   public int getNetworkStatusVersion() {
     return this.networkStatusVersion;
   }
 
   private String consensusFlavor;
+  @Override
   public String getConsensusFlavor() {
     return this.consensusFlavor;
   }
 
   private int consensusMethod;
+  @Override
   public int getConsensusMethod() {
     return this.consensusMethod;
   }
 
   private long validAfterMillis;
+  @Override
   public long getValidAfterMillis() {
     return this.validAfterMillis;
   }
 
   private long freshUntilMillis;
+  @Override
   public long getFreshUntilMillis() {
     return this.freshUntilMillis;
   }
 
   private long validUntilMillis;
+  @Override
   public long getValidUntilMillis() {
     return this.validUntilMillis;
   }
 
   private long voteSeconds;
+  @Override
   public long getVoteSeconds() {
     return this.voteSeconds;
   }
 
   private long distSeconds;
+  @Override
   public long getDistSeconds() {
     return this.distSeconds;
   }
 
   private String[] recommendedClientVersions;
+  @Override
   public List<String> getRecommendedClientVersions() {
     return this.recommendedClientVersions == null ? null :
         Arrays.asList(this.recommendedClientVersions);
   }
 
   private String[] recommendedServerVersions;
+  @Override
   public List<String> getRecommendedServerVersions() {
     return this.recommendedServerVersions == null ? null :
         Arrays.asList(this.recommendedServerVersions);
   }
 
   private List<String> packageLines;
+  @Override
   public List<String> getPackageLines() {
     return this.packageLines == null ? null
         : new ArrayList<>(this.packageLines);
   }
 
   private String[] knownFlags;
+  @Override
   public SortedSet<String> getKnownFlags() {
     return new TreeSet<>(Arrays.asList(this.knownFlags));
   }
 
   private SortedMap<String, Integer> consensusParams;
+  @Override
   public SortedMap<String, Integer> getConsensusParams() {
     return this.consensusParams == null ? null:
         new TreeMap<>(this.consensusParams);
   }
 
   private SortedMap<String, Integer> bandwidthWeights;
+  @Override
   public SortedMap<String, Integer> getBandwidthWeights() {
     return this.bandwidthWeights == null ? null :
         new TreeMap<>(this.bandwidthWeights);
