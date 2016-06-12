@@ -1,3 +1,9 @@
+# Changes in version 1.3.0 - 2016-0x-xx
+
+ * Medium changes
+   - Parse "package" lines in consensuses and votes.
+
+
 # Changes in version 1.2.0 - 2016-05-31
 
  * Medium changes

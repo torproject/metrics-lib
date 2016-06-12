@@ -10,6 +10,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -605,6 +606,42 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     ConsensusBuilder.createWithClientVersionsLine(
         "client-versions ,0.2.2.34");
+  }
+
+  @Test()
+  public void testPackageNone() throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithPackageLines(null);
+    assertNull(consensus.getPackageLines());
+  }
+
+  @Test()
+  public void testPackageOne() throws DescriptorParseException {
+    String packageLine = "package shouldbesecond 0 http digest=digest";
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithPackageLines(packageLine);
+    assertEquals(packageLine.substring("package ".length()),
+        consensus.getPackageLines().get(0));
+  }
+
+  @Test()
+  public void testPackageTwo() throws DescriptorParseException {
+    List<String> packageLines = Arrays.asList(
+        "package shouldbesecond 0 http digest=digest",
+        "package outoforder 0 http digest=digest");
+    RelayNetworkStatusConsensus consensus =
+        ConsensusBuilder.createWithPackageLines(packageLines.get(0)
+        + "\n" + packageLines.get(1));
+    for (int i = 0; i < packageLines.size(); i++) {
+      assertEquals(packageLines.get(i).substring("package ".length()),
+          consensus.getPackageLines().get(i));
+    }
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testPackageIncomplete() throws DescriptorParseException {
+    String packageLine = "package shouldbesecond 0 http";
+    ConsensusBuilder.createWithPackageLines(packageLine);
   }
 
   @Test(expected = DescriptorParseException.class)

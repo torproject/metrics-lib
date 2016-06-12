@@ -105,6 +105,16 @@ public interface RelayNetworkStatusVote extends Descriptor {
   public List<String> getRecommendedClientVersions();
 
   /**
+   * Return a list of software packages and their versions together with a
+   * URL and one or more digests in the format <code>PackageName Version
+   * URL DIGESTS</code> that are known by this directory authority, or
+   * null if this descriptor does not contain package information.
+   *
+   * @since 1.3.0
+   */
+  public List<String> getPackageLines();
+
+  /**
    * Return known relay flags by this authority.
    *
    * @since 1.0.0

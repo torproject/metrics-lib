@@ -123,6 +123,9 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       case "server-versions":
         this.parseServerVersionsLine(line, parts);
         break;
+      case "package":
+        this.parsePackageLine(line, parts);
+        break;
       case "known-flags":
         this.parseKnownFlagsLine(line, parts);
         break;
@@ -276,6 +279,18 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         line, parts);
   }
 
+  private void parsePackageLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length < 5) {
+      throw new DescriptorParseException("Wrong number of values in line "
+          + "'" + line + "'.");
+    }
+    if (this.packageLines == null) {
+      this.packageLines = new ArrayList<>();
+    }
+    this.packageLines.add(line.substring("package ".length()));
+  }
+
   private void parseKnownFlagsLine(String line, String[] parts)
       throws DescriptorParseException {
     if (parts.length < 2) {
@@ -356,6 +371,12 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   public List<String> getRecommendedServerVersions() {
     return this.recommendedServerVersions == null ? null :
         Arrays.asList(this.recommendedServerVersions);
+  }
+
+  private List<String> packageLines;
+  public List<String> getPackageLines() {
+    return this.packageLines == null ? null
+        : new ArrayList<>(this.packageLines);
   }
 
   private String[] knownFlags;

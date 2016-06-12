@@ -85,6 +85,14 @@ public class ConsensusBuilder {
     cb.serverVersionsLine = line;
     return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
+  private String packageLines = null;
+  protected static RelayNetworkStatusConsensus
+      createWithPackageLines(String lines)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.packageLines = lines;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
   private String knownFlagsLine = "known-flags Authority BadExit Exit "
       + "Fast Guard HSDir Named Running Stable Unnamed V2Dir Valid";
   protected static RelayNetworkStatusConsensus
@@ -260,6 +268,9 @@ public class ConsensusBuilder {
     }
     if (this.serverVersionsLine != null) {
       sb.append(this.serverVersionsLine).append("\n");
+    }
+    if (this.packageLines != null) {
+      sb.append(this.packageLines).append("\n");
     }
     if (this.knownFlagsLine != null) {
       sb.append(this.knownFlagsLine).append("\n");

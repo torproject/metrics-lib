@@ -108,6 +108,14 @@ public class RelayNetworkStatusVoteImplTest {
       vb.serverVersionsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+    private String packageLines = null;
+    protected static RelayNetworkStatusVote
+        createWithPackageLines(String lines)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.packageLines = lines;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
     private String knownFlagsLine = "known-flags Authority BadExit Exit "
         + "Fast Guard HSDir Named Running Stable Unnamed V2Dir Valid";
     private static RelayNetworkStatusVote
@@ -407,6 +415,9 @@ public class RelayNetworkStatusVoteImplTest {
       }
       if (this.serverVersionsLine != null) {
         sb.append(this.serverVersionsLine).append("\n");
+      }
+      if (this.packageLines != null) {
+        sb.append(this.packageLines).append("\n");
       }
       if (this.knownFlagsLine != null) {
         sb.append(this.knownFlagsLine).append("\n");
@@ -776,6 +787,42 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithClientVersionsLine(
         "client-versions ,0.2.2.34");
   }
+
+  @Test()
+  public void testPackageNone() throws DescriptorParseException {
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithPackageLines(null);
+    assertNull(vote.getPackageLines());
+  }
+
+  @Test()
+  public void testPackageOne() throws DescriptorParseException {
+    String packageLine = "package shouldbesecond 0 http digest=digest";
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithPackageLines(packageLine);
+    assertEquals(packageLine.substring("package ".length()),
+        vote.getPackageLines().get(0));
+  }
+
+  @Test()
+  public void testPackageTwo() throws DescriptorParseException {
+    List<String> packageLines = Arrays.asList(
+        "package shouldbesecond 0 http digest=digest",
+        "package outoforder 0 http digest=digest");
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithPackageLines(packageLines.get(0)
+        + "\n" + packageLines.get(1));
+    for (int i = 0; i < packageLines.size(); i++) {
+      assertEquals(packageLines.get(i).substring("package ".length()),
+          vote.getPackageLines().get(i));
+    }
+  }
+
+   @Test(expected = DescriptorParseException.class)
+   public void testPackageIncomplete() throws DescriptorParseException {
+     String packageLine = "package shouldbesecond 0 http";
+     ConsensusBuilder.createWithPackageLines(packageLine);
+   }
 
   @Test(expected = DescriptorParseException.class)
   public void testKnownFlagsNoLine() throws DescriptorParseException {
