@@ -3,6 +3,8 @@
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DirectorySignature;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -308,10 +310,13 @@ public class RelayNetworkStatusConsensusImplTest {
         "00795A6E8D91C270FC23B30F388A495553E01894"));
     assertEquals("188.177.149.216", consensus.getStatusEntry(
         "00795A6E8D91C270FC23B30F388A495553E01894").getAddress());
-    assertEquals("3509BA5A624403A905C74DA5C8A0CEC9E0D3AF86",
-        consensus.getDirectorySignatures().get(
-        "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4").
-        getSigningKeyDigest());
+    for (DirectorySignature signature : consensus.getSignatures()) {
+      if ("14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4".equals(
+          signature.getIdentity())) {
+        assertEquals("3509BA5A624403A905C74DA5C8A0CEC9E0D3AF86",
+            signature.getSigningKeyDigest());
+      }
+    }
     assertEquals(285, (int) consensus.getBandwidthWeights().get("Wbd"));
     assertTrue(consensus.getUnrecognizedLines().isEmpty());
   }
@@ -1114,22 +1119,38 @@ public class RelayNetworkStatusConsensusImplTest {
     DirectorySignatureBuilder.createWithIdentity("ED03BB616EB2F60");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testDirectorySignatureIdentityTooLong()
       throws DescriptorParseException {
+    /* This hex string has an unusual length of 58 hex characters, but
+     * dir-spec.txt only requires a hex string, and we can't know all hex
+     * string lengths for all future digest algorithms, so let's just
+     * accept this. */
     DirectorySignatureBuilder.createWithIdentity(
         "ED03BB616EB2F60BEC80151114BB25CEF515B226ED03BB616EB2F60BEC");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testDirectorySignatureSigningKeyTooShort()
       throws DescriptorParseException {
-    DirectorySignatureBuilder.createWithSigningKey("845CF1D0B370CA4");
+    /* See above, we accept this hex string even though it's unusually
+     * short. */
+    DirectorySignatureBuilder.createWithSigningKey("845CF1D0B370CA");
   }
 
   @Test(expected = DescriptorParseException.class)
+  public void testDirectorySignatureSigningKeyTooShortOddNumber()
+      throws DescriptorParseException {
+    /* We don't accept this hex string, because it contains an odd number
+     * of hex characters. */
+    DirectorySignatureBuilder.createWithSigningKey("845");
+  }
+
+  @Test()
   public void testDirectorySignatureSigningKeyTooLong()
       throws DescriptorParseException {
+    /* See above, we accept this hex string even though it's unusually
+     * long. */
     DirectorySignatureBuilder.createWithSigningKey(
         "845CF1D0B370CA443A8579D18E7987E7E532F639845CF1D0B370CA443A");
   }

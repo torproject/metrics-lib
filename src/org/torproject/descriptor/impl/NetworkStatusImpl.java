@@ -217,12 +217,12 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   protected void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
-    if (this.directorySignatures == null) {
-      this.directorySignatures = new TreeMap<>();
+    if (this.signatures == null) {
+      this.signatures = new ArrayList<>();
     }
     DirectorySignatureImpl signature = new DirectorySignatureImpl(
         directorySignatureBytes, failUnrecognizedDescriptorLines);
-    this.directorySignatures.put(signature.getIdentity(), signature);
+    this.signatures.add(signature);
     List<String> unrecognizedStatusEntryLines = signature.
         getAndClearUnrecognizedLines();
     if (unrecognizedStatusEntryLines != null) {
@@ -251,10 +251,20 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     return this.statusEntries.get(fingerprint);
   }
 
-  protected SortedMap<String, DirectorySignature> directorySignatures;
+  protected List<DirectorySignature> signatures;
+  public List<DirectorySignature> getSignatures() {
+    return this.signatures == null ? null
+        : new ArrayList<>(this.signatures);
+  }
   public SortedMap<String, DirectorySignature> getDirectorySignatures() {
-    return this.directorySignatures == null ? null :
-        new TreeMap<>(this.directorySignatures);
+    SortedMap<String, DirectorySignature> directorySignatures = null;
+    if (this.signatures != null) {
+      directorySignatures = new TreeMap<>();
+      for (DirectorySignature signature : this.signatures) {
+        directorySignatures.put(signature.getIdentity(), signature);
+      }
+    }
+    return directorySignatures;
   }
 }
 

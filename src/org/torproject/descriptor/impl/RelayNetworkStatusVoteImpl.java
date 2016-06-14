@@ -3,6 +3,7 @@
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DirectorySignature;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         + "valid-until,voting-delay,known-flags,dir-source,"
         + "dir-key-certificate-version,fingerprint,dir-key-published,"
         + "dir-key-expires,dir-identity-key,dir-signing-key,"
-        + "dir-key-certification,directory-signature").split(",")));
+        + "dir-key-certification").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
         "consensus-methods,client-versions,server-versions,"
@@ -55,6 +56,9 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         + "legacy-key,dir-key-crosscert,dir-address,directory-footer").
         split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
+    Set<String> atLeastOnceKeywords = new HashSet<>(Arrays.asList(
+        "directory-signature"));
+    this.checkAtLeastOnceKeywords(atLeastOnceKeywords);
     this.checkFirstKeyword("network-status-version");
     this.clearParsedKeywords();
   }
@@ -605,9 +609,14 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   @Override
   public String getSigningKeyDigest() {
     String signingKeyDigest = null;
-    if (!this.directorySignatures.isEmpty()) {
-      signingKeyDigest = this.directorySignatures.get(
-          this.directorySignatures.firstKey()).getSigningKeyDigest();
+    if (this.signatures != null && !this.signatures.isEmpty()) {
+      for (DirectorySignature signature : this.signatures) {
+        if (DirectorySignatureImpl.DEFAULT_ALGORITHM.equals(
+            signature.getAlgorithm())) {
+          signingKeyDigest = signature.getSigningKeyDigest();
+          break;
+        }
+      }
     }
     return signingKeyDigest;
   }

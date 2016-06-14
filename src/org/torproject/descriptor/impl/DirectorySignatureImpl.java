@@ -53,9 +53,9 @@ public class DirectorySignatureImpl implements DirectorySignature {
           throw new DescriptorParseException("Illegal line '" + line
               + "'.");
         }
-        this.identity = ParseHelper.parseTwentyByteHexString(line,
+        this.identity = ParseHelper.parseHexString(line,
             parts[1 + algorithmOffset]);
-        this.signingKeyDigest = ParseHelper.parseTwentyByteHexString(
+        this.signingKeyDigest = ParseHelper.parseHexString(
             line, parts[2 + algorithmOffset]);
         break;
       case "-----BEGIN":
@@ -86,10 +86,12 @@ public class DirectorySignatureImpl implements DirectorySignature {
     }
   }
 
-  private String algorithm = "sha1";
+  static final String DEFAULT_ALGORITHM = "sha1";
+
+  private String algorithm;
   @Override
   public String getAlgorithm() {
-    return this.algorithm;
+    return this.algorithm == null ? DEFAULT_ALGORITHM : this.algorithm;
   }
 
   private String identity;

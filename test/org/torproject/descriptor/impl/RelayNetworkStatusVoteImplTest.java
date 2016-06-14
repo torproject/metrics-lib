@@ -3,6 +3,8 @@
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DirectorySignature;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -532,6 +534,18 @@ public class RelayNetworkStatusVoteImplTest {
         vote.getDirKeyCrosscert().split("\n")[0]);
     assertEquals("-----BEGIN SIGNATURE-----",
         vote.getDirKeyCertification().split("\n")[0]);
+    assertEquals(1, vote.getSignatures().size());
+    DirectorySignature signature = vote.getSignatures().get(0);
+    assertEquals("sha1", signature.getAlgorithm());
+    assertEquals("80550987E1D626E3EBA5E5E75A458DE0626D088C",
+        signature.getIdentity());
+    assertEquals("EEB9299D295C1C815E289FBF2F2BBEA5F52FDD19",
+        signature.getSigningKeyDigest());
+    assertEquals("-----BEGIN SIGNATURE-----\n"
+        + "iHEU3Iidya5RIrjyYgv8tlU0R+rF56/3/MmaaZi0a67e7ZkISfQ4dghScHxn"
+        + "F3Yh\nrXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40Oi"
+        + "kfOIwEj+Ny\n+zBRQssP3hPhTPOj/A7o3mZZwtL6x1sxpeu/nME1l5E=\n"
+        + "-----END SIGNATURE-----\n", signature.getSignature());
     assertTrue(vote.getUnrecognizedLines().isEmpty());
   }
 
@@ -1202,6 +1216,61 @@ public class RelayNetworkStatusVoteImplTest {
   public void testDirectorySignaturesLinesMissing()
       throws DescriptorParseException {
     VoteBuilder.createWithDirectorySignatureLines(null);
+  }
+
+  @Test()
+  public void testDirectorySignaturesLinesTwoAlgorithms()
+      throws DescriptorParseException {
+    String identitySha256 = "32519E5CB7254AB5A94CC9925EC7676E53D5D52EEAB7"
+        + "914BD3ED751E537CAFCC";
+    String signingKeyDigestSha256 = "5A59D99C17831B9254422B6C5AA10CC59381"
+        + "6CAA5241E22ECAE8BBB4E8E9D1FC";
+    String signatureSha256 = "-----BEGIN SIGNATURE-----\n"
+        + "x57Alc424/zHS73SHokghGtNBVrBjtUz+gSL5w9AHGKUQcMyfw4Z9aDlKpTbFc"
+        + "5W\nnyIvFmM9C2OAH0S1+a647HHIxhE0zKf4+yKSwzqSyL6sbKQygVlJsRHNRr"
+        + "cFg8lp\nqBxEwvxQoA4xEDqnerR92pbK9l42nNLiKOcoReUqbbQ=\n"
+        + "-----END SIGNATURE-----";
+    String identitySha1 = "80550987E1D626E3EBA5E5E75A458DE0626D088C";
+    String signingKeyDigestSha1 =
+        "EEB9299D295C1C815E289FBF2F2BBEA5F52FDD19";
+    String signatureSha1 = "-----BEGIN SIGNATURE-----\n"
+        + "iHEU3Iidya5RIrjyYgv8tlU0R+rF56/3/MmaaZi0a67e7ZkISfQ4dghScHxnF3"
+        + "Yh\nrXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40OikfOI"
+        + "wEj+Ny\n+zBRQssP3hPhTPOj/A7o3mZZwtL6x1sxpeu/nME1l5E=\n"
+        + "-----END SIGNATURE-----";
+    String signaturesLines = String.format(
+        "directory-signature sha256 %s %s\n%s\n"
+        + "directory-signature %s %s\n%s", identitySha256,
+        signingKeyDigestSha256, signatureSha256, identitySha1,
+        signingKeyDigestSha1, signatureSha1);
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithDirectorySignatureLines(signaturesLines);
+    assertEquals(2, vote.getSignatures().size());
+    DirectorySignature firstSignature = vote.getSignatures().get(0);
+    assertEquals("sha256", firstSignature.getAlgorithm());
+    assertEquals(identitySha256, firstSignature.getIdentity());
+    assertEquals(signingKeyDigestSha256,
+        firstSignature.getSigningKeyDigest());
+    assertEquals(signatureSha256 + "\n", firstSignature.getSignature());
+    DirectorySignature secondSignature = vote.getSignatures().get(1);
+    assertEquals("sha1", secondSignature.getAlgorithm());
+    assertEquals(identitySha1, secondSignature.getIdentity());
+    assertEquals(signingKeyDigestSha1,
+        secondSignature.getSigningKeyDigest());
+    assertEquals(signatureSha1 + "\n", secondSignature.getSignature());
+    assertEquals(signingKeyDigestSha1, vote.getSigningKeyDigest());
+  }
+
+  @Test()
+  public void testDirectorySignaturesLinesTwoAlgorithmsSameDigests()
+      throws DescriptorParseException {
+    String signaturesLines = "directory-signature 00 00\n"
+        + "-----BEGIN SIGNATURE-----\n00\n-----END SIGNATURE-----\n"
+        + "directory-signature sha256 00 00\n"
+        + "-----BEGIN SIGNATURE-----\n00\n-----END SIGNATURE-----";
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithDirectorySignatureLines(signaturesLines);
+    assertEquals(2, vote.getSignatures().size());
   }
 
   @Test(expected = DescriptorParseException.class)

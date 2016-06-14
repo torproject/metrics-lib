@@ -325,6 +325,12 @@ public interface RelayNetworkStatusVote extends Descriptor {
    * 40 upper-case hexadecimal characters, or null if this digest cannot
    * be obtained from the directory signature.
    *
+   * @deprecated Removed in order to be more explicit that authorities may
+   *     use different digest algorithms than "sha1"; see
+   *     {@link #getSignatures()} and
+   *     {@link DirectorySignature#getSigningKeyDigest()} for
+   *     alternatives.
+   *
    * @since 1.0.0
    */
   public String getSigningKeyDigest();
@@ -382,8 +388,21 @@ public interface RelayNetworkStatusVote extends Descriptor {
    * 3 directory protocol, encoded as 40 upper-case hexadecimal
    * characters.
    *
+   * @deprecated Replaced by {@link #getSignatures()} which permits an
+   * arbitrary number of signatures made by the authority using the same
+   * identity key digest and different algorithms.
+   *
    * @since 1.0.0
    */
   public SortedMap<String, DirectorySignature> getDirectorySignatures();
+
+  /**
+   * Return a list of signatures contained in this vote, which is
+   * typically a single signature made by the authority but which may also
+   * be more than one signature made with different keys or algorithms.
+   *
+   * @since 1.3.0
+   */
+  public List<DirectorySignature> getSignatures();
 }
 

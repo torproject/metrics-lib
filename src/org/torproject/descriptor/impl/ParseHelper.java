@@ -207,11 +207,22 @@ public class ParseHelper {
     return result;
   }
 
-  private static Pattern twentyByteHexPattern =
-      Pattern.compile("^[0-9a-fA-F]{40}$");
   protected static String parseTwentyByteHexString(String line,
       String hexString) throws DescriptorParseException {
-    if (!twentyByteHexPattern.matcher(hexString).matches()) {
+    return parseHexString(line, hexString, 40);
+  }
+
+  protected static String parseHexString(String line, String hexString)
+      throws DescriptorParseException {
+    return parseHexString(line, hexString, -1);
+  }
+
+  private static Pattern hexPattern = Pattern.compile("^[0-9a-fA-F]*$");
+  private static String parseHexString(String line, String hexString,
+      int expectedLength) throws DescriptorParseException {
+    if (!hexPattern.matcher(hexString).matches() ||
+        hexString.length() % 2 != 0 ||
+        (expectedLength >= 0 && hexString.length() != expectedLength)) {
       throw new DescriptorParseException("Illegal hex string in line '"
           + line + "'.");
     }

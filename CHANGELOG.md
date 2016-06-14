@@ -2,6 +2,14 @@
 
  * Medium changes
    - Parse "package" lines in consensuses and votes.
+   - Support more than one "directory-signature" line in a vote, which
+     may become relevant when authorities start signing votes using
+     more than one algorithm.
+   - Provide directory signatures in consensuses and votes in a list
+     rather than a map to support multiple signatures made using the
+     same identity key digest but different algorithms.
+   - Be more lenient about digest lengths in directory signatures
+     which may be longer or shorter than 20 bytes.
 
 
 # Changes in version 1.2.0 - 2016-05-31

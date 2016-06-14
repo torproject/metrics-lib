@@ -186,9 +186,20 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    * SHA-1 digests of the authorities' identity keys in the version 3
    * directory protocol, encoded as 40 upper-case hexadecimal characters.
    *
+   * @deprecated Replaced by {@link #getSignatures()} which permits an
+   * arbitrary number of signatures made by an authority using the same
+   * identity key digest and different algorithms.
+   *
    * @since 1.0.0
    */
   public SortedMap<String, DirectorySignature> getDirectorySignatures();
+
+  /**
+   * Return the list of signatures contained in this consensus.
+   *
+   * @since 1.3.0
+   */
+  public List<DirectorySignature> getSignatures();
 
   /**
    * Return optional weights to be applied to router bandwidths during
