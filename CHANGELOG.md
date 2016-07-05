@@ -12,6 +12,10 @@
      which may be longer or shorter than 20 bytes.
    - Parse "tunnelled-dir-server" lines in server descriptors.
 
+ * Minor changes
+   - Stop reporting "-----END .*-----" lines in v2 network statuses as
+     unrecognized.
+
 
 # Changes in version 1.2.0 - 2016-05-31
 
