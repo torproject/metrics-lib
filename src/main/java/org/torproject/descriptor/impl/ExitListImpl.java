@@ -1,8 +1,12 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.ExitList;
+import org.torproject.descriptor.ExitListEntry;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,9 +15,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TimeZone;
-
-import org.torproject.descriptor.ExitList;
-import org.torproject.descriptor.ExitListEntry;
 
 public class ExitListImpl extends DescriptorImpl implements ExitList {
 
@@ -27,8 +28,8 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
 
   private void setPublishedMillisFromFileName(String fileName)
       throws DescriptorParseException {
-    if (this.downloadedMillis == 0L &&
-        fileName.length() == "2012-02-01-04-06-24".length()) {
+    if (this.downloadedMillis == 0L
+        && fileName.length() == "2012-02-01-04-06-24".length()) {
       try {
         SimpleDateFormat fileNameFormat = new SimpleDateFormat(
             "yyyy-MM-dd-HH-mm-ss");
@@ -110,8 +111,8 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
         exitListEntryBytes, this.failUnrecognizedDescriptorLines);
     this.exitListEntries.add(exitListEntry);
     this.oldExitListEntries.addAll(exitListEntry.oldEntries());
-    List<String> unrecognizedExitListEntryLines = exitListEntry.
-        getAndClearUnrecognizedLines();
+    List<String> unrecognizedExitListEntryLines = exitListEntry
+        .getAndClearUnrecognizedLines();
     if (unrecognizedExitListEntryLines != null) {
       if (this.unrecognizedLines == null) {
         this.unrecognizedLines = new ArrayList<>();
@@ -121,12 +122,14 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
   }
 
   private long downloadedMillis;
+
   @Override
   public long getDownloadedMillis() {
     return this.downloadedMillis;
   }
 
   private Set<ExitListEntry> oldExitListEntries = new HashSet<>();
+
   @Deprecated
   @Override
   public Set<ExitListEntry> getExitListEntries() {
@@ -134,6 +137,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
   }
 
   private Set<ExitList.Entry> exitListEntries = new HashSet<>();
+
   @Override
   public Set<ExitList.Entry> getEntries() {
     return new HashSet<>(this.exitListEntries);

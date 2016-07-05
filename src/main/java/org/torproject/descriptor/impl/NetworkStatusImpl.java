@@ -1,16 +1,17 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DirSourceEntry;
+import org.torproject.descriptor.DirectorySignature;
+import org.torproject.descriptor.NetworkStatusEntry;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.torproject.descriptor.DirSourceEntry;
-import org.torproject.descriptor.DirectorySignature;
-import org.torproject.descriptor.NetworkStatusEntry;
 
 /* Parse the common parts of v3 consensuses, v3 votes, v3 microdesc
  * consensuses, v2 statuses, and sanitized bridge network statuses and
@@ -34,8 +35,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     }
     String descriptorString = new String(rawDescriptorBytes);
     int startIndex = 0;
-    int firstDirSourceIndex = !containsDirSourceEntries ? -1 :
-        this.findFirstIndexOfKeyword(descriptorString, "dir-source");
+    int firstDirSourceIndex = !containsDirSourceEntries ? -1
+        : this.findFirstIndexOfKeyword(descriptorString, "dir-source");
     int firstRIndex = this.findFirstIndexOfKeyword(descriptorString, "r");
     int directoryFooterIndex = this.findFirstIndexOfKeyword(
         descriptorString, "directory-footer");
@@ -164,8 +165,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
         dirSourceBytes, this.failUnrecognizedDescriptorLines);
     this.dirSourceEntries.put(dirSourceEntry.getIdentity(),
         dirSourceEntry);
-    List<String> unrecognizedDirSourceLines = dirSourceEntry.
-        getAndClearUnrecognizedLines();
+    List<String> unrecognizedDirSourceLines = dirSourceEntry
+        .getAndClearUnrecognizedLines();
     if (unrecognizedDirSourceLines != null) {
       if (this.unrecognizedLines == null) {
         this.unrecognizedLines = new ArrayList<>();
@@ -191,8 +192,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
         }
         break;
       default:
-        throw new DescriptorParseException("Illegal versions line '" + line
-            + "'.");
+        throw new DescriptorParseException("Illegal versions line '"
+            + line + "'.");
     }
     return result;
   }
@@ -202,8 +203,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
         statusEntryBytes, false, this.failUnrecognizedDescriptorLines);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
-    List<String> unrecognizedStatusEntryLines = statusEntry.
-        getAndClearUnrecognizedLines();
+    List<String> unrecognizedStatusEntryLines = statusEntry
+        .getAndClearUnrecognizedLines();
     if (unrecognizedStatusEntryLines != null) {
       if (this.unrecognizedLines == null) {
         this.unrecognizedLines = new ArrayList<>();
@@ -223,8 +224,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     DirectorySignatureImpl signature = new DirectorySignatureImpl(
         directorySignatureBytes, failUnrecognizedDescriptorLines);
     this.signatures.add(signature);
-    List<String> unrecognizedStatusEntryLines = signature.
-        getAndClearUnrecognizedLines();
+    List<String> unrecognizedStatusEntryLines = signature
+        .getAndClearUnrecognizedLines();
     if (unrecognizedStatusEntryLines != null) {
       if (this.unrecognizedLines == null) {
         this.unrecognizedLines = new ArrayList<>();
@@ -235,27 +236,33 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   protected SortedMap<String, DirSourceEntry> dirSourceEntries =
       new TreeMap<>();
+
   public SortedMap<String, DirSourceEntry> getDirSourceEntries() {
     return new TreeMap<>(this.dirSourceEntries);
   }
 
   protected SortedMap<String, NetworkStatusEntry> statusEntries =
       new TreeMap<>();
+
   public SortedMap<String, NetworkStatusEntry> getStatusEntries() {
     return new TreeMap<>(this.statusEntries);
   }
+
   public boolean containsStatusEntry(String fingerprint) {
     return this.statusEntries.containsKey(fingerprint);
   }
+
   public NetworkStatusEntry getStatusEntry(String fingerprint) {
     return this.statusEntries.get(fingerprint);
   }
 
   protected List<DirectorySignature> signatures;
+
   public List<DirectorySignature> getSignatures() {
     return this.signatures == null ? null
         : new ArrayList<>(this.signatures);
   }
+
   public SortedMap<String, DirectorySignature> getDirectorySignatures() {
     SortedMap<String, DirectorySignature> directorySignatures = null;
     if (this.signatures != null) {

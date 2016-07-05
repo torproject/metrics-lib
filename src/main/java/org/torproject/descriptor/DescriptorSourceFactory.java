@@ -44,7 +44,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static String DOWNLOADER_DEFAULT =
+  public static final String DOWNLOADER_DEFAULT =
       "org.torproject.descriptor.impl.DescriptorDownloaderImpl";
 
   /**
@@ -53,7 +53,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static String PARSER_DEFAULT =
+  public static final String PARSER_DEFAULT =
       "org.torproject.descriptor.impl.DescriptorParserImpl";
 
   /**
@@ -62,7 +62,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static String READER_DEFAULT =
+  public static final String READER_DEFAULT =
       "org.torproject.descriptor.impl.DescriptorReaderImpl";
 
   /**
@@ -71,7 +71,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static String COLLECTOR_DEFAULT =
+  public static final String COLLECTOR_DEFAULT =
       "org.torproject.descriptor.impl.DescriptorCollectorImpl";
 
   /**
@@ -81,7 +81,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static String PARSER_PROPERTY = "descriptor.parser";
+  public static final String PARSER_PROPERTY = "descriptor.parser";
 
   /**
    * Property name for overriding the implementation of the
@@ -90,7 +90,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static String READER_PROPERTY = "descriptor.reader";
+  public static final String READER_PROPERTY = "descriptor.reader";
 
   /**
    * Property name for overriding the implementation of the
@@ -99,7 +99,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static String DOWNLOADER_PROPERTY =
+  public static final String DOWNLOADER_PROPERTY =
       "descriptor.downloader";
 
   /**
@@ -109,7 +109,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static String COLLECTOR_PROPERTY = "descriptor.collector";
+  public static final String COLLECTOR_PROPERTY = "descriptor.collector";
 
   /**
    * Create a new {@link DescriptorParser} by instantiating the class in
@@ -117,7 +117,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static DescriptorParser createDescriptorParser() {
+  public static final DescriptorParser createDescriptorParser() {
     return (DescriptorParser) retrieve(PARSER_PROPERTY);
   }
 
@@ -127,7 +127,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static DescriptorReader createDescriptorReader() {
+  public static final DescriptorReader createDescriptorReader() {
     return (DescriptorReader) retrieve(READER_PROPERTY);
   }
 
@@ -137,7 +137,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static DescriptorDownloader createDescriptorDownloader() {
+  public static final DescriptorDownloader createDescriptorDownloader() {
     return (DescriptorDownloader) retrieve(DOWNLOADER_PROPERTY);
   }
 
@@ -147,30 +147,30 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public final static DescriptorCollector createDescriptorCollector() {
+  public static final DescriptorCollector createDescriptorCollector() {
     return (DescriptorCollector) retrieve(COLLECTOR_PROPERTY);
   }
 
-  private final static <T> Object retrieve(String type) {
+  private static final <T> Object retrieve(String type) {
     Object object;
     String clazzName = null;
     try {
       switch (type) {
-      case PARSER_PROPERTY:
-        clazzName = System.getProperty(type, PARSER_DEFAULT);
-        break;
-      case DOWNLOADER_PROPERTY:
-        clazzName = System.getProperty(type, DOWNLOADER_DEFAULT);
-        break;
-      case READER_PROPERTY:
-        clazzName = System.getProperty(type, READER_DEFAULT);
-        break;
-      case COLLECTOR_PROPERTY:
-        clazzName = System.getProperty(type, COLLECTOR_DEFAULT);
-        break;
+        case PARSER_PROPERTY:
+          clazzName = System.getProperty(type, PARSER_DEFAULT);
+          break;
+        case DOWNLOADER_PROPERTY:
+          clazzName = System.getProperty(type, DOWNLOADER_DEFAULT);
+          break;
+        case READER_PROPERTY:
+          clazzName = System.getProperty(type, READER_DEFAULT);
+          break;
+        case COLLECTOR_PROPERTY:
+          clazzName = System.getProperty(type, COLLECTOR_DEFAULT);
+          break;
       }
-      object = ClassLoader.getSystemClassLoader().loadClass(clazzName).
-          newInstance();
+      object = ClassLoader.getSystemClassLoader().loadClass(clazzName)
+          .newInstance();
     } catch (ClassNotFoundException ex) {
       throw new ImplementationNotAccessibleException("Cannot load class "
           + clazzName + "for type " + type, ex);

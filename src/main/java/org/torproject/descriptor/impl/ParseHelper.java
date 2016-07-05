@@ -1,6 +1,9 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.DescriptorParseException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -16,12 +19,11 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.torproject.descriptor.DescriptorParseException;
-
 public class ParseHelper {
 
   private static Pattern keywordPattern =
       Pattern.compile("^[A-Za-z0-9-]+$");
+
   protected static String parseKeyword(String line, String keyword)
       throws DescriptorParseException {
     if (!keywordPattern.matcher(keyword).matches()) {
@@ -33,6 +35,7 @@ public class ParseHelper {
 
   private static Pattern ipv4Pattern =
       Pattern.compile("^[0-9\\.]{7,15}$");
+
   protected static String parseIpv4Address(String line, String address)
       throws DescriptorParseException {
     boolean isValid = true;
@@ -141,20 +144,25 @@ public class ParseHelper {
   }
 
   private static ThreadLocal<Map<String, DateFormat>> dateFormats =
-      new ThreadLocal<Map<String, DateFormat>> () {
+      new ThreadLocal<Map<String, DateFormat>>() {
+
     public Map<String, DateFormat> get() {
       return super.get();
     }
+
     protected Map<String, DateFormat> initialValue() {
       return new HashMap<>();
     }
+
     public void remove() {
       super.remove();
     }
+
     public void set(Map<String, DateFormat> value) {
       super.set(value);
     }
   };
+
   static DateFormat getDateFormat(String format) {
     Map<String, DateFormat> threadDateFormats = dateFormats.get();
     if (!threadDateFormats.containsKey(format)) {
@@ -218,11 +226,13 @@ public class ParseHelper {
   }
 
   private static Pattern hexPattern = Pattern.compile("^[0-9a-fA-F]*$");
+
   private static String parseHexString(String line, String hexString,
       int expectedLength) throws DescriptorParseException {
-    if (!hexPattern.matcher(hexString).matches() ||
-        hexString.length() % 2 != 0 ||
-        (expectedLength >= 0 && hexString.length() != expectedLength)) {
+    if (!hexPattern.matcher(hexString).matches()
+        || hexString.length() % 2 != 0
+        || (expectedLength >= 0
+        && hexString.length() != expectedLength)) {
       throw new DescriptorParseException("Illegal hex string in line '"
           + line + "'.");
     }
@@ -265,6 +275,7 @@ public class ParseHelper {
 
   private static Pattern nicknamePattern =
       Pattern.compile("^[0-9a-zA-Z]{1,19}$");
+
   protected static String parseNickname(String line, String nickname)
       throws DescriptorParseException {
     if (!nicknamePattern.matcher(nickname).matches()) {
@@ -277,17 +288,19 @@ public class ParseHelper {
   protected static boolean parseBoolean(String b, String line)
       throws DescriptorParseException {
     switch (b) {
-    case "1":
-      return true;
-    case "0":
-      return false;
-    default:
-      throw new DescriptorParseException("Illegal line '" + line + "'.");
+      case "1":
+        return true;
+      case "0":
+        return false;
+      default:
+        throw new DescriptorParseException("Illegal line '" + line
+            + "'.");
     }
   }
 
   private static Pattern twentyByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{27}$");
+
   protected static String parseTwentyByteBase64String(String line,
       String base64String) throws DescriptorParseException {
     if (!twentyByteBase64Pattern.matcher(base64String).matches()) {
@@ -296,12 +309,13 @@ public class ParseHelper {
           + "20-byte value.");
     }
     return DatatypeConverter.printHexBinary(
-        DatatypeConverter.parseBase64Binary(base64String + "=")).
-        toUpperCase();
+        DatatypeConverter.parseBase64Binary(base64String + "="))
+        .toUpperCase();
   }
 
   private static Pattern thirtyTwoByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{43}$");
+
   protected static String parseThirtyTwoByteBase64String(String line,
       String base64String) throws DescriptorParseException {
     if (!thirtyTwoByteBase64Pattern.matcher(base64String).matches()) {
@@ -310,12 +324,13 @@ public class ParseHelper {
           + "32-byte value.");
     }
     return DatatypeConverter.printHexBinary(
-        DatatypeConverter.parseBase64Binary(base64String + "=")).
-        toUpperCase();
+        DatatypeConverter.parseBase64Binary(base64String + "="))
+        .toUpperCase();
   }
 
   private static Map<Integer, Pattern>
       commaSeparatedKeyValueListPatterns = new HashMap<>();
+
   protected static String parseCommaSeparatedKeyIntegerValueList(
       String line, String[] partsNoOpt, int index, int keyLength)
       throws DescriptorParseException {
@@ -382,8 +397,8 @@ public class ParseHelper {
         String[] keyAndValue = listElement.split("=");
         String key = null;
         long value = -1;
-        if (keyAndValue.length == 2 && (keyLength == 0 ||
-            keyAndValue[0].length() == keyLength)) {
+        if (keyAndValue.length == 2 && (keyLength == 0
+            || keyAndValue[0].length() == keyLength)) {
           try {
             value = Long.parseLong(keyAndValue[1]);
             key = keyAndValue[0];
@@ -496,8 +511,8 @@ public class ParseHelper {
       String identityEd25519CryptoBlock) throws DescriptorParseException {
     String identityEd25519CryptoBlockNoNewlines =
         identityEd25519CryptoBlock.replaceAll("\n", "");
-    String beginEd25519CertLine = "-----BEGIN ED25519 CERT-----",
-        endEd25519CertLine = "-----END ED25519 CERT-----";
+    String beginEd25519CertLine = "-----BEGIN ED25519 CERT-----";
+    String endEd25519CertLine = "-----END ED25519 CERT-----";
     if (!identityEd25519CryptoBlockNoNewlines.startsWith(
         beginEd25519CertLine)) {
       throw new DescriptorParseException("Illegal start of "
@@ -510,8 +525,8 @@ public class ParseHelper {
           + "identity-ed25519 crypto block '" + identityEd25519CryptoBlock
           + "'.");
     }
-    String identityEd25519Base64 = identityEd25519CryptoBlockNoNewlines.
-        substring(beginEd25519CertLine.length(),
+    String identityEd25519Base64 = identityEd25519CryptoBlockNoNewlines
+        .substring(beginEd25519CertLine.length(),
         identityEd25519CryptoBlock.length()
         - endEd25519CertLine.length()).replaceAll("=", "");
     byte[] identityEd25519 = DatatypeConverter.parseBase64Binary(
@@ -551,8 +566,8 @@ public class ParseHelper {
           byte[] masterKeyEd25519 = new byte[32];
           System.arraycopy(identityEd25519, extensionStart + 4,
               masterKeyEd25519, 0, masterKeyEd25519.length);
-          String masterKeyEd25519Base64 = DatatypeConverter.
-              printBase64Binary(masterKeyEd25519).replaceAll("=", "");
+          String masterKeyEd25519Base64 = DatatypeConverter
+              .printBase64Binary(masterKeyEd25519).replaceAll("=", "");
           String masterKeyEd25519Base64NoTrailingEqualSigns =
               masterKeyEd25519Base64.replaceAll("=", "");
           return masterKeyEd25519Base64NoTrailingEqualSigns;

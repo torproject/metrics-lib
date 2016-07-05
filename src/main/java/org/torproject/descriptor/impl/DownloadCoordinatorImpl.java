@@ -1,6 +1,12 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.Descriptor;
+import org.torproject.descriptor.DescriptorRequest;
+import org.torproject.descriptor.DirSourceEntry;
+import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,28 +17,32 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.torproject.descriptor.Descriptor;
-import org.torproject.descriptor.DescriptorRequest;
-import org.torproject.descriptor.DirSourceEntry;
-import org.torproject.descriptor.RelayNetworkStatusConsensus;
-
 /* TODO This whole download logic is a mess and needs a cleanup. */
 public class DownloadCoordinatorImpl implements DownloadCoordinator {
 
   private BlockingIteratorImpl<DescriptorRequest> descriptorQueue =
       new BlockingIteratorImpl<>();
+
   protected Iterator<DescriptorRequest> getDescriptorQueue() {
     return this.descriptorQueue;
   }
 
   private SortedSet<String> runningDirectories;
+
   private SortedMap<String, DirectoryDownloader> directoryAuthorities;
+
   private SortedMap<String, DirectoryDownloader> directoryMirrors;
+
   private boolean downloadConsensusFromAllAuthorities;
+
   private boolean includeCurrentReferencedVotes;
+
   private long connectTimeoutMillis;
+
   private long readTimeoutMillis;
+
   private long globalTimeoutMillis;
+
   private boolean failUnrecognizedDescriptorLines;
 
   protected DownloadCoordinatorImpl(
@@ -58,8 +68,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     this.globalTimeoutMillis = globalTimeoutMillis;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
-    if (this.directoryMirrors.isEmpty() &&
-        this.directoryAuthorities.isEmpty()) {
+    if (this.directoryMirrors.isEmpty()
+        && this.directoryAuthorities.isEmpty()) {
       this.descriptorQueue.setOutOfDescriptors();
       /* TODO Should we say anything if we don't have any directories
        * configured? */
@@ -68,8 +78,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
           this);
       this.globalTimerThread = new Thread(globalTimer);
       this.globalTimerThread.start();
-      for (DirectoryDownloader directoryMirror :
-          this.directoryMirrors.values()) {
+      for (DirectoryDownloader directoryMirror
+          : this.directoryMirrors.values()) {
         directoryMirror.setDownloadCoordinator(this);
         directoryMirror.setConnectTimeout(this.connectTimeoutMillis);
         directoryMirror.setReadTimeout(this.readTimeoutMillis);
@@ -77,8 +87,8 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
             this.failUnrecognizedDescriptorLines);
         new Thread(directoryMirror).start();
       }
-      for (DirectoryDownloader directoryAuthority :
-          this.directoryAuthorities.values()) {
+      for (DirectoryDownloader directoryAuthority
+          : this.directoryAuthorities.values()) {
         directoryAuthority.setDownloadCoordinator(this);
         directoryAuthority.setConnectTimeout(this.connectTimeoutMillis);
         directoryAuthority.setReadTimeout(this.readTimeoutMillis);
@@ -92,16 +102,22 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
   /* Interrupt all downloads if the total download time exceeds a given
    * time. */
   private Thread globalTimerThread;
+
   private static class GlobalTimer implements Runnable {
+
     private long timeoutMillis;
+
     private DownloadCoordinatorImpl downloadCoordinator;
+
     private GlobalTimer(long timeoutMillis,
         DownloadCoordinatorImpl downloadCoordinator) {
       this.timeoutMillis = timeoutMillis;
       this.downloadCoordinator = downloadCoordinator;
     }
+
     public void run() {
-      long started = System.currentTimeMillis(), sleep;
+      long started = System.currentTimeMillis();
+      long sleep;
       while ((sleep = started + this.timeoutMillis
           - System.currentTimeMillis()) > 0L) {
         try {
@@ -148,10 +164,10 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     while (!this.hasFinishedDownloading) {
       DescriptorRequestImpl request = new DescriptorRequestImpl();
       request.setDirectoryNickname(nickname);
-      if ((this.missingConsensus ||
-          (this.downloadConsensusFromAllAuthorities &&
-          this.directoryAuthorities.containsKey(nickname))) &&
-          !this.requestedConsensuses.contains(nickname)) {
+      if ((this.missingConsensus
+          || (this.downloadConsensusFromAllAuthorities
+          && this.directoryAuthorities.containsKey(nickname)))
+          && !this.requestedConsensuses.contains(nickname)) {
         if (!this.downloadConsensusFromAllAuthorities) {
           this.missingConsensus = false;
         }
@@ -162,12 +178,13 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
         request.setDescriptorType("consensus");
         return request;
       }
-      if (!this.missingVotes.isEmpty() &&
-          this.directoryAuthorities.containsKey(nickname)) {
+      if (!this.missingVotes.isEmpty()
+          && this.directoryAuthorities.containsKey(nickname)) {
         String requestingVote = null;
         for (String missingVote : this.missingVotes) {
-          if (!this.requestedVotes.containsKey(nickname) ||
-              !this.requestedVotes.get(nickname).contains(missingVote)) {
+          if (!this.requestedVotes.containsKey(nickname)
+              || !this.requestedVotes.get(nickname).contains(
+              missingVote)) {
             requestingVote = missingVote;
           }
         }
@@ -208,26 +225,26 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     switch (response.getDescriptorType()) {
       case "consensus":
         this.requestingConsensuses.remove(nickname);
-        if (response.getResponseCode() == 200 &&
-            response.getDescriptors() != null) {
+        if (response.getResponseCode() == 200
+            && response.getDescriptors() != null) {
           if (this.includeCurrentReferencedVotes) {
             /* TODO Only add votes if the consensus is not older than one
              * hour.  Or does that make no sense? */
-            for (Descriptor parsedDescriptor :
-                response.getDescriptors()) {
-              if (!(parsedDescriptor instanceof
-                  RelayNetworkStatusConsensus)) {
+            for (Descriptor parsedDescriptor
+                : response.getDescriptors()) {
+              if (!(parsedDescriptor
+                  instanceof RelayNetworkStatusConsensus)) {
                 continue;
               }
               RelayNetworkStatusConsensus parsedConsensus =
                   (RelayNetworkStatusConsensus) parsedDescriptor;
-              for (DirSourceEntry dirSource :
-                  parsedConsensus.getDirSourceEntries().values()) {
+              for (DirSourceEntry dirSource
+                  : parsedConsensus.getDirSourceEntries().values()) {
                 String identity = dirSource.getIdentity();
                 if (!this.missingVotes.contains(identity)) {
                   boolean alreadyRequested = false;
-                  for (Set<String> requestedBefore :
-                      this.requestedVotes.values()) {
+                  for (Set<String> requestedBefore
+                      : this.requestedVotes.values()) {
                     if (requestedBefore.contains(identity)) {
                       alreadyRequested = true;
                       break;
@@ -255,11 +272,11 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
       this.descriptorQueue.add(response);
     }
     boolean doneDownloading = true;
-    if ((this.missingConsensus ||
-        this.downloadConsensusFromAllAuthorities) &&
-        (!this.requestedConsensuses.containsAll(
-        this.runningDirectories) ||
-        !this.requestingConsensuses.isEmpty())) {
+    if ((this.missingConsensus
+        || this.downloadConsensusFromAllAuthorities)
+        && (!this.requestedConsensuses.containsAll(
+        this.runningDirectories)
+        || !this.requestingConsensuses.isEmpty())) {
       doneDownloading = false;
     }
     if (!this.requestingVotes.isEmpty()) {

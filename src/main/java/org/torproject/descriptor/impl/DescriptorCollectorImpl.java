@@ -1,9 +1,12 @@
 /* Copyright 2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
-import java.io.BufferedOutputStream;
+import org.torproject.descriptor.DescriptorCollector;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,8 +28,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
-
-import org.torproject.descriptor.DescriptorCollector;
 
 public class DescriptorCollectorImpl implements DescriptorCollector {
 
@@ -51,8 +52,8 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
         this.fetchRemoteDirectories(collecTorBaseUrl, remoteDirectories);
     SortedSet<String> parsedDirectories = new TreeSet<>();
     SortedMap<String, Long> remoteFiles = new TreeMap<>();
-    for (Map.Entry<String, String> e :
-        fetchedDirectoryListings.entrySet()) {
+    for (Map.Entry<String, String> e
+        : fetchedDirectoryListings.entrySet()) {
       String remoteDirectory = e.getKey();
       String directoryListing = e.getValue();
       SortedMap<String, Long> parsedRemoteFiles =
@@ -174,9 +175,9 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
     for (Map.Entry<String, Long> e : remoteFiles.entrySet()) {
       String filename = e.getKey();
       long lastModifiedMillis = e.getValue();
-      if (lastModifiedMillis < minLastModified ||
-          (localFiles.containsKey(filename) &&
-          localFiles.get(filename) >= lastModifiedMillis)) {
+      if (lastModifiedMillis < minLastModified
+          || (localFiles.containsKey(filename)
+          && localFiles.get(filename) >= lastModifiedMillis)) {
         continue;
       }
       String url = collecTorBaseUrl + filename;
@@ -206,8 +207,8 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
       int responseCode = huc.getResponseCode();
       if (responseCode == 200) {
         InputStream is;
-        if (huc.getContentEncoding() != null &&
-            huc.getContentEncoding().equalsIgnoreCase("gzip")) {
+        if (huc.getContentEncoding() != null
+            && huc.getContentEncoding().equalsIgnoreCase("gzip")) {
           is = new GZIPInputStream(huc.getInputStream());
         } else {
           is = huc.getInputStream();

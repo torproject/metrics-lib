@@ -389,8 +389,8 @@ public interface RelayNetworkStatusVote extends Descriptor {
    * characters.
    *
    * @deprecated Replaced by {@link #getSignatures()} which permits an
-   * arbitrary number of signatures made by the authority using the same
-   * identity key digest and different algorithms.
+   *     arbitrary number of signatures made by the authority using the
+   *     same identity key digest and different algorithms.
    *
    * @since 1.0.0
    */

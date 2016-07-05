@@ -187,8 +187,8 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    * directory protocol, encoded as 40 upper-case hexadecimal characters.
    *
    * @deprecated Replaced by {@link #getSignatures()} which permits an
-   * arbitrary number of signatures made by an authority using the same
-   * identity key digest and different algorithms.
+   *     arbitrary number of signatures made by an authority using the
+   *     same identity key digest and different algorithms.
    *
    * @since 1.0.0
    */

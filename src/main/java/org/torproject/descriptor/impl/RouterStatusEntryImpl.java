@@ -1,5 +1,6 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.RouterStatusEntry;
@@ -15,24 +16,28 @@ public class RouterStatusEntryImpl implements RouterStatusEntry {
   }
 
   private String nickname;
+
   @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String fingerprint;
+
   @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private boolean isLive;
+
   @Override
   public boolean isLive() {
     return this.isLive;
   }
 
   private boolean isVerified;
+
   @Override
   public boolean isVerified() {
     return this.isVerified;

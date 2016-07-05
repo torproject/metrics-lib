@@ -1,8 +1,11 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
+import org.torproject.descriptor.BridgeNetworkStatus;
 import org.torproject.descriptor.DescriptorParseException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,8 +13,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TimeZone;
-
-import org.torproject.descriptor.BridgeNetworkStatus;
 
 /* Contains a bridge network status. */
 public class BridgeNetworkStatusImpl extends NetworkStatusImpl
@@ -31,9 +32,9 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
        * "published" line. */
       return;
     }
-    if (fileName.length() ==
-        "20000101-000000-4A0CCD2DDC7995083D73F5D667100C8A5831F16D".
-        length()) {
+    if (fileName.length()
+        == "20000101-000000-4A0CCD2DDC7995083D73F5D667100C8A5831F16D"
+        .length()) {
       String publishedString = fileName.substring(0,
           "yyyyMMdd-HHmmss".length());
       try {
@@ -41,8 +42,8 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
             "yyyyMMdd-HHmmss");
         fileNameFormat.setLenient(false);
         fileNameFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        this.publishedMillis = fileNameFormat.parse(publishedString).
-            getTime();
+        this.publishedMillis = fileNameFormat.parse(publishedString)
+            .getTime();
       } catch (ParseException e) {
       }
     }
@@ -74,22 +75,22 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "published":
-        this.parsePublishedLine(line, parts);
-        break;
-      case "flag-thresholds":
-        this.parseFlagThresholdsLine(line, parts);
-        break;
-      default:
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in bridge network status.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        case "published":
+          this.parsePublishedLine(line, parts);
+          break;
+        case "flag-thresholds":
+          this.parseFlagThresholdsLine(line, parts);
+          break;
+        default:
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in bridge network status.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
           }
-          this.unrecognizedLines.add(line);
-        }
       }
     }
   }
@@ -111,36 +112,36 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     try {
       for (Map.Entry<String, String> e : flagThresholds.entrySet()) {
         switch (e.getKey()) {
-        case "stable-uptime":
-          this.stableUptime = Long.parseLong(e.getValue());
-          break;
-        case "stable-mtbf":
-          this.stableMtbf = Long.parseLong(e.getValue());
-          break;
-        case "fast-speed":
-          this.fastBandwidth = Long.parseLong(e.getValue());
-          break;
-        case "guard-wfu":
-          this.guardWfu = Double.parseDouble(e.getValue().
-              replaceAll("%", ""));
-          break;
-        case "guard-tk":
-          this.guardTk = Long.parseLong(e.getValue());
-          break;
-        case "guard-bw-inc-exits":
-          this.guardBandwidthIncludingExits =
-              Long.parseLong(e.getValue());
-          break;
-        case "guard-bw-exc-exits":
-          this.guardBandwidthExcludingExits =
-              Long.parseLong(e.getValue());
-          break;
-        case "enough-mtbf":
-          this.enoughMtbfInfo = Integer.parseInt(e.getValue());
-          break;
-        case "ignoring-advertised-bws":
-          this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
-          break;
+          case "stable-uptime":
+            this.stableUptime = Long.parseLong(e.getValue());
+            break;
+          case "stable-mtbf":
+            this.stableMtbf = Long.parseLong(e.getValue());
+            break;
+          case "fast-speed":
+            this.fastBandwidth = Long.parseLong(e.getValue());
+            break;
+          case "guard-wfu":
+            this.guardWfu = Double.parseDouble(e.getValue()
+                .replaceAll("%", ""));
+            break;
+          case "guard-tk":
+            this.guardTk = Long.parseLong(e.getValue());
+            break;
+          case "guard-bw-inc-exits":
+            this.guardBandwidthIncludingExits =
+                Long.parseLong(e.getValue());
+            break;
+          case "guard-bw-exc-exits":
+            this.guardBandwidthExcludingExits =
+                Long.parseLong(e.getValue());
+            break;
+          case "enough-mtbf":
+            this.enoughMtbfInfo = Integer.parseInt(e.getValue());
+            break;
+          case "ignoring-advertised-bws":
+            this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
+            break;
         }
       }
     } catch (NumberFormatException ex) {
@@ -168,60 +169,70 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
   }
 
   private long publishedMillis;
+
   @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private long stableUptime;
+
   @Override
   public long getStableUptime() {
     return this.stableUptime;
   }
 
   private long stableMtbf;
+
   @Override
   public long getStableMtbf() {
     return this.stableMtbf;
   }
 
   private long fastBandwidth;
+
   @Override
   public long getFastBandwidth() {
     return this.fastBandwidth;
   }
 
   private double guardWfu;
+
   @Override
   public double getGuardWfu() {
     return this.guardWfu;
   }
 
   private long guardTk;
+
   @Override
   public long getGuardTk() {
     return this.guardTk;
   }
 
   private long guardBandwidthIncludingExits;
+
   @Override
   public long getGuardBandwidthIncludingExits() {
     return this.guardBandwidthIncludingExits;
   }
 
   private long guardBandwidthExcludingExits;
+
   @Override
   public long getGuardBandwidthExcludingExits() {
     return this.guardBandwidthExcludingExits;
   }
 
   private int enoughMtbfInfo;
+
   @Override
   public int getEnoughMtbfInfo() {
     return this.enoughMtbfInfo;
   }
 
   private int ignoringAdvertisedBws;
+
   @Override
   public int getIgnoringAdvertisedBws() {
     return this.ignoringAdvertisedBws;

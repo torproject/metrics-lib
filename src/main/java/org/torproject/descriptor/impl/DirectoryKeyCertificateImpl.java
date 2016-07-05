@@ -1,6 +1,10 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DirectoryKeyCertificate;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -13,9 +17,6 @@ import java.util.Scanner;
 import java.util.Set;
 
 import javax.xml.bind.DatatypeConverter;
-
-import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.DirectoryKeyCertificate;
 
 /* TODO Add test class. */
 
@@ -58,8 +59,8 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
-        useDelimiter("\n");
+    Scanner s = new Scanner(new String(this.rawDescriptorBytes))
+        .useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
     while (s.hasNext()) {
@@ -67,78 +68,78 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "dir-key-certificate-version":
-        this.parseDirKeyCertificateVersionLine(line, parts);
-        break;
-      case "dir-address":
-        this.parseDirAddressLine(line, parts);
-        break;
-      case "fingerprint":
-        this.parseFingerprintLine(line, parts);
-        break;
-      case "dir-identity-key":
-        this.parseDirIdentityKeyLine(line, parts);
-        nextCrypto = "dir-identity-key";
-        break;
-      case "dir-key-published":
-        this.parseDirKeyPublishedLine(line, parts);
-        break;
-      case "dir-key-expires":
-        this.parseDirKeyExpiresLine(line, parts);
-        break;
-      case "dir-signing-key":
-        this.parseDirSigningKeyLine(line, parts);
-        nextCrypto = "dir-signing-key";
-        break;
-      case "dir-key-crosscert":
-        this.parseDirKeyCrosscertLine(line, parts);
-        nextCrypto = "dir-key-crosscert";
-        break;
-      case "dir-key-certification":
-        this.parseDirKeyCertificationLine(line, parts);
-        nextCrypto = "dir-key-certification";
-        break;
-      case "-----BEGIN":
-        crypto = new StringBuilder();
-        crypto.append(line).append("\n");
-        break;
-      case "-----END":
-        crypto.append(line).append("\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        switch (nextCrypto) {
+        case "dir-key-certificate-version":
+          this.parseDirKeyCertificateVersionLine(line, parts);
+          break;
+        case "dir-address":
+          this.parseDirAddressLine(line, parts);
+          break;
+        case "fingerprint":
+          this.parseFingerprintLine(line, parts);
+          break;
         case "dir-identity-key":
-          this.dirIdentityKey = cryptoString;
+          this.parseDirIdentityKeyLine(line, parts);
+          nextCrypto = "dir-identity-key";
+          break;
+        case "dir-key-published":
+          this.parseDirKeyPublishedLine(line, parts);
+          break;
+        case "dir-key-expires":
+          this.parseDirKeyExpiresLine(line, parts);
           break;
         case "dir-signing-key":
-          this.dirSigningKey = cryptoString;
+          this.parseDirSigningKeyLine(line, parts);
+          nextCrypto = "dir-signing-key";
           break;
         case "dir-key-crosscert":
-          this.dirKeyCrosscert = cryptoString;
+          this.parseDirKeyCrosscertLine(line, parts);
+          nextCrypto = "dir-key-crosscert";
           break;
         case "dir-key-certification":
-          this.dirKeyCertification = cryptoString;
+          this.parseDirKeyCertificationLine(line, parts);
+          nextCrypto = "dir-key-certification";
+          break;
+        case "-----BEGIN":
+          crypto = new StringBuilder();
+          crypto.append(line).append("\n");
+          break;
+        case "-----END":
+          crypto.append(line).append("\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          switch (nextCrypto) {
+            case "dir-identity-key":
+              this.dirIdentityKey = cryptoString;
+              break;
+            case "dir-signing-key":
+              this.dirSigningKey = cryptoString;
+              break;
+            case "dir-key-crosscert":
+              this.dirKeyCrosscert = cryptoString;
+              break;
+            case "dir-key-certification":
+              this.dirKeyCertification = cryptoString;
+              break;
+            default:
+              throw new DescriptorParseException("Unrecognized crypto "
+                  + "block in directory key certificate.");
+          }
+          nextCrypto = "";
           break;
         default:
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in directory key certificate.");
-        }
-        nextCrypto = "";
-        break;
-      default:
-        if (crypto != null) {
-          crypto.append(line).append("\n");
-        } else {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in directory key certificate.");
+          if (crypto != null) {
+            crypto.append(line).append("\n");
           } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
+            if (this.failUnrecognizedDescriptorLines) {
+              throw new DescriptorParseException("Unrecognized line '"
+                  + line + "' in directory key certificate.");
+            } else {
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
+              }
+              this.unrecognizedLines.add(line);
             }
-            this.unrecognizedLines.add(line);
           }
-        }
       }
     }
   }
@@ -225,8 +226,8 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
         this.certificateDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest)).
-            toLowerCase();
+            MessageDigest.getInstance("SHA-1").digest(forDigest))
+            .toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */
@@ -240,66 +241,77 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   }
 
   private int dirKeyCertificateVersion;
+
   @Override
   public int getDirKeyCertificateVersion() {
     return this.dirKeyCertificateVersion;
   }
 
   private String address;
+
   @Override
   public String getAddress() {
     return this.address;
   }
 
   private int port = -1;
+
   @Override
   public int getPort() {
     return this.port;
   }
 
   private String fingerprint;
+
   @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private String dirIdentityKey;
+
   @Override
   public String getDirIdentityKey() {
     return this.dirIdentityKey;
   }
 
   private long dirKeyPublishedMillis;
+
   @Override
   public long getDirKeyPublishedMillis() {
     return this.dirKeyPublishedMillis;
   }
 
   private long dirKeyExpiresMillis;
+
   @Override
   public long getDirKeyExpiresMillis() {
     return this.dirKeyExpiresMillis;
   }
 
   private String dirSigningKey;
+
   @Override
   public String getDirSigningKey() {
     return this.dirSigningKey;
   }
 
   private String dirKeyCrosscert;
+
   @Override
   public String getDirKeyCrosscert() {
     return this.dirKeyCrosscert;
   }
 
   private String dirKeyCertification;
+
   @Override
   public String getDirKeyCertification() {
     return this.dirKeyCertification;
   }
 
   private String certificateDigest;
+
   @Override
   public String getCertificateDigest() {
     return this.certificateDigest;

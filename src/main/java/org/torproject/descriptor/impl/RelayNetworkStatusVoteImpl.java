@@ -1,9 +1,11 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DirectorySignature;
+import org.torproject.descriptor.RelayNetworkStatusVote;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,8 +18,6 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import org.torproject.descriptor.RelayNetworkStatusVote;
 
 /* Contains a network status vote. */
 public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
@@ -53,8 +53,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
         "consensus-methods,client-versions,server-versions,"
         + "flag-thresholds,params,contact,"
-        + "legacy-key,dir-key-crosscert,dir-address,directory-footer").
-        split(",")));
+        + "legacy-key,dir-key-crosscert,dir-address,directory-footer")
+        .split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     Set<String> atLeastOnceKeywords = new HashSet<>(Arrays.asList(
         "directory-signature"));
@@ -87,129 +87,129 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "network-status-version":
-        this.parseNetworkStatusVersionLine(line, parts);
-        break;
-      case "vote-status":
-        this.parseVoteStatusLine(line, parts);
-        break;
-      case "consensus-methods":
-        this.parseConsensusMethodsLine(line, parts);
-        break;
-      case "published":
-        this.parsePublishedLine(line, parts);
-        break;
-      case "valid-after":
-        this.parseValidAfterLine(line, parts);
-        break;
-      case "fresh-until":
-        this.parseFreshUntilLine(line, parts);
-        break;
-      case "valid-until":
-        this.parseValidUntilLine(line, parts);
-        break;
-      case "voting-delay":
-        this.parseVotingDelayLine(line, parts);
-        break;
-      case "client-versions":
-        this.parseClientVersionsLine(line, parts);
-        break;
-      case "server-versions":
-        this.parseServerVersionsLine(line, parts);
-        break;
-      case "package":
-        this.parsePackageLine(line, parts);
-        break;
-      case "known-flags":
-        this.parseKnownFlagsLine(line, parts);
-        break;
-      case "flag-thresholds":
-        this.parseFlagThresholdsLine(line, parts);
-        break;
-      case "params":
-        this.parseParamsLine(line, parts);
-        break;
-      case "dir-source":
-        this.parseDirSourceLine(line, parts);
-        break;
-      case "contact":
-        this.parseContactLine(line, parts);
-        break;
-      case "dir-key-certificate-version":
-        this.parseDirKeyCertificateVersionLine(line, parts);
-        break;
-      case "dir-address":
-        this.parseDirAddressLine(line, parts);
-        break;
-      case "fingerprint":
-        this.parseFingerprintLine(line, parts);
-        break;
-      case "legacy-dir-key":
-        this.parseLegacyDirKeyLine(line, parts);
-        break;
-      case "dir-key-published":
-        this.parseDirKeyPublished(line, parts);
-        break;
-      case "dir-key-expires":
-        this.parseDirKeyExpiresLine(line, parts);
-        break;
-      case "dir-identity-key":
-        this.parseDirIdentityKeyLine(line, parts);
-        nextCrypto = "dir-identity-key";
-        break;
-      case "dir-signing-key":
-        this.parseDirSigningKeyLine(line, parts);
-        nextCrypto = "dir-signing-key";
-        break;
-      case "dir-key-crosscert":
-        this.parseDirKeyCrosscertLine(line, parts);
-        nextCrypto = "dir-key-crosscert";
-        break;
-      case "dir-key-certification":
-        this.parseDirKeyCertificationLine(line, parts);
-        nextCrypto = "dir-key-certification";
-        break;
-      case "-----BEGIN":
-        crypto = new StringBuilder();
-        crypto.append(line).append("\n");
-        break;
-      case "-----END":
-        crypto.append(line).append("\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        switch (nextCrypto) {
+        case "network-status-version":
+          this.parseNetworkStatusVersionLine(line, parts);
+          break;
+        case "vote-status":
+          this.parseVoteStatusLine(line, parts);
+          break;
+        case "consensus-methods":
+          this.parseConsensusMethodsLine(line, parts);
+          break;
+        case "published":
+          this.parsePublishedLine(line, parts);
+          break;
+        case "valid-after":
+          this.parseValidAfterLine(line, parts);
+          break;
+        case "fresh-until":
+          this.parseFreshUntilLine(line, parts);
+          break;
+        case "valid-until":
+          this.parseValidUntilLine(line, parts);
+          break;
+        case "voting-delay":
+          this.parseVotingDelayLine(line, parts);
+          break;
+        case "client-versions":
+          this.parseClientVersionsLine(line, parts);
+          break;
+        case "server-versions":
+          this.parseServerVersionsLine(line, parts);
+          break;
+        case "package":
+          this.parsePackageLine(line, parts);
+          break;
+        case "known-flags":
+          this.parseKnownFlagsLine(line, parts);
+          break;
+        case "flag-thresholds":
+          this.parseFlagThresholdsLine(line, parts);
+          break;
+        case "params":
+          this.parseParamsLine(line, parts);
+          break;
+        case "dir-source":
+          this.parseDirSourceLine(line, parts);
+          break;
+        case "contact":
+          this.parseContactLine(line, parts);
+          break;
+        case "dir-key-certificate-version":
+          this.parseDirKeyCertificateVersionLine(line, parts);
+          break;
+        case "dir-address":
+          this.parseDirAddressLine(line, parts);
+          break;
+        case "fingerprint":
+          this.parseFingerprintLine(line, parts);
+          break;
+        case "legacy-dir-key":
+          this.parseLegacyDirKeyLine(line, parts);
+          break;
+        case "dir-key-published":
+          this.parseDirKeyPublished(line, parts);
+          break;
+        case "dir-key-expires":
+          this.parseDirKeyExpiresLine(line, parts);
+          break;
         case "dir-identity-key":
-          this.dirIdentityKey = cryptoString;
+          this.parseDirIdentityKeyLine(line, parts);
+          nextCrypto = "dir-identity-key";
           break;
         case "dir-signing-key":
-          this.dirSigningKey = cryptoString;
+          this.parseDirSigningKeyLine(line, parts);
+          nextCrypto = "dir-signing-key";
           break;
         case "dir-key-crosscert":
-          this.dirKeyCrosscert = cryptoString;
+          this.parseDirKeyCrosscertLine(line, parts);
+          nextCrypto = "dir-key-crosscert";
           break;
         case "dir-key-certification":
-          this.dirKeyCertification = cryptoString;
+          this.parseDirKeyCertificationLine(line, parts);
+          nextCrypto = "dir-key-certification";
+          break;
+        case "-----BEGIN":
+          crypto = new StringBuilder();
+          crypto.append(line).append("\n");
+          break;
+        case "-----END":
+          crypto.append(line).append("\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          switch (nextCrypto) {
+            case "dir-identity-key":
+              this.dirIdentityKey = cryptoString;
+              break;
+            case "dir-signing-key":
+              this.dirSigningKey = cryptoString;
+              break;
+            case "dir-key-crosscert":
+              this.dirKeyCrosscert = cryptoString;
+              break;
+            case "dir-key-certification":
+              this.dirKeyCertification = cryptoString;
+              break;
+            default:
+              throw new DescriptorParseException("Unrecognized crypto "
+                  + "block in vote.");
+          }
+          nextCrypto = "";
           break;
         default:
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in vote.");
-        }
-        nextCrypto = "";
-        break;
-      default:
-        if (crypto != null) {
-          crypto.append(line).append("\n");
-        } else {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in vote.");
+          if (crypto != null) {
+            crypto.append(line).append("\n");
           } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
+            if (this.failUnrecognizedDescriptorLines) {
+              throw new DescriptorParseException("Unrecognized line '"
+                  + line + "' in vote.");
+            } else {
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
+              }
+              this.unrecognizedLines.add(line);
             }
-            this.unrecognizedLines.add(line);
           }
-        }
       }
     }
   }
@@ -341,38 +341,38 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     try {
       for (Map.Entry<String, String> e : flagThresholds.entrySet()) {
         switch (e.getKey()) {
-        case "stable-uptime":
-          this.stableUptime = Long.parseLong(e.getValue());
-          break;
-        case "stable-mtbf":
-          this.stableMtbf = Long.parseLong(e.getValue());
-          break;
-        case "fast-speed":
-          this.fastBandwidth = Long.parseLong(e.getValue());
-          break;
-        case "guard-wfu":
-          this.guardWfu = Double.parseDouble(e.getValue().
-              replaceAll("%", ""));
-          break;
-        case "guard-tk":
-          this.guardTk = Long.parseLong(e.getValue());
-          break;
-        case "guard-bw-inc-exits":
-          this.guardBandwidthIncludingExits =
-              Long.parseLong(e.getValue());
-          break;
-        case "guard-bw-exc-exits":
-          this.guardBandwidthExcludingExits =
-              Long.parseLong(e.getValue());
-          break;
-        case "enough-mtbf":
-          this.enoughMtbfInfo = Integer.parseInt(e.getValue());
-          break;
-        case "ignoring-advertised-bws":
-          this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
-          break;
-        default:
-          // empty
+          case "stable-uptime":
+            this.stableUptime = Long.parseLong(e.getValue());
+            break;
+          case "stable-mtbf":
+            this.stableMtbf = Long.parseLong(e.getValue());
+            break;
+          case "fast-speed":
+            this.fastBandwidth = Long.parseLong(e.getValue());
+            break;
+          case "guard-wfu":
+            this.guardWfu = Double.parseDouble(e.getValue()
+                .replaceAll("%", ""));
+            break;
+          case "guard-tk":
+            this.guardTk = Long.parseLong(e.getValue());
+            break;
+          case "guard-bw-inc-exits":
+            this.guardBandwidthIncludingExits =
+                Long.parseLong(e.getValue());
+            break;
+          case "guard-bw-exc-exits":
+            this.guardBandwidthExcludingExits =
+                Long.parseLong(e.getValue());
+            break;
+          case "enough-mtbf":
+            this.enoughMtbfInfo = Integer.parseInt(e.getValue());
+            break;
+          case "ignoring-advertised-bws":
+            this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
+            break;
+          default:
+            // empty
         }
       }
     } catch (NumberFormatException ex) {
@@ -454,7 +454,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     if (parts.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    this.legacyDirKey = ParseHelper.parseTwentyByteHexString(line, parts[1]);
+    this.legacyDirKey = ParseHelper.parseTwentyByteHexString(line,
+        parts[1]);
   }
 
   private void parseDirKeyPublished(String line, String[] parts)
@@ -517,90 +518,105 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   }
 
   private String nickname;
+
   @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String identity;
+
   @Override
   public String getIdentity() {
     return this.identity;
   }
 
   private String hostname;
+
   @Override
   public String getHostname() {
     return this.hostname;
   }
 
   private String address;
+
   @Override
   public String getAddress() {
     return this.address;
   }
 
   private int dirPort;
+
   @Override
   public int getDirport() {
     return this.dirPort;
   }
 
   private int orPort;
+
   @Override
   public int getOrport() {
     return this.orPort;
   }
 
   private String contactLine;
+
   @Override
   public String getContactLine() {
     return this.contactLine;
   }
 
   private int dirKeyCertificateVersion;
+
   @Override
   public int getDirKeyCertificateVersion() {
     return this.dirKeyCertificateVersion;
   }
 
   private String legacyDirKey;
+
   @Override
   public String getLegacyDirKey() {
     return this.legacyDirKey;
   }
 
   private long dirKeyPublishedMillis;
+
   @Override
   public long getDirKeyPublishedMillis() {
     return this.dirKeyPublishedMillis;
   }
 
   private long dirKeyExpiresMillis;
+
   @Override
   public long getDirKeyExpiresMillis() {
     return this.dirKeyExpiresMillis;
   }
 
   private String dirIdentityKey;
+
   @Override
   public String getDirIdentityKey() {
     return this.dirIdentityKey;
   }
 
   private String dirSigningKey;
+
   @Override
   public String getDirSigningKey() {
     return this.dirSigningKey;
   }
 
   private String dirKeyCrosscert;
+
   @Override
   public String getDirKeyCrosscert() {
     return this.dirKeyCrosscert;
   }
 
   private String dirKeyCertification;
+
   @Override
   public String getDirKeyCertification() {
     return this.dirKeyCertification;
@@ -622,69 +638,80 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   }
 
   private int networkStatusVersion;
+
   @Override
   public int getNetworkStatusVersion() {
     return this.networkStatusVersion;
   }
 
   private Integer[] consensusMethods;
+
   @Override
   public List<Integer> getConsensusMethods() {
-    return this.consensusMethods == null ? null :
-        Arrays.asList(this.consensusMethods);
+    return this.consensusMethods == null ? null
+        : Arrays.asList(this.consensusMethods);
   }
 
   private long publishedMillis;
+
   @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private long validAfterMillis;
+
   @Override
   public long getValidAfterMillis() {
     return this.validAfterMillis;
   }
 
   private long freshUntilMillis;
+
   @Override
   public long getFreshUntilMillis() {
     return this.freshUntilMillis;
   }
 
   private long validUntilMillis;
+
   @Override
   public long getValidUntilMillis() {
     return this.validUntilMillis;
   }
 
   private long voteSeconds;
+
   @Override
   public long getVoteSeconds() {
     return this.voteSeconds;
   }
 
   private long distSeconds;
+
   @Override
   public long getDistSeconds() {
     return this.distSeconds;
   }
 
   private String[] recommendedClientVersions;
+
   @Override
   public List<String> getRecommendedClientVersions() {
-    return this.recommendedClientVersions == null ? null :
-        Arrays.asList(this.recommendedClientVersions);
+    return this.recommendedClientVersions == null ? null
+        : Arrays.asList(this.recommendedClientVersions);
   }
 
   private String[] recommendedServerVersions;
+
   @Override
   public List<String> getRecommendedServerVersions() {
-    return this.recommendedServerVersions == null ? null :
-        Arrays.asList(this.recommendedServerVersions);
+    return this.recommendedServerVersions == null ? null
+        : Arrays.asList(this.recommendedServerVersions);
   }
 
   private List<String> packageLines;
+
   @Override
   public List<String> getPackageLines() {
     return this.packageLines == null ? null
@@ -692,70 +719,81 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   }
 
   private String[] knownFlags;
+
   @Override
   public SortedSet<String> getKnownFlags() {
     return new TreeSet<>(Arrays.asList(this.knownFlags));
   }
 
   private long stableUptime;
+
   @Override
   public long getStableUptime() {
     return this.stableUptime;
   }
 
   private long stableMtbf;
+
   @Override
   public long getStableMtbf() {
     return this.stableMtbf;
   }
 
   private long fastBandwidth;
+
   @Override
   public long getFastBandwidth() {
     return this.fastBandwidth;
   }
 
   private double guardWfu;
+
   @Override
   public double getGuardWfu() {
     return this.guardWfu;
   }
 
   private long guardTk;
+
   @Override
   public long getGuardTk() {
     return this.guardTk;
   }
 
   private long guardBandwidthIncludingExits;
+
   @Override
   public long getGuardBandwidthIncludingExits() {
     return this.guardBandwidthIncludingExits;
   }
 
   private long guardBandwidthExcludingExits;
+
   @Override
   public long getGuardBandwidthExcludingExits() {
     return this.guardBandwidthExcludingExits;
   }
 
   private int enoughMtbfInfo;
+
   @Override
   public int getEnoughMtbfInfo() {
     return this.enoughMtbfInfo;
   }
 
   private int ignoringAdvertisedBws;
+
   @Override
   public int getIgnoringAdvertisedBws() {
     return this.ignoringAdvertisedBws;
   }
 
   private SortedMap<String, Integer> consensusParams;
+
   @Override
   public SortedMap<String, Integer> getConsensusParams() {
-    return this.consensusParams == null ? null:
-        new TreeMap<>(this.consensusParams);
+    return this.consensusParams == null ? null
+        : new TreeMap<>(this.consensusParams);
   }
 }
 

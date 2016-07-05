@@ -1,15 +1,16 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.DescriptorParser;
+import org.torproject.descriptor.DescriptorSourceFactory;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.zip.InflaterInputStream;
-
-import org.torproject.descriptor.DescriptorParser;
-import org.torproject.descriptor.DescriptorSourceFactory;
 
 /* Download descriptors from one directory authority or mirror.  First,
  * ask the coordinator thread to create a request, run it, and deliver
@@ -18,8 +19,11 @@ import org.torproject.descriptor.DescriptorSourceFactory;
 public class DirectoryDownloader implements Runnable {
 
   private String nickname;
+
   private String ipPort;
+
   private DescriptorParser descriptorParser;
+
   protected DirectoryDownloader(String nickname, String ip, int dirPort) {
     this.nickname = nickname;
     this.ipPort = ip + ":" + String.valueOf(dirPort);
@@ -28,17 +32,20 @@ public class DirectoryDownloader implements Runnable {
   }
 
   private DownloadCoordinator downloadCoordinator;
+
   protected void setDownloadCoordinator(
       DownloadCoordinator downloadCoordinator) {
     this.downloadCoordinator = downloadCoordinator;
   }
 
   private long connectTimeout;
+
   protected void setConnectTimeout(long connectTimeout) {
     this.connectTimeout = connectTimeout;
   }
 
   private long readTimeout;
+
   protected void setReadTimeout(long readTimeout) {
     this.readTimeout = readTimeout;
   }

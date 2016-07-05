@@ -1,6 +1,10 @@
 /* Copyright 2014--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.Microdescriptor;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -13,9 +17,6 @@ import java.util.Scanner;
 import java.util.Set;
 
 import javax.xml.bind.DatatypeConverter;
-
-import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.Microdescriptor;
 
 /* Contains a microdescriptor. */
 public class MicrodescriptorImpl extends DescriptorImpl
@@ -55,8 +56,8 @@ public class MicrodescriptorImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
-        useDelimiter("\n");
+    Scanner s = new Scanner(new String(this.rawDescriptorBytes))
+        .useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
     while (s.hasNext()) {
@@ -67,59 +68,59 @@ public class MicrodescriptorImpl extends DescriptorImpl
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "onion-key":
-        this.parseOnionKeyLine(line, parts);
-        nextCrypto = "onion-key";
-        break;
-      case "ntor-onion-key":
-        this.parseNtorOnionKeyLine(line, parts);
-        break;
-      case "a":
-        this.parseALine(line, parts);
-        break;
-      case "family":
-        this.parseFamilyLine(line, parts);
-        break;
-      case "p":
-        this.parsePLine(line, parts);
-        break;
-      case "p6":
-        this.parseP6Line(line, parts);
-        break;
-      case "id":
-        this.parseIdLine(line, parts);
-        break;
-      case "-----BEGIN":
-        crypto = new StringBuilder();
-        crypto.append(line).append("\n");
-        break;
-      case "-----END":
-        crypto.append(line).append("\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        if (nextCrypto.equals("onion-key")) {
-          this.onionKey = cryptoString;
-        } else {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in microdescriptor.");
-        }
-        nextCrypto = "";
-        break;
-      default:
-        if (crypto != null) {
+        case "onion-key":
+          this.parseOnionKeyLine(line, parts);
+          nextCrypto = "onion-key";
+          break;
+        case "ntor-onion-key":
+          this.parseNtorOnionKeyLine(line, parts);
+          break;
+        case "a":
+          this.parseALine(line, parts);
+          break;
+        case "family":
+          this.parseFamilyLine(line, parts);
+          break;
+        case "p":
+          this.parsePLine(line, parts);
+          break;
+        case "p6":
+          this.parseP6Line(line, parts);
+          break;
+        case "id":
+          this.parseIdLine(line, parts);
+          break;
+        case "-----BEGIN":
+          crypto = new StringBuilder();
           crypto.append(line).append("\n");
-        } else {
-          ParseHelper.parseKeyword(line, parts[0]);
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in microdescriptor.");
+          break;
+        case "-----END":
+          crypto.append(line).append("\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          if (nextCrypto.equals("onion-key")) {
+            this.onionKey = cryptoString;
           } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
-            }
-            this.unrecognizedLines.add(line);
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block in microdescriptor.");
           }
-        }
+          nextCrypto = "";
+          break;
+        default:
+          if (crypto != null) {
+            crypto.append(line).append("\n");
+          } else {
+            ParseHelper.parseKeyword(line, parts[0]);
+            if (this.failUnrecognizedDescriptorLines) {
+              throw new DescriptorParseException("Unrecognized line '"
+                  + line + "' in microdescriptor.");
+            } else {
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
+              }
+              this.unrecognizedLines.add(line);
+            }
+          }
       }
     }
   }
@@ -195,18 +196,18 @@ public class MicrodescriptorImpl extends DescriptorImpl
       isValid = false;
     } else  {
       switch (parts[1]) {
-      case "accept":
-      case "reject":
-        String[] ports = parts[2].split(",", -1);
-        for (int i = 0; i < ports.length; i++) {
-          if (ports[i].length() < 1) {
-            isValid = false;
-            break;
+        case "accept":
+        case "reject":
+          String[] ports = parts[2].split(",", -1);
+          for (int i = 0; i < ports.length; i++) {
+            if (ports[i].length() < 1) {
+              isValid = false;
+              break;
+            }
           }
-        }
-        break;
-      default:
-        isValid = false;
+          break;
+        default:
+          isValid = false;
       }
     }
     if (!isValid) {
@@ -219,7 +220,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
     if (parts.length != 3) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     } else {
-        switch (parts[1]) {
+      switch (parts[1]) {
         case "ed25519":
           ParseHelper.parseThirtyTwoByteBase64String(line, parts[2]);
           this.ed25519Identity = parts[2];
@@ -229,8 +230,9 @@ public class MicrodescriptorImpl extends DescriptorImpl
           this.rsa1024Identity = parts[2];
           break;
         default:
-          throw new DescriptorParseException("Illegal line '" + line + "'.");
-        }
+          throw new DescriptorParseException("Illegal line '" + line
+              + "'.");
+      }
     }
   }
 
@@ -245,8 +247,8 @@ public class MicrodescriptorImpl extends DescriptorImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, end - start);
         this.microdescriptorDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-256").digest(forDigest)).
-            toLowerCase();
+            MessageDigest.getInstance("SHA-256").digest(forDigest))
+            .toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */
@@ -260,66 +262,78 @@ public class MicrodescriptorImpl extends DescriptorImpl
   }
 
   private String microdescriptorDigest;
+
   @Override
   public String getMicrodescriptorDigest() {
     return this.microdescriptorDigest;
   }
 
   private String onionKey;
+
   @Override
   public String getOnionKey() {
     return this.onionKey;
   }
 
   private String ntorOnionKey;
+
   @Override
   public String getNtorOnionKey() {
     return this.ntorOnionKey;
   }
 
   private List<String> orAddresses = new ArrayList<>();
+
   @Override
   public List<String> getOrAddresses() {
     return new ArrayList<>(this.orAddresses);
   }
 
   private String[] familyEntries;
+
   @Override
   public List<String> getFamilyEntries() {
-    return this.familyEntries == null ? null :
-        Arrays.asList(this.familyEntries);
+    return this.familyEntries == null ? null
+        : Arrays.asList(this.familyEntries);
   }
+
   private String defaultPolicy;
+
   @Override
   public String getDefaultPolicy() {
     return this.defaultPolicy;
   }
 
   private String portList;
+
   @Override
   public String getPortList() {
     return this.portList;
   }
 
   private String ipv6DefaultPolicy;
+
   @Override
   public String getIpv6DefaultPolicy() {
     return this.ipv6DefaultPolicy;
   }
 
   private String ipv6PortList;
+
   @Override
   public String getIpv6PortList() {
     return this.ipv6PortList;
   }
 
   private String rsa1024Identity;
+
   @Override
   public String getRsa1024Identity() {
     return this.rsa1024Identity;
   }
 
   private String ed25519Identity;
+
   @Override
   public String getEd25519Identity() {
     return this.ed25519Identity;

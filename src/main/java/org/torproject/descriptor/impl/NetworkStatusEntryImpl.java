@@ -1,8 +1,11 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.NetworkStatusEntry;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -15,11 +18,10 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.torproject.descriptor.NetworkStatusEntry;
-
 public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private byte[] statusEntryBytes;
+
   @Override
   public byte[] getStatusEntryBytes() {
     return this.statusEntryBytes;
@@ -28,7 +30,9 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   private boolean microdescConsensus;
 
   private boolean failUnrecognizedDescriptorLines;
+
   private List<String> unrecognizedLines;
+
   protected List<String> getAndClearUnrecognizedLines() {
     List<String> lines = this.unrecognizedLines;
     this.unrecognizedLines = null;
@@ -48,6 +52,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private SortedSet<String> atMostOnceKeywords;
+
   private void initializeKeywords() {
     this.atMostOnceKeywords = new TreeSet<>();
     this.atMostOnceKeywords.add("s");
@@ -66,8 +71,8 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private void parseStatusEntryBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.statusEntryBytes)).
-        useDelimiter("\n");
+    Scanner s = new Scanner(new String(this.statusEntryBytes))
+        .useDelimiter("\n");
     String line = null;
     if (!s.hasNext() || !(line = s.next()).startsWith("r ")) {
       throw new DescriptorParseException("Status entry must start with "
@@ -77,49 +82,49 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.parseRLine(line, rLineParts);
     while (s.hasNext()) {
       line = s.next();
-      String[] parts = !line.startsWith("opt ") ? line.split("[ \t]+") :
-          line.substring("opt ".length()).split("[ \t]+");
+      String[] parts = !line.startsWith("opt ") ? line.split("[ \t]+")
+          : line.substring("opt ".length()).split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "a":
-        this.parseALine(line, parts);
-        break;
-      case "s":
-        this.parseSLine(line, parts);
-        break;
-      case "v":
-        this.parseVLine(line, parts);
-        break;
-      case "w":
-        this.parseWLine(line, parts);
-        break;
-      case "p":
-        this.parsePLine(line, parts);
-        break;
-      case "m":
-        this.parseMLine(line, parts);
-        break;
-      case "id":
-        this.parseIdLine(line, parts);
-        break;
-      default:
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in status entry.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        case "a":
+          this.parseALine(line, parts);
+          break;
+        case "s":
+          this.parseSLine(line, parts);
+          break;
+        case "v":
+          this.parseVLine(line, parts);
+          break;
+        case "w":
+          this.parseWLine(line, parts);
+          break;
+        case "p":
+          this.parsePLine(line, parts);
+          break;
+        case "m":
+          this.parseMLine(line, parts);
+          break;
+        case "id":
+          this.parseIdLine(line, parts);
+          break;
+        default:
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in status entry.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
           }
-          this.unrecognizedLines.add(line);
-        }
       }
     }
   }
 
   private void parseRLine(String line, String[] parts)
       throws DescriptorParseException {
-    if ((!this.microdescConsensus && parts.length != 9) ||
-        (this.microdescConsensus && parts.length != 8)) {
+    if ((!this.microdescConsensus && parts.length != 9)
+        || (this.microdescConsensus && parts.length != 8)) {
       throw new DescriptorParseException("r line '" + line + "' has "
           + "fewer space-separated elements than expected.");
     }
@@ -154,6 +159,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private static Map<String, Integer> flagIndexes = new HashMap<>();
+
   private static Map<Integer, String> flagStrings = new HashMap<>();
 
   private void parseSLine(String line, String[] parts)
@@ -215,22 +221,22 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     if (parts.length != 3) {
       isValid = false;
     } else {
-        switch (parts[1]) {
-          case "accept":
-          case "reject":
-            this.defaultPolicy = parts[1];
-            this.portList = parts[2];
-            String[] ports = parts[2].split(",", -1);
-            for (int i = 0; i < ports.length; i++) {
-              if (ports[i].length() < 1) {
-                isValid = false;
-                break;
-              }
+      switch (parts[1]) {
+        case "accept":
+        case "reject":
+          this.defaultPolicy = parts[1];
+          this.portList = parts[2];
+          String[] ports = parts[2].split(",", -1);
+          for (int i = 0; i < ports.length; i++) {
+            if (ports[i].length() < 1) {
+              isValid = false;
+              break;
             }
-            break;
-          default:
-            isValid = false;
-        }
+          }
+          break;
+        default:
+          isValid = false;
+      }
     }
     if (!isValid) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -270,61 +276,71 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private String nickname;
+
   @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String fingerprint;
+
   @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private String descriptor;
+
   @Override
   public String getDescriptor() {
     return this.descriptor;
   }
 
   private long publishedMillis;
+
   @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private String address;
+
   @Override
   public String getAddress() {
     return this.address;
   }
 
   private int orPort;
+
   @Override
   public int getOrPort() {
     return this.orPort;
   }
 
   private int dirPort;
+
   @Override
   public int getDirPort() {
     return this.dirPort;
   }
 
   private Set<String> microdescriptorDigests;
+
   @Override
   public Set<String> getMicrodescriptorDigests() {
-    return this.microdescriptorDigests == null ? null :
-        new HashSet<>(this.microdescriptorDigests);
+    return this.microdescriptorDigests == null ? null
+        : new HashSet<>(this.microdescriptorDigests);
   }
 
   private List<String> orAddresses = new ArrayList<>();
+
   @Override
   public List<String> getOrAddresses() {
     return new ArrayList<>(this.orAddresses);
   }
 
   private BitSet flags;
+
   @Override
   public SortedSet<String> getFlags() {
     SortedSet<String> result = new TreeSet<>();
@@ -338,42 +354,49 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private String version;
+
   @Override
   public String getVersion() {
     return this.version;
   }
 
   private long bandwidth = -1L;
+
   @Override
   public long getBandwidth() {
     return this.bandwidth;
   }
 
   private long measured = -1L;
+
   @Override
   public long getMeasured() {
     return this.measured;
   }
 
   private boolean unmeasured = false;
+
   @Override
   public boolean getUnmeasured() {
     return this.unmeasured;
   }
 
   private String defaultPolicy;
+
   @Override
   public String getDefaultPolicy() {
     return this.defaultPolicy;
   }
 
   private String portList;
+
   @Override
   public String getPortList() {
     return this.portList;
   }
 
   private String masterKeyEd25519;
+
   @Override
   public String getMasterKeyEd25519() {
     return this.masterKeyEd25519;

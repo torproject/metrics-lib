@@ -1,6 +1,10 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -17,9 +21,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.xml.bind.DatatypeConverter;
-
-import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
 /* Contains a network status consensus or microdesc consensus. */
 public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
@@ -74,8 +75,8 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
         this.consensusDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest)).
-            toLowerCase();
+            MessageDigest.getInstance("SHA-1").digest(forDigest))
+            .toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */
@@ -96,65 +97,66 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "network-status-version":
-        this.parseNetworkStatusVersionLine(line, parts);
-        break;
-      case "vote-status":
-        this.parseVoteStatusLine(line, parts);
-        break;
-      case "consensus-method":
-        this.parseConsensusMethodLine(line, parts);
-        break;
-      case "valid-after":
-        this.parseValidAfterLine(line, parts);
-        break;
-      case "fresh-until":
-        this.parseFreshUntilLine(line, parts);
-        break;
-      case "valid-until":
-        this.parseValidUntilLine(line, parts);
-        break;
-      case "voting-delay":
-        this.parseVotingDelayLine(line, parts);
-        break;
-      case "client-versions":
-        this.parseClientVersionsLine(line, parts);
-        break;
-      case "server-versions":
-        this.parseServerVersionsLine(line, parts);
-        break;
-      case "package":
-        this.parsePackageLine(line, parts);
-        break;
-      case "known-flags":
-        this.parseKnownFlagsLine(line, parts);
-        break;
-      case "params":
-        this.parseParamsLine(line, parts);
-        break;
-      default:
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in consensus.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        case "network-status-version":
+          this.parseNetworkStatusVersionLine(line, parts);
+          break;
+        case "vote-status":
+          this.parseVoteStatusLine(line, parts);
+          break;
+        case "consensus-method":
+          this.parseConsensusMethodLine(line, parts);
+          break;
+        case "valid-after":
+          this.parseValidAfterLine(line, parts);
+          break;
+        case "fresh-until":
+          this.parseFreshUntilLine(line, parts);
+          break;
+        case "valid-until":
+          this.parseValidUntilLine(line, parts);
+          break;
+        case "voting-delay":
+          this.parseVotingDelayLine(line, parts);
+          break;
+        case "client-versions":
+          this.parseClientVersionsLine(line, parts);
+          break;
+        case "server-versions":
+          this.parseServerVersionsLine(line, parts);
+          break;
+        case "package":
+          this.parsePackageLine(line, parts);
+          break;
+        case "known-flags":
+          this.parseKnownFlagsLine(line, parts);
+          break;
+        case "params":
+          this.parseParamsLine(line, parts);
+          break;
+        default:
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in consensus.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
           }
-          this.unrecognizedLines.add(line);
-        }
       }
     }
   }
 
   private boolean microdescConsensus = false;
+
   protected void parseStatusEntry(byte[] statusEntryBytes)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
         statusEntryBytes, this.microdescConsensus,
         this.failUnrecognizedDescriptorLines);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
-    List<String> unrecognizedStatusEntryLines = statusEntry.
-        getAndClearUnrecognizedLines();
+    List<String> unrecognizedStatusEntryLines = statusEntry
+        .getAndClearUnrecognizedLines();
     if (unrecognizedStatusEntryLines != null) {
       if (this.unrecognizedLines == null) {
         this.unrecognizedLines = new ArrayList<>();
@@ -171,21 +173,21 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "directory-footer":
-        break;
-      case "bandwidth-weights":
-        this.parseBandwidthWeightsLine(line, parts);
-        break;
-      default:
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in consensus.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+        case "directory-footer":
+          break;
+        case "bandwidth-weights":
+          this.parseBandwidthWeightsLine(line, parts);
+          break;
+        default:
+          if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in consensus.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
           }
-          this.unrecognizedLines.add(line);
-        }
       }
     }
   }
@@ -317,74 +319,86 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   }
 
   private String consensusDigest;
+
   @Override
   public String getConsensusDigest() {
     return this.consensusDigest;
   }
 
   private int networkStatusVersion;
+
   @Override
   public int getNetworkStatusVersion() {
     return this.networkStatusVersion;
   }
 
   private String consensusFlavor;
+
   @Override
   public String getConsensusFlavor() {
     return this.consensusFlavor;
   }
 
   private int consensusMethod;
+
   @Override
   public int getConsensusMethod() {
     return this.consensusMethod;
   }
 
   private long validAfterMillis;
+
   @Override
   public long getValidAfterMillis() {
     return this.validAfterMillis;
   }
 
   private long freshUntilMillis;
+
   @Override
   public long getFreshUntilMillis() {
     return this.freshUntilMillis;
   }
 
   private long validUntilMillis;
+
   @Override
   public long getValidUntilMillis() {
     return this.validUntilMillis;
   }
 
   private long voteSeconds;
+
   @Override
   public long getVoteSeconds() {
     return this.voteSeconds;
   }
 
   private long distSeconds;
+
   @Override
   public long getDistSeconds() {
     return this.distSeconds;
   }
 
   private String[] recommendedClientVersions;
+
   @Override
   public List<String> getRecommendedClientVersions() {
-    return this.recommendedClientVersions == null ? null :
-        Arrays.asList(this.recommendedClientVersions);
+    return this.recommendedClientVersions == null ? null
+        : Arrays.asList(this.recommendedClientVersions);
   }
 
   private String[] recommendedServerVersions;
+
   @Override
   public List<String> getRecommendedServerVersions() {
-    return this.recommendedServerVersions == null ? null :
-        Arrays.asList(this.recommendedServerVersions);
+    return this.recommendedServerVersions == null ? null
+        : Arrays.asList(this.recommendedServerVersions);
   }
 
   private List<String> packageLines;
+
   @Override
   public List<String> getPackageLines() {
     return this.packageLines == null ? null
@@ -392,23 +406,26 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   }
 
   private String[] knownFlags;
+
   @Override
   public SortedSet<String> getKnownFlags() {
     return new TreeSet<>(Arrays.asList(this.knownFlags));
   }
 
   private SortedMap<String, Integer> consensusParams;
+
   @Override
   public SortedMap<String, Integer> getConsensusParams() {
-    return this.consensusParams == null ? null:
-        new TreeMap<>(this.consensusParams);
+    return this.consensusParams == null ? null
+        : new TreeMap<>(this.consensusParams);
   }
 
   private SortedMap<String, Integer> bandwidthWeights;
+
   @Override
   public SortedMap<String, Integer> getBandwidthWeights() {
-    return this.bandwidthWeights == null ? null :
-        new TreeMap<>(this.bandwidthWeights);
+    return this.bandwidthWeights == null ? null
+        : new TreeMap<>(this.bandwidthWeights);
   }
 }
 

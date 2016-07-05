@@ -1,26 +1,30 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DirSourceEntry;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.torproject.descriptor.DirSourceEntry;
-
 public class DirSourceEntryImpl implements DirSourceEntry {
 
   private byte[] dirSourceEntryBytes;
+
   @Override
   public byte[] getDirSourceEntryBytes() {
     return this.dirSourceEntryBytes;
   }
 
   private boolean failUnrecognizedDescriptorLines;
+
   private List<String> unrecognizedLines;
+
   protected List<String> getAndClearUnrecognizedLines() {
     List<String> lines = this.unrecognizedLines;
     this.unrecognizedLines = null;
@@ -38,7 +42,10 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     this.checkAndClearKeywords();
   }
 
-  private SortedSet<String> exactlyOnceKeywords, atMostOnceKeywords;
+  private SortedSet<String> exactlyOnceKeywords;
+
+  private SortedSet<String> atMostOnceKeywords;
+
   private void initializeKeywords() {
     this.exactlyOnceKeywords = new TreeSet<>();
     this.exactlyOnceKeywords.add("dir-source");
@@ -76,40 +83,40 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   private void parseDirSourceEntryBytes()
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.dirSourceEntryBytes)).
-        useDelimiter("\n");
+    Scanner s = new Scanner(new String(this.dirSourceEntryBytes))
+        .useDelimiter("\n");
     boolean skipCrypto = false;
     while (s.hasNext()) {
       String line = s.next();
       String[] parts = line.split(" ");
       switch (parts[0]) {
-      case "dir-source":
-        this.parseDirSourceLine(line);
-        break;
-      case "contact":
-        this.parseContactLine(line);
-        break;
-      case "vote-digest":
-        this.parseVoteDigestLine(line);
-        break;
-      case "-----BEGIN":
-        skipCrypto = true;
-        break;
-      case "-----END":
-        skipCrypto = false;
-        break;
-      default:
-        if (!skipCrypto) {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in dir-source entry.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
+        case "dir-source":
+          this.parseDirSourceLine(line);
+          break;
+        case "contact":
+          this.parseContactLine(line);
+          break;
+        case "vote-digest":
+          this.parseVoteDigestLine(line);
+          break;
+        case "-----BEGIN":
+          skipCrypto = true;
+          break;
+        case "-----END":
+          skipCrypto = false;
+          break;
+        default:
+          if (!skipCrypto) {
+            if (this.failUnrecognizedDescriptorLines) {
+              throw new DescriptorParseException("Unrecognized line '"
+                  + line + "' in dir-source entry.");
+            } else {
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
+              }
+              this.unrecognizedLines.add(line);
             }
-            this.unrecognizedLines.add(line);
           }
-        }
       }
     }
   }
@@ -162,54 +169,63 @@ public class DirSourceEntryImpl implements DirSourceEntry {
   }
 
   private String nickname;
+
   @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String identity;
+
   @Override
   public String getIdentity() {
     return this.identity;
   }
 
   private boolean isLegacy;
+
   @Override
   public boolean isLegacy() {
     return this.isLegacy;
   }
 
   private String hostname;
+
   @Override
   public String getHostname() {
     return this.hostname;
   }
 
   private String ip;
+
   @Override
   public String getIp() {
     return this.ip;
   }
 
   private int dirPort;
+
   @Override
   public int getDirPort() {
     return this.dirPort;
   }
 
   private int orPort;
+
   @Override
   public int getOrPort() {
     return this.orPort;
   }
 
   private String contactLine;
+
   @Override
   public String getContactLine() {
     return this.contactLine;
   }
 
   private String voteDigest;
+
   @Override
   public String getVoteDigest() {
     return this.voteDigest;

@@ -19,7 +19,7 @@ public interface ExitList extends Descriptor {
    *
    * @since 1.0.0
    */
-  public final static String EOL = "\n";
+  public static final String EOL = "\n";
 
   /**
    * Exit list entry containing results from a single exit scan.

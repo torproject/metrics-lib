@@ -1,8 +1,11 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
+import org.torproject.descriptor.BridgePoolAssignment;
 import org.torproject.descriptor.DescriptorParseException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,8 +14,6 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.torproject.descriptor.BridgePoolAssignment;
 
 /* TODO Write a test class. */
 public class BridgePoolAssignmentImpl extends DescriptorImpl
@@ -48,8 +49,8 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.rawDescriptorBytes)).
-        useDelimiter("\n");
+    Scanner s = new Scanner(new String(this.rawDescriptorBytes))
+        .useDelimiter("\n");
     while (s.hasNext()) {
       String line = s.next();
       if (line.startsWith("bridge-pool-assignment ")) {
@@ -85,12 +86,14 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
   }
 
   private long publishedMillis;
+
   @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private SortedMap<String, String> entries = new TreeMap<>();
+
   @Override
   public SortedMap<String, String> getEntries() {
     return new TreeMap<>(this.entries);

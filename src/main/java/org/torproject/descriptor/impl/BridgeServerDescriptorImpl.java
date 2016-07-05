@@ -1,13 +1,14 @@
 /* Copyright 2015 The Tor Project
  * See LICENSE for licensing information */
-package org.torproject.descriptor.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.BridgeServerDescriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ServerDescriptor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BridgeServerDescriptorImpl extends ServerDescriptorImpl
     implements BridgeServerDescriptor {

@@ -1,12 +1,13 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
+import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.DescriptorParseException;
+
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.torproject.descriptor.BandwidthHistory;
 
 public class BandwidthHistoryImpl implements BandwidthHistory {
 
@@ -18,17 +19,17 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
       try {
         this.historyEndMillis = ParseHelper.parseTimestampAtIndex(line,
             partsNoOpt, 1, 2);
-        if (partsNoOpt[3].startsWith("(") &&
-            partsNoOpt[4].startsWith("s)")) {
-          this.intervalLength = Long.parseLong(partsNoOpt[3].
-              substring(1));
+        if (partsNoOpt[3].startsWith("(")
+            && partsNoOpt[4].startsWith("s)")) {
+          this.intervalLength = Long.parseLong(partsNoOpt[3]
+              .substring(1));
           if (this.intervalLength <= 0L) {
             throw new DescriptorParseException("Only positive interval "
                 + "lengths are allowed in line '" + line + "'.");
           }
           String[] values = null;
-          if (partsNoOpt.length == 5 &&
-              partsNoOpt[4].equals("s)")) {
+          if (partsNoOpt.length == 5
+              && partsNoOpt[4].equals("s)")) {
             /* There are no bandwidth values to parse. */
             isValid = true;
           } else if (partsNoOpt.length == 6) {
@@ -66,24 +67,28 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
   }
 
   private String line;
+
   @Override
   public String getLine() {
     return this.line;
   }
 
   private long historyEndMillis;
+
   @Override
   public long getHistoryEndMillis() {
     return this.historyEndMillis;
   }
 
   private long intervalLength;
+
   @Override
   public long getIntervalLength() {
     return this.intervalLength;
   }
 
   private long[] bandwidthValues;
+
   @Override
   public SortedMap<Long, Long> getBandwidthValues() {
     SortedMap<Long, Long> result = new TreeMap<>();

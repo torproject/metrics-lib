@@ -1,15 +1,16 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.DescriptorDownloader;
+import org.torproject.descriptor.DescriptorRequest;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.torproject.descriptor.DescriptorRequest;
-import org.torproject.descriptor.DescriptorDownloader;
 
 public class DescriptorDownloaderImpl
     implements DescriptorDownloader {
@@ -18,6 +19,7 @@ public class DescriptorDownloaderImpl
 
   private SortedMap<String, DirectoryDownloader> directoryAuthorities =
       new TreeMap<>();
+
   @Override
   public void addDirectoryAuthority(String nickname, String ip,
       int dirPort) {
@@ -33,6 +35,7 @@ public class DescriptorDownloaderImpl
 
   private SortedMap<String, DirectoryDownloader> directoryMirrors =
       new TreeMap<>();
+
   @Override
   public void addDirectoryMirror(String nickname, String ip,
       int dirPort) {
@@ -67,14 +70,15 @@ public class DescriptorDownloaderImpl
     }
     /* TODO Relax the requirement for directory nicknames to be unique.
      * In theory, we can identify them by ip+port. */
-    if (this.directoryAuthorities.containsKey(nickname) ||
-        this.directoryMirrors.containsKey(nickname)) {
+    if (this.directoryAuthorities.containsKey(nickname)
+        || this.directoryMirrors.containsKey(nickname)) {
       throw new IllegalArgumentException("Directory nicknames must be "
           + "unique.");
     }
   }
 
   private boolean downloadConsensus = false;
+
   @Override
   public void setIncludeCurrentConsensus() {
     if (this.hasStartedDownloading) {
@@ -85,6 +89,7 @@ public class DescriptorDownloaderImpl
   }
 
   private boolean downloadConsensusFromAllAuthorities = false;
+
   @Override
   public void setIncludeCurrentConsensusFromAllDirectoryAuthorities() {
     if (this.hasStartedDownloading) {
@@ -95,6 +100,7 @@ public class DescriptorDownloaderImpl
   }
 
   private boolean includeCurrentReferencedVotes = false;
+
   @Override
   public void setIncludeCurrentReferencedVotes() {
     if (this.hasStartedDownloading) {
@@ -105,6 +111,7 @@ public class DescriptorDownloaderImpl
   }
 
   private Set<String> downloadVotes = new HashSet<>();
+
   @Override
   public void setIncludeCurrentVote(String fingerprint) {
     if (this.hasStartedDownloading) {
@@ -207,6 +214,7 @@ public class DescriptorDownloaderImpl
   }
 
   private long readTimeoutMillis = 60L * 1000L;
+
   @Override
   public void setReadTimeout(long readTimeoutMillis) {
     if (this.hasStartedDownloading) {
@@ -222,6 +230,7 @@ public class DescriptorDownloaderImpl
   }
 
   private long connectTimeoutMillis = 60L * 1000L;
+
   @Override
   public void setConnectTimeout(long connectTimeoutMillis) {
     if (this.hasStartedDownloading) {
@@ -237,6 +246,7 @@ public class DescriptorDownloaderImpl
   }
 
   private long globalTimeoutMillis = 60L * 60L * 1000L;
+
   @Override
   public void setGlobalTimeout(long globalTimeoutMillis) {
     if (this.hasStartedDownloading) {
@@ -252,6 +262,7 @@ public class DescriptorDownloaderImpl
   }
 
   private boolean failUnrecognizedDescriptorLines = false;
+
   @Override
   public void setFailUnrecognizedDescriptorLines() {
     if (this.hasStartedDownloading) {
@@ -275,8 +286,8 @@ public class DescriptorDownloaderImpl
         this.includeCurrentReferencedVotes, this.connectTimeoutMillis,
         this.readTimeoutMillis, this.globalTimeoutMillis,
         this.failUnrecognizedDescriptorLines);
-    Iterator<DescriptorRequest> descriptorQueue = downloadCoordinator.
-        getDescriptorQueue();
+    Iterator<DescriptorRequest> descriptorQueue = downloadCoordinator
+        .getDescriptorQueue();
     return descriptorQueue;
   }
 }

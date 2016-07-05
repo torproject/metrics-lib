@@ -1,8 +1,12 @@
 /* Copyright 2012--2016 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
+import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.TorperfResult;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,9 +15,6 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.torproject.descriptor.Descriptor;
-import org.torproject.descriptor.TorperfResult;
 
 public class TorperfResultImpl extends DescriptorImpl
     implements TorperfResult {
@@ -80,100 +81,102 @@ public class TorperfResultImpl extends DescriptorImpl
       this.markKeyAsParsed(key, line);
       String value = keyValueParts[1];
       switch (key) {
-      case "SOURCE":
-        this.parseSource(value, keyValue, line);
-        break;
-      case "FILESIZE":
-        this.parseFileSize(value, keyValue, line);
-        break;
-      case "START":
-        this.parseStart(value, keyValue, line);
-        break;
-      case "SOCKET":
-        this.parseSocket(value, keyValue, line);
-        break;
-      case "CONNECT":
-        this.parseConnect(value, keyValue, line);
-        break;
-      case "NEGOTIATE":
-        this.parseNegotiate(value, keyValue, line);
-        break;
-      case "REQUEST":
-        this.parseRequest(value, keyValue, line);
-        break;
-      case "RESPONSE":
-        this.parseResponse(value, keyValue, line);
-        break;
-      case "DATAREQUEST":
-        this.parseDataRequest(value, keyValue, line);
-        break;
-      case "DATARESPONSE":
-        this.parseDataResponse(value, keyValue, line);
-        break;
-      case "DATACOMPLETE":
-        this.parseDataComplete(value, keyValue, line);
-        break;
-      case "WRITEBYTES":
-        this.parseWriteBytes(value, keyValue, line);
-        break;
-      case "READBYTES":
-        this.parseReadBytes(value, keyValue, line);
-        break;
-      case "DIDTIMEOUT":
-        this.parseDidTimeout(value, keyValue, line);
-        break;
-      case "LAUNCH":
-        this.parseLaunch(value, keyValue, line);
-        break;
-      case "USED_AT":
-        this.parseUsedAt(value, keyValue, line);
-        break;
-      case "PATH":
-        this.parsePath(value, keyValue, line);
-        break;
-      case "BUILDTIMES":
-        this.parseBuildTimes(value, keyValue, line);
-        break;
-      case "TIMEOUT":
-        this.parseTimeout(value, keyValue, line);
-        break;
-      case "QUANTILE":
-        this.parseQuantile(value, keyValue, line);
-        break;
-      case "CIRC_ID":
-        this.parseCircId(value, keyValue, line);
-        break;
-      case "USED_BY":
-        this.parseUsedBy(value, keyValue, line);
-        break;
-      default:
-        if (key.startsWith("DATAPERC")) {
-          this.parseDataPercentile(value, keyValue, line);
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized key '" + key
-              + "' in line '" + line + "'.");
-        } else {
-          if (this.unrecognizedKeys == null) {
-            this.unrecognizedKeys = new TreeMap<>();
+        case "SOURCE":
+          this.parseSource(value, keyValue, line);
+          break;
+        case "FILESIZE":
+          this.parseFileSize(value, keyValue, line);
+          break;
+        case "START":
+          this.parseStart(value, keyValue, line);
+          break;
+        case "SOCKET":
+          this.parseSocket(value, keyValue, line);
+          break;
+        case "CONNECT":
+          this.parseConnect(value, keyValue, line);
+          break;
+        case "NEGOTIATE":
+          this.parseNegotiate(value, keyValue, line);
+          break;
+        case "REQUEST":
+          this.parseRequest(value, keyValue, line);
+          break;
+        case "RESPONSE":
+          this.parseResponse(value, keyValue, line);
+          break;
+        case "DATAREQUEST":
+          this.parseDataRequest(value, keyValue, line);
+          break;
+        case "DATARESPONSE":
+          this.parseDataResponse(value, keyValue, line);
+          break;
+        case "DATACOMPLETE":
+          this.parseDataComplete(value, keyValue, line);
+          break;
+        case "WRITEBYTES":
+          this.parseWriteBytes(value, keyValue, line);
+          break;
+        case "READBYTES":
+          this.parseReadBytes(value, keyValue, line);
+          break;
+        case "DIDTIMEOUT":
+          this.parseDidTimeout(value, keyValue, line);
+          break;
+        case "LAUNCH":
+          this.parseLaunch(value, keyValue, line);
+          break;
+        case "USED_AT":
+          this.parseUsedAt(value, keyValue, line);
+          break;
+        case "PATH":
+          this.parsePath(value, keyValue, line);
+          break;
+        case "BUILDTIMES":
+          this.parseBuildTimes(value, keyValue, line);
+          break;
+        case "TIMEOUT":
+          this.parseTimeout(value, keyValue, line);
+          break;
+        case "QUANTILE":
+          this.parseQuantile(value, keyValue, line);
+          break;
+        case "CIRC_ID":
+          this.parseCircId(value, keyValue, line);
+          break;
+        case "USED_BY":
+          this.parseUsedBy(value, keyValue, line);
+          break;
+        default:
+          if (key.startsWith("DATAPERC")) {
+            this.parseDataPercentile(value, keyValue, line);
+          } else if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized key '" + key
+                + "' in line '" + line + "'.");
+          } else {
+            if (this.unrecognizedKeys == null) {
+              this.unrecognizedKeys = new TreeMap<>();
+            }
+            this.unrecognizedKeys.put(key, value);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            if (!this.unrecognizedLines.contains(line)) {
+              this.unrecognizedLines.add(line);
+            }
           }
-          this.unrecognizedKeys.put(key, value);
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
-          }
-          if (!this.unrecognizedLines.contains(line)) {
-            this.unrecognizedLines.add(line);
-          }
-        }
       }
     }
     this.checkAllRequiredKeysParsed(line);
   }
 
   private Set<String> parsedKeys = new HashSet<>();
+
   private Set<String> requiredKeys = new HashSet<>(Arrays.asList(
       ("SOURCE,FILESIZE,START,SOCKET,CONNECT,NEGOTIATE,REQUEST,RESPONSE,"
-      + "DATAREQUEST,DATARESPONSE,DATACOMPLETE,WRITEBYTES,READBYTES").
-      split(",")));
+      + "DATAREQUEST,DATARESPONSE,DATACOMPLETE,WRITEBYTES,READBYTES")
+      .split(",")));
+
   private void markKeyAsParsed(String key, String line)
       throws DescriptorParseException {
     if (this.parsedKeys.contains(key)) {
@@ -184,6 +187,7 @@ public class TorperfResultImpl extends DescriptorImpl
     this.parsedKeys.add(key);
     this.requiredKeys.remove(key);
   }
+
   private void checkAllRequiredKeysParsed(String line)
       throws DescriptorParseException {
     for (String key : this.requiredKeys) {
@@ -397,6 +401,7 @@ public class TorperfResultImpl extends DescriptorImpl
   }
 
   private SortedMap<String, String> unrecognizedKeys;
+
   @Override
   public SortedMap<String, String> getUnrecognizedKeys() {
     return this.unrecognizedKeys == null ? null
@@ -404,90 +409,105 @@ public class TorperfResultImpl extends DescriptorImpl
   }
 
   private String source;
+
   @Override
   public String getSource() {
     return this.source;
   }
 
   private int fileSize;
+
   @Override
   public int getFileSize() {
     return this.fileSize;
   }
 
   private long startMillis;
+
   @Override
   public long getStartMillis() {
     return this.startMillis;
   }
 
   private long socketMillis;
+
   @Override
   public long getSocketMillis() {
     return this.socketMillis;
   }
 
   private long connectMillis;
+
   @Override
   public long getConnectMillis() {
     return this.connectMillis;
   }
 
   private long negotiateMillis;
+
   @Override
   public long getNegotiateMillis() {
     return this.negotiateMillis;
   }
 
   private long requestMillis;
+
   @Override
   public long getRequestMillis() {
     return this.requestMillis;
   }
 
   private long responseMillis;
+
   @Override
   public long getResponseMillis() {
     return this.responseMillis;
   }
 
   private long dataRequestMillis;
+
   @Override
   public long getDataRequestMillis() {
     return this.dataRequestMillis;
   }
 
   private long dataResponseMillis;
+
   @Override
   public long getDataResponseMillis() {
     return this.dataResponseMillis;
   }
 
   private long dataCompleteMillis;
+
   @Override
   public long getDataCompleteMillis() {
     return this.dataCompleteMillis;
   }
 
   private int writeBytes;
+
   @Override
   public int getWriteBytes() {
     return this.writeBytes;
   }
 
   private int readBytes;
+
   @Override
   public int getReadBytes() {
     return this.readBytes;
   }
 
   private boolean didTimeout;
+
   @Override
   public Boolean didTimeout() {
     return this.didTimeout;
   }
 
   private SortedMap<Integer, Long> dataPercentiles;
+
   @Override
   public SortedMap<Integer, Long> getDataPercentiles() {
     return this.dataPercentiles == null ? null
@@ -495,49 +515,57 @@ public class TorperfResultImpl extends DescriptorImpl
   }
 
   private long launchMillis = -1L;
+
   @Override
   public long getLaunchMillis() {
     return this.launchMillis;
   }
 
   private long usedAtMillis = -1L;
+
   @Override
   public long getUsedAtMillis() {
     return this.usedAtMillis;
   }
 
   private String[] path;
+
   @Override
   public List<String> getPath() {
     return this.path == null ? null : Arrays.asList(this.path);
   }
 
   private Long[] buildTimes;
+
   @Override
   public List<Long> getBuildTimes() {
-    return this.buildTimes == null ? null :
-        Arrays.asList(this.buildTimes);
+    return this.buildTimes == null ? null
+        : Arrays.asList(this.buildTimes);
   }
 
   private long timeout = -1L;
+
   @Override
   public long getTimeout() {
     return this.timeout;
   }
 
   private double quantile = -1.0;
+
   @Override
   public double getQuantile() {
     return this.quantile;
   }
 
   private int circId = -1;
+
   @Override
   public int getCircId() {
     return this.circId;
   }
 
   private int usedBy = -1;
+
   @Override
   public int getUsedBy() {
     return this.usedBy;

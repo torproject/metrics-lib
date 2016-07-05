@@ -1,5 +1,6 @@
 /* Copyright 2011--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import java.util.Iterator;
@@ -46,6 +47,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
 
   /* Signalize that there won't be any further objects to be enqueued. */
   private boolean outOfDescriptors = false;
+
   protected synchronized void setOutOfDescriptors() {
     if (this.outOfDescriptors) {
       throw new IllegalStateException("Internal error: Sending "

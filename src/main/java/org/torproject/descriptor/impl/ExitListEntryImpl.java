@@ -1,9 +1,11 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExitList;
+import org.torproject.descriptor.ExitListEntry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,14 +15,14 @@ import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.torproject.descriptor.ExitListEntry;
-
 public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
 
   private byte[] exitListEntryBytes;
 
   private boolean failUnrecognizedDescriptorLines;
+
   private List<String> unrecognizedLines;
+
   protected List<String> getAndClearUnrecognizedLines() {
     List<String> lines = this.unrecognizedLines;
     this.unrecognizedLines = null;
@@ -40,8 +42,8 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
   List<ExitListEntry> oldEntries() {
     List<ExitListEntry> result = new ArrayList<>();
     if (this.exitAddresses.size() > 1) {
-      for (Map.Entry<String, Long> entry :
-          this.exitAddresses.entrySet()) {
+      for (Map.Entry<String, Long> entry
+          : this.exitAddresses.entrySet()) {
         result.add(new ExitListEntryImpl(this.fingerprint,
             this.publishedMillis, this.lastStatusMillis, entry.getKey(),
             entry.getValue()));
@@ -64,6 +66,7 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
   }
 
   private SortedSet<String> keywordCountingSet;
+
   private void initializeKeywords() {
     this.keywordCountingSet = new TreeSet<>();
     this.keywordCountingSet.add("ExitNode");
@@ -91,8 +94,8 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
 
   private void parseExitListEntryBytes()
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.exitListEntryBytes)).
-        useDelimiter(ExitList.EOL);
+    Scanner s = new Scanner(new String(this.exitListEntryBytes))
+        .useDelimiter(ExitList.EOL);
     while (s.hasNext()) {
       String line = s.next();
       String[] parts = line.split(" ");
@@ -169,24 +172,28 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
   }
 
   private String fingerprint;
+
   @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private long publishedMillis;
+
   @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private long lastStatusMillis;
+
   @Override
   public long getLastStatusMillis() {
     return this.lastStatusMillis;
   }
 
   private String exitAddress;
+
   @Override
   public String getExitAddress() {
     if (null == exitAddress) {
@@ -199,12 +206,14 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
   }
 
   private Map<String, Long> exitAddresses = new HashMap<>();
+
   @Override
-  public Map<String, Long> getExitAddresses(){
+  public Map<String, Long> getExitAddresses() {
     return new HashMap<>(this.exitAddresses);
   }
 
   private long scanMillis;
+
   @Override
   public long getScanMillis() {
     if (null == exitAddress) {

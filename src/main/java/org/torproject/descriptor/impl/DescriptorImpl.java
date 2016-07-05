@@ -1,8 +1,11 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
+import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-
-import org.torproject.descriptor.Descriptor;
 
 public abstract class DescriptorImpl implements Descriptor {
 
@@ -28,21 +29,21 @@ public abstract class DescriptorImpl implements Descriptor {
     System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,
         first100Chars.length);
     String firstLines = new String(first100Chars);
-    if (firstLines.startsWith("@type network-status-consensus-3 1.") ||
-        firstLines.startsWith("@type network-status-microdesc-"
-            + "consensus-3 1.") ||
-        ((firstLines.startsWith("network-status-version 3") ||
-        firstLines.contains("\nnetwork-status-version 3")) &&
-        firstLines.contains("\nvote-status consensus\n"))) {
-      parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl.
-          parseConsensuses(rawDescriptorBytes,
+    if (firstLines.startsWith("@type network-status-consensus-3 1.")
+        || firstLines.startsWith("@type network-status-microdesc-"
+            + "consensus-3 1.")
+        || ((firstLines.startsWith("network-status-version 3")
+        || firstLines.contains("\nnetwork-status-version 3"))
+        && firstLines.contains("\nvote-status consensus\n"))) {
+      parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl
+          .parseConsensuses(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type network-status-vote-3 1.")
-        || ((firstLines.startsWith("network-status-version 3\n") ||
-        firstLines.contains("\nnetwork-status-version 3\n")) &&
-        firstLines.contains("\nvote-status vote\n"))) {
-      parsedDescriptors.addAll(RelayNetworkStatusVoteImpl.
-          parseVotes(rawDescriptorBytes,
+        || ((firstLines.startsWith("network-status-version 3\n")
+        || firstLines.contains("\nnetwork-status-version 3\n"))
+        && firstLines.contains("\nvote-status vote\n"))) {
+      parsedDescriptors.addAll(RelayNetworkStatusVoteImpl
+          .parseVotes(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type bridge-network-status 1.")
         || firstLines.startsWith("r ")) {
@@ -50,56 +51,56 @@ public abstract class DescriptorImpl implements Descriptor {
           rawDescriptorBytes, fileName, failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith(
         "@type bridge-server-descriptor 1.")) {
-      parsedDescriptors.addAll(BridgeServerDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes,
+      parsedDescriptors.addAll(BridgeServerDescriptorImpl
+          .parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type server-descriptor 1.") ||
-        firstLines.startsWith("router ") ||
-        firstLines.contains("\nrouter ")) {
-      parsedDescriptors.addAll(RelayServerDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes,
+    } else if (firstLines.startsWith("@type server-descriptor 1.")
+        || firstLines.startsWith("router ")
+        || firstLines.contains("\nrouter ")) {
+      parsedDescriptors.addAll(RelayServerDescriptorImpl
+          .parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type bridge-extra-info 1.")) {
-      parsedDescriptors.addAll(BridgeExtraInfoDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes,
+      parsedDescriptors.addAll(BridgeExtraInfoDescriptorImpl
+          .parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type extra-info 1.") ||
-        firstLines.startsWith("extra-info ") ||
-        firstLines.contains("\nextra-info ")) {
-      parsedDescriptors.addAll(RelayExtraInfoDescriptorImpl.
-          parseDescriptors(rawDescriptorBytes,
+    } else if (firstLines.startsWith("@type extra-info 1.")
+        || firstLines.startsWith("extra-info ")
+        || firstLines.contains("\nextra-info ")) {
+      parsedDescriptors.addAll(RelayExtraInfoDescriptorImpl
+          .parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type microdescriptor 1.") ||
-        firstLines.startsWith("onion-key\n") ||
-        firstLines.contains("\nonion-key\n")) {
-      parsedDescriptors.addAll(MicrodescriptorImpl.
-          parseDescriptors(rawDescriptorBytes,
+    } else if (firstLines.startsWith("@type microdescriptor 1.")
+        || firstLines.startsWith("onion-key\n")
+        || firstLines.contains("\nonion-key\n")) {
+      parsedDescriptors.addAll(MicrodescriptorImpl
+          .parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type bridge-pool-assignment 1.") ||
-        firstLines.startsWith("bridge-pool-assignment ") ||
-        firstLines.contains("\nbridge-pool-assignment ")) {
-      parsedDescriptors.addAll(BridgePoolAssignmentImpl.
-          parseDescriptors(rawDescriptorBytes,
+    } else if (firstLines.startsWith("@type bridge-pool-assignment 1.")
+        || firstLines.startsWith("bridge-pool-assignment ")
+        || firstLines.contains("\nbridge-pool-assignment ")) {
+      parsedDescriptors.addAll(BridgePoolAssignmentImpl
+          .parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type dir-key-certificate-3 1.") ||
-        firstLines.startsWith("dir-key-certificate-version ") ||
-        firstLines.contains("\ndir-key-certificate-version ")) {
-      parsedDescriptors.addAll(DirectoryKeyCertificateImpl.
-          parseDescriptors(rawDescriptorBytes,
+    } else if (firstLines.startsWith("@type dir-key-certificate-3 1.")
+        || firstLines.startsWith("dir-key-certificate-version ")
+        || firstLines.contains("\ndir-key-certificate-version ")) {
+      parsedDescriptors.addAll(DirectoryKeyCertificateImpl
+          .parseDescriptors(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type tordnsel 1.") ||
-        firstLines.startsWith("ExitNode ") ||
-        firstLines.contains("\nExitNode ")) {
+    } else if (firstLines.startsWith("@type tordnsel 1.")
+        || firstLines.startsWith("ExitNode ")
+        || firstLines.contains("\nExitNode ")) {
       parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, fileName,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type network-status-2 1.") ||
-        firstLines.startsWith("network-status-version 2\n") ||
-        firstLines.contains("\nnetwork-status-version 2\n")) {
+    } else if (firstLines.startsWith("@type network-status-2 1.")
+        || firstLines.startsWith("network-status-version 2\n")
+        || firstLines.contains("\nnetwork-status-version 2\n")) {
       parsedDescriptors.add(new RelayNetworkStatusImpl(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type directory 1.") ||
-        firstLines.startsWith("signed-directory\n") ||
-        firstLines.contains("\nsigned-directory\n")) {
+    } else if (firstLines.startsWith("@type directory 1.")
+        || firstLines.startsWith("signed-directory\n")
+        || firstLines.contains("\nsigned-directory\n")) {
       parsedDescriptors.add(new RelayDirectoryImpl(rawDescriptorBytes,
           failUnrecognizedDescriptorLines));
     } else if (firstLines.startsWith("@type torperf 1.")) {
@@ -122,10 +123,10 @@ public abstract class DescriptorImpl implements Descriptor {
     } catch (UnsupportedEncodingException e) {
       return rawDescriptors;
     }
-    int endAllDescriptors = rawDescriptorBytes.length,
-        startAnnotations = 0;
-    boolean containsAnnotations = ascii.startsWith("@") ||
-        ascii.contains("\n@");
+    int endAllDescriptors = rawDescriptorBytes.length;
+    int startAnnotations = 0;
+    boolean containsAnnotations = ascii.startsWith("@")
+        || ascii.contains("\n@");
     while (startAnnotations < endAllDescriptors) {
       int startDescriptor;
       if (ascii.indexOf(startToken, startAnnotations) == 0) {
@@ -159,6 +160,7 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   protected byte[] rawDescriptorBytes;
+
   @Override
   public byte[] getRawDescriptorBytes() {
     return this.rawDescriptorBytes;
@@ -167,10 +169,11 @@ public abstract class DescriptorImpl implements Descriptor {
   protected boolean failUnrecognizedDescriptorLines = false;
 
   protected List<String> unrecognizedLines;
+
   @Override
   public List<String> getUnrecognizedLines() {
-    return this.unrecognizedLines == null ? new ArrayList<String>() :
-        new ArrayList<>(this.unrecognizedLines);
+    return this.unrecognizedLines == null ? new ArrayList<String>()
+        : new ArrayList<>(this.unrecognizedLines);
   }
 
   protected DescriptorImpl(byte[] rawDescriptorBytes,
@@ -185,12 +188,13 @@ public abstract class DescriptorImpl implements Descriptor {
 
   /* Parse annotation lines from the descriptor bytes. */
   private List<String> annotations = new ArrayList<>();
+
   private void cutOffAnnotations(byte[] rawDescriptorBytes)
       throws DescriptorParseException {
     String ascii = new String(rawDescriptorBytes);
     int start = 0;
-    while ((start == 0 && ascii.startsWith("@")) ||
-        (start > 0 && ascii.indexOf("\n@", start - 1) >= 0)) {
+    while ((start == 0 && ascii.startsWith("@"))
+        || (start > 0 && ascii.indexOf("\n@", start - 1) >= 0)) {
       int end = ascii.indexOf("\n", start);
       if (end < 0) {
         throw new DescriptorParseException("Annotation line does not "
@@ -203,26 +207,31 @@ public abstract class DescriptorImpl implements Descriptor {
       int length = rawDescriptorBytes.length;
       byte[] rawDescriptor = new byte[length - start];
       System.arraycopy(rawDescriptorBytes, start, rawDescriptor, 0,
-        length - start);
+          length - start);
       this.rawDescriptorBytes = rawDescriptor;
     }
   }
+
   @Override
   public List<String> getAnnotations() {
     return new ArrayList<>(this.annotations);
   }
 
-  /* Count parsed keywords for consistency checks by subclasses. */
-  private String firstKeyword, lastKeyword;
+  private String firstKeyword;
+
+  private String lastKeyword;
+
   private Map<String, Integer> parsedKeywords = new HashMap<>();
+
+  /* Count parsed keywords for consistency checks by subclasses. */
   private void countKeywords(byte[] rawDescriptorBytes,
       boolean blankLinesAllowed) throws DescriptorParseException {
     if (rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
     String descriptorString = new String(rawDescriptorBytes);
-    if (!blankLinesAllowed && (descriptorString.startsWith("\n") ||
-        descriptorString.contains("\n\n"))) {
+    if (!blankLinesAllowed && (descriptorString.startsWith("\n")
+        || descriptorString.contains("\n\n"))) {
       throw new DescriptorParseException("Blank lines are not allowed.");
     }
     boolean skipCrypto = false;
@@ -233,10 +242,10 @@ public abstract class DescriptorImpl implements Descriptor {
         skipCrypto = true;
       } else if (line.startsWith("-----END")) {
         skipCrypto = false;
-      } else if (!line.isEmpty() && !line.startsWith("@") &&
-          !skipCrypto) {
-        String lineNoOpt = line.startsWith("opt ") ?
-            line.substring("opt ".length()) : line;
+      } else if (!line.isEmpty() && !line.startsWith("@")
+          && !skipCrypto) {
+        String lineNoOpt = line.startsWith("opt ")
+            ? line.substring("opt ".length()) : line;
         String keyword = lineNoOpt.split(" ", -1)[0];
         if (keyword.equals("")) {
           throw new DescriptorParseException("Illegal keyword in line '"
@@ -257,8 +266,8 @@ public abstract class DescriptorImpl implements Descriptor {
 
   protected void checkFirstKeyword(String keyword)
       throws DescriptorParseException {
-    if (this.firstKeyword == null ||
-        !this.firstKeyword.equals(keyword)) {
+    if (this.firstKeyword == null
+        || !this.firstKeyword.equals(keyword)) {
       throw new DescriptorParseException("Keyword '" + keyword + "' must "
           + "be contained in the first line.");
     }
@@ -266,8 +275,8 @@ public abstract class DescriptorImpl implements Descriptor {
 
   protected void checkLastKeyword(String keyword)
       throws DescriptorParseException {
-    if (this.lastKeyword == null ||
-        !this.lastKeyword.equals(keyword)) {
+    if (this.lastKeyword == null
+        || !this.lastKeyword.equals(keyword)) {
       throw new DescriptorParseException("Keyword '" + keyword + "' must "
           + "be contained in the last line.");
     }
@@ -301,8 +310,8 @@ public abstract class DescriptorImpl implements Descriptor {
   protected void checkAtMostOnceKeywords(Set<String> keywords)
       throws DescriptorParseException {
     for (String keyword : keywords) {
-      if (this.parsedKeywords.containsKey(keyword) &&
-          this.parsedKeywords.get(keyword) > 1) {
+      if (this.parsedKeywords.containsKey(keyword)
+          && this.parsedKeywords.get(keyword) > 1) {
         throw new DescriptorParseException("Keyword '" + keyword + "' is "
             + "contained " + this.parsedKeywords.get(keyword) + " times, "
             + "but must be contained at most once.");
@@ -313,8 +322,8 @@ public abstract class DescriptorImpl implements Descriptor {
   protected void checkKeywordsDependOn(Set<String> dependentKeywords,
       String dependingKeyword) throws DescriptorParseException {
     for (String dependentKeyword : dependentKeywords) {
-      if (this.parsedKeywords.containsKey(dependentKeyword) &&
-          !this.parsedKeywords.containsKey(dependingKeyword)) {
+      if (this.parsedKeywords.containsKey(dependentKeyword)
+          && !this.parsedKeywords.containsKey(dependingKeyword)) {
         throw new DescriptorParseException("Keyword '" + dependentKeyword
             + "' is contained, but keyword '" + dependingKeyword + "' is "
             + "not.");

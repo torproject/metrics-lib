@@ -1,6 +1,10 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.RelayNetworkStatus;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -15,9 +19,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.xml.bind.DatatypeConverter;
-
-import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.RelayNetworkStatus;
 
 /* TODO Write unit tests. */
 
@@ -71,8 +72,8 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
         this.statusDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest)).
-            toLowerCase();
+            MessageDigest.getInstance("SHA-1").digest(forDigest))
+            .toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */
@@ -98,61 +99,61 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "network-status-version":
-        this.parseNetworkStatusVersionLine(line, parts);
-        break;
-      case "dir-source":
-        this.parseDirSourceLine(line, parts);
-        break;
-      case "fingerprint":
-        this.parseFingerprintLine(line, parts);
-        break;
-      case "contact":
-        this.parseContactLine(line, parts);
-        break;
-      case "dir-signing-key":
-        this.parseDirSigningKeyLine(line, parts);
-        nextCrypto = "dir-signing-key";
-        break;
-      case "client-versions":
-        this.parseClientVersionsLine(line, parts);
-        break;
-      case "server-versions":
-        this.parseServerVersionsLine(line, parts);
-        break;
-      case "published":
-        this.parsePublishedLine(line, parts);
-        break;
-      case "dir-options":
-        this.parseDirOptionsLine(line, parts);
-        break;
-      case "-----BEGIN":
-        crypto = new StringBuilder();
-        crypto.append(line).append("\n");
-        break;
-      case "-----END":
-        crypto.append(line).append("\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        if (nextCrypto.equals("dir-signing-key")) {
-          this.dirSigningKey = cryptoString;
-        } else {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in v2 network status.");
-        }
-        nextCrypto = "";
-      default:
-        if (crypto != null) {
+        case "network-status-version":
+          this.parseNetworkStatusVersionLine(line, parts);
+          break;
+        case "dir-source":
+          this.parseDirSourceLine(line, parts);
+          break;
+        case "fingerprint":
+          this.parseFingerprintLine(line, parts);
+          break;
+        case "contact":
+          this.parseContactLine(line, parts);
+          break;
+        case "dir-signing-key":
+          this.parseDirSigningKeyLine(line, parts);
+          nextCrypto = "dir-signing-key";
+          break;
+        case "client-versions":
+          this.parseClientVersionsLine(line, parts);
+          break;
+        case "server-versions":
+          this.parseServerVersionsLine(line, parts);
+          break;
+        case "published":
+          this.parsePublishedLine(line, parts);
+          break;
+        case "dir-options":
+          this.parseDirOptionsLine(line, parts);
+          break;
+        case "-----BEGIN":
+          crypto = new StringBuilder();
           crypto.append(line).append("\n");
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in v2 network status.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+          break;
+        case "-----END":
+          crypto.append(line).append("\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          if (nextCrypto.equals("dir-signing-key")) {
+            this.dirSigningKey = cryptoString;
+          } else {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block in v2 network status.");
           }
-          this.unrecognizedLines.add(line);
-        }
+          nextCrypto = "";
+        default:
+          if (crypto != null) {
+            crypto.append(line).append("\n");
+          } else if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in v2 network status.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
+          }
       }
     }
   }
@@ -165,8 +166,8 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   protected void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(directorySignatureBytes)).
-        useDelimiter("\n");
+    Scanner s = new Scanner(new String(directorySignatureBytes))
+        .useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
     while (s.hasNext()) {
@@ -174,38 +175,38 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
-      case "directory-signature":
-        this.parseDirectorySignatureLine(line, parts);
-        nextCrypto = "directory-signature";
-        break;
-      case "-----BEGIN":
-        crypto = new StringBuilder();
-        crypto.append(line).append("\n");
-        break;
-      case "-----END":
-        crypto.append(line).append("\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        if (nextCrypto.equals("directory-signature")) {
-          this.directorySignature = cryptoString;
-        } else {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in v2 network status.");
-        }
-        nextCrypto = "";
-        break;
-      default:
-        if (crypto != null) {
+        case "directory-signature":
+          this.parseDirectorySignatureLine(line, parts);
+          nextCrypto = "directory-signature";
+          break;
+        case "-----BEGIN":
+          crypto = new StringBuilder();
           crypto.append(line).append("\n");
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in v2 network status.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+          break;
+        case "-----END":
+          crypto.append(line).append("\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          if (nextCrypto.equals("directory-signature")) {
+            this.directorySignature = cryptoString;
+          } else {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block in v2 network status.");
           }
-          this.unrecognizedLines.add(line);
-        }
+          nextCrypto = "";
+          break;
+        default:
+          if (crypto != null) {
+            crypto.append(line).append("\n");
+          } else if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in v2 network status.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
+          }
       }
     }
   }
@@ -296,86 +297,100 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
   }
 
   private String statusDigest;
+
   @Override
   public String getStatusDigest() {
     return this.statusDigest;
   }
 
   private int networkStatusVersion;
+
   @Override
   public int getNetworkStatusVersion() {
     return this.networkStatusVersion;
   }
 
   private String hostname;
+
   @Override
   public String getHostname() {
     return this.hostname;
   }
 
   private String address;
+
   @Override
   public String getAddress() {
     return this.address;
   }
 
   private int dirPort;
+
   @Override
   public int getDirport() {
     return this.dirPort;
   }
 
   private String fingerprint;
+
   @Override
   public String getFingerprint() {
     return this.fingerprint;
   }
 
   private String contactLine;
+
   @Override
   public String getContactLine() {
     return this.contactLine;
   }
 
   private String dirSigningKey;
+
   @Override
   public String getDirSigningKey() {
     return this.dirSigningKey;
   }
 
   private String[] recommendedClientVersions;
+
   @Override
   public List<String> getRecommendedClientVersions() {
-    return this.recommendedClientVersions == null ? null :
-        Arrays.asList(this.recommendedClientVersions);
+    return this.recommendedClientVersions == null ? null
+        : Arrays.asList(this.recommendedClientVersions);
   }
 
   private String[] recommendedServerVersions;
+
   @Override
   public List<String> getRecommendedServerVersions() {
-    return this.recommendedServerVersions == null ? null :
-        Arrays.asList(this.recommendedServerVersions);
+    return this.recommendedServerVersions == null ? null
+        : Arrays.asList(this.recommendedServerVersions);
   }
 
   private long publishedMillis;
+
   @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private String[] dirOptions;
+
   @Override
   public SortedSet<String> getDirOptions() {
     return new TreeSet<>(Arrays.asList(this.dirOptions));
   }
 
   private String nickname;
+
   @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String directorySignature;
+
   @Override
   public String getDirectorySignature() {
     return this.directorySignature;

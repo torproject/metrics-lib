@@ -1,6 +1,12 @@
 /* Copyright 2012--2015 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
+
+import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.RelayDirectory;
+import org.torproject.descriptor.RouterStatusEntry;
+import org.torproject.descriptor.ServerDescriptor;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -13,11 +19,6 @@ import java.util.Scanner;
 import java.util.Set;
 
 import javax.xml.bind.DatatypeConverter;
-
-import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.RelayDirectory;
-import org.torproject.descriptor.RouterStatusEntry;
-import org.torproject.descriptor.ServerDescriptor;
 
 /* TODO Write unit tests. */
 
@@ -73,8 +74,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, sig - start);
         this.directoryDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest)).
-            toLowerCase();
+            MessageDigest.getInstance("SHA-1").digest(forDigest))
+            .toLowerCase();
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */
@@ -173,8 +174,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
         to += 1;
       }
       int toNoNewline = to;
-      while (toNoNewline > from &&
-          descriptorString.charAt(toNoNewline - 1) == '\n') {
+      while (toNoNewline > from
+          && descriptorString.charAt(toNoNewline - 1) == '\n') {
         toNoNewline--;
       }
       byte[] part = new byte[toNoNewline - from];
@@ -189,99 +190,102 @@ public class RelayDirectoryImpl extends DescriptorImpl
   private void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
     Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
-    String publishedLine = null, nextCrypto = "",
-        runningRoutersLine = null, routerStatusLine = null;
+    String publishedLine = null;
+    String nextCrypto = "";
+    String runningRoutersLine = null;
+    String routerStatusLine = null;
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
       if (line.isEmpty() || line.startsWith("@")) {
         continue;
       }
-      String lineNoOpt = line.startsWith("opt ") ?
-          line.substring("opt ".length()) : line;
+      String lineNoOpt = line.startsWith("opt ")
+          ? line.substring("opt ".length()) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");
       String keyword = partsNoOpt[0];
       switch (keyword) {
-      case "signed-directory":
-        this.parseSignedDirectoryLine(line, lineNoOpt, partsNoOpt);
-        break;
-      case "published":
-        if (publishedLine != null) {
-          throw new DescriptorParseException("Keyword 'published' is "
-              + "contained more than once, but must be contained exactly "
-              + "once.");
-        } else {
-          publishedLine = line;
-        }
-        break;
-      case "dir-signing-key":
-        this.parseDirSigningKeyLine(line, lineNoOpt, partsNoOpt);
-        nextCrypto = "dir-signing-key";
-        break;
-      case "recommended-software":
-        this.parseRecommendedSoftwareLine(line, lineNoOpt, partsNoOpt);
-        break;
-      case "running-routers":
-        runningRoutersLine = line;
-        break;
-      case "router-status":
-        routerStatusLine = line;
-        break;
-      case "-----BEGIN":
-        crypto = new StringBuilder();
-        crypto.append(line).append("\n");
-        break;
-      case "-----END":
-        crypto.append(line).append("\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        if (nextCrypto.equals("dir-signing-key") &&
-            this.dirSigningKey == null) {
-          this.dirSigningKey = cryptoString;
-        } else {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in v1 directory.");
-        }
-        nextCrypto = "";
-        break;
-      default:
-        if (crypto != null) {
-          crypto.append(line).append("\n");
-        } else {
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in v1 directory.");
+        case "signed-directory":
+          this.parseSignedDirectoryLine(line, lineNoOpt, partsNoOpt);
+          break;
+        case "published":
+          if (publishedLine != null) {
+            throw new DescriptorParseException("Keyword 'published' is "
+                + "contained more than once, but must be contained "
+                + "exactly once.");
           } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
-            }
-            this.unrecognizedLines.add(line);
+            publishedLine = line;
           }
-        }
+          break;
+        case "dir-signing-key":
+          this.parseDirSigningKeyLine(line, lineNoOpt, partsNoOpt);
+          nextCrypto = "dir-signing-key";
+          break;
+        case "recommended-software":
+          this.parseRecommendedSoftwareLine(line, lineNoOpt, partsNoOpt);
+          break;
+        case "running-routers":
+          runningRoutersLine = line;
+          break;
+        case "router-status":
+          routerStatusLine = line;
+          break;
+        case "-----BEGIN":
+          crypto = new StringBuilder();
+          crypto.append(line).append("\n");
+          break;
+        case "-----END":
+          crypto.append(line).append("\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          if (nextCrypto.equals("dir-signing-key")
+              && this.dirSigningKey == null) {
+            this.dirSigningKey = cryptoString;
+          } else {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block in v1 directory.");
+          }
+          nextCrypto = "";
+          break;
+        default:
+          if (crypto != null) {
+            crypto.append(line).append("\n");
+          } else {
+            if (this.failUnrecognizedDescriptorLines) {
+              throw new DescriptorParseException("Unrecognized line '"
+                  + line + "' in v1 directory.");
+            } else {
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
+              }
+              this.unrecognizedLines.add(line);
+            }
+          }
       }
     }
     if (publishedLine == null) {
       throw new DescriptorParseException("Keyword 'published' is "
           + "contained 0 times, but must be contained exactly once.");
     } else {
-      String publishedLineNoOpt = publishedLine.startsWith("opt ") ?
-          publishedLine.substring("opt ".length()) : publishedLine;
+      String publishedLineNoOpt = publishedLine.startsWith("opt ")
+          ? publishedLine.substring("opt ".length()) : publishedLine;
       String[] publishedPartsNoOpt = publishedLineNoOpt.split("[ \t]+");
       this.parsePublishedLine(publishedLine, publishedLineNoOpt,
           publishedPartsNoOpt);
     }
     if (routerStatusLine != null) {
-      String routerStatusLineNoOpt = routerStatusLine.startsWith("opt ") ?
-          routerStatusLine.substring("opt ".length()) : routerStatusLine;
+      String routerStatusLineNoOpt = routerStatusLine.startsWith("opt ")
+          ? routerStatusLine.substring("opt ".length())
+          : routerStatusLine;
       String[] routerStatusPartsNoOpt =
           routerStatusLineNoOpt.split("[ \t]+");
       this.parseRouterStatusLine(routerStatusLine, routerStatusLineNoOpt,
           routerStatusPartsNoOpt);
     } else if (runningRoutersLine != null) {
       String runningRoutersLineNoOpt =
-          runningRoutersLine.startsWith("opt ") ?
-          runningRoutersLine.substring("opt ".length()) :
-          runningRoutersLine;
+          runningRoutersLine.startsWith("opt ")
+          ? runningRoutersLine.substring("opt ".length())
+          : runningRoutersLine;
       String[] runningRoutersPartsNoOpt =
           runningRoutersLineNoOpt.split("[ \t]+");
       this.parseRunningRoutersLine(runningRoutersLine,
@@ -305,49 +309,49 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   private void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(directorySignatureBytes)).
-        useDelimiter("\n");
+    Scanner s = new Scanner(new String(directorySignatureBytes))
+        .useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
     while (s.hasNext()) {
       String line = s.next();
-      String lineNoOpt = line.startsWith("opt ") ?
-          line.substring("opt ".length()) : line;
+      String lineNoOpt = line.startsWith("opt ")
+          ? line.substring("opt ".length()) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");
       String keyword = partsNoOpt[0];
       switch (keyword) {
-      case "directory-signature":
-        this.parseDirectorySignatureLine(line, lineNoOpt, partsNoOpt);
-        nextCrypto = "directory-signature";
-        break;
-      case "-----BEGIN":
-        crypto = new StringBuilder();
-        crypto.append(line).append("\n");
-        break;
-      case "-----END":
-        crypto.append(line).append("\n");
-        String cryptoString = crypto.toString();
-        crypto = null;
-        if (nextCrypto.equals("directory-signature")) {
-          this.directorySignature = cryptoString;
-        } else {
-          throw new DescriptorParseException("Unrecognized crypto "
-              + "block in v2 network status.");
-        }
-        nextCrypto = "";
-        break;
-      default:
-        if (crypto != null) {
+        case "directory-signature":
+          this.parseDirectorySignatureLine(line, lineNoOpt, partsNoOpt);
+          nextCrypto = "directory-signature";
+          break;
+        case "-----BEGIN":
+          crypto = new StringBuilder();
           crypto.append(line).append("\n");
-        } else if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '" + line
-              + "' in v2 network status.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
+          break;
+        case "-----END":
+          crypto.append(line).append("\n");
+          String cryptoString = crypto.toString();
+          crypto = null;
+          if (nextCrypto.equals("directory-signature")) {
+            this.directorySignature = cryptoString;
+          } else {
+            throw new DescriptorParseException("Unrecognized crypto "
+                + "block in v2 network status.");
           }
-          this.unrecognizedLines.add(line);
-        }
+          nextCrypto = "";
+          break;
+        default:
+          if (crypto != null) {
+            crypto.append(line).append("\n");
+          } else if (this.failUnrecognizedDescriptorLines) {
+            throw new DescriptorParseException("Unrecognized line '"
+                + line + "' in v2 network status.");
+          } else {
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
+          }
       }
     }
   }
@@ -419,7 +423,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
         part = part.substring(1);
       }
       boolean isVerified;
-      String fingerprint = null, nickname = null;
+      String fingerprint = null;
+      String nickname = null;
       if (part.startsWith("$")) {
         isVerified = false;
         fingerprint = ParseHelper.parseTwentyByteHexString(debugLine,
@@ -442,7 +447,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
       if (part.contains("=")) {
         String[] partParts = part.split("=");
         if (partParts.length == 2) {
-          boolean isVerified = true, isLive;
+          boolean isVerified = true;
+          boolean isLive;
           String nickname;
           if (partParts[0].startsWith("!")) {
             isLive = false;
@@ -458,8 +464,10 @@ public class RelayDirectoryImpl extends DescriptorImpl
               isVerified);
         }
       } else {
-        boolean isVerified = false, isLive;
-        String nickname = null, fingerprint;
+        boolean isVerified = false;
+        boolean isLive;
+        String nickname = null;
+        String fingerprint;
         if (part.startsWith("!")) {
           isLive = false;
           fingerprint = ParseHelper.parseTwentyByteHexString(
@@ -489,37 +497,43 @@ public class RelayDirectoryImpl extends DescriptorImpl
   }
 
   private long publishedMillis;
+
   @Override
   public long getPublishedMillis() {
     return this.publishedMillis;
   }
 
   private String dirSigningKey;
+
   @Override
   public String getDirSigningKey() {
     return this.dirSigningKey;
   }
 
   private List<String> recommendedSoftware;
+
   @Override
   public List<String> getRecommendedSoftware() {
-    return this.recommendedSoftware == null ? null :
-        new ArrayList<>(this.recommendedSoftware);
+    return this.recommendedSoftware == null ? null
+        : new ArrayList<>(this.recommendedSoftware);
   }
 
   private String directorySignature;
+
   @Override
   public String getDirectorySignature() {
     return this.directorySignature;
   }
 
   private List<RouterStatusEntry> statusEntries = new ArrayList<>();
+
   @Override
   public List<RouterStatusEntry> getRouterStatusEntries() {
     return new ArrayList<>(this.statusEntries);
   }
 
   private List<ServerDescriptor> serverDescriptors = new ArrayList<>();
+
   @Override
   public List<ServerDescriptor> getServerDescriptors() {
     return new ArrayList<>(this.serverDescriptors);
@@ -527,18 +541,21 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   private List<Exception> serverDescriptorParseExceptions =
       new ArrayList<>();
+
   @Override
   public List<Exception> getServerDescriptorParseExceptions() {
     return new ArrayList<>(this.serverDescriptorParseExceptions);
   }
 
   private String nickname;
+
   @Override
   public String getNickname() {
     return this.nickname;
   }
 
   private String directoryDigest;
+
   @Override
   public String getDirectoryDigest() {
     return this.directoryDigest;
