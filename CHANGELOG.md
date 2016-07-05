@@ -10,6 +10,7 @@
      same identity key digest but different algorithms.
    - Be more lenient about digest lengths in directory signatures
      which may be longer or shorter than 20 bytes.
+   - Parse "tunnelled-dir-server" lines in server descriptors.
 
 
 # Changes in version 1.2.0 - 2016-05-31

@@ -38,8 +38,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         + "eventdns,caches-extra-info,extra-info-digest,"
         + "hidden-service-dir,protocols,allow-single-hop-exits,onion-key,"
         + "signing-key,ipv6-policy,ntor-onion-key,onion-key-crosscert,"
-        + "ntor-onion-key-crosscert,router-sig-ed25519,router-signature,"
-        + "router-digest-sha256,router-digest").split(",")));
+        + "ntor-onion-key-crosscert,tunnelled-dir-server,"
+        + "router-sig-ed25519,router-signature,router-digest-sha256,"
+        + "router-digest").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("router");
     if (this.getKeywordCount("accept") == 0 &&
@@ -170,6 +171,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
       case "ntor-onion-key-crosscert":
         this.parseNtorOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
         nextCrypto = "ntor-onion-key-crosscert";
+        break;
+      case "tunnelled-dir-server":
+        this.parseTunnelledDirServerLine(line, lineNoOpt, partsNoOpt);
         break;
       case "-----BEGIN":
         cryptoLines = new ArrayList<>();
@@ -607,6 +611,14 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
+  private void parseTunnelledDirServerLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (!lineNoOpt.equals("tunnelled-dir-server")) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.tunnelledDirServer = true;
+  }
+
   private void parseIdentityEd25519CryptoBlock(String cryptoString)
       throws DescriptorParseException {
     String masterKeyEd25519FromIdentityEd25519 =
@@ -962,6 +974,12 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   @Override
   public int getNtorOnionKeyCrosscertSign() {
     return ntorOnionKeyCrosscertSign;
+  }
+
+  private boolean tunnelledDirServer;
+  @Override
+  public boolean getTunnelledDirServer() {
+    return this.tunnelledDirServer;
   }
 }
 

@@ -423,5 +423,13 @@ public interface ServerDescriptor extends Descriptor {
    * @since 1.1.0
    */
   public int getNtorOnionKeyCrosscertSign();
+
+  /**
+   * Return whether the server accepts "tunneled" directory requests using
+   * a BEGIN_DIR cell over the server's OR port.
+   *
+   * @since 1.3.0
+   */
+  public boolean getTunnelledDirServer();
 }
 

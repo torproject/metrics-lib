@@ -212,6 +212,13 @@ public class ServerDescriptorImplTest {
       db.ntorOnionKeyLine = line;
       return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
+    private String tunnelledDirServerLine = null;
+    private static ServerDescriptor createWithTunnelledDirServerLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.tunnelledDirServerLine = line;
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
+    }
     private String routerSignatureLines = "router-signature\n"
         + "-----BEGIN SIGNATURE-----\n"
         + "o4j+kH8UQfjBwepUnr99v0ebN8RpzHJ/lqYsTojXHy9kMr1RNI9IDeSzA7PSqT"
@@ -332,6 +339,9 @@ public class ServerDescriptorImplTest {
       }
       if (this.ntorOnionKeyLine != null) {
         sb.append(this.ntorOnionKeyLine).append("\n");
+      }
+      if (this.tunnelledDirServerLine != null) {
+        sb.append(this.tunnelledDirServerLine).append("\n");
       }
       if (this.unrecognizedLine != null) {
         sb.append(this.unrecognizedLine).append("\n");
@@ -1343,6 +1353,43 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithNtorOnionKeyLine("ntor-onion-key "
         + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY\nntor-onion-key "
         + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY\n");
+  }
+
+  @Test()
+  public void testTunnelledDirServerTrue()
+      throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder
+        .createWithTunnelledDirServerLine("tunnelled-dir-server");
+    assertTrue(descriptor.getTunnelledDirServer());
+  }
+
+  @Test()
+  public void testTunnelledDirServerFalse()
+      throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder
+        .createWithTunnelledDirServerLine(null);
+    assertFalse(descriptor.getTunnelledDirServer());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testTunnelledDirServerTypo()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithTunnelledDirServerLine(
+        "tunneled-dir-server");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testTunnelledDirServerTwice()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithTunnelledDirServerLine(
+        "tunnelled-dir-server\ntunnelled-dir-server");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testTunnelledDirServerArgs()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithTunnelledDirServerLine(
+        "tunnelled-dir-server 1");
   }
 
   @Test(expected = DescriptorParseException.class)
