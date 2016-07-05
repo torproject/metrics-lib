@@ -1,10 +1,10 @@
 <project default="jar" name="descriptor" basedir=".">
   <property name="release.version" value="1.2.0-dev" />
-  <property name="sources" value="src"/>
+  <property name="sources" value="src/main/java"/>
   <property name="resources" value="resources"/>
   <property name="classes" value="classes"/>
   <property name="docs" value="javadoc"/>
-  <property name="tests" value="test"/>
+  <property name="tests" value="src/test/java"/>
   <property name="libs" value="lib"/>
   <property name="jarfile" value="descriptor-${release.version}.jar" />
   <property name="jarsourcesfile"
@@ -152,11 +152,11 @@
         <include name="*.md" />
       </tarfileset>
       <tarfileset dir="${sources}"
-                  prefix="descriptor-${release.version}/src" />
+                  prefix="descriptor-${release.version}/${sources}" />
       <tarfileset dir="${tests}"
-                  prefix="descriptor-${release.version}/test" />
+                  prefix="descriptor-${release.version}/${tests}" />
       <tarfileset dir="${libs}"
-                  prefix="descriptor-${release.version}/lib" />
+                  prefix="descriptor-${release.version}/${libs}" />
     </tar>
   </target>
 </project>
