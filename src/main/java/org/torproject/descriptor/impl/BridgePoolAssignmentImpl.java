@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-/* TODO Write a test class. */
 public class BridgePoolAssignmentImpl extends DescriptorImpl
     implements BridgePoolAssignment {
 

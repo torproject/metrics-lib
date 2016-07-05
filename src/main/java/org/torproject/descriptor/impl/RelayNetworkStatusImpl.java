@@ -20,8 +20,6 @@ import java.util.TreeSet;
 
 import javax.xml.bind.DatatypeConverter;
 
-/* TODO Write unit tests. */
-
 public class RelayNetworkStatusImpl extends NetworkStatusImpl
     implements RelayNetworkStatus {
 
@@ -142,6 +140,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
                 + "block in v2 network status.");
           }
           nextCrypto = "";
+          break;
         default:
           if (crypto != null) {
             crypto.append(line).append("\n");
