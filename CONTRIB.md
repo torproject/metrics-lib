@@ -95,18 +95,17 @@ Deprecating features
 --------------------
 
 We have to assume that applications don't update their metrics-lib version
-very often.  This is related to the lack of a release process so far.  If
-we want to remove a feature we'll have to deprecate it and basically keep
-it working for at least another year.
+very often.  This is related to the lack of a release process until
+recently.  If we want to remove a feature we'll have to deprecate it and
+basically keep it working for at least another year.
 
 
 Change log
 ----------
 
-We didn't have a change log for a long time, but we should totally have
-one if we want to put out releases.  Here we're going to describe what
-deserves a change log entry and whether those changes are major, medium,
-or minor:
+We're keeping a change log since we started putting out releases.  Here
+we're going to describe what deserves a change log entry and whether those
+changes are major, medium, or minor:
 
  - Bug fixes obviously need a change log entry, but it depends on the bug
    whether it should be listed as major or medium change.
@@ -142,21 +141,20 @@ or minor:
 Releases
 --------
 
-As mentioned before we didn't put out releases for far too long.  But
-we're about to change that.  As a rule of thumb, we should put out a new
-release of metrics-lib soon after making a major change as listed under
-"Change log" above.  If we're planning to make more changes soon after,
-let's wait for them and make a release with everything.  But we shouldn't
-let a major change sit in an unreleased metrics-lib for more than, say,
-two weeks.  In contrast to that, medium changes can stay unreleased for
-longer, though they don't have to if we want to use them in an application
-sooner. Minor changes can be collected and usually will be released with
-changes on higher stages, but when necessary they can be released earlier.
+As a rule of thumb, we should put out a new release of metrics-lib soon
+after making a major change as listed under "Change log" above.  If we're
+planning to make more changes soon after, let's wait for them and make a
+release with everything.  But we shouldn't let a major change sit in an
+unreleased metrics-lib for more than, say, two weeks.  In contrast to
+that, medium changes can stay unreleased for longer, though they don't
+have to if we want to use them in an application sooner.  Minor changes
+can be collected and usually will be released with changes on higher
+stages, but when necessary they can be released earlier.
 
-Regarding version numbers, we'll start with 1.0.0 and bump to 1.0.1,
-1.1.0, 1.2.0, etc. for each backwards-compatible change.  When we remove a
-previously deprecated feature, making a backwards-incompatible change,
-we'll bump to 2.0.0.
+Regarding version numbers, we started with 1.0.0 and bumped to 1.1.0,
+1.2.0, etc. which were all backwards-compatible changes.  Whenever we'll
+remove a previously deprecated feature, making a backwards-incompatible
+change, we'll bump to 2.0.0.  For minor changes, we'd bump to x.x.1.
 
 Releases are cryptographically signed on multiple levels: the Git tag
 created for the release is signed using GnuPG, the produced .jar files are
@@ -207,18 +205,8 @@ release.
 
 Commit these changes.
 
-Create a signed Git tag for the new release:
-
-```
-git tag -s descriptor-1.0.0 -m "DescripTor 1.0.0"
-```
-
-Push the branch.  Ideally, verify the tag signature by cloning it on
-another system and running the following command:
-
-```
-git verify-tag descriptor-1.0.0
-```
+Clean up the src/ and lib/ directories from any files that may have been
+used locally for developing and that shouldn't be included in the tarball.
 
 Use Ant to first clean up and then create a tarball containing all sources
 and signed .jar files:
@@ -236,6 +224,19 @@ gpg --detach-sign --armor --local-user 0x4EFD4FDC3F46D41E \
 
 Verify the signed tarball, ideally on a different system, as described in
 `README.md`.
+
+Create a signed Git tag for the new release:
+
+```
+git tag -s descriptor-1.0.0 -m "DescripTor 1.0.0"
+```
+
+Push the branch.  Ideally, verify the tag signature by cloning it on
+another system and running the following command:
+
+```
+git verify-tag descriptor-1.0.0
+```
 
 Upload the tarball and signature file and announce the new version.
 
