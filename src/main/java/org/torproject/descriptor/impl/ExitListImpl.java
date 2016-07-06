@@ -52,16 +52,16 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
       throw new DescriptorParseException("Descriptor is empty.");
     }
     String descriptorString = new String(rawDescriptorBytes);
-    Scanner s = new Scanner(descriptorString).useDelimiter(EOL);
+    Scanner scanner = new Scanner(descriptorString).useDelimiter(EOL);
     StringBuilder sb = new StringBuilder();
     boolean firstEntry = true;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       if (line.startsWith("@")) { /* Skip annotation. */
-        if (!s.hasNext()) {
+        if (!scanner.hasNext()) {
           throw new DescriptorParseException("Descriptor is empty.");
         } else {
-          line = s.next();
+          line = scanner.next();
         }
       }
       String[] parts = line.split(" ");

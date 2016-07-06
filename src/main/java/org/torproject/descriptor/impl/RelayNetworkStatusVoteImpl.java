@@ -79,11 +79,11 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.enoughMtbfInfo = -1;
     this.ignoringAdvertisedBws = -1;
 
-    Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
@@ -500,9 +500,9 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   protected void parseFooter(byte[] footerBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(footerBytes)).useDelimiter("\n");
-    while (s.hasNext()) {
-      String line = s.next();
+    Scanner scanner = new Scanner(new String(footerBytes)).useDelimiter("\n");
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       if (!line.equals("directory-footer")) {
         if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '"

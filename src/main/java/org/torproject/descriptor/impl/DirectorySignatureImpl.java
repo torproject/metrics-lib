@@ -35,11 +35,11 @@ public class DirectorySignatureImpl implements DirectorySignature {
 
   private void parseDirectorySignatureBytes()
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.directorySignatureBytes))
+    Scanner scanner = new Scanner(new String(this.directorySignatureBytes))
         .useDelimiter("\n");
     StringBuilder crypto = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split(" ", -1);
       String keyword = parts[0];
       switch (keyword) {

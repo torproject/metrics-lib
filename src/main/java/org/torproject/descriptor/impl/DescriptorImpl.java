@@ -235,9 +235,9 @@ public abstract class DescriptorImpl implements Descriptor {
       throw new DescriptorParseException("Blank lines are not allowed.");
     }
     boolean skipCrypto = false;
-    Scanner s = new Scanner(descriptorString).useDelimiter("\n");
-    while (s.hasNext()) {
-      String line = s.next();
+    Scanner scanner = new Scanner(descriptorString).useDelimiter("\n");
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       if (line.startsWith("-----BEGIN")) {
         skipCrypto = true;
       } else if (line.startsWith("-----END")) {

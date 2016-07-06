@@ -14,9 +14,14 @@ package org.torproject.descriptor;
 public class ImplementationNotAccessibleException
     extends RuntimeException {
 
-  public ImplementationNotAccessibleException(String string,
+  public ImplementationNotAccessibleException(String message,
       Throwable ex) {
-    super(string, ex);
+    super(message, ex);
   }
+
+  public ImplementationNotAccessibleException(String message) {
+    super(message);
+  }
+
 }
 

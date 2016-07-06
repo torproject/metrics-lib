@@ -91,9 +91,9 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
-    while (s.hasNext()) {
-      String line = s.next();
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
@@ -167,9 +167,9 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   protected void parseFooter(byte[] footerBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(footerBytes)).useDelimiter("\n");
-    while (s.hasNext()) {
-      String line = s.next();
+    Scanner scanner = new Scanner(new String(footerBytes)).useDelimiter("\n");
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {

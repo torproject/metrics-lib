@@ -18,5 +18,10 @@ public class DescriptorParseException
   public DescriptorParseException(String message) {
     super(message);
   }
+
+  public DescriptorParseException(String message, Exception ex) {
+    super(message, ex);
+  }
+
 }
 

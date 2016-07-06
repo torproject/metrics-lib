@@ -48,10 +48,10 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.rawDescriptorBytes))
+    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
         .useDelimiter("\n");
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       if (line.startsWith("bridge-pool-assignment ")) {
         this.parseBridgePoolAssignmentLine(line);
       } else {

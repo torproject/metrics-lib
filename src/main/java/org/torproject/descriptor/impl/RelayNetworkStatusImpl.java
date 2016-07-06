@@ -86,11 +86,11 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       if (line.isEmpty()) {
         continue;
       }
@@ -165,12 +165,12 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   protected void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(directorySignatureBytes))
+    Scanner scanner = new Scanner(new String(directorySignatureBytes))
         .useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {

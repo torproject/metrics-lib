@@ -285,9 +285,9 @@ public class ParseHelper {
     return nickname;
   }
 
-  protected static boolean parseBoolean(String b, String line)
+  protected static boolean parseBoolean(String boolString, String line)
       throws DescriptorParseException {
-    switch (b) {
+    switch (boolString) {
       case "1":
         return true;
       case "0":

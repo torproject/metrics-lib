@@ -78,12 +78,12 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.rawDescriptorBytes))
+    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
         .useDelimiter("\n");
     String nextCrypto = "";
     List<String> cryptoLines = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String lineNoOpt = line.startsWith("opt ")
           ? line.substring("opt ".length()) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");

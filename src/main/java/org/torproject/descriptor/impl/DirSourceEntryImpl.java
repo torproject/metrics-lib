@@ -83,11 +83,11 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   private void parseDirSourceEntryBytes()
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.dirSourceEntryBytes))
+    Scanner scanner = new Scanner(new String(this.dirSourceEntryBytes))
         .useDelimiter("\n");
     boolean skipCrypto = false;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split(" ");
       switch (parts[0]) {
         case "dir-source":

@@ -14,5 +14,10 @@ package org.torproject.descriptor.impl;
   protected DescriptorParseException(String message) {
     super(message);
   }
+
+  protected DescriptorParseException(String message, Exception ex) {
+    super(message, ex);
+  }
+
 }
 

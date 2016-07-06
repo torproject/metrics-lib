@@ -27,10 +27,10 @@ public class TorperfResultImpl extends DescriptorImpl
     }
     List<Descriptor> parsedDescriptors = new ArrayList<>();
     String descriptorString = new String(rawDescriptorBytes);
-    Scanner s = new Scanner(descriptorString).useDelimiter("\r?\n");
+    Scanner scanner = new Scanner(descriptorString).useDelimiter("\r?\n");
     String typeAnnotation = "";
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       if (line.startsWith("@type torperf ")) {
         String[] parts = line.split(" ");
         if (parts.length != 3) {

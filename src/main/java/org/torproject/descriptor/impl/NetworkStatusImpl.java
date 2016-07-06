@@ -34,30 +34,28 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       throw new DescriptorParseException("Descriptor is empty.");
     }
     String descriptorString = new String(rawDescriptorBytes);
-    int startIndex = 0;
-    int firstDirSourceIndex = !containsDirSourceEntries ? -1
-        : this.findFirstIndexOfKeyword(descriptorString, "dir-source");
     int firstRIndex = this.findFirstIndexOfKeyword(descriptorString, "r");
-    int directoryFooterIndex = this.findFirstIndexOfKeyword(
-        descriptorString, "directory-footer");
+    int endIndex = descriptorString.length();
     int firstDirectorySignatureIndex = this.findFirstIndexOfKeyword(
         descriptorString, "directory-signature");
-    int endIndex = descriptorString.length();
     if (firstDirectorySignatureIndex < 0) {
       firstDirectorySignatureIndex = endIndex;
     }
+    int directoryFooterIndex = this.findFirstIndexOfKeyword(
+        descriptorString, "directory-footer");
     if (directoryFooterIndex < 0) {
       directoryFooterIndex = firstDirectorySignatureIndex;
     }
     if (firstRIndex < 0) {
       firstRIndex = directoryFooterIndex;
     }
+    int firstDirSourceIndex = !containsDirSourceEntries ? -1
+        : this.findFirstIndexOfKeyword(descriptorString, "dir-source");
     if (firstDirSourceIndex < 0) {
       firstDirSourceIndex = firstRIndex;
     }
-    if (firstDirSourceIndex > startIndex) {
-      this.parseHeaderBytes(descriptorString, startIndex,
-          firstDirSourceIndex);
+    if (firstDirSourceIndex > 0) {
+      this.parseHeaderBytes(descriptorString, 0, firstDirSourceIndex);
     }
     if (firstRIndex > firstDirSourceIndex) {
       this.parseDirSourceBytes(descriptorString, firstDirSourceIndex,

@@ -94,10 +94,10 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
 
   private void parseExitListEntryBytes()
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.exitListEntryBytes))
+    Scanner scanner = new Scanner(new String(this.exitListEntryBytes))
         .useDelimiter(ExitList.EOL);
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split(" ");
       String keyword = parts[0];
       switch (keyword) {

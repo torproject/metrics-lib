@@ -20,8 +20,6 @@ import java.util.Set;
 
 import javax.xml.bind.DatatypeConverter;
 
-/* TODO Write unit tests. */
-
 public class RelayDirectoryImpl extends DescriptorImpl
     implements RelayDirectory {
 
@@ -189,14 +187,14 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   private void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
     String publishedLine = null;
     String nextCrypto = "";
     String runningRoutersLine = null;
     String routerStatusLine = null;
     StringBuilder crypto = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       if (line.isEmpty() || line.startsWith("@")) {
         continue;
       }
@@ -309,12 +307,12 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   private void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
-    Scanner s = new Scanner(new String(directorySignatureBytes))
+    Scanner scanner = new Scanner(new String(directorySignatureBytes))
         .useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String lineNoOpt = line.startsWith("opt ")
           ? line.substring("opt ".length()) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");

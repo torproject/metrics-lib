@@ -71,17 +71,17 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private void parseStatusEntryBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.statusEntryBytes))
+    Scanner scanner = new Scanner(new String(this.statusEntryBytes))
         .useDelimiter("\n");
     String line = null;
-    if (!s.hasNext() || !(line = s.next()).startsWith("r ")) {
+    if (!scanner.hasNext() || !(line = scanner.next()).startsWith("r ")) {
       throw new DescriptorParseException("Status entry must start with "
           + "an r line.");
     }
-    String[] rLineParts = line.split("[ \t]+");
-    this.parseRLine(line, rLineParts);
-    while (s.hasNext()) {
-      line = s.next();
+    String[] rlineParts = line.split("[ \t]+");
+    this.parseRLine(line, rlineParts);
+    while (scanner.hasNext()) {
+      line = scanner.next();
       String[] parts = !line.startsWith("opt ") ? line.split("[ \t]+")
           : line.substring("opt ".length()).split("[ \t]+");
       String keyword = parts[0];

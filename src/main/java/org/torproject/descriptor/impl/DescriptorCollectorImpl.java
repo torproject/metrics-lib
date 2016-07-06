@@ -111,12 +111,12 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
     return fetchedDirectoryListings;
   }
 
-  String fetchRemoteDirectory(String url) {
+  String fetchRemoteDirectory(String urlString) {
     StringBuilder sb = new StringBuilder();
     HttpURLConnection huc = null;
     try {
-      URL u = new URL(url);
-      huc = (HttpURLConnection) u.openConnection();
+      URL url = new URL(urlString);
+      huc = (HttpURLConnection) url.openConnection();
       huc.setRequestMethod("GET");
       huc.connect();
       int responseCode = huc.getResponseCode();
@@ -139,7 +139,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
     return sb.toString();
   }
 
-  final Pattern DIRECTORY_LISTING_LINE_PATTERN =
+  final Pattern directoryListingLinePattern =
       Pattern.compile(".* href=\"([^\"/]+)\"" /* filename */
       + ".*>(\\d{2}-\\w{3}-\\d{4} \\d{2}:\\d{2})\\s*<.*"); /* dateTime */
 
@@ -149,11 +149,11 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
     DateFormat dateTimeFormat = ParseHelper.getDateFormat(
         "dd-MMM-yyyy HH:mm");
     try {
-      Scanner s = new Scanner(directoryListing);
-      s.useDelimiter("\n");
-      while (s.hasNext()) {
-        String line = s.next();
-        Matcher matcher = DIRECTORY_LISTING_LINE_PATTERN.matcher(line);
+      Scanner scanner = new Scanner(directoryListing);
+      scanner.useDelimiter("\n");
+      while (scanner.hasNext()) {
+        String line = scanner.next();
+        Matcher matcher = directoryListingLinePattern.matcher(line);
         if (matcher.matches()) {
           String filename = matcher.group(1);
           long lastModifiedMillis = dateTimeFormat.parse(
@@ -161,7 +161,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
           remoteFiles.put(remoteDirectory + filename, lastModifiedMillis);
         }
       }
-      s.close();
+      scanner.close();
     } catch (ParseException e) {
       e.printStackTrace();
       return null;
@@ -187,7 +187,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
     }
   }
 
-  void fetchRemoteFile(String url, File destinationFile,
+  void fetchRemoteFile(String urlString, File destinationFile,
       long lastModifiedMillis) {
     HttpURLConnection huc = null;
     try {
@@ -197,10 +197,10 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
           + destinationFile.getName());
       BufferedOutputStream bos = new BufferedOutputStream(
           new FileOutputStream(tempDestinationFile));
-      URL u = new URL(url);
-      huc = (HttpURLConnection) u.openConnection();
+      URL url = new URL(urlString);
+      huc = (HttpURLConnection) url.openConnection();
       huc.setRequestMethod("GET");
-      if (!url.endsWith(".xz")) {
+      if (!urlString.endsWith(".xz")) {
         huc.addRequestProperty("Accept-Encoding", "gzip");
       }
       huc.connect();

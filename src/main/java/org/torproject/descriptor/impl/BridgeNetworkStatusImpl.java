@@ -45,6 +45,8 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
         this.publishedMillis = fileNameFormat.parse(publishedString)
             .getTime();
       } catch (ParseException e) {
+        throw new DescriptorParseException("Cannot parse published time "
+            + "for status file name '" + fileName + "'.", e);
       }
     }
     if (this.publishedMillis == 0L) {
@@ -69,9 +71,9 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     this.enoughMtbfInfo = -1;
     this.ignoringAdvertisedBws = -1;
 
-    Scanner s = new Scanner(new String(headerBytes)).useDelimiter("\n");
-    while (s.hasNext()) {
-      String line = s.next();
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {
@@ -146,7 +148,7 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
       }
     } catch (NumberFormatException ex) {
       throw new DescriptorParseException("Illegal value in line '"
-          + line + "'.");
+          + line + "'.", ex);
     }
   }
 

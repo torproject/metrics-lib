@@ -59,12 +59,12 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.rawDescriptorBytes))
+    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
         .useDelimiter("\n");
     String nextCrypto = "";
     StringBuilder crypto = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       String[] parts = line.split("[ \t]+");
       String keyword = parts[0];
       switch (keyword) {

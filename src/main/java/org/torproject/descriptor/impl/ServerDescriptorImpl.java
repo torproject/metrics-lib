@@ -54,12 +54,12 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner s = new Scanner(new String(this.rawDescriptorBytes))
+    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
         .useDelimiter("\n");
     String nextCrypto = "";
     List<String> cryptoLines = null;
-    while (s.hasNext()) {
-      String line = s.next();
+    while (scanner.hasNext()) {
+      String line = scanner.next();
       if (line.startsWith("@")) {
         continue;
       }

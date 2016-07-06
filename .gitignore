@@ -1,4 +1,5 @@
 classes/
+generated/
 lib/
 descriptor-*.jar
 descriptor-*.tar.gz

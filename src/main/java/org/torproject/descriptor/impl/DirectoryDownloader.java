@@ -63,13 +63,13 @@ public class DirectoryDownloader implements Runnable {
       DescriptorRequestImpl request =
           this.downloadCoordinator.createRequest(this.nickname);
       if (request != null) {
-        String url = "http://" + this.ipPort
+        String urlString = "http://" + this.ipPort
             + request.getRequestedResource();
         request.setRequestStart(System.currentTimeMillis());
         HttpURLConnection huc = null;
         try {
-          URL u = new URL(url);
-          huc = (HttpURLConnection) u.openConnection();
+          URL url = new URL(urlString);
+          huc = (HttpURLConnection) url.openConnection();
           huc.setConnectTimeout((int) this.connectTimeout);
           huc.setReadTimeout((int) this.readTimeout);
           huc.setRequestMethod("GET");

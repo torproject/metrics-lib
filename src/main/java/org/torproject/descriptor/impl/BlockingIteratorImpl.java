@@ -39,6 +39,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
       try {
         wait();
       } catch (InterruptedException e) {
+        /* nothing to be done */
       }
     }
     this.queue.offer(object);
@@ -66,6 +67,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
       try {
         wait();
       } catch (InterruptedException e) {
+        /* nothing to be done */
       }
     }
     return this.queue.peek() != null;
@@ -81,6 +83,7 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
       try {
         wait();
       } catch (InterruptedException e) {
+        /* nothing to be done */
       }
     }
     if (this.queue.peek() == null) {
