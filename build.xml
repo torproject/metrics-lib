@@ -253,7 +253,7 @@
         <include name="**/*.java" />
       </fileset>
     </cobertura-report>
-    <cobertura-check branchrate="0" totallinerate="31" totalbranchrate="41" >
+    <cobertura-check branchrate="0" totallinerate="31" totalbranchrate="42" >
       <regex pattern="org.torproject.descriptor.benchmark.*" branchrate="0" linerate="0"/>
     </cobertura-check>
   </target>
