@@ -16,6 +16,8 @@
   <property name="jarfile" value="descriptor-${release.version}.jar" />
   <property name="jarsourcesfile"
             value="descriptor-${release.version}-sources.jar" />
+  <property name="jardocsfile"
+            value="descriptor-${release.version}-javadoc.jar" />
   <property name="source-and-target-java-version" value="1.7" />
   <property name="release.tarball"
             value="descriptor-${release.version}.tar.gz" />
@@ -80,6 +82,7 @@
     </delete>
     <delete file="${jarfile}"/>
     <delete file="${jarsourcesfile}"/>
+    <delete file="${jardocsfile}"/>
     <delete file="${release.tarball}"/>
   </target>
 
@@ -169,7 +172,7 @@
     </checkstyle>
   </target>
 
-  <target name="jar" depends="compile">
+  <target name="jar" depends="compile,docs">
     <exec executable="git" outputproperty="git.revision">
       <arg value="rev-parse" />
       <arg value="--short" />
@@ -194,6 +197,15 @@
                    value="${release.version}-${git.revision}"/>
       </manifest>
     </jar>
+    <jar destfile="${jardocsfile}">
+      <fileset dir="${docs}" />
+      <manifest>
+        <attribute name="Created-By" value="The Tor Project" />
+        <attribute name="Implementation-Title" value="DescripTor"/>
+        <attribute name="Implementation-Version"
+                   value="${release.version}-${git.revision}"/>
+      </manifest>
+    </jar>
   </target>
 
   <target name="signjar" depends="jar">
@@ -205,6 +217,7 @@
       <path>
         <pathelement path="${jarfile}"/>
         <pathelement path="${jarsourcesfile}"/>
+        <pathelement path="${jardocsfile}"/>
       </path>
     </signjar>
   </target>
@@ -214,6 +227,7 @@
       <tarfileset dir="." prefix="descriptor-${release.version}">
         <include name="${jarfile}" />
         <include name="${jarsourcesfile}" />
+        <include name="${jardocsfile}" />
         <include name="build.xml" />
         <include name="LICENSE" />
         <include name="CERT" />
