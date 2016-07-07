@@ -267,6 +267,9 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
         if (response.getResponseCode() != 200) {
           this.missingVotes.add(requestedVote);
         }
+        break;
+      default:
+        /* nothing to be done */
     }
     if (response.getRequestEnd() != 0L) {
       this.descriptorQueue.add(response);

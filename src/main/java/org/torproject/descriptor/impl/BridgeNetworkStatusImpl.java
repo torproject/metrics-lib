@@ -144,6 +144,8 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
           case "ignoring-advertised-bws":
             this.ignoringAdvertisedBws = Integer.parseInt(e.getValue());
             break;
+          default:
+            /* nothing to be done */
         }
       }
     } catch (NumberFormatException ex) {

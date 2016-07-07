@@ -261,6 +261,11 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
         : new ArrayList<>(this.signatures);
   }
 
+  /**
+   * Implements method defined in
+   * {@link org.torproject.descriptor.RelayNetworkStatusConsensus}
+   * and {@link org.torproject.descriptor.RelayNetworkStatusVote}.
+   */
   public SortedMap<String, DirectorySignature> getDirectorySignatures() {
     SortedMap<String, DirectorySignature> directorySignatures = null;
     if (this.signatures != null) {

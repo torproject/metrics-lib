@@ -1,4 +1,5 @@
 classes/
+cobertura.ser
 generated/
 lib/
 descriptor-*.jar
