@@ -141,13 +141,13 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
 
   final Pattern directoryListingLinePattern =
       Pattern.compile(".* href=\"([^\"/]+)\"" /* filename */
-      + ".*>(\\d{2}-\\w{3}-\\d{4} \\d{2}:\\d{2})\\s*<.*"); /* dateTime */
+      + ".*>(\\d{4}-\\w{2}-\\d{2} \\d{2}:\\d{2})\\s*<.*"); /* dateTime */
 
   SortedMap<String, Long> parseDirectoryListing(
       String remoteDirectory, String directoryListing) {
     SortedMap<String, Long> remoteFiles = new TreeMap<>();
     DateFormat dateTimeFormat = ParseHelper.getDateFormat(
-        "dd-MMM-yyyy HH:mm");
+        "yyyy-MM-dd HH:mm");
     try {
       Scanner scanner = new Scanner(directoryListing);
       scanner.useDelimiter("\n");
