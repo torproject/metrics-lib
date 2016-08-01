@@ -1,3 +1,10 @@
+# Changes in version 1.3.1 - 2016-08-01
+
+ * Medium changes
+   - Adapt to CollecTor's new date format to make DescriptorCollector
+     work again.
+
+
 # Changes in version 1.3.0 - 2016-07-06
 
  * Medium changes
