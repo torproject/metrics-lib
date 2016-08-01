@@ -24,7 +24,7 @@ public class DescriptorCollectorImplTest {
         + "<img src=\"/icons/unknown.gif\" alt=\"[   ]\"></td><td>"
         + "<a href=\"" + remoteFilename + "\">"
         + "2015-05-24-12-00-00-consensus</a></td>"
-        + "<td align=\"right\">24-May-2015 12:08  </td>"
+        + "<td align=\"right\">2015-05-24 12:08  </td>"
         + "<td align=\"right\">1.5M</td><td>&nbsp;</td></tr>";
     SortedMap<String, Long> remoteFiles =
         new DescriptorCollectorImpl().parseDirectoryListing(
@@ -40,8 +40,8 @@ public class DescriptorCollectorImplTest {
   @Test()
   public void testSameFileTwoTimestampsLastWins() {
     String remoteFilename = "2015-05-24-12-00-00-consensus";
-    String firstTimestamp = "24-May-2015 12:04";
-    String secondTimestamp = "24-May-2015 12:08";
+    String firstTimestamp = "2015-05-24 12:04";
+    String secondTimestamp = "2015-05-24 12:08";
     String lineFormat = "<tr><td valign=\"top\">"
         + "<img src=\"/icons/unknown.gif\" alt=\"[   ]\"></td><td>"
         + "<a href=\"%s\">2015-05-24-12-00-00-consensus</a></td>"
@@ -65,7 +65,7 @@ public class DescriptorCollectorImplTest {
     String directoryListing = "<tr><td valign=\"top\">"
         + "<img src=\"/icons/folder.gif\" alt=\"[DIR]\"></td><td>"
         + "<a href=\"subdir/\">subdir/</a></td>"
-        + "<td align=\"right\">27-May-2015 14:07  </td>"
+        + "<td align=\"right\">2015-05-27 14:07  </td>"
         + "<td align=\"right\">  - </td><td>&nbsp;</td></tr>";
     DescriptorCollectorImpl collector = new DescriptorCollectorImpl();
     SortedMap<String, Long> remoteFiles = collector.parseDirectoryListing(
@@ -94,7 +94,7 @@ public class DescriptorCollectorImplTest {
         + "<img src=\"/icons/unknown.gif\" alt=\"[   ]\"></td><td>"
         + "<a href=\"2015-05-24-12-00-00-consensus\">"
         + "2015-05-24-12-00-00-consensus</a></td>"
-        + "<td align=\"right\">2015-05-24 12:08  </td>"
+        + "<td align=\"right\">24-May-2015 12:08  </td>"
         + "<td align=\"right\">1.5M</td><td>&nbsp;</td></tr>";
     SortedMap<String, Long> remoteFiles =
         new DescriptorCollectorImpl().parseDirectoryListing(
@@ -109,21 +109,7 @@ public class DescriptorCollectorImplTest {
         + "<img src=\"/icons/unknown.gif\" alt=\"[   ]\"></td><td>"
         + "<a href=\"2015-05-24-12-00-00-consensus\">"
         + "2015-05-24-12-00-00-consensus</a></td>"
-        + "<td align=\"right\">34-May-2015 12:08  </td>"
-        + "<td align=\"right\">1.5M</td><td>&nbsp;</td></tr>";
-    SortedMap<String, Long> remoteFiles =
-        new DescriptorCollectorImpl().parseDirectoryListing(
-        REMOTE_DIRECTORY_CONSENSUSES, directoryListing);
-    assertNull(remoteFiles);
-  }
-
-  @Test()
-  public void testInvalidLocaleDe() {
-    String directoryListing = "<tr><td valign=\"top\">"
-        + "<img src=\"/icons/unknown.gif\" alt=\"[   ]\"></td><td>"
-        + "<a href=\"2015-05-24-12-00-00-consensus\">"
-        + "2015-05-24-12-00-00-consensus</a></td>"
-        + "<td align=\"right\">24-Mai-2015 12:08  </td>"
+        + "<td align=\"right\">2015-05-34 12:08  </td>"
         + "<td align=\"right\">1.5M</td><td>&nbsp;</td></tr>";
     SortedMap<String, Long> remoteFiles =
         new DescriptorCollectorImpl().parseDirectoryListing(
