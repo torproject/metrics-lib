@@ -260,7 +260,6 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           + "'" + line + "'.");
     }
     /* TODO Add more checks. */
-    /* TODO Add tests. */
     this.orAddresses.add(partsNoOpt[1]);
   }
 

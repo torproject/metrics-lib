@@ -154,7 +154,6 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
           + "status entry.");
     }
     /* TODO Add more checks. */
-    /* TODO Add tests. */
     this.orAddresses.add(parts[1]);
   }
 

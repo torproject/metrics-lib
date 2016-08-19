@@ -14,6 +14,9 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -34,6 +37,7 @@ import java.util.TreeMap;
 
 public class DescriptorReaderImpl implements DescriptorReader {
 
+  private static Logger log = LoggerFactory.getLogger(DescriptorReaderImpl.class);
   private boolean hasStartedReading = false;
 
   private List<File> directories = new ArrayList<>();
@@ -185,12 +189,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
         this.readTarballs();
         this.hasFinishedReading = true;
       } catch (Throwable t) {
-        /* We're usually not writing to stdout or stderr, but we shouldn't
-         * stay quiet about this potential bug.  If we were to switch to a
-         * logging API, this would qualify as ERROR. */
-        System.err.println("Bug: uncaught exception or error while "
-            + "reading descriptors:");
-        t.printStackTrace();
+        log.error("Bug: uncaught exception or error while "
+            + "reading descriptors: " + t.getMessage(), t);
       } finally {
         this.descriptorQueue.setOutOfDescriptors();
       }
@@ -209,7 +209,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
         String line;
         while ((line = br.readLine()) != null) {
           if (!line.contains(" ")) {
-            /* TODO Handle this problem? */
+            log.warn("Unexpected line structure in old history: " + line);
             continue;
           }
           long lastModifiedMillis = Long.parseLong(line.substring(0,
@@ -218,10 +218,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
           this.excludedFilesBefore.put(absolutePath, lastModifiedMillis);
         }
         br.close();
-      } catch (IOException e) {
-        /* TODO Handle this exception. */
-      } catch (NumberFormatException e) {
-        /* TODO Handle this exception. */
+      } catch (IOException | NumberFormatException e) {
+        log.warn("Trouble reading old history.", e);
       }
     }
 
@@ -246,7 +244,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
         }
         bw.close();
       } catch (IOException e) {
-        /* TODO Handle this exception. */
+        log.warn("Trouble writing new history.", e);
       }
     }
 

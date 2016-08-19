@@ -8,6 +8,9 @@ import org.torproject.descriptor.DescriptorRequest;
 import org.torproject.descriptor.DirSourceEntry;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,6 +22,9 @@ import java.util.TreeSet;
 
 /* TODO This whole download logic is a mess and needs a cleanup. */
 public class DownloadCoordinatorImpl implements DownloadCoordinator {
+
+  private static Logger log = LoggerFactory
+      .getLogger(DownloadCoordinatorImpl.class);
 
   private BlockingIteratorImpl<DescriptorRequest> descriptorQueue =
       new BlockingIteratorImpl<>();
@@ -71,8 +77,7 @@ public class DownloadCoordinatorImpl implements DownloadCoordinator {
     if (this.directoryMirrors.isEmpty()
         && this.directoryAuthorities.isEmpty()) {
       this.descriptorQueue.setOutOfDescriptors();
-      /* TODO Should we say anything if we don't have any directories
-       * configured? */
+      log.warn("There were no directories configured. Nothing to download.");
     } else {
       GlobalTimer globalTimer = new GlobalTimer(this.globalTimeoutMillis,
           this);

@@ -5,6 +5,9 @@ package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorCollector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -30,6 +33,9 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 public class DescriptorCollectorImpl implements DescriptorCollector {
+
+  private static Logger log = LoggerFactory
+      .getLogger(DescriptorCollectorImpl.class);
 
   @Override
   public void collectDescriptors(String collecTorBaseUrl,
@@ -130,7 +136,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
         br.close();
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Cannot fetch remote directory.", e);
       if (huc != null) {
         huc.disconnect();
       }
@@ -163,7 +169,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
       }
       scanner.close();
     } catch (ParseException e) {
-      e.printStackTrace();
+      log.error("Cannot parse directory listing: " + directoryListing, e);
       return null;
     }
     return remoteFiles;
@@ -225,7 +231,7 @@ public class DescriptorCollectorImpl implements DescriptorCollector {
         destinationFile.setLastModified(lastModifiedMillis);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Cannot fetch remote file.", e);
       if (huc != null) {
         huc.disconnect();
       }

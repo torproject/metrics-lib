@@ -18,8 +18,6 @@ import java.util.Set;
 
 import javax.xml.bind.DatatypeConverter;
 
-/* TODO Add test class. */
-
 public class DirectoryKeyCertificateImpl extends DescriptorImpl
     implements DirectoryKeyCertificate {
 

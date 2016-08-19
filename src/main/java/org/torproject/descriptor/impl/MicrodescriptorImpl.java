@@ -147,7 +147,6 @@ public class MicrodescriptorImpl extends DescriptorImpl
           + "'" + line + "'.");
     }
     /* TODO Add more checks. */
-    /* TODO Add tests. */
     this.orAddresses.add(parts[1]);
   }
 
