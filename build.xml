@@ -3,7 +3,8 @@
   <property name="allsources" value="src"/>
   <property name="sources" value="src/main/java"/>
   <property name="resources" value="src/main/resources"/>
-  <property name="generated" value="generated/"/>
+  <property name="generated" value="generated"/>
+  <property name="dist" value="${generated}/dist"/>
   <property name="classes" value="${generated}/classes"/>
   <property name="docs" value="${generated}/javadoc"/>
   <property name="tests" value="src/test/java"/>
@@ -14,18 +15,19 @@
   <property name="testclasses" value="${generated}/testclasses/"/>
   <property name="libs" value="lib"/>
   <property name="cobertura.ser.file" value="${basedir}/cobertura.ser" />
-  <property name="jarfile" value="descriptor-${release.version}.jar" />
+  <property name="jarfile" value="${dist}/descriptor-${release.version}.jar" />
   <property name="jarsourcesfile"
-            value="descriptor-${release.version}-sources.jar" />
+            value="${dist}/descriptor-${release.version}-sources.jar" />
   <property name="jardocsfile"
-            value="descriptor-${release.version}-javadoc.jar" />
+            value="${dist}/descriptor-${release.version}-javadoc.jar" />
   <property name="source-and-target-java-version" value="1.7" />
   <property name="release.tarball"
-            value="descriptor-${release.version}.tar.gz" />
+            value="${dist}/descriptor-${release.version}.tar.gz" />
   <property file="build.properties" />
 
   <patternset id="runtime" >
       <include name="commons-compress-1.9.jar"/>
+      <include name="gson-2.2.4.jar"/>
       <include name="slf4j-api-1.7.7.jar" />
       <include name="xz-1.5.jar"/>
   </patternset>
@@ -84,10 +86,7 @@
     <delete includeEmptyDirs="true" quiet="true">
       <fileset dir="${generated}" defaultexcludes="false" includes="**" />
     </delete>
-    <delete file="${jarfile}"/>
-    <delete file="${jarsourcesfile}"/>
-    <delete file="${jardocsfile}"/>
-    <delete file="${release.tarball}"/>
+    <delete file="${cobertura.ser.file}" quiet="true" />
   </target>
 
   <target name="init">
@@ -257,6 +256,7 @@
 
   <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
   <target name="coverage" depends="compile,testcompile">
+    <delete file="${cobertura.ser.file}" quiet="true" />
     <copy todir="${instrument}" >
       <fileset dir="${classes}"/>
     </copy>
@@ -280,7 +280,7 @@
         <include name="**/*.java" />
       </fileset>
     </cobertura-report>
-    <cobertura-check branchrate="0" totallinerate="31" totalbranchrate="42" >
+    <cobertura-check branchrate="0" totallinerate="57" totalbranchrate="50" >
       <regex pattern="org.torproject.descriptor.benchmark.*" branchrate="0" linerate="0"/>
     </cobertura-check>
   </target>
