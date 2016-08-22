@@ -1,3 +1,9 @@
+# Changes in version 1.4.0 - 2016-08-24
+
+ * Minor changes
+   - Add slf4j for logging support.
+
+
 # Changes in version 1.3.1 - 2016-08-01
 
  * Medium changes
