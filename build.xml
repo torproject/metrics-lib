@@ -280,8 +280,21 @@
         <include name="**/*.java" />
       </fileset>
     </cobertura-report>
-    <cobertura-check branchrate="0" totallinerate="57" totalbranchrate="50" >
-      <regex pattern="org.torproject.descriptor.benchmark.*" branchrate="0" linerate="0"/>
+    <cobertura-check totallinerate="58" totalbranchrate="50" >
+      <regex pattern="org.torproject.descriptor.benchmark.*"
+             linerate="0" branchrate="0"/>
+      <regex pattern="org.torproject.descriptor.index"
+             linerate="97" branchrate="62"/>
+      <regex pattern="org.torproject.descriptor.DescriptorSourceFactory"
+             linerate="100" branchrate="77"/>
+      <regex pattern="org.torproject.descriptor.index.DescriptorIndexCollector"
+             linerate="92" branchrate="61"/>
+      <regex pattern="org.torproject.descriptor.index.IndexNode"
+             linerate="100" branchrate="61"/>
+      <regex pattern="org.torproject.descriptor.index.FileNode"
+             linerate="100" branchrate="100"/>
+      <regex pattern="org.torproject.descriptor.index.DirectoryNode"
+             linerate="100" branchrate="100"/>
     </cobertura-check>
   </target>
 

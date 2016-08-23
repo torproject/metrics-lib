@@ -7,4 +7,4 @@ descriptor-*.tar.gz
 .classpath
 .project
 build.properties
-
+*~
