@@ -1,7 +1,23 @@
 # Changes in version 1.4.0 - 2016-08-24
 
+ * Major changes
+   - Add the Simple Logging Facade for Java (slf4j) for logging
+     support rather than printing warnings to stderr.  Applications
+     must provide slf4j-api-1.7.7.jar or higher as dependency and can
+     optionally provide a compatible logging framework of their choice
+     (java.util.logging, logback, log4j).
+
+ * Medium changes
+   - Add an alpha version of a DescriptorCollector implementation that
+     is not enabled by default and that uses CollecTor's index.json
+     file to determine which descriptor files to fetch.  Applications
+     can enable this implementation by providing gson-2.2.4.jar or
+     higher as dependency and setting property descriptor.collector to
+     org.torproject.descriptor.index.DescriptorIndexCollector.
+
  * Minor changes
-   - Add slf4j for logging support.
+   - Include resource files in src/*/resources/ in the release
+     tarball.
 
 
 # Changes in version 1.3.1 - 2016-08-01
