@@ -97,13 +97,13 @@ public class DescriptorIndexCollectorTest {
   private File newIndexFile(String name, String remoteDirectory)
       throws Exception {
     SortedSet<FileNode> fm = new TreeSet<>();
-    fm.add(new FileNode("w2", 100L, "2100-01-01 01:01"));
-    fm.add(new FileNode("z2", 2L, "1900-01-01 01:02"));
+    fm.add(new FileNode("w2", 0L, "2100-01-01 01:01"));
+    fm.add(new FileNode("z2", 0L, "1900-01-01 01:02"));
     SortedSet<DirectoryNode> dm = new TreeSet<>();
     dm.add(new DirectoryNode("c", fm, null));
     fm = new TreeSet<>();
-    fm.add(new FileNode("x2", 2L, "2100-01-01 01:01"));
-    fm.add(new FileNode("y2", 2L, "2100-01-01 01:02"));
+    fm.add(new FileNode("x2", 0L, "2100-01-01 01:01"));
+    fm.add(new FileNode("y2", 0L, "2100-01-01 01:02"));
     DirectoryNode dnb = new DirectoryNode("b", fm, dm);
     dm = new TreeSet<>();
     dm.add(dnb);
@@ -133,7 +133,7 @@ public class DescriptorIndexCollectorTest {
 
     new DescriptorIndexCollector()
         .collectDescriptors(indexFile.toURL().toString(),
-            new String[]{"a/b", "a/b/c"}, 1451606400_000L, localFolder, true);
+            new String[]{"a/b"}, 1451606400_000L, localFolder, true);
     checkContains(true,
         DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
         "a/b/y2","a/b/x2");
