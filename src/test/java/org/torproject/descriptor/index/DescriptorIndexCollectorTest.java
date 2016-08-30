@@ -44,6 +44,11 @@ public class DescriptorIndexCollectorTest {
 
     File indexFile = newIndexFile("testindex.json",
         remoteDirectory.toURL().toString());
+
+    // verify precondition for test.
+    checkContains(true,
+        DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
+        "a/b/x1", "a/b/y1", "a/b/c/w1", "a/b/c/z1", "a/b/c/u1");
     checkContains(false,
         DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
         "a/b/y2","a/b/x2");
@@ -51,22 +56,26 @@ public class DescriptorIndexCollectorTest {
     DescriptorCollector dc = new DescriptorIndexCollector();
     dc.collectDescriptors(indexFile.toURL().toString(),
         new String[]{"a/b", "a"}, 1451606400_000L, localFolder, false);
+
+    // verify that files in 'a/b' were fetched
     checkContains(true,
         DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
         "a/b/x1", "a/b/y1", "a/b/y2","a/b/x2", "a/b/c/w1", "a/b/c/z1");
+
+    // verify that files in 'a/b/c' were not fetched.
     checkContains(false,
         DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
-        "a/b/c/w2","a/b/c/z2");
+        "a/b/c/u2");
   }
 
   private void makeStructure(File folder, String suffix) throws IOException {
     File dir = makeDirs(folder.toString(), "a", "b");
     makeFiles(dir, "x" + suffix, "y" + suffix);
     File subdir = makeDirs(dir.toString(), "c");
-    makeFiles(subdir, "w" + suffix, "z" + suffix);
+    makeFiles(subdir, "u" + suffix, "w" + suffix, "z" + suffix);
     SortedMap<String, Long> local = DescriptorIndexCollector
         .statLocalDirectory(folder);
-    assertEquals("found " + local, 4, local.size());
+    assertEquals("found " + local, 5, local.size());
   }
 
   private File makeDirs(String first, String ... dirs) throws IOException {
@@ -97,11 +106,20 @@ public class DescriptorIndexCollectorTest {
   private File newIndexFile(String name, String remoteDirectory)
       throws Exception {
     SortedSet<FileNode> fm = new TreeSet<>();
-    fm.add(new FileNode("w2", 0L, "2100-01-01 01:01"));
+
+    // 'u2' should be fetched when the path is included.
+    fm.add(new FileNode("u2", 0L, "2100-01-01 01:02"));
+
+    // 'w2' should not be fetched, b/c of wrong filesize
+    fm.add(new FileNode("w2", 100L, "2100-01-01 01:01"));
+
+    // 'z2' should not be fetched, b/c of being too old.
     fm.add(new FileNode("z2", 0L, "1900-01-01 01:02"));
     SortedSet<DirectoryNode> dm = new TreeSet<>();
     dm.add(new DirectoryNode("c", fm, null));
     fm = new TreeSet<>();
+
+    // 'x2' and 'y2' should be fetched when their path is included.
     fm.add(new FileNode("x2", 0L, "2100-01-01 01:01"));
     fm.add(new FileNode("y2", 0L, "2100-01-01 01:02"));
     DirectoryNode dnb = new DirectoryNode("b", fm, dm);
@@ -127,19 +145,33 @@ public class DescriptorIndexCollectorTest {
 
     File indexFile = newIndexFile("testindexDelete.json",
         remoteDirectory.toURL().toString());
+
+    // verify precondition for test.
+    checkContains(true,
+        DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
+        "a/b/x1", "a/b/y1", "a/b/c/w1", "a/b/c/z1", "a/b/c/u1");
     checkContains(false,
         DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
         "a/b/y2","a/b/x2");
 
     new DescriptorIndexCollector()
         .collectDescriptors(indexFile.toURL().toString(),
-            new String[]{"a/b"}, 1451606400_000L, localFolder, true);
+            new String[]{"a/b", "a/b/c"}, 1451606400_000L, localFolder, true);
+
+    // verify file addition.
     checkContains(true,
         DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
-        "a/b/y2","a/b/x2");
+        "a/b/y2", "a/b/x2", "a/b/c/u2");
+
+    // verify that invalid files weren't fetched.
     checkContains(false,
         DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
-        "a/b/x1", "a/b/y1", "a/b/c/w1", "a/b/c/z1", "a/b/c/w2", "a/b/c/z2");
+        "a/b/c/w2", "a/b/c/z2");
+
+    // verify file deletion.
+    checkContains(false,
+        DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
+        "a/b/x1", "a/b/y1", "a/b/c/w1", "a/b/c/z1", "a/b/c/u1");
   }
 
   @Test()
