@@ -24,6 +24,14 @@ running, batch-processing applications and not for continuously running
 applications that rely on learning about changes to an underlying
 descriptor source.
 
+The executable jar, source jar, and javadoc jar can be found in
+
+```
+generated/dist/
+```
+
+Before using them please verify the release (see below for instructions).
+
 
 Verifying releases
 ------------------

@@ -18,6 +18,7 @@
  * Minor changes
    - Include resource files in src/*/resources/ in the release
      tarball.
+   - Move executable, source, and javadoc jar to generated/dist/.
 
 
 # Changes in version 1.3.1 - 2016-08-01
