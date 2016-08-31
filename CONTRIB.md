@@ -171,7 +171,7 @@ parameters:
 ```
 keytool -genkeypair -alias karsten -keyalg RSA -keysize 2048 \
     -sigalg SHA256withRSA -validity 90 \
-    -dname "CN=Karsten Loesing, O=The Tor Project\, Inc, L=Cambridge, ST=MA, C=US"
+    -dname "CN=Karsten Loesing, O=The Tor Project\, Inc, L=Seattle, ST=WA, C=US"
 ```
 
 Extend the certificate for the existing key pair when it expires:

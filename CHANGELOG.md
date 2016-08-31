@@ -1,4 +1,4 @@
-# Changes in version 1.4.0 - 2016-08-24
+# Changes in version 1.4.0 - 2016-08-31
 
  * Major changes
    - Add the Simple Logging Facade for Java (slf4j) for logging

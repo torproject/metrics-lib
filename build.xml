@@ -1,5 +1,5 @@
 <project default="jar" name="descriptor" basedir=".">
-  <property name="release.version" value="1.3.1-dev" />
+  <property name="release.version" value="1.4.0" />
   <property name="allsources" value="src"/>
   <property name="sources" value="src/main/java"/>
   <property name="resources" value="src/main/resources"/>
@@ -227,11 +227,10 @@
              storepass="${jarsigner.storepass}"
              sigalg="SHA256withRSA"
              digestalg="SHA-256"
-             tsaurl="http://timestamp.digicert.com">
+             tsaurl="http://timestamp.digicert.com"
+             lazy="true">
       <path>
-        <pathelement path="${jarfile}"/>
-        <pathelement path="${jarsourcesfile}"/>
-        <pathelement path="${jardocsfile}"/>
+        <fileset dir="${dist}" includes="descriptor-${release.version}*.jar" />
       </path>
     </signjar>
   </target>
