@@ -1,3 +1,9 @@
+# Changes in version 1.?.? - 2016-1?-??
+
+ * Minor changes
+   - Avoid running into an IOException and logging a warning for it.
+
+
 # Changes in version 1.4.0 - 2016-08-31
 
  * Major changes

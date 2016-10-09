@@ -200,7 +200,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
     }
 
     private void readOldHistory() {
-      if (this.historyFile == null) {
+      if (this.historyFile == null || !this.historyFile.exists()) {
         return;
       }
       try {
