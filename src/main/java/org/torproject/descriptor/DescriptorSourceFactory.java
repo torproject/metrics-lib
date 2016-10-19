@@ -3,6 +3,9 @@
 
 package org.torproject.descriptor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Factory for descriptor sources which in turn produce descriptors.
  *
@@ -37,6 +40,9 @@ package org.torproject.descriptor;
  * @since 1.0.0
  */
 public final class DescriptorSourceFactory {
+
+  private static Logger log = LoggerFactory.getLogger(
+      DescriptorSourceFactory.class);
 
   /**
    * Default implementation of the {@link DescriptorDownloader}
@@ -174,6 +180,7 @@ public final class DescriptorSourceFactory {
       }
       object = ClassLoader.getSystemClassLoader().loadClass(clazzName)
           .newInstance();
+      log.info("Serving implementation {} for {}.", clazzName, type);
     } catch (ClassNotFoundException | InstantiationException
              | IllegalAccessException ex) {
       throw new ImplementationNotAccessibleException("Cannot load class "
