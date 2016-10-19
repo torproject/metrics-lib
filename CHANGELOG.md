@@ -1,5 +1,11 @@
 # Changes in version 1.?.? - 2016-1?-??
 
+ * Major changes
+   - Make the DescriptorCollector implementation that uses CollecTor's
+     index.json file to determine which descriptor files to fetch the
+     new default.  Applications must provide gson-2.2.4.jar or higher
+     as dependency.
+
  * Minor changes
    - Avoid running into an IOException and logging a warning for it.
 

@@ -9,10 +9,10 @@ import org.torproject.descriptor.DescriptorDownloader;
 import org.torproject.descriptor.DescriptorParser;
 import org.torproject.descriptor.DescriptorReader;
 import org.torproject.descriptor.ImplementationNotAccessibleException;
-import org.torproject.descriptor.impl.DescriptorCollectorImpl;
 import org.torproject.descriptor.impl.DescriptorDownloaderImpl;
 import org.torproject.descriptor.impl.DescriptorParserImpl;
 import org.torproject.descriptor.impl.DescriptorReaderImpl;
+import org.torproject.descriptor.index.DescriptorIndexCollector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -35,7 +35,7 @@ public class DescriptorSourceFactoryTest {
   public void testDefaults() {
     setProperties(defaults);
     DescriptorCollector dc = DescriptorSourceFactory.createDescriptorCollector();
-    assertTrue(dc instanceof DescriptorCollectorImpl);
+    assertTrue(dc instanceof DescriptorIndexCollector);
     DescriptorDownloader dd = DescriptorSourceFactory.createDescriptorDownloader();
     assertTrue(dd instanceof DescriptorDownloaderImpl);
     DescriptorParser dp = DescriptorSourceFactory.createDescriptorParser();
@@ -101,7 +101,7 @@ public class DescriptorSourceFactoryTest {
 
 }
 
-class DummyCollectorImplementation extends DescriptorCollectorImpl {
+class DummyCollectorImplementation extends DescriptorIndexCollector {
   static int count;
   public DummyCollectorImplementation() {
     count++;

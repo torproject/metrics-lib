@@ -72,7 +72,7 @@ public final class DescriptorSourceFactory {
    * @since 1.0.0
    */
   public static final String COLLECTOR_DEFAULT =
-      "org.torproject.descriptor.impl.DescriptorCollectorImpl";
+      "org.torproject.descriptor.index.DescriptorIndexCollector";
 
   /**
    * Property name for overriding the implementation of the
