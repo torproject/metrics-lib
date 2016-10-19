@@ -14,6 +14,8 @@
      - Relaxed requirement that catch parameters must be at least two
        characters long [CatchParameterName].
 
+     - Added a check for unused imports [UnusedImports].
+
     Checkstyle is very configurable. Be sure to read the documentation at
     http://checkstyle.sf.net (or in your downloaded distribution).
 
@@ -52,6 +54,7 @@
         </module>
         <module name="AvoidStarImport"/>
         <module name="OneTopLevelClass"/>
+        <module name="UnusedImports"/>
         <module name="NoLineWrap"/>
         <module name="EmptyBlock">
             <property name="option" value="TEXT"/>
