@@ -1,4 +1,4 @@
-# Changes in version 1.?.? - 2016-1?-??
+# Changes in version 1.5.0 - 2016-10-19
 
  * Major changes
    - Make the DescriptorCollector implementation that uses CollecTor's
