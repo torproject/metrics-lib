@@ -33,12 +33,14 @@ public class DescriptorIndexCollector implements DescriptorCollector {
       .getLogger(DescriptorIndexCollector.class);
 
   /**
-   * The parameter usage differs from the interface:
-   * <code>collecTorIndexUrl</code> is expected to contain the URL
-   * for an index JSON file (plain or compressed).
+   * If <code>collecTorIndexUrlString</code> contains just the
+   * base url, e.g. https://some.host.org, the path
+   * <code>/index/index.json</code> will be appended.
+   * If a path is given (even just a final slash, e.g. https://some.host.org/),
+   * the <code>collecTorIndexUrlString</code> will be used as is.
    */
   @Override
-  public void collectDescriptors(String collecTorIndexUrl,
+  public void collectDescriptors(String collecTorIndexUrlString,
       String[] remoteDirectories, long minLastModified,
       File localDirectory, boolean deleteExtraneousLocalFiles) {
     if (minLastModified < 0) {
@@ -52,11 +54,18 @@ public class DescriptorIndexCollector implements DescriptorCollector {
     SortedMap<String, Long> localFiles = statLocalDirectory(localDirectory);
     SortedMap<String, FileNode> remoteFiles = null;
     IndexNode index = null;
+    String indexUrlString = "";
     try {
-      index = IndexNode.fetchIndex(collecTorIndexUrl);
+      URL indexUrl = new URL(collecTorIndexUrlString);
+      indexUrlString = indexUrl.toString();
+      if (indexUrl.getPath().isEmpty()) {
+        indexUrlString += "/index/index.json";
+      }
+      index = IndexNode.fetchIndex(indexUrlString);
       remoteFiles = index.retrieveFilesIn(remoteDirectories);
-    } catch (Exception ioe) {
-      throw new RuntimeException("Cannot fetch index. ", ioe);
+    } catch (Exception ex) {
+      throw new RuntimeException("Cannot fetch index from '"
+          + indexUrlString + "'.", ex);
     }
     this.fetchRemoteFiles(index.path, remoteFiles, minLastModified,
         localDirectory, localFiles);
