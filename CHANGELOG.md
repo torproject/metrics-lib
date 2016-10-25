@@ -9,6 +9,10 @@
      process.
    - Avoid deleting extraneous local descriptor files when collecting
      descriptors from CollecTor.
+   - Turn the descriptor reader thread into a daemon thread, so that
+     the application can decide at any time to stop consuming
+     descriptors without having to worry about the reader thread not
+     being done.
 
 
 # Changes in version 1.5.0 - 2016-10-19

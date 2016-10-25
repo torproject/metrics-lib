@@ -153,7 +153,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
         this.tarballs, descriptorQueue, this.autoSaveHistoryFile,
         this.manualSaveHistoryFile, this.excludedFiles,
         this.failUnrecognizedDescriptorLines);
-    new Thread(this.reader).start();
+    Thread readerThread = new Thread(this.reader);
+    readerThread.setDaemon(true);
+    readerThread.start();
     return descriptorQueue;
   }
 
