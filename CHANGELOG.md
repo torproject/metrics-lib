@@ -1,3 +1,11 @@
+# Changes in version 1.6.0 - 2016-??-??
+
+ * Medium changes
+   - Add two methods for loading and saving a parse history file in
+     the descriptor reader to avoid situations where applications fail
+     after all descriptors are read but before they are all processed.
+
+
 # Changes in version 1.5.0 - 2016-10-19
 
  * Major changes

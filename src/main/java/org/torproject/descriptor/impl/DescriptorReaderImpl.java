@@ -62,7 +62,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.tarballs.add(tarball);
   }
 
-  private File historyFile;
+  private File autoSaveHistoryFile;
+
+  private File manualSaveHistoryFile;
 
   @Override
   public void setExcludeFiles(File historyFile) {
@@ -70,7 +72,16 @@ public class DescriptorReaderImpl implements DescriptorReader {
       throw new IllegalStateException("Reconfiguration is not permitted "
           + "after starting to read.");
     }
-    this.historyFile = historyFile;
+    this.autoSaveHistoryFile = historyFile;
+  }
+
+  @Override
+  public void setHistoryFile(File historyFile) {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to read.");
+    }
+    this.manualSaveHistoryFile = historyFile;
   }
 
   private SortedMap<String, Long> excludedFiles;
@@ -139,10 +150,20 @@ public class DescriptorReaderImpl implements DescriptorReader {
         : new BlockingIteratorImpl<DescriptorFile>(
         this.maxDescriptorFilesInQueue);
     this.reader = new DescriptorReaderRunnable(this.directories,
-        this.tarballs, descriptorQueue, this.historyFile,
-        this.excludedFiles, this.failUnrecognizedDescriptorLines);
+        this.tarballs, descriptorQueue, this.autoSaveHistoryFile,
+        this.manualSaveHistoryFile, this.excludedFiles,
+        this.failUnrecognizedDescriptorLines);
     new Thread(this.reader).start();
     return descriptorQueue;
+  }
+
+  @Override
+  public void saveHistoryFile(File historyFile) {
+    if (!this.reader.hasFinishedReading) {
+      throw new IllegalStateException("Saving history is only permitted after "
+          + "reading descriptors.");
+    }
+    this.reader.writeNewHistory(historyFile);
   }
 
   private static class DescriptorReaderRunnable implements Runnable {
@@ -153,7 +174,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private BlockingIteratorImpl<DescriptorFile> descriptorQueue;
 
-    private File historyFile;
+    private File autoSaveHistoryFile;
+
+    private File manualSaveHistoryFile;
 
     private SortedMap<String, Long> excludedFilesBefore = new TreeMap<>();
 
@@ -168,12 +191,14 @@ public class DescriptorReaderImpl implements DescriptorReader {
     private DescriptorReaderRunnable(List<File> directories,
         List<File> tarballs,
         BlockingIteratorImpl<DescriptorFile> descriptorQueue,
-        File historyFile, SortedMap<String, Long> excludedFiles,
+        File autoSaveHistoryFile, File manualSaveHistoryFile,
+        SortedMap<String, Long> excludedFiles,
         boolean failUnrecognizedDescriptorLines) {
       this.directories = directories;
       this.tarballs = tarballs;
       this.descriptorQueue = descriptorQueue;
-      this.historyFile = historyFile;
+      this.autoSaveHistoryFile = autoSaveHistoryFile;
+      this.manualSaveHistoryFile = manualSaveHistoryFile;
       if (excludedFiles != null) {
         this.excludedFilesBefore = excludedFiles;
       }
@@ -184,7 +209,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     public void run() {
       try {
-        this.readOldHistory();
+        this.readOldHistory(this.autoSaveHistoryFile);
+        this.readOldHistory(this.manualSaveHistoryFile);
         this.readDescriptors();
         this.readTarballs();
         this.hasFinishedReading = true;
@@ -195,17 +221,17 @@ public class DescriptorReaderImpl implements DescriptorReader {
         this.descriptorQueue.setOutOfDescriptors();
       }
       if (this.hasFinishedReading) {
-        this.writeNewHistory();
+        this.writeNewHistory(this.autoSaveHistoryFile);
       }
     }
 
-    private void readOldHistory() {
-      if (this.historyFile == null || !this.historyFile.exists()) {
+    private void readOldHistory(File historyFile) {
+      if (historyFile == null || !historyFile.exists()) {
         return;
       }
       try {
         BufferedReader br = new BufferedReader(new FileReader(
-            this.historyFile));
+            historyFile));
         String line;
         while ((line = br.readLine()) != null) {
           if (!line.contains(" ")) {
@@ -223,16 +249,16 @@ public class DescriptorReaderImpl implements DescriptorReader {
       }
     }
 
-    private void writeNewHistory() {
-      if (this.historyFile == null) {
+    private void writeNewHistory(File historyFile) {
+      if (historyFile == null) {
         return;
       }
       try {
-        if (this.historyFile.getParentFile() != null) {
-          this.historyFile.getParentFile().mkdirs();
+        if (historyFile.getParentFile() != null) {
+          historyFile.getParentFile().mkdirs();
         }
         BufferedWriter bw = new BufferedWriter(new FileWriter(
-            this.historyFile));
+            historyFile));
         SortedMap<String, Long> newHistory = new TreeMap<>();
         newHistory.putAll(this.excludedFilesAfter);
         newHistory.putAll(this.parsedFilesAfter);

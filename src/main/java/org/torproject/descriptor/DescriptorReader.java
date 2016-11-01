@@ -68,9 +68,38 @@ public interface DescriptorReader {
    * <p>Lines in the history file contain the last modified time in
    * milliseconds since the epoch and the absolute path of a file.</p>
    *
+   * @deprecated Replaced by {@link #setHistoryFile()} and
+   *     {@link #saveHistoryFile()} which let the application explicitly tell us
+   *     when it's done processing read descriptors.
+   *
    * @since 1.0.0
    */
   public void setExcludeFiles(File historyFile);
+
+  /**
+   * Set a history file to load before reading descriptors and exclude
+   * descriptor files that haven't changed since they have last been read.
+   *
+   * <p>Lines in the history file contain the last modified time in
+   * milliseconds since the epoch and the absolute path of a file, separated by
+   * a space.</p>
+   *
+   * @since 1.6.0
+   */
+  public void setHistoryFile(File historyFile);
+
+  /**
+   * Save a history file with file names and last modified timestamps of
+   * descriptor files that exist in the input directory or directories and that
+   * have either been parsed or excluded from parsing.
+   *
+   * <p>Lines in the history file contain the last modified time in
+   * milliseconds since the epoch and the absolute path of a file, separated by
+   * a space.</p>
+   *
+   * @since 1.6.0
+   */
+  public void saveHistoryFile(File historyFile);
 
   /**
    * Exclude files if they haven't changed since the corresponding last
