@@ -18,14 +18,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -229,23 +228,23 @@ public class DescriptorReaderImpl implements DescriptorReader {
       if (historyFile == null || !historyFile.exists()) {
         return;
       }
+      List<String> lines = null;
       try {
-        BufferedReader br = new BufferedReader(new FileReader(
-            historyFile));
-        String line;
-        while ((line = br.readLine()) != null) {
-          if (!line.contains(" ")) {
-            log.warn("Unexpected line structure in old history: " + line);
-            continue;
-          }
-          long lastModifiedMillis = Long.parseLong(line.substring(0,
-              line.indexOf(" ")));
-          String absolutePath = line.substring(line.indexOf(" ") + 1);
-          this.excludedFilesBefore.put(absolutePath, lastModifiedMillis);
-        }
-        br.close();
+        lines = Files.readAllLines(historyFile.toPath(),
+            StandardCharsets.UTF_8);
       } catch (IOException | NumberFormatException e) {
-        log.warn("Trouble reading old history.", e);
+        log.warn("Trouble reading given history file {}.", historyFile, e);
+        return;
+      }
+      for (String line : lines) {
+        if (!line.contains(" ")) {
+          log.warn("Unexpected line structure in old history: {}", line);
+          continue;
+        }
+        long lastModifiedMillis = Long.parseLong(line.substring(0,
+            line.indexOf(" ")));
+        String absolutePath = line.substring(line.indexOf(" ") + 1);
+        this.excludedFilesBefore.put(absolutePath, lastModifiedMillis);
       }
     }
 
@@ -253,24 +252,23 @@ public class DescriptorReaderImpl implements DescriptorReader {
       if (historyFile == null) {
         return;
       }
-      try {
-        if (historyFile.getParentFile() != null) {
-          historyFile.getParentFile().mkdirs();
-        }
-        BufferedWriter bw = new BufferedWriter(new FileWriter(
-            historyFile));
+      if (historyFile.getParentFile() != null) {
+        historyFile.getParentFile().mkdirs();
+      }
+      try (BufferedWriter bw = Files.newBufferedWriter(historyFile.toPath(),
+          StandardCharsets.UTF_8)) {
         SortedMap<String, Long> newHistory = new TreeMap<>();
         newHistory.putAll(this.excludedFilesAfter);
         newHistory.putAll(this.parsedFilesAfter);
         for (Map.Entry<String, Long> e : newHistory.entrySet()) {
           String absolutePath = e.getKey();
-          long lastModifiedMillis = e.getValue();
-          bw.write(String.valueOf(lastModifiedMillis) + " " + absolutePath
-              + "\n");
+          String lastModifiedMillis = String.valueOf(e.getValue());
+          bw.write(lastModifiedMillis + " " + absolutePath);
+          bw.newLine();
         }
-        bw.close();
       } catch (IOException e) {
-        log.warn("Trouble writing new history.", e);
+        log.warn("Trouble writing new history file '{}'.",
+            historyFile, e);
       }
     }
 
@@ -395,16 +393,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private List<Descriptor> readFile(File file) throws IOException,
         DescriptorParseException {
-      FileInputStream fis = new FileInputStream(file);
-      BufferedInputStream bis = new BufferedInputStream(fis);
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      int len;
-      byte[] data = new byte[1024];
-      while ((len = bis.read(data, 0, 1024)) >= 0) {
-        baos.write(data, 0, len);
-      }
-      bis.close();
-      byte[] rawDescriptorBytes = baos.toByteArray();
+      byte[] rawDescriptorBytes = Files.readAllBytes(file.toPath());
       return this.descriptorParser.parseDescriptors(rawDescriptorBytes,
           file.getName());
     }
