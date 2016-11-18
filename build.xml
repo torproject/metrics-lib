@@ -140,7 +140,7 @@
     </javac>
   </target>
 
-  <target name="test" depends="clean,compile,testcompile">
+  <target name="test" depends="compile,testcompile">
     <junit fork="true" haltonfailure="true" printsummary="off">
       <classpath refid="test.classpath"/>
       <formatter type="plain" usefile="false"/>
@@ -162,7 +162,7 @@
   <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties">
     <classpath refid="checkstyle.classpath" />
   </taskdef>
-  <target name="checks" depends="compile" unless="jenkins">
+  <target name="checks" depends="compile">
     <checkstyle config="${testresources}/metrics_checks.xml">
       <fileset dir="${sources}"
                includes="**/*.java" />
