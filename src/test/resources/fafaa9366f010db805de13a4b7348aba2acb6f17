@@ -1,0 +1,30 @@
+@type server-descriptor 1.0
+router kouettng 163.172.27.62 9001 0 9030
+platform Tor 0.2.4.27 on Linux
+protocols Link 1 2 Circuit 1
+published 2016-12-01 05:34:06
+fingerprint 1B95 9E07 DF0C 33C1 E956 C8D8 FA41 5AB5 2F07 6FB7
+uptime 21297741
+bandwidth 5120000 10240000 6494197
+extra-info-digest EC116B121B2E59095003761F49004CACA0C30692
+onion-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBALlqdCYEaNqaCtZgExgbsEaUPpcbSxVKFHg0GQQyX///WxzpXNliaIWq
+npKXhsTyW2Bn1gcilvYXY/kLx8LV8c5QnolrJUClL3IQp0Mbt+VPk+rG8QfxqltV
+bcXKh2sgRCtS1oWlnuaVlbjz+y/xpjNGxI3ejKc1ttvJ+RMH0fAHAgMBAAE=
+-----END RSA PUBLIC KEY-----
+signing-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAK7E60fMuLIln5nJtDV2ldKw+bulhV4MrD634RpleWc6gMFgEulZmEy1
+8aCEtFk8OpbCHjFb6+ppsNmvZGmQ15lvYe3B7n92cYDe4y+ChVs3MGOkT7k+PjVu
+pujkT428JsG1T5yfiagLxWJkUqP/pG5SHNpgKEViGaPhY1WG5gW7AgMBAAE=
+-----END RSA PUBLIC KEY-----
+hidden-service-dir
+ntor-onion-key 9LojUfBId8wzCfFwgWrTKB1l3m3hwCJ1MJFD/sugM2U=
+reject *:*
+router-signature
+-----BEGIN SIGNATURE-----
+Z4I3KQDvcAhJsnhSiAj/Y0Mf7AJgYDtPnKR7ToPqsRxG2HqtOmK9LdJPK1oeJO3F
+k1fNdhXaEsaRYkzwrdchyRUgiY2GBOuWpCsz00NDwVPpuv8FFGwVXwNhiTOmU6uW
+f/5FMuIDdB8PqMJ69UvGPRg2EXBmuPIUqEsISw6ut7I=
+-----END SIGNATURE-----
