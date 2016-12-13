@@ -232,19 +232,19 @@ public class DescriptorReaderImpl implements DescriptorReader {
       try {
         lines = Files.readAllLines(historyFile.toPath(),
             StandardCharsets.UTF_8);
+        for (String line : lines) {
+          if (!line.contains(" ")) {
+            log.warn("Unexpected line structure in old history: {}", line);
+            continue;
+          }
+          long lastModifiedMillis = Long.parseLong(line.substring(0,
+              line.indexOf(" ")));
+          String absolutePath = line.substring(line.indexOf(" ") + 1);
+          this.excludedFilesBefore.put(absolutePath, lastModifiedMillis);
+        }
       } catch (IOException | NumberFormatException e) {
         log.warn("Trouble reading given history file {}.", historyFile, e);
         return;
-      }
-      for (String line : lines) {
-        if (!line.contains(" ")) {
-          log.warn("Unexpected line structure in old history: {}", line);
-          continue;
-        }
-        long lastModifiedMillis = Long.parseLong(line.substring(0,
-            line.indexOf(" ")));
-        String absolutePath = line.substring(line.indexOf(" ") + 1);
-        this.excludedFilesBefore.put(absolutePath, lastModifiedMillis);
       }
     }
 

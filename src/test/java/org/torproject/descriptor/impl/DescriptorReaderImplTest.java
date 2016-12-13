@@ -62,12 +62,15 @@ public class DescriptorReaderImplTest {
         parseHistoryContents.getBytes(StandardCharsets.UTF_8));
   }
 
-  private void readAllDescriptors() {
+  private int readAllDescriptors() {
     Iterator<DescriptorFile> descriptorFiles =
         this.descriptorReader.readDescriptors();
+    int count = 0;
     while (descriptorFiles.hasNext()) {
+      count++;
       descriptorFiles.next();
     }
+    return count;
   }
 
   private void assertExcludedFilesParsedFilesAndHistoryFileLines(
@@ -147,5 +150,18 @@ public class DescriptorReaderImplTest {
     this.readAllDescriptors();
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(0, 0, 1);
   }
+
+  @Test
+  public void testSetHistoryCorruptFile() throws IOException {
+    File corruptHistoryFile = this.temporaryFolder.newFile("corruptHistory");
+    Files.write(corruptHistoryFile.toPath(),"1293145200000  \n   ".getBytes());
+    this.descriptorReader.setHistoryFile(corruptHistoryFile);
+    this.descriptorReader.addDirectory(this.inputDirectory);
+    int count = this.readAllDescriptors();
+    assertEquals("Two files should have been parsed.", 2, count);
+    descriptorReader.saveHistoryFile(this.historyFile);
+    this.assertExcludedFilesParsedFilesAndHistoryFileLines(0, 2, 2);
+  }
+
 }
 
