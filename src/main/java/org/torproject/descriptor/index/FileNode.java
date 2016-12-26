@@ -39,6 +39,13 @@ public class FileNode implements Comparable<FileNode> {
 
   private long lastModifiedMillis;
 
+  /* Added to satisfy Gson. */
+  private FileNode() {
+    path = null;
+    size = 0;
+    lastModified = null;
+  }
+
   /**
    * A FileNode needs a path, i.e. the file name, the file size, and
    * the last modified date-time string.

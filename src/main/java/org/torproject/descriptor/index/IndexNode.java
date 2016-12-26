@@ -56,6 +56,14 @@ public class IndexNode {
   @Expose
   public final SortedSet<FileNode> files;
 
+  /* Added to satisfy Gson. */
+  private IndexNode() {
+    created = null;
+    path = null;
+    files = null;
+    directories = null;
+  }
+
   /** An index node is the top-level node in the JSON structure. */
   public IndexNode(String created, String path,
             SortedSet<FileNode> files,

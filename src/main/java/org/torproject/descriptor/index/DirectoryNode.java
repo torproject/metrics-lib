@@ -26,6 +26,13 @@ public class DirectoryNode implements Comparable<DirectoryNode> {
   @Expose
   public final SortedSet<DirectoryNode> directories;
 
+  /* Added to satisfy Gson. */
+  private DirectoryNode() {
+    path = null;
+    files = null;
+    directories = null;
+  }
+
   /** A directory for the JSON structure. */
   public DirectoryNode(String path, SortedSet<FileNode> files,
                 SortedSet<DirectoryNode> directories) {
