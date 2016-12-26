@@ -243,6 +243,28 @@ Upload the tarball and signature file and announce the new version.
 Edit `build.xml` again and raise `release.version` to the current release
 plus `-dev`, e.g., `1.0.0-dev`.
 
+Development
+-----------
+
+If you want to start working on metrics-lib, you can clone the repo:
+
+```
+git clone --recursive https://git.torproject.org/metrics-lib.git
+```
+
+In case you forgot to add '--recursive'
+just run the bootstrap script for the submodule:
+
+```
+./src/main/resources/bootstrap-development.sh
+```
+
+or the contained git command:
+
+```
+git submodule update --init --remote
+```
+
 
 Packages
 --------
