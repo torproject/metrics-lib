@@ -210,11 +210,12 @@ public class DescriptorIndexCollectorTest {
     assertTrue("found " + res, res.isEmpty());
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test()
   public void testMinimalArgs() throws IOException {
     File fakeDir = tmpf.newFolder("fantasy-dir");
     new DescriptorIndexCollector()
-        .collectDescriptors(null, new String[]{}, 100L, fakeDir, true);
+        .collectDescriptors("http://localhost", new String[]{}, 100L, fakeDir,
+        true);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -227,7 +228,7 @@ public class DescriptorIndexCollectorTest {
   public void testIllegalDirectory() throws IOException {
     File fakeDir = tmpf.newFile("fantasy-dir");
     new DescriptorIndexCollector().collectDescriptors(
-        null, new String[]{}, 100L, fakeDir, false);
+        "", new String[]{}, 100L, fakeDir, false);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -236,24 +237,14 @@ public class DescriptorIndexCollectorTest {
         null, new String[]{}, 100L, null, false);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testExistingFile() throws IOException {
-    File fakeDir = tmpf.newFile("fantasy-dir");
-    new DescriptorIndexCollector()
-        .collectDescriptors(null, null, 100L, fakeDir, false);
-  }
-
   @Test()
   public void testExistingDir() throws IOException {
     File dir = tmpf.newFolder();
     dir.setWritable(false);
     SortedMap<String, FileNode> fm = new TreeMap<>();
     fm.put("readonly", new FileNode("w", 2L, "2100-01-01 01:01"));
-    thrown.expect(RuntimeException.class);
-    thrown.expectMessage("Cannot create dir: " + dir.toString()
-        + "/readonly");
     new DescriptorIndexCollector()
-        .fetchRemoteFiles(null, fm, 100L, dir, new TreeMap<String, Long>());
+        .fetchRemoteFiles("", fm, 100L, dir, new TreeMap<String, Long>());
   }
 }
 

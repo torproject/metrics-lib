@@ -43,14 +43,23 @@ public class DescriptorIndexCollector implements DescriptorCollector {
   public void collectDescriptors(String collecTorIndexUrlString,
       String[] remoteDirectories, long minLastModified,
       File localDirectory, boolean deleteExtraneousLocalFiles) {
+    log.info("Starting descriptor collection.");
     if (minLastModified < 0) {
       throw new IllegalArgumentException("A negative minimum "
           + "last-modified time is not permitted.");
     }
-    if (null == localDirectory || localDirectory.isFile()) {
-      throw new IllegalArgumentException("Local directory already exists "
-          + "and is not a directory.");
+    if (null == collecTorIndexUrlString || null == remoteDirectories
+        || null == localDirectory) {
+      throw new IllegalArgumentException("Null values are not permitted for "
+          + "CollecTor base URL, remote directories, or local directory.");
     }
+    if (localDirectory.isFile()) {
+      throw new IllegalArgumentException("A non-directory file exists at {} "
+          + "which is supposed to be the local directory for storing remotely "
+          + "fetched files.  Move this file away or delete it.  Aborting "
+          + "descriptor collection.");
+    }
+    log.info("Indexing local directory {}.", localDirectory.getAbsolutePath());
     SortedMap<String, Long> localFiles = statLocalDirectory(localDirectory);
     SortedMap<String, FileNode> remoteFiles = null;
     IndexNode index = null;
@@ -61,20 +70,29 @@ public class DescriptorIndexCollector implements DescriptorCollector {
       if (indexUrl.getPath().isEmpty()) {
         indexUrlString += "/index/index.json";
       }
+      log.info("Fetching remote index file {}.", indexUrlString);
       index = IndexNode.fetchIndex(indexUrlString);
       remoteFiles = index.retrieveFilesIn(remoteDirectories);
     } catch (Exception ex) {
-      throw new RuntimeException("Cannot fetch index from '"
-          + indexUrlString + "'.", ex);
+      log.warn("Cannot fetch index file {} and hence cannot determine which "
+          + "remote files to fetch.  Aborting descriptor collection.",
+          indexUrlString, ex);
+      return;
     }
-    this.fetchRemoteFiles(index.path, remoteFiles, minLastModified,
-        localDirectory, localFiles);
+    log.info("Fetching remote files from {}.", index.path);
+    if (!this.fetchRemoteFiles(index.path, remoteFiles, minLastModified,
+        localDirectory, localFiles)) {
+      return;
+    }
     if (deleteExtraneousLocalFiles) {
-      this.deleteExtraneousLocalFiles(remoteFiles, localDirectory, localFiles);
+      log.info("Deleting extraneous files from local directory {}.",
+          localDirectory);
+      deleteExtraneousLocalFiles(remoteFiles, localDirectory, localFiles);
     }
+    log.info("Finished descriptor collection.");
   }
 
-  void fetchRemoteFiles(String baseUrl, SortedMap<String, FileNode> remotes,
+  boolean fetchRemoteFiles(String baseUrl, SortedMap<String, FileNode> remotes,
       long minLastModified, File localDir, SortedMap<String, Long> locals) {
     for (Map.Entry<String, FileNode> entry : remotes.entrySet()) {
       String filepathname = entry.getKey();
@@ -88,10 +106,17 @@ public class DescriptorIndexCollector implements DescriptorCollector {
         continue;
       }
       if (!filepath.exists() && !filepath.mkdirs()) {
-        throw new RuntimeException("Cannot create dir: " + filepath);
+        log.warn("Cannot create local directory {} to store remote file {}.  "
+            + "Aborting descriptor collection.", filepath, filename);
+        return false;
       }
       File destinationFile = new File(filepath, filename);
       File tempDestinationFile = new File(filepath, "." + filename);
+      log.debug("Fetching remote file {} with expected size of {} bytes from "
+          + "{}, storing locally to temporary file {}, then renaming to {}.",
+          filepathname, entry.getValue().size, baseUrl,
+          tempDestinationFile.getAbsolutePath(),
+          destinationFile.getAbsolutePath());
       try (InputStream is = new URL(baseUrl + "/" + filepathname)
           .openStream()) {
         Files.copy(is, tempDestinationFile.toPath());
@@ -99,13 +124,18 @@ public class DescriptorIndexCollector implements DescriptorCollector {
           tempDestinationFile.renameTo(destinationFile);
           destinationFile.setLastModified(lastModifiedMillis);
         } else {
-          log.warn("File sizes don't match. Expected {},  but received {}.",
-              entry.getValue().size, tempDestinationFile.length());
+          log.warn("Fetched remote file {} from {} has a size of {} bytes "
+              + "which is different from the expected {} bytes.  Not storing "
+              + "this file.",
+              filename, baseUrl, tempDestinationFile.length(),
+              entry.getValue().size);
         }
       } catch (IOException e) {
-        log.error("Cannot fetch remote file: {}", filename, e);
+        log.warn("Cannot fetch remote file {} from {}.  Skipping that file.",
+            filename, baseUrl, e);
       }
     }
+    return true;
   }
 
   static void deleteExtraneousLocalFiles(
@@ -113,7 +143,10 @@ public class DescriptorIndexCollector implements DescriptorCollector {
       File localDir, SortedMap<String, Long> locals) {
     for (String localPath : locals.keySet()) {
       if (!remoteFiles.containsKey(localPath)) {
-        new File(localDir, localPath).delete();
+        File extraneousLocalFile = new File(localDir, localPath);
+        log.debug("Deleting extraneous local file {}.",
+            extraneousLocalFile.getAbsolutePath());
+        extraneousLocalFile.delete();
       }
     }
   }
@@ -137,7 +170,9 @@ public class DescriptorIndexCollector implements DescriptorCollector {
             }
         });
     } catch (IOException ioe) {
-      log.error("Cannot stat local directory.", ioe);
+      log.warn("Cannot index local directory {} to skip any remote files that "
+          + "already exist locally.  Continuing with an either empty or "
+          + "incomplete index of local files.", ioe);
     }
     return locals;
   }
