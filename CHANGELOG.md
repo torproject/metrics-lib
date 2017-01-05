@@ -4,6 +4,9 @@
    - Add two methods for loading and saving a parse history file in
      the descriptor reader to avoid situations where applications fail
      after all descriptors are read but before they are all processed.
+   - Unify the build process by adding git-submodule metrics-base in
+     src/build and removing all centralized parts of the build
+     process.
 
 
 # Changes in version 1.5.0 - 2016-10-19
