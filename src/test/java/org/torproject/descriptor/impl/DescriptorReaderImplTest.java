@@ -1,5 +1,6 @@
 /* Copyright 2016--2017 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;

@@ -1,5 +1,6 @@
 /* Copyright 2015--2017 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
@@ -8,9 +9,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.SortedMap;
-
 import org.junit.Test;
+
+import java.util.SortedMap;
 
 public class DescriptorCollectorImplTest {
 

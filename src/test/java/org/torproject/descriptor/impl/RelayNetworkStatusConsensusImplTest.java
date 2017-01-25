@@ -1,9 +1,7 @@
 /* Copyright 2011--2017 The Tor Project
  * See LICENSE for licensing information */
-package org.torproject.descriptor.impl;
 
-import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.DirectorySignature;
+package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,14 +9,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DirectorySignature;
+import org.torproject.descriptor.NetworkStatusEntry;
+import org.torproject.descriptor.RelayNetworkStatusConsensus;
+
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-
-import org.junit.Test;
-import org.torproject.descriptor.NetworkStatusEntry;
-import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
 /* TODO Add test cases for all lines starting with "opt ". */
 
@@ -31,6 +31,7 @@ public class RelayNetworkStatusConsensusImplTest {
   /* Helper class to build a directory source based on default data and
    * modifications requested by test methods. */
   private static class DirSourceBuilder {
+
     private static RelayNetworkStatusConsensus
         createWithDirSource(String dirSourceString)
         throws DescriptorParseException {
@@ -39,7 +40,9 @@ public class RelayNetworkStatusConsensusImplTest {
       return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
           true);
     }
+
     private String nickname = "gabelmoo";
+
     private static RelayNetworkStatusConsensus
         createWithNickname(String string)
         throws DescriptorParseException {
@@ -47,7 +50,9 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.nickname = string;
       return createWithDirSource(dsb.buildDirSource());
     }
+
     private String identity = "ED03BB616EB2F60BEC80151114BB25CEF515B226";
+
     private static RelayNetworkStatusConsensus
         createWithIdentity(String string)
         throws DescriptorParseException {
@@ -55,7 +60,9 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.identity = string;
       return createWithDirSource(dsb.buildDirSource());
     }
+
     private String hostName = "212.112.245.170";
+
     private static RelayNetworkStatusConsensus
         createWithHostName(String string)
         throws DescriptorParseException {
@@ -63,7 +70,9 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.hostName = string;
       return createWithDirSource(dsb.buildDirSource());
     }
+
     private String address = "212.112.245.170";
+
     private static RelayNetworkStatusConsensus
         createWithAddress(String string)
         throws DescriptorParseException {
@@ -71,7 +80,9 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.address = string;
       return createWithDirSource(dsb.buildDirSource());
     }
+
     private String dirPort = "80";
+
     private static RelayNetworkStatusConsensus
         createWithDirPort(String string)
         throws DescriptorParseException {
@@ -79,7 +90,9 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.dirPort = string;
       return createWithDirSource(dsb.buildDirSource());
     }
+
     private String orPort = "443";
+
     private static RelayNetworkStatusConsensus
         createWithOrPort(String string)
         throws DescriptorParseException {
@@ -87,8 +100,10 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.orPort = string;
       return createWithDirSource(dsb.buildDirSource());
     }
+
     private String contactLine = "contact 4096R/C5AA446D Sebastian Hahn "
         + "<tor@sebastianhahn.net>";
+
     private static RelayNetworkStatusConsensus
         createWithContactLine(String line)
         throws DescriptorParseException {
@@ -96,8 +111,10 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.contactLine = line;
       return createWithDirSource(dsb.buildDirSource());
     }
+
     private String voteDigestLine =
         "vote-digest 0F398A5834D2C139E1D92310B09F814F243354D1";
+
     private static RelayNetworkStatusConsensus
         createWithVoteDigestLine(String line)
         throws DescriptorParseException {
@@ -105,6 +122,7 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.voteDigestLine = line;
       return createWithDirSource(dsb.buildDirSource());
     }
+
     private String buildDirSource() {
       StringBuilder sb = new StringBuilder();
       String dirSourceLine = "dir-source " + this.nickname + " "
@@ -127,6 +145,7 @@ public class RelayNetworkStatusConsensusImplTest {
   /* Helper class to build a status entry based on default data and
    * modifications requested by test methods. */
   private static class StatusEntryBuilder {
+
     private static RelayNetworkStatusConsensus
         createWithStatusEntry(String statusEntryString)
         throws DescriptorParseException {
@@ -135,7 +154,9 @@ public class RelayNetworkStatusConsensusImplTest {
       return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
           true);
     }
+
     private String nickname = "right2privassy3";
+
     private static RelayNetworkStatusConsensus
         createWithNickname(String string)
         throws DescriptorParseException {
@@ -143,7 +164,9 @@ public class RelayNetworkStatusConsensusImplTest {
       seb.nickname = string;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
     private String fingerprintBase64 = "ADQ6gCT3DiFHKPDFr3rODBUI8HM";
+
     private static RelayNetworkStatusConsensus
         createWithFingerprintBase64(String string)
         throws DescriptorParseException {
@@ -151,7 +174,9 @@ public class RelayNetworkStatusConsensusImplTest {
       seb.fingerprintBase64 = string;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
     private String descriptorBase64 = "Yiti+nayuT2Efe2X1+M4nslwVuU";
+
     private static RelayNetworkStatusConsensus
         createWithDescriptorBase64(String string)
         throws DescriptorParseException {
@@ -159,7 +184,9 @@ public class RelayNetworkStatusConsensusImplTest {
       seb.descriptorBase64 = string;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
     private String publishedString = "2011-11-29 21:34:27";
+
     private static RelayNetworkStatusConsensus
         createWithPublishedString(String string)
         throws DescriptorParseException {
@@ -167,55 +194,75 @@ public class RelayNetworkStatusConsensusImplTest {
       seb.publishedString = string;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
     private String address = "50.63.8.215";
+
     private static RelayNetworkStatusConsensus
         createWithAddress(String string) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.address = string;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
     private String orPort = "9023";
+
     private static RelayNetworkStatusConsensus
         createWithOrPort(String string) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.orPort = string;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
     private String dirPort = "0";
+
     private static RelayNetworkStatusConsensus
         createWithDirPort(String string) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.dirPort = string;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
+    @SuppressWarnings("checkstyle:membername")
     private String sLine = "s Exit Fast Named Running Stable Valid";
+
     private static RelayNetworkStatusConsensus
         createWithSLine(String line) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.sLine = line;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
+    @SuppressWarnings("checkstyle:membername")
     private String vLine = "v Tor 0.2.1.29 (r8e9b25e6c7a2e70c)";
+
     private static RelayNetworkStatusConsensus
         createWithVLine(String line) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.vLine = line;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
+    @SuppressWarnings("checkstyle:membername")
     private String wLine = "w Bandwidth=1";
+
     private static RelayNetworkStatusConsensus
         createWithWLine(String line) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.wLine = line;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
+    @SuppressWarnings("checkstyle:membername")
     private String pLine = "p accept 80,1194,1220,1293";
+
     private static RelayNetworkStatusConsensus
         createWithPLine(String line) throws DescriptorParseException {
       StatusEntryBuilder seb = new StatusEntryBuilder();
       seb.pLine = line;
       return createWithStatusEntry(seb.buildStatusEntry());
     }
+
+    @SuppressWarnings("checkstyle:localvariablename")
     private String buildStatusEntry() {
       StringBuilder sb = new StringBuilder();
       String rLine = "r " + nickname + " " + fingerprintBase64 + " "
@@ -244,6 +291,7 @@ public class RelayNetworkStatusConsensusImplTest {
   /* Helper class to build a directory signature based on default data and
    * modifications requested by test methods. */
   private static class DirectorySignatureBuilder {
+
     private static RelayNetworkStatusConsensus
         createWithDirectorySignature(String directorySignatureString)
         throws DescriptorParseException {
@@ -252,7 +300,9 @@ public class RelayNetworkStatusConsensusImplTest {
       return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
           true);
     }
+
     private String identity = "ED03BB616EB2F60BEC80151114BB25CEF515B226";
+
     private static RelayNetworkStatusConsensus
         createWithIdentity(String string)
         throws DescriptorParseException {
@@ -260,8 +310,10 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.identity = string;
       return createWithDirectorySignature(dsb.buildDirectorySignature());
     }
+
     private String signingKey =
         "845CF1D0B370CA443A8579D18E7987E7E532F639";
+
     private static RelayNetworkStatusConsensus
         createWithSigningKey(String string)
         throws DescriptorParseException {
@@ -269,6 +321,7 @@ public class RelayNetworkStatusConsensusImplTest {
       dsb.signingKey = string;
       return createWithDirectorySignature(dsb.buildDirectorySignature());
     }
+
     private String buildDirectorySignature() {
       String directorySignature = "directory-signature " + identity + " "
           + signingKey + "\n"
@@ -1093,16 +1146,16 @@ public class RelayNetworkStatusConsensusImplTest {
   @Test()
   public void testBandwidthWeightsLineNoSpace()
       throws DescriptorParseException {
-    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
-        createWithBandwidthWeightsLine("bandwidth-weights");
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithBandwidthWeightsLine("bandwidth-weights");
     assertNotNull(consensus.getBandwidthWeights());
   }
 
   @Test()
   public void testBandwidthWeightsLineOneSpace()
       throws DescriptorParseException {
-    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
-        createWithBandwidthWeightsLine("bandwidth-weights ");
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithBandwidthWeightsLine("bandwidth-weights ");
     assertNotNull(consensus.getBandwidthWeights());
   }
 
@@ -1185,8 +1238,8 @@ public class RelayNetworkStatusConsensusImplTest {
   public void testUnrecognizedHeaderLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
-        createWithUnrecognizedHeaderLine(unrecognizedLine, false);
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithUnrecognizedHeaderLine(unrecognizedLine, false);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
@@ -1204,8 +1257,8 @@ public class RelayNetworkStatusConsensusImplTest {
   public void testUnrecognizedDirSourceLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
-        createWithUnrecognizedDirSourceLine(unrecognizedLine, false);
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithUnrecognizedDirSourceLine(unrecognizedLine, false);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
@@ -1223,8 +1276,8 @@ public class RelayNetworkStatusConsensusImplTest {
   public void testUnrecognizedStatusEntryLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
-        createWithUnrecognizedStatusEntryLine(unrecognizedLine, false);
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithUnrecognizedStatusEntryLine(unrecognizedLine, false);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
@@ -1242,8 +1295,8 @@ public class RelayNetworkStatusConsensusImplTest {
   public void testUnrecognizedDirectoryFooterLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
-        createWithUnrecognizedFooterLine(unrecognizedLine, false);
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithUnrecognizedFooterLine(unrecognizedLine, false);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
@@ -1261,8 +1314,8 @@ public class RelayNetworkStatusConsensusImplTest {
   public void testUnrecognizedDirectorySignatureLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusConsensus consensus = ConsensusBuilder.
-        createWithUnrecognizedDirectorySignatureLine(unrecognizedLine,
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithUnrecognizedDirectorySignatureLine(unrecognizedLine,
         false);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);

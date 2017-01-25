@@ -36,7 +36,8 @@ import java.util.TreeMap;
 
 public class DescriptorReaderImpl implements DescriptorReader {
 
-  private static Logger log = LoggerFactory.getLogger(DescriptorReaderImpl.class);
+  private static Logger log = LoggerFactory.getLogger(
+      DescriptorReaderImpl.class);
   private boolean hasStartedReading = false;
 
   private List<File> directories = new ArrayList<>();

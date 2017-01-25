@@ -1,5 +1,6 @@
 /* Copyright 2016--2017 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.benchmark;
 
 import org.torproject.descriptor.Descriptor;
@@ -20,7 +21,7 @@ import java.util.SortedMap;
 
 public class MeasurePerformance {
 
-  /* Check if all necessary files are available and then measure
+  /** Check if all necessary files are available and then measure
    * performance of some more or less common use cases. */
   public static void main(String[] args) {
     if (!filesAvailable()) {
@@ -88,8 +89,9 @@ public class MeasurePerformance {
   private static void measureAverageAdvertisedBandwidth(
       File tarballFileOrDirectory) {
     System.out.println("Starting measureAverageAdvertisedBandwidth");
-    long startedMillis = System.currentTimeMillis();
-    long sumAdvertisedBandwidth = 0, countedServerDescriptors = 0;
+    final long startedMillis = System.currentTimeMillis();
+    long sumAdvertisedBandwidth = 0;
+    long countedServerDescriptors = 0;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
     descriptorReader.addTarball(tarballFileOrDirectory);
@@ -125,7 +127,7 @@ public class MeasurePerformance {
 
   private static void measureCountriesV3Requests(File tarballFile) {
     System.out.println("Starting measureCountriesV3Requests");
-    long startedMillis = System.currentTimeMillis();
+    final long startedMillis = System.currentTimeMillis();
     Set<String> countries = new HashSet<>();
     long countedExtraInfoDescriptors = 0;
     DescriptorReader descriptorReader =
@@ -165,9 +167,10 @@ public class MeasurePerformance {
   private static void measureAverageRelaysExit(
       File tarballFileOrDirectory) {
     System.out.println("Starting measureAverageRelaysExit");
-    long startedMillis = System.currentTimeMillis();
-    long totalRelaysWithExitFlag = 0L, totalRelays = 0L,
-        countedConsensuses = 0L;
+    final long startedMillis = System.currentTimeMillis();
+    long totalRelaysWithExitFlag = 0L;
+    long totalRelays = 0L;
+    long countedConsensuses = 0L;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
     descriptorReader.addTarball(tarballFileOrDirectory);
@@ -212,8 +215,9 @@ public class MeasurePerformance {
       File tarballFile) {
     System.out.println("Starting "
         + "measureFractionRelaysExit80Microdescriptors");
-    long startedMillis = System.currentTimeMillis();
-    long totalRelaysWithExitFlag = 0L, countedMicrodescriptors = 0L;
+    final long startedMillis = System.currentTimeMillis();
+    long totalRelaysWithExitFlag = 0L;
+    long countedMicrodescriptors = 0L;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
     descriptorReader.addTarball(tarballFile);

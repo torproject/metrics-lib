@@ -1,20 +1,21 @@
 /* Copyright 2011--2017 The Tor Project
  * See LICENSE for licensing information */
-package org.torproject.descriptor.impl;
 
-import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.DirectorySignature;
+package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DirectorySignature;
+import org.torproject.descriptor.RelayNetworkStatusVote;
+
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.junit.Test;
-import org.torproject.descriptor.RelayNetworkStatusVote;
 
 /* TODO Add test cases for all lines starting with "opt ". */
 
@@ -27,7 +28,9 @@ public class RelayNetworkStatusVoteImplTest {
   /* Helper class to build a vote based on default data and modifications
    * requested by test methods. */
   private static class VoteBuilder {
+
     private String networkStatusVersionLine = "network-status-version 3";
+
     private static RelayNetworkStatusVote
         createWithNetworkStatusVersionLine(String line)
         throws DescriptorParseException {
@@ -35,7 +38,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.networkStatusVersionLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String voteStatusLine = "vote-status vote";
+
     private static RelayNetworkStatusVote
         createWithVoteStatusLine(String line)
         throws DescriptorParseException {
@@ -43,8 +48,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.voteStatusLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String consensusMethodsLine =
         "consensus-methods 1 2 3 4 5 6 7 8 9 10 11";
+
     private static RelayNetworkStatusVote
         createWithConsensusMethodsLine(String line)
         throws DescriptorParseException {
@@ -52,7 +59,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.consensusMethodsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String publishedLine = "published 2011-11-30 08:50:01";
+
     private static RelayNetworkStatusVote
         createWithPublishedLine(String line)
         throws DescriptorParseException {
@@ -60,7 +69,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.publishedLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String validAfterLine = "valid-after 2011-11-30 09:00:00";
+
     private static RelayNetworkStatusVote
         createWithValidAfterLine(String line)
         throws DescriptorParseException {
@@ -68,7 +79,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.validAfterLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String freshUntilLine = "fresh-until 2011-11-30 10:00:00";
+
     private static RelayNetworkStatusVote
         createWithFreshUntilLine(String line)
         throws DescriptorParseException {
@@ -76,7 +89,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.freshUntilLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String validUntilLine = "valid-until 2011-11-30 12:00:00";
+
     private static RelayNetworkStatusVote
         createWithValidUntilLine(String line)
         throws DescriptorParseException {
@@ -84,7 +99,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.validUntilLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String votingDelayLine = "voting-delay 300 300";
+
     private static RelayNetworkStatusVote
         createWithVotingDelayLine(String line)
         throws DescriptorParseException {
@@ -92,8 +109,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.votingDelayLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String clientVersionsLine = "client-versions 0.2.1.31,"
         + "0.2.2.34,0.2.3.6-alpha,0.2.3.7-alpha,0.2.3.8-alpha";
+
     private static RelayNetworkStatusVote
         createWithClientVersionsLine(String line)
         throws DescriptorParseException {
@@ -101,8 +120,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.clientVersionsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String serverVersionsLine = "server-versions 0.2.1.31,"
         + "0.2.2.34,0.2.3.6-alpha,0.2.3.7-alpha,0.2.3.8-alpha";
+
     private static RelayNetworkStatusVote
         createWithServerVersionsLine(String line)
         throws DescriptorParseException {
@@ -110,7 +131,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.serverVersionsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String packageLines = null;
+
     protected static RelayNetworkStatusVote
         createWithPackageLines(String lines)
         throws DescriptorParseException {
@@ -118,8 +141,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.packageLines = lines;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String knownFlagsLine = "known-flags Authority BadExit Exit "
         + "Fast Guard HSDir Named Running Stable Unnamed V2Dir Valid";
+
     private static RelayNetworkStatusVote
         createWithKnownFlagsLine(String line)
         throws DescriptorParseException {
@@ -127,10 +152,12 @@ public class RelayNetworkStatusVoteImplTest {
       vb.knownFlagsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String flagThresholdsLine = "flag-thresholds "
         + "stable-uptime=693369 stable-mtbf=153249 fast-speed=40960 "
         + "guard-wfu=94.669% guard-tk=691200 guard-bw-inc-exits=174080 "
         + "guard-bw-exc-exits=184320 enough-mtbf=1";
+
     private static RelayNetworkStatusVote
         createWithFlagThresholdsLine(String line)
         throws DescriptorParseException {
@@ -138,11 +165,13 @@ public class RelayNetworkStatusVoteImplTest {
       vb.flagThresholdsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String paramsLine = "params "
         + "CircuitPriorityHalflifeMsec=30000 bwauthbestratio=1 "
         + "bwauthcircs=1 bwauthdescbw=0 bwauthkp=10000 bwauthpid=1 "
         + "bwauthtd=5000 bwauthti=50000 bwauthtidecay=5000 cbtnummodes=3 "
         + "cbtquantile=80 circwindow=1000 refuseunknownexits=1";
+
     private static RelayNetworkStatusVote
         createWithParamsLine(String line)
         throws DescriptorParseException {
@@ -150,9 +179,11 @@ public class RelayNetworkStatusVoteImplTest {
       vb.paramsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String dirSourceLine = "dir-source urras "
         + "80550987E1D626E3EBA5E5E75A458DE0626D088C 208.83.223.34 "
         + "208.83.223.34 443 80";
+
     private static RelayNetworkStatusVote
         createWithDirSourceLine(String line)
         throws DescriptorParseException {
@@ -160,8 +191,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirSourceLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String contactLine = "contact 4096R/E012B42D Jacob Appelbaum "
         + "<jacob@appelbaum.net>";
+
     private static RelayNetworkStatusVote
         createWithContactLine(String line)
         throws DescriptorParseException {
@@ -169,7 +202,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.contactLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String legacyDirKeyLine = null;
+
     private static RelayNetworkStatusVote
         createWithLegacyDirKeyLine(String line)
         throws DescriptorParseException {
@@ -177,8 +212,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.legacyDirKeyLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String dirKeyCertificateVersionLine =
         "dir-key-certificate-version 3";
+
     private static RelayNetworkStatusVote
         createWithDirKeyCertificateVersionLine(String line)
         throws DescriptorParseException {
@@ -186,8 +223,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirKeyCertificateVersionLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String fingerprintLine = "fingerprint "
         + "80550987E1D626E3EBA5E5E75A458DE0626D088C";
+
     private static RelayNetworkStatusVote
         createWithFingerprintLine(String line)
         throws DescriptorParseException {
@@ -195,8 +234,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.fingerprintLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String dirKeyPublishedLine = "dir-key-published 2011-04-27 "
         + "05:34:37";
+
     private static RelayNetworkStatusVote
         createWithDirKeyPublishedLine(String line)
         throws DescriptorParseException {
@@ -204,8 +245,10 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirKeyPublishedLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String dirKeyExpiresLine = "dir-key-expires 2012-04-27 "
         + "05:34:37";
+
     private static RelayNetworkStatusVote
         createWithDirKeyExpiresLine(String line)
         throws DescriptorParseException {
@@ -213,6 +256,7 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirKeyExpiresLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String dirIdentityKeyLines = "dir-identity-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"
         + "MIIBigKCAYEAtKpuLgVK25sfScjsxfVU1ljofrDygt9GP7bNJl/rghX42KUT97"
@@ -225,6 +269,7 @@ public class RelayNetworkStatusVoteImplTest {
         + "TvcaKz9CEj4XcKm+kOmzejYmIa\nkbWNcRpXPiUZ+xmwGtsq30xrzqiONmERkx"
         + "qlmf7bVQPFvh3Kz6hGcmTBhTbHSe9h\nzDgmdaTNn3EHAgMBAAE=\n"
         + "-----END RSA PUBLIC KEY-----";
+
     private static RelayNetworkStatusVote
         createWithDirIdentityKeyLines(String lines)
         throws DescriptorParseException {
@@ -232,6 +277,7 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirIdentityKeyLines = lines;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String dirSigningKeyLines = "dir-signing-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"
         + "MIGJAoGBAN05qyHFQlTqykMP8yLuD4G2UuYulD4Xs8iSX5uqF+WGsUA1E4zZh4"
@@ -239,6 +285,7 @@ public class RelayNetworkStatusVoteImplTest {
         + "mBGsN7\nPUXyMNjwRKL6UvrcbYk1d2mRBLO7SAP/sFW5fHhIBVeLIWrzQ19rAg"
         + "MBAAE=\n"
         + "-----END RSA PUBLIC KEY-----";
+
     private static RelayNetworkStatusVote
         createWithDirSigningKeyLines(String lines)
         throws DescriptorParseException {
@@ -246,12 +293,14 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirSigningKeyLines = lines;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String dirKeyCrosscertLines = "dir-key-crosscert\n"
         + "-----BEGIN ID SIGNATURE-----\n"
         + "rPBFn6IJ6TvAHj4pSwlg+RTn1fP89JGSVa08wuyJr5dAvZsdakQXvRjamT9oJU"
         + "aZ\nnY5Rl/tRlGuSQ0BglTPPKoXdKERK0FUr9f0EKrQy7NDUgE2j9losiRuyKz"
         + "hA3neZ\nK4yF8bhqAwM51u7fzAhIjNeRif9c04rhFJJCseco84w=\n"
         + "-----END ID SIGNATURE-----";
+
     private static RelayNetworkStatusVote
         createWithDirKeyCrosscertLines(String lines)
         throws DescriptorParseException {
@@ -259,6 +308,7 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirKeyCrosscertLines = lines;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String dirKeyCertificationLines = "dir-key-certification\n"
         + "-----BEGIN SIGNATURE-----\n"
         + "hPSh6FuohNF5ccjiMbkvr8cZJwGFuL11cNtwN9k0X3pUdFZVATIEkqBe7z+rE2"
@@ -271,6 +321,7 @@ public class RelayNetworkStatusVoteImplTest {
         + "bEGbvY/P8mzVAZxp3Yz+sRtNel\nC1SWz/Fx+Saex5oI7DJ3xtSD4XqKb/wYwZ"
         + "FT8IxDYq1t2tFXdHxd4QPRVcvc0zYC\n"
         + "-----END SIGNATURE-----";
+
     private static RelayNetworkStatusVote
         createWithDirKeyCertificationLines(String lines)
         throws DescriptorParseException {
@@ -278,14 +329,18 @@ public class RelayNetworkStatusVoteImplTest {
       vb.dirKeyCertificationLines = lines;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private List<String> statusEntries = null;
+
     private static RelayNetworkStatusVote createWithStatusEntries(
         List<String> statusEntries) throws DescriptorParseException {
       VoteBuilder vb = new VoteBuilder();
       vb.statusEntries = statusEntries;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String directoryFooterLine = "directory-footer";
+
     private static RelayNetworkStatusVote
         createWithDirectoryFooterLine(String line)
         throws DescriptorParseException {
@@ -293,6 +348,7 @@ public class RelayNetworkStatusVoteImplTest {
       vb.directoryFooterLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String directorySignatureLines = "directory-signature "
           + "80550987E1D626E3EBA5E5E75A458DE0626D088C "
           + "EEB9299D295C1C815E289FBF2F2BBEA5F52FDD19\n"
@@ -301,6 +357,7 @@ public class RelayNetworkStatusVoteImplTest {
           + "F3Yh\nrXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40Oi"
           + "kfOIwEj+Ny\n+zBRQssP3hPhTPOj/A7o3mZZwtL6x1sxpeu/nME1l5E=\n"
           + "-----END SIGNATURE-----";
+
     private static RelayNetworkStatusVote
         createWithDirectorySignatureLines(String lines)
         throws DescriptorParseException {
@@ -308,7 +365,9 @@ public class RelayNetworkStatusVoteImplTest {
       vb.directorySignatureLines = lines;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
+
     private String unrecognizedHeaderLine = null;
+
     protected static RelayNetworkStatusVote
         createWithUnrecognizedHeaderLine(String line,
         boolean failUnrecognizedDescriptorLines)
@@ -318,7 +377,9 @@ public class RelayNetworkStatusVoteImplTest {
       return new RelayNetworkStatusVoteImpl(vb.buildVote(),
           failUnrecognizedDescriptorLines);
     }
+
     private String unrecognizedDirSourceLine = null;
+
     protected static RelayNetworkStatusVote
         createWithUnrecognizedDirSourceLine(String line,
         boolean failUnrecognizedDescriptorLines)
@@ -328,7 +389,9 @@ public class RelayNetworkStatusVoteImplTest {
       return new RelayNetworkStatusVoteImpl(vb.buildVote(),
           failUnrecognizedDescriptorLines);
     }
+
     private String unrecognizedStatusEntryLine = null;
+
     protected static RelayNetworkStatusVote
         createWithUnrecognizedStatusEntryLine(String line,
         boolean failUnrecognizedDescriptorLines)
@@ -338,7 +401,9 @@ public class RelayNetworkStatusVoteImplTest {
       return new RelayNetworkStatusVoteImpl(vb.buildVote(),
           failUnrecognizedDescriptorLines);
     }
+
     private String unrecognizedFooterLine = null;
+
     protected static RelayNetworkStatusVote
         createWithUnrecognizedFooterLine(String line,
         boolean failUnrecognizedDescriptorLines)
@@ -348,7 +413,9 @@ public class RelayNetworkStatusVoteImplTest {
       return new RelayNetworkStatusVoteImpl(vb.buildVote(),
           failUnrecognizedDescriptorLines);
     }
+
     private String unrecognizedDirectorySignatureLine = null;
+
     protected static RelayNetworkStatusVote
         createWithUnrecognizedDirectorySignatureLine(String line,
         boolean failUnrecognizedDescriptorLines)
@@ -378,6 +445,7 @@ public class RelayNetworkStatusVoteImplTest {
           + "m 8,9,10,11 "
           + "sha256=9ciEx9t0McXk9A06I7qwN7pxuNOdpCP64RV/6cx2Zkc");
     }
+
     private byte[] buildVote() {
       StringBuilder sb = new StringBuilder();
       this.appendHeader(sb);
@@ -387,6 +455,7 @@ public class RelayNetworkStatusVoteImplTest {
       this.appendDirectorySignature(sb);
       return sb.toString().getBytes();
     }
+
     private void appendHeader(StringBuilder sb) {
       if (this.networkStatusVersionLine != null) {
         sb.append(this.networkStatusVersionLine).append("\n");
@@ -434,6 +503,7 @@ public class RelayNetworkStatusVoteImplTest {
         sb.append(this.unrecognizedHeaderLine).append("\n");
       }
     }
+
     private void appendDirSource(StringBuilder sb) {
       if (this.dirSourceLine != null) {
         sb.append(this.dirSourceLine).append("\n");
@@ -472,6 +542,7 @@ public class RelayNetworkStatusVoteImplTest {
         sb.append(this.unrecognizedDirSourceLine).append("\n");
       }
     }
+
     private void appendStatusEntries(StringBuilder sb) {
       for (String statusEntry : this.statusEntries) {
         sb.append(statusEntry).append("\n");
@@ -480,6 +551,7 @@ public class RelayNetworkStatusVoteImplTest {
         sb.append(this.unrecognizedStatusEntryLine).append("\n");
       }
     }
+
     private void appendFooter(StringBuilder sb) {
       if (this.directoryFooterLine != null) {
         sb.append(this.directoryFooterLine).append("\n");
@@ -488,6 +560,7 @@ public class RelayNetworkStatusVoteImplTest {
         sb.append(this.unrecognizedFooterLine).append("\n");
       }
     }
+
     private void appendDirectorySignature(StringBuilder sb) {
       if (this.directorySignatureLines != null) {
         sb.append(directorySignatureLines).append("\n");
@@ -517,8 +590,8 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals(30000, (int) vote.getConsensusParams().get(
         "CircuitPriorityHalflifeMsec"));
     assertEquals("Tor 0.2.1.29 (r8e9b25e6c7a2e70c)",
-        vote.getStatusEntry("00343A8024F70E214728F0C5AF7ACE0C1508F073").
-        getVersion());
+        vote.getStatusEntry("00343A8024F70E214728F0C5AF7ACE0C1508F073")
+        .getVersion());
     assertEquals(3, vote.getDirKeyCertificateVersion());
     assertEquals("80550987E1D626E3EBA5E5E75A458DE0626D088C",
         vote.getIdentity());
@@ -832,11 +905,11 @@ public class RelayNetworkStatusVoteImplTest {
     }
   }
 
-   @Test(expected = DescriptorParseException.class)
-   public void testPackageIncomplete() throws DescriptorParseException {
-     String packageLine = "package shouldbesecond 0 http";
-     ConsensusBuilder.createWithPackageLines(packageLine);
-   }
+  @Test(expected = DescriptorParseException.class)
+  public void testPackageIncomplete() throws DescriptorParseException {
+    String packageLine = "package shouldbesecond 0 http";
+    ConsensusBuilder.createWithPackageLines(packageLine);
+  }
 
   @Test(expected = DescriptorParseException.class)
   public void testKnownFlagsNoLine() throws DescriptorParseException {
@@ -1284,8 +1357,8 @@ public class RelayNetworkStatusVoteImplTest {
   public void testUnrecognizedHeaderLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusVote vote = VoteBuilder.
-        createWithUnrecognizedHeaderLine(unrecognizedLine, false);
+    RelayNetworkStatusVote vote = VoteBuilder
+        .createWithUnrecognizedHeaderLine(unrecognizedLine, false);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
@@ -1303,8 +1376,8 @@ public class RelayNetworkStatusVoteImplTest {
   public void testUnrecognizedDirSourceLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusVote vote = VoteBuilder.
-        createWithUnrecognizedDirSourceLine(unrecognizedLine, false);
+    RelayNetworkStatusVote vote = VoteBuilder
+        .createWithUnrecognizedDirSourceLine(unrecognizedLine, false);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
@@ -1321,8 +1394,8 @@ public class RelayNetworkStatusVoteImplTest {
   public void testUnrecognizedFooterLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusVote vote = VoteBuilder.
-        createWithUnrecognizedFooterLine(unrecognizedLine, false);
+    RelayNetworkStatusVote vote = VoteBuilder
+        .createWithUnrecognizedFooterLine(unrecognizedLine, false);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());

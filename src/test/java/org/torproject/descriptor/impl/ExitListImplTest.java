@@ -1,16 +1,18 @@
 /* Copyright 2015--2017 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExitListEntry;
+
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExitListImplTest {
 

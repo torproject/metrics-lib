@@ -1,16 +1,18 @@
 /* Copyright 2015--2017 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
 import org.torproject.descriptor.BridgeNetworkStatus;
 import org.torproject.descriptor.DescriptorParseException;
+
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /* Test parsing of bridge network statuses.  Some of the parsing code is
  * already tested in the consensus/vote-parsing tests. */
@@ -19,8 +21,10 @@ public class BridgeNetworkStatusTest {
   /* Helper class to build a bridge network status based on default data
    * and modifications requested by test methods. */
   private static class StatusBuilder {
+
     private String fileName = "20151121-173936-"
         + "4A0CCD2DDC7995083D73F5D667100C8A5831F16D";
+
     private static BridgeNetworkStatus
         createWithFileName(String fileName)
         throws DescriptorParseException {
@@ -29,7 +33,9 @@ public class BridgeNetworkStatusTest {
       return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
           true);
     }
+
     private String publishedLine = "published 2015-11-21 17:39:36";
+
     private static BridgeNetworkStatus
         createWithPublishedLine(String line)
         throws DescriptorParseException {
@@ -38,11 +44,13 @@ public class BridgeNetworkStatusTest {
       return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
           true);
     }
+
     private String flagThresholdsLine = "flag-thresholds "
         + "stable-uptime=3105080 stable-mtbf=2450615 fast-speed=55000 "
         + "guard-wfu=98.000% guard-tk=691200 guard-bw-inc-exits=337000 "
         + "guard-bw-exc-exits=339000 enough-mtbf=1 "
         + "ignoring-advertised-bws=0";
+
     private static BridgeNetworkStatus
         createWithFlagThresholdsLine(String line)
         throws DescriptorParseException {
@@ -51,8 +59,11 @@ public class BridgeNetworkStatusTest {
       return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
           true);
     }
+
     private List<String> statusEntries = new ArrayList<>();
+
     private String unrecognizedHeaderLine = null;
+
     protected static BridgeNetworkStatus
         createWithUnrecognizedHeaderLine(String line,
         boolean failUnrecognizedDescriptorLines)
@@ -62,7 +73,9 @@ public class BridgeNetworkStatusTest {
       return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
           failUnrecognizedDescriptorLines);
     }
+
     private String unrecognizedStatusEntryLine = null;
+
     protected static BridgeNetworkStatus
         createWithUnrecognizedStatusEntryLine(String line,
         boolean failUnrecognizedDescriptorLines)
@@ -79,12 +92,14 @@ public class BridgeNetworkStatusTest {
           + "10.153.163.200 443 0\ns Fast Running Stable Valid\n"
           + "w Bandwidth=264\np reject 1-65535");
     }
+
     private byte[] buildStatus() {
       StringBuilder sb = new StringBuilder();
       this.appendHeader(sb);
       this.appendStatusEntries(sb);
       return sb.toString().getBytes();
     }
+
     private void appendHeader(StringBuilder sb) {
       if (this.publishedLine != null) {
         sb.append(this.publishedLine).append("\n");
@@ -96,6 +111,7 @@ public class BridgeNetworkStatusTest {
         sb.append(this.unrecognizedHeaderLine).append("\n");
       }
     }
+
     private void appendStatusEntries(StringBuilder sb) {
       for (String statusEntry : this.statusEntries) {
         sb.append(statusEntry).append("\n");

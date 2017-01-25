@@ -34,7 +34,8 @@ import org.slf4j.LoggerFactory;
  * descriptor downloader:</p>
  *
  * <p><code>
- *  java -Ddescriptor.downloader=my.special.descriptorimpl.Downloader my.app.Mainclass
+ *  java -Ddescriptor.downloader=my.special.descriptorimpl.Downloader \
+ *      my.app.Mainclass
  * </code></p>
  *
  * @since 1.0.0

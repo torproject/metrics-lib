@@ -1,19 +1,21 @@
 /* Copyright 2015--2017 The Tor Project
  * See LICENSE for licensing information */
+
 package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.List;
+import org.torproject.descriptor.Descriptor;
 
 import org.junit.Test;
-import org.torproject.descriptor.Descriptor;
+
+import java.util.List;
 
 public class TorperfResultImplTest {
 
   @Test()
-  public void testAnnotatedInput() throws Exception{
+  public void testAnnotatedInput() throws Exception {
     TorperfResultImpl result = (TorperfResultImpl)
         (TorperfResultImpl.parseTorperfResults((torperfAnnotation + input)
         .getBytes("US-ASCII"), false).get(0));
@@ -29,7 +31,7 @@ public class TorperfResultImplTest {
   }
 
   @Test()
-  public void testPartiallyAnnotatedInput() throws Exception{
+  public void testPartiallyAnnotatedInput() throws Exception {
     byte[] asciiBytes = (torperfAnnotation
         + input + input + input).getBytes("US-ASCII");
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
