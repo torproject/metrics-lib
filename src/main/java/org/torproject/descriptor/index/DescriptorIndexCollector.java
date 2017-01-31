@@ -87,7 +87,8 @@ public class DescriptorIndexCollector implements DescriptorCollector {
     if (deleteExtraneousLocalFiles) {
       log.info("Deleting extraneous files from local directory {}.",
           localDirectory);
-      deleteExtraneousLocalFiles(remoteFiles, localDirectory, localFiles);
+      deleteExtraneousLocalFiles(remoteDirectories, remoteFiles, localDirectory,
+          localFiles);
     }
     log.info("Finished descriptor collection.");
   }
@@ -138,15 +139,19 @@ public class DescriptorIndexCollector implements DescriptorCollector {
     return true;
   }
 
-  static void deleteExtraneousLocalFiles(
+  static void deleteExtraneousLocalFiles(String[] remoteDirectories,
       SortedMap<String, FileNode> remoteFiles,
       File localDir, SortedMap<String, Long> locals) {
     for (String localPath : locals.keySet()) {
-      if (!remoteFiles.containsKey(localPath)) {
-        File extraneousLocalFile = new File(localDir, localPath);
-        log.debug("Deleting extraneous local file {}.",
-            extraneousLocalFile.getAbsolutePath());
-        extraneousLocalFile.delete();
+      for (String remoteDirectory : remoteDirectories) {
+        if (localPath.startsWith(remoteDirectory)) {
+          if (!remoteFiles.containsKey(localPath)) {
+            File extraneousLocalFile = new File(localDir, localPath);
+            log.debug("Deleting extraneous local file {}.",
+                extraneousLocalFile.getAbsolutePath());
+            extraneousLocalFile.delete();
+          }
+        }
       }
     }
   }

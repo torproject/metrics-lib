@@ -139,6 +139,8 @@ public class DescriptorIndexCollectorTest {
   public void testNormalCollectingWithDeletion() throws Exception {
     File localFolder = tmpf.newFolder();
     makeStructure(localFolder, "1");
+    File nonSyncedDir = makeDirs(localFolder.toString(), "d");
+    makeFiles(nonSyncedDir, "p1");
 
     File remoteDirectory = tmpf.newFolder();
     makeStructure(remoteDirectory, "2");
@@ -158,10 +160,10 @@ public class DescriptorIndexCollectorTest {
         .collectDescriptors(indexFile.toURL().toString(),
             new String[]{"a/b", "a/b/c"}, 1451606400_000L, localFolder, true);
 
-    // verify file addition.
+    // verify file addition, including that the non-synced dir is not touched.
     checkContains(true,
         DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
-        "a/b/y2", "a/b/x2", "a/b/c/u2");
+        "a/b/y2", "a/b/x2", "a/b/c/u2", "d/p1");
 
     // verify that invalid files weren't fetched.
     checkContains(false,

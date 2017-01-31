@@ -7,6 +7,8 @@
    - Unify the build process by adding git-submodule metrics-base in
      src/build and removing all centralized parts of the build
      process.
+   - Avoid deleting extraneous local descriptor files when collecting
+     descriptors from CollecTor.
 
 
 # Changes in version 1.5.0 - 2016-10-19
