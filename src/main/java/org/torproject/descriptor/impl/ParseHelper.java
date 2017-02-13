@@ -8,13 +8,16 @@ import org.torproject.descriptor.DescriptorParseException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.DatatypeConverter;
@@ -577,6 +580,50 @@ public class ParseHelper {
     }
     throw new DescriptorParseException("Unable to locate "
         + "master-key-ed25519 in identity-ed25519.");
+  }
+
+  private static Map<String, SortedMap<String, SortedSet<Long>>>
+      parsedProtocolVersions = new HashMap<>();
+
+  protected static SortedMap<String, SortedSet<Long>> parseProtocolVersions(
+      String line, String lineNoOpt, String[] partsNoOpt)
+      throws DescriptorParseException {
+    if (!parsedProtocolVersions.containsKey(lineNoOpt)) {
+      SortedMap<String, SortedSet<Long>> parsed = new TreeMap<>();
+      boolean invalid = false;
+      try {
+        for (int i = 1; i < partsNoOpt.length; i++) {
+          String[] part = partsNoOpt[i].split("=");
+          SortedSet<Long> versions = new TreeSet<>();
+          for (String val : part[1].split(",")) {
+            if (val.contains("-")) {
+              String[] fromTo = val.split("-");
+              long from = Long.parseLong(fromTo[0]);
+              long to = Long.parseLong(fromTo[1]);
+              if (from > to || to >= 0x1_0000_0000L) {
+                invalid = true;
+              } else {
+                for (long j = from;
+                    j <= to; j++) {
+                  versions.add(j);
+                }
+              }
+            } else {
+              versions.add(Long.parseLong(val));
+            }
+          }
+          parsed.put(part[0], Collections.unmodifiableSortedSet(versions));
+        }
+      } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+        throw new DescriptorParseException("Invalid line '" + line + "'.", e);
+      }
+      if (invalid) {
+        throw new DescriptorParseException("Invalid line '" + line + "'.");
+      }
+      parsedProtocolVersions.put(lineNoOpt,
+          Collections.unmodifiableSortedMap(parsed));
+    }
+    return parsedProtocolVersions.get(lineNoOpt);
   }
 }
 

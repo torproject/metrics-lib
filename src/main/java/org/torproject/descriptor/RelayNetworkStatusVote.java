@@ -105,6 +105,38 @@ public interface RelayNetworkStatusVote extends Descriptor {
   public List<String> getRecommendedClientVersions();
 
   /**
+   * Return the version numbers of all protocols that clients should support,
+   * or null if the vote does not contain an opinion about protocol versions.
+   *
+   * @since 1.6.0
+   */
+  public SortedMap<String, SortedSet<Long>> getRecommendedClientProtocols();
+
+  /**
+   * Return the version numbers of all protocols that relays should support,
+   * or null if the vote does not contain an opinion about protocol versions.
+   *
+   * @since 1.6.0
+   */
+  public SortedMap<String, SortedSet<Long>> getRecommendedRelayProtocols();
+
+  /**
+   * Return the version numbers of all protocols that clients must support,
+   * or null if the vote does not contain an opinion about protocol versions.
+   *
+   * @since 1.6.0
+   */
+  public SortedMap<String, SortedSet<Long>> getRequiredClientProtocols();
+
+  /**
+   * Return the version numbers of all protocols that relays must support,
+   * or null if the vote does not contain an opinion about protocol versions.
+   *
+   * @since 1.6.0
+   */
+  public SortedMap<String, SortedSet<Long>> getRequiredRelayProtocols();
+
+  /**
    * Return a list of software packages and their versions together with a
    * URL and one or more digests in the format <code>PackageName Version
    * URL DIGESTS</code> that are known by this directory authority, or

@@ -5,6 +5,7 @@ package org.torproject.descriptor;
 
 import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
 
 /**
@@ -121,6 +122,14 @@ public interface NetworkStatusEntry {
    * @since 1.0.0
    */
   public String getVersion();
+
+  /**
+   * Return the version numbers of all protocols supported by this server, or
+   * null if the status entry does not specify supported protocol versions.
+   *
+   * @since 1.6.0
+   */
+  public SortedMap<String, SortedSet<Long>> getProtocols();
 
   /**
    * Return the bandwidth weight of this server or -1 if the status entry

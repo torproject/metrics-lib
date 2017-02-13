@@ -13,6 +13,9 @@
      the application can decide at any time to stop consuming
      descriptors without having to worry about the reader thread not
      being done.
+   - Parse "proto" lines in server descriptors, "pr" lines in status
+     entries, and "(recommended|required)-(client|relay)-protocols"
+     lines in consensuses and votes.
 
 
 # Changes in version 1.5.0 - 2016-10-19

@@ -19,6 +19,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeSet;
 
 /* TODO Add test cases for all lines starting with "opt ". */
 
@@ -242,6 +243,16 @@ public class RelayNetworkStatusConsensusImplTest {
       return createWithStatusEntry(seb.buildStatusEntry());
     }
 
+    private String prLine = "pr Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 "
+        + "HSIntro=3 HSRend=1-2 Link=1-4 LinkAuth=1 Microdesc=1-2 Relay=1-2";
+
+    private static RelayNetworkStatusConsensus
+        createWithPrLine(String line) throws DescriptorParseException {
+      StatusEntryBuilder seb = new StatusEntryBuilder();
+      seb.prLine = line;
+      return createWithStatusEntry(seb.buildStatusEntry());
+    }
+
     @SuppressWarnings("checkstyle:membername")
     private String wLine = "w Bandwidth=1";
 
@@ -274,6 +285,9 @@ public class RelayNetworkStatusConsensusImplTest {
       }
       if (this.vLine != null) {
         sb.append(this.vLine).append("\n");
+      }
+      if (this.prLine != null) {
+        sb.append(this.prLine).append("\n");
       }
       if (this.wLine != null) {
         sb.append(this.wLine).append("\n");
@@ -353,6 +367,14 @@ public class RelayNetworkStatusConsensusImplTest {
     assertTrue(consensus.getRecommendedServerVersions().contains(
         "0.2.3.8-alpha"));
     assertTrue(consensus.getKnownFlags().contains("Running"));
+    assertTrue(consensus.getRecommendedClientProtocols().get("Cons")
+        .contains(1L));
+    assertFalse(consensus.getRecommendedRelayProtocols().get("Cons")
+        .contains(33L));
+    assertFalse(consensus.getRequiredClientProtocols().get("Relay")
+        .contains(1L));
+    assertTrue(consensus.getRequiredRelayProtocols().get("Relay")
+        .contains(1L));
     assertEquals(30000, (int) consensus.getConsensusParams().get(
         "CircuitPriorityHalflifeMsec"));
     assertEquals("86.59.21.38", consensus.getDirSourceEntries().get(
@@ -664,6 +686,54 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     ConsensusBuilder.createWithClientVersionsLine(
         "client-versions ,0.2.2.34");
+  }
+
+  @Test()
+  public void testRecommendedClientProtocols123()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithRecommendedClientProtocolsLine(
+        "recommended-client-protocols Cons=1,2,3");
+    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 1L, 2L, 3L })),
+        consensus.getRecommendedClientProtocols().get("Cons"));
+  }
+
+  @Test()
+  public void testRecommendedRelayProtocols134()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithRecommendedRelayProtocolsLine(
+        "recommended-relay-protocols Cons=1,3-4");
+    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 1L, 3L, 4L })),
+        consensus.getRecommendedRelayProtocols().get("Cons"));
+  }
+
+  @Test()
+  public void testRequiredClientProtocols1425()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithRequiredClientProtocolsLine(
+        "required-client-protocols Cons=1-3,2-4");
+    assertEquals(new TreeSet<Long>(Arrays.asList(
+        new Long[] { 1L, 2L, 3L, 4L })),
+        consensus.getRequiredClientProtocols().get("Cons"));
+  }
+
+  @Test()
+  public void testRequiredRelayProtocols1111()
+      throws DescriptorParseException {
+    RelayNetworkStatusConsensus consensus = ConsensusBuilder
+        .createWithRequiredRelayProtocolsLine(
+        "required-relay-protocols Cons=1-1,1-1");
+    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 1L })),
+        consensus.getRequiredRelayProtocols().get("Cons"));
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testRequiredRelayProtocolsTwice()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithRequiredRelayProtocolsLine(
+        "required-relay-protocols Cons=1\nrequired-relay-protocols Cons=1");
   }
 
   @Test()
@@ -1016,6 +1086,15 @@ public class RelayNetworkStatusConsensusImplTest {
   public void testTwoSLines() throws DescriptorParseException {
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.sLine = sb.sLine + "\n" + sb.sLine;
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.statusEntries.add(sb.buildStatusEntry());
+    new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testTwoPrLines() throws DescriptorParseException {
+    StatusEntryBuilder sb = new StatusEntryBuilder();
+    sb.prLine = sb.prLine + "\n" + sb.prLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
     new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);

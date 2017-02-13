@@ -57,6 +57,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.atMostOnceKeywords = new TreeSet<>();
     this.atMostOnceKeywords.add("s");
     this.atMostOnceKeywords.add("v");
+    this.atMostOnceKeywords.add("pr");
     this.atMostOnceKeywords.add("w");
     this.atMostOnceKeywords.add("p");
   }
@@ -94,6 +95,9 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
           break;
         case "v":
           this.parseVLine(line, parts);
+          break;
+        case "pr":
+          this.parsePrLine(line, parts);
           break;
         case "w":
           this.parseWLine(line, parts);
@@ -189,6 +193,12 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     } else {
       this.version = noOptLine.substring(2);
     }
+  }
+
+  private void parsePrLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.parsedAtMostOnceKeyword("pr");
+    this.protocols = ParseHelper.parseProtocolVersions(line, line, parts);
   }
 
   private void parseWLine(String line, String[] parts)
@@ -357,6 +367,13 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   @Override
   public String getVersion() {
     return this.version;
+  }
+
+  private SortedMap<String, SortedSet<Long>> protocols;
+
+  @Override
+  public SortedMap<String, SortedSet<Long>> getProtocols() {
+    return this.protocols;
   }
 
   private long bandwidth = -1L;

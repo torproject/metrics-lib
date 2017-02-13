@@ -4,6 +4,8 @@
 package org.torproject.descriptor;
 
 import java.util.List;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 /**
  * Contains a relay or sanitized bridge server descriptor.
@@ -150,6 +152,14 @@ public interface ServerDescriptor extends Descriptor {
    * @since 1.0.0
    */
   public String getPlatform();
+
+  /**
+   * Return the version numbers of all protocols supported by this server, or
+   * null if this descriptor does not specify supported protocol versions.
+   *
+   * @since 1.6.0
+   */
+  public SortedMap<String, SortedSet<Long>> getProtocols();
 
   /**
    * Return the time in milliseconds since the epoch when this descriptor

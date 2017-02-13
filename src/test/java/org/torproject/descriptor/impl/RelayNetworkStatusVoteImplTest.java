@@ -16,6 +16,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeSet;
 
 /* TODO Add test cases for all lines starting with "opt ". */
 
@@ -150,6 +151,54 @@ public class RelayNetworkStatusVoteImplTest {
         throws DescriptorParseException {
       VoteBuilder vb = new VoteBuilder();
       vb.knownFlagsLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
+
+    private String recommendedClientProtocolsLine =
+        "recommended-client-protocols Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 "
+        + "HSIntro=3 HSRend=1 Link=4 LinkAuth=1 Microdesc=1-2 Relay=2";
+
+    private static RelayNetworkStatusVote
+        createWithRecommendedClientProtocolsLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.recommendedClientProtocolsLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
+
+    private String recommendedRelayProtocolsLine =
+        "recommended-relay-protocols Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 "
+        + "HSIntro=3 HSRend=1 Link=4 LinkAuth=1 Microdesc=1-2 Relay=2";
+
+    private static RelayNetworkStatusVote
+        createWithRecommendedRelayProtocolsLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.recommendedRelayProtocolsLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
+
+    private String requiredClientProtocolsLine =
+        "required-client-protocols Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 "
+        + "HSIntro=3 HSRend=1 Link=4 LinkAuth=1 Microdesc=1-2 Relay=2";
+
+    private static RelayNetworkStatusVote
+        createWithRequiredClientProtocolsLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.requiredClientProtocolsLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
+
+    private String requiredRelayProtocolsLine =
+        "required-relay-protocols Cons=1 Desc=1 DirCache=1 HSDir=1 HSIntro=3 "
+        + "HSRend=1 Link=3-4 LinkAuth=1 Microdesc=1 Relay=1-2";
+
+    private static RelayNetworkStatusVote
+        createWithRequiredRelayProtocolsLine(String line)
+        throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.requiredRelayProtocolsLine = line;
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
 
@@ -492,6 +541,18 @@ public class RelayNetworkStatusVoteImplTest {
       }
       if (this.knownFlagsLine != null) {
         sb.append(this.knownFlagsLine).append("\n");
+      }
+      if (this.recommendedClientProtocolsLine != null) {
+        sb.append(this.recommendedClientProtocolsLine).append("\n");
+      }
+      if (this.recommendedRelayProtocolsLine != null) {
+        sb.append(this.recommendedRelayProtocolsLine).append("\n");
+      }
+      if (this.requiredClientProtocolsLine != null) {
+        sb.append(this.requiredClientProtocolsLine).append("\n");
+      }
+      if (this.requiredRelayProtocolsLine != null) {
+        sb.append(this.requiredRelayProtocolsLine).append("\n");
       }
       if (this.flagThresholdsLine != null) {
         sb.append(this.flagThresholdsLine).append("\n");
@@ -873,6 +934,37 @@ public class RelayNetworkStatusVoteImplTest {
       throws DescriptorParseException {
     VoteBuilder.createWithClientVersionsLine(
         "client-versions ,0.2.2.34");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testRecommendedClientProtocols21()
+      throws DescriptorParseException {
+    VoteBuilder.createWithRecommendedClientProtocolsLine(
+        "recommended-client-protocols Cons=2-1");
+  }
+
+  @Test()
+  public void testRecommendedRelayProtocols0()
+      throws DescriptorParseException {
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithRecommendedRelayProtocolsLine(
+        "recommended-relay-protocols Cons=0");
+    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 0L })),
+        vote.getRecommendedRelayProtocols().get("Cons"));
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testRequiredClientProtocols1Max()
+      throws DescriptorParseException {
+    VoteBuilder.createWithRequiredClientProtocolsLine(
+        "recommended-client-protocols Cons=1-4294967296");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testRequiredRelayProtocolsMinus1()
+      throws DescriptorParseException {
+    VoteBuilder.createWithRequiredRelayProtocolsLine(
+        "recommended-client-protocols Cons=-1");
   }
 
   @Test()

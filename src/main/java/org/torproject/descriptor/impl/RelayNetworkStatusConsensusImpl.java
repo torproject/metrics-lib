@@ -52,7 +52,9 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         + "valid-until,voting-delay,known-flags").split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "client-versions,server-versions,params,directory-footer,"
+        "client-versions,server-versions,recommended-client-protocols,"
+        + "recommended-relay-protocols,required-client-protocols,"
+        + "required-relay-protocols,params,directory-footer,"
         + "bandwidth-weights").split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkFirstKeyword("network-status-version");
@@ -123,6 +125,18 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
           break;
         case "server-versions":
           this.parseServerVersionsLine(line, parts);
+          break;
+        case "recommended-client-protocols":
+          this.parseRecommendedClientProtocolsLine(line, parts);
+          break;
+        case "recommended-relay-protocols":
+          this.parseRecommendedRelayProtocolsLine(line, parts);
+          break;
+        case "required-client-protocols":
+          this.parseRequiredClientProtocolsLine(line, parts);
+          break;
+        case "required-relay-protocols":
+          this.parseRequiredRelayProtocolsLine(line, parts);
           break;
         case "package":
           this.parsePackageLine(line, parts);
@@ -281,6 +295,30 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         line, parts);
   }
 
+  private void parseRecommendedClientProtocolsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.recommendedClientProtocols = ParseHelper.parseProtocolVersions(line,
+        line, parts);
+  }
+
+  private void parseRecommendedRelayProtocolsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.recommendedRelayProtocols = ParseHelper.parseProtocolVersions(line,
+        line, parts);
+  }
+
+  private void parseRequiredClientProtocolsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.requiredClientProtocols = ParseHelper.parseProtocolVersions(line,
+        line, parts);
+  }
+
+  private void parseRequiredRelayProtocolsLine(String line, String[] parts)
+      throws DescriptorParseException {
+    this.requiredRelayProtocols = ParseHelper.parseProtocolVersions(line, line,
+        parts);
+  }
+
   private void parsePackageLine(String line, String[] parts)
       throws DescriptorParseException {
     if (parts.length < 5) {
@@ -395,6 +433,34 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   public List<String> getRecommendedServerVersions() {
     return this.recommendedServerVersions == null ? null
         : Arrays.asList(this.recommendedServerVersions);
+  }
+
+  private SortedMap<String, SortedSet<Long>> recommendedClientProtocols;
+
+  @Override
+  public SortedMap<String, SortedSet<Long>> getRecommendedClientProtocols() {
+    return this.recommendedClientProtocols;
+  }
+
+  private SortedMap<String, SortedSet<Long>> recommendedRelayProtocols;
+
+  @Override
+  public SortedMap<String, SortedSet<Long>> getRecommendedRelayProtocols() {
+    return this.recommendedRelayProtocols;
+  }
+
+  private SortedMap<String, SortedSet<Long>> requiredClientProtocols;
+
+  @Override
+  public SortedMap<String, SortedSet<Long>> getRequiredClientProtocols() {
+    return this.requiredClientProtocols;
+  }
+
+  private SortedMap<String, SortedSet<Long>> requiredRelayProtocols;
+
+  @Override
+  public SortedMap<String, SortedSet<Long>> getRequiredRelayProtocols() {
+    return this.requiredRelayProtocols;
   }
 
   private List<String> packageLines;

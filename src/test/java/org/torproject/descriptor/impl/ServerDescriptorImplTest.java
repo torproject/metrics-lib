@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.TreeSet;
 
 /* Test parsing of relay server descriptors. */
 public class ServerDescriptorImplTest {
@@ -226,12 +227,22 @@ public class ServerDescriptorImplTest {
       return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
 
-    private String protocolsLine = "opt protocols Link 1 2 Circuit 1";
+    private String protocolsLine = null;
 
     private static ServerDescriptor createWithProtocolsLine(
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.protocolsLine = line;
+      return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
+    }
+
+    private String protoLine = "proto Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 "
+        + "HSIntro=3 HSRend=1-2 Link=1-4 LinkAuth=1 Microdesc=1-2 Relay=1-2";
+
+    private static ServerDescriptor createWithProtoLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.protoLine = line;
       return new RelayServerDescriptorImpl(db.buildDescriptor(), true);
     }
 
@@ -395,6 +406,9 @@ public class ServerDescriptorImplTest {
       if (this.protocolsLine != null) {
         sb.append(this.protocolsLine).append("\n");
       }
+      if (this.protoLine != null) {
+        sb.append(this.protoLine).append("\n");
+      }
       if (this.allowSingleHopExitsLine != null) {
         sb.append(this.allowSingleHopExitsLine).append("\n");
       }
@@ -446,10 +460,10 @@ public class ServerDescriptorImplTest {
     assertEquals(0, (int) descriptor.getDirPort());
     assertEquals("Tor 0.2.2.35 (git-b04388f9e7546a9f) on Linux i686",
         descriptor.getPlatform());
-    assertEquals(Arrays.asList(new Integer[] {1, 2}),
-        descriptor.getLinkProtocolVersions());
-    assertEquals(Arrays.asList(new Integer[] {1}),
-        descriptor.getCircuitProtocolVersions());
+    assertEquals(new TreeSet<Long>(Arrays.asList(
+        new Long[] { 1L, 2L, 3L, 4L })), descriptor.getProtocols().get("Link"));
+    assertEquals(new TreeSet<Long>(Arrays.asList(
+        new Long[] { 1L })), descriptor.getProtocols().get("LinkAuth"));
     assertEquals(1325390599000L, descriptor.getPublishedMillis());
     assertEquals("D8733048FC8EC9102466AD8F3098622BF1BF71FD",
         descriptor.getFingerprint());
@@ -605,6 +619,16 @@ public class ServerDescriptorImplTest {
   }
 
   @Test()
+  public void testProtocolsOpt() throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder
+        .createWithProtocolsLine("opt protocols Link 1 2 Circuit 1");
+    assertEquals(Arrays.asList(new Integer[] {1, 2}),
+        descriptor.getLinkProtocolVersions());
+    assertEquals(Arrays.asList(new Integer[] {1}),
+        descriptor.getCircuitProtocolVersions());
+  }
+
+  @Test()
   public void testProtocolsNoOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithProtocolsLine("protocols Link 1 2 Circuit 1");
@@ -624,6 +648,21 @@ public class ServerDescriptorImplTest {
   public void testProtocolsNoCircuitVersions()
       throws DescriptorParseException {
     DescriptorBuilder.createWithProtocolsLine("opt protocols Link 1 2");
+  }
+
+  @Test()
+  public void testProtoGreenPurple() throws DescriptorParseException {
+    ServerDescriptor descriptor = DescriptorBuilder
+        .createWithProtoLine("proto Green=23 Purple=42");
+    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 23L })),
+        descriptor.getProtocols().get("Green"));
+    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 42L })),
+        descriptor.getProtocols().get("Purple"));
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testProtoInvalid() throws DescriptorParseException {
+    DescriptorBuilder.createWithProtoLine("proto Invalid=1+2+3");
   }
 
   @Test(expected = DescriptorParseException.class)

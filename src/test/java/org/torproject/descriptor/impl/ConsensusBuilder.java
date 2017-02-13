@@ -126,6 +126,54 @@ public class ConsensusBuilder {
     return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
 
+  private String recommendedClientProtocolsLine =
+      "recommended-client-protocols Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 "
+      + "HSIntro=3 HSRend=1 Link=4 LinkAuth=1 Microdesc=1-2 Relay=2";
+
+  protected static RelayNetworkStatusConsensus
+      createWithRecommendedClientProtocolsLine(String line)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.recommendedClientProtocolsLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
+
+  private String recommendedRelayProtocolsLine =
+      "recommended-relay-protocols Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 "
+      + "HSIntro=3 HSRend=1 Link=4 LinkAuth=1 Microdesc=1-2 Relay=2";
+
+  protected static RelayNetworkStatusConsensus
+      createWithRecommendedRelayProtocolsLine(String line)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.recommendedRelayProtocolsLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
+
+  private String requiredClientProtocolsLine =
+      "required-client-protocols Cons=1-2 Desc=1-2 DirCache=1 HSDir=1 "
+      + "HSIntro=3 HSRend=1 Link=4 LinkAuth=1 Microdesc=1-2 Relay=2";
+
+  protected static RelayNetworkStatusConsensus
+      createWithRequiredClientProtocolsLine(String line)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.requiredClientProtocolsLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
+
+  private String requiredRelayProtocolsLine =
+      "required-relay-protocols Cons=1 Desc=1 DirCache=1 HSDir=1 HSIntro=3 "
+      + "HSRend=1 Link=3-4 LinkAuth=1 Microdesc=1 Relay=1-2";
+
+  protected static RelayNetworkStatusConsensus
+      createWithRequiredRelayProtocolsLine(String line)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.requiredRelayProtocolsLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
+
   private String paramsLine = "params "
       + "CircuitPriorityHalflifeMsec=30000 bwauthbestratio=1 "
       + "bwauthcircs=1 bwauthdescbw=0 bwauthkp=10000 bwauthpid=1 "
@@ -321,6 +369,18 @@ public class ConsensusBuilder {
     }
     if (this.knownFlagsLine != null) {
       sb.append(this.knownFlagsLine).append("\n");
+    }
+    if (this.recommendedClientProtocolsLine != null) {
+      sb.append(this.recommendedClientProtocolsLine).append("\n");
+    }
+    if (this.recommendedRelayProtocolsLine != null) {
+      sb.append(this.recommendedRelayProtocolsLine).append("\n");
+    }
+    if (this.requiredClientProtocolsLine != null) {
+      sb.append(this.requiredClientProtocolsLine).append("\n");
+    }
+    if (this.requiredRelayProtocolsLine != null) {
+      sb.append(this.requiredRelayProtocolsLine).append("\n");
     }
     if (this.paramsLine != null) {
       sb.append(this.paramsLine).append("\n");

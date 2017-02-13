@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -34,7 +36,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         "router,bandwidth,published".split(",")));
     this.checkExactlyOnceKeywords(exactlyOnceKeywords);
     Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "identity-ed25519,master-key-ed25519,platform,fingerprint,"
+        "identity-ed25519,master-key-ed25519,platform,proto,fingerprint,"
         + "hibernating,uptime,contact,family,read-history,write-history,"
         + "eventdns,caches-extra-info,extra-info-digest,"
         + "hidden-service-dir,protocols,allow-single-hop-exits,onion-key,"
@@ -79,6 +81,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           break;
         case "platform":
           this.parsePlatformLine(line, lineNoOpt, partsNoOpt);
+          break;
+        case "proto":
+          this.parseProtoLine(line, lineNoOpt, partsNoOpt);
           break;
         case "published":
           this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
@@ -301,6 +306,12 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     } else {
       this.platform = "";
     }
+  }
+
+  private void parseProtoLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    this.protocols = ParseHelper.parseProtocolVersions(line, lineNoOpt,
+        partsNoOpt);
   }
 
   private void parsePublishedLine(String line, String lineNoOpt,
@@ -810,6 +821,13 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   @Override
   public String getPlatform() {
     return this.platform;
+  }
+
+  private SortedMap<String, SortedSet<Long>> protocols;
+
+  @Override
+  public SortedMap<String, SortedSet<Long>> getProtocols() {
+    return this.protocols;
   }
 
   private long publishedMillis;
