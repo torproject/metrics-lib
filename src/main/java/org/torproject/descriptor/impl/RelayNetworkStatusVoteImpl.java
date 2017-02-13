@@ -54,7 +54,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         "consensus-methods,client-versions,server-versions,"
         + "recommended-client-protocols,recommended-relay-protocols,"
         + "required-client-protocols,required-relay-protocols,"
-        + "flag-thresholds,params,contact,"
+        + "flag-thresholds,params,contact,shared-rand-participate,"
+        + "shared-rand-previous-value,shared-rand-current-value,"
         + "legacy-key,dir-key-crosscert,dir-address,directory-footer")
         .split(",")));
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
@@ -148,6 +149,18 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           break;
         case "contact":
           this.parseContactLine(line, parts);
+          break;
+        case "shared-rand-participate":
+          this.parseSharedRandParticipateLine(line, parts);
+          break;
+        case "shared-rand-commit":
+          this.parseSharedRandCommitLine(line, parts);
+          break;
+        case "shared-rand-previous-value":
+          this.parseSharedRandPreviousValueLine(line, parts);
+          break;
+        case "shared-rand-current-value":
+          this.parseSharedRandCurrentValueLine(line, parts);
           break;
         case "dir-key-certificate-version":
           this.parseDirKeyCertificateVersionLine(line, parts);
@@ -452,6 +465,53 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     }
   }
 
+  private void parseSharedRandParticipateLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 1) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
+    this.sharedRandParticipate = true;
+  }
+
+  private void parseSharedRandCommitLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (this.sharedRandCommitLines == null) {
+      this.sharedRandCommitLines = new ArrayList<>();
+    }
+    this.sharedRandCommitLines.add(line);
+  }
+
+  private void parseSharedRandPreviousValueLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 3) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
+    try {
+      this.sharedRandPreviousNumReveals = Integer.parseInt(parts[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
+    this.sharedRandPreviousValue = parts[2];
+  }
+
+  private void parseSharedRandCurrentValueLine(String line, String[] parts)
+      throws DescriptorParseException {
+    if (parts.length != 3) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
+    try {
+      this.sharedRandCurrentNumReveals = Integer.parseInt(parts[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in vote.");
+    }
+    this.sharedRandCurrentValue = parts[2];
+  }
+
   private void parseDirKeyCertificateVersionLine(String line,
       String[] parts) throws DescriptorParseException {
     if (parts.length != 2) {
@@ -602,6 +662,48 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   @Override
   public String getContactLine() {
     return this.contactLine;
+  }
+
+  private boolean sharedRandParticipate = false;
+
+  @Override
+  public boolean isSharedRandParticipate() {
+    return this.sharedRandParticipate;
+  }
+
+  private List<String> sharedRandCommitLines = null;
+
+  @Override
+  public List<String> getSharedRandCommitLines() {
+    return this.sharedRandCommitLines;
+  }
+
+  private int sharedRandPreviousNumReveals = -1;
+
+  @Override
+  public int getSharedRandPreviousNumReveals() {
+    return this.sharedRandPreviousNumReveals;
+  }
+
+  private String sharedRandPreviousValue = null;
+
+  @Override
+  public String getSharedRandPreviousValue() {
+    return this.sharedRandPreviousValue;
+  }
+
+  private int sharedRandCurrentNumReveals = -1;
+
+  @Override
+  public int getSharedRandCurrentNumReveals() {
+    return this.sharedRandCurrentNumReveals;
+  }
+
+  private String sharedRandCurrentValue = null;
+
+  @Override
+  public String getSharedRandCurrentValue() {
+    return this.sharedRandCurrentValue;
   }
 
   private int dirKeyCertificateVersion;

@@ -179,6 +179,40 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   public SortedMap<String, Integer> getConsensusParams();
 
   /**
+   * Return the number of commits used to generate the second-to-last shared
+   * random value, or -1 if the consensus does not contain a second-to-last
+   * shared random value.
+   *
+   * @since 1.6.0
+   */
+  public int getSharedRandPreviousNumReveals();
+
+  /**
+   * Return the second-to-last shared random value, encoded in base64, or null
+   * if the consensus does not contain a second-to-last shared random value.
+   *
+   * @since 1.6.0
+   */
+  public String getSharedRandPreviousValue();
+
+  /**
+   * Return the number of commits used to generate the latest shared random
+   * value, or -1 if the consensus does not contain the latest shared random
+   * value.
+   *
+   * @since 1.6.0
+   */
+  public int getSharedRandCurrentNumReveals();
+
+  /**
+   * Return the latest shared random value, encoded in base64, or null if the
+   * consensus does not contain the latest shared random value.
+   *
+   * @since 1.6.0
+   */
+  public String getSharedRandCurrentValue();
+
+  /**
    * Return directory source entries for each directory authority that
    * contributed to the consensus, with map keys being SHA-1 digests of
    * the authorities' identity keys in the version 3 directory protocol,

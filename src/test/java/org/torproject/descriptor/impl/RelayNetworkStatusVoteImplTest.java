@@ -252,6 +252,52 @@ public class RelayNetworkStatusVoteImplTest {
       return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
     }
 
+    private String sharedRandParticipateLine = "shared-rand-participate";
+
+    private static RelayNetworkStatusVote createWithSharedRandParticipateLine(
+        String line) throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.sharedRandParticipateLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
+
+    private List<String> sharedRandCommitLines = Arrays.asList(new String[] {
+        "shared-rand-commit 1 sha3-256 "
+        + "0232AF901C31A04EE9848595AF9BB7620D4C5B2E "
+        + "AAAAAFieVABh3Aauk2h31FVKaW0xIm28T7VPDkzP5nHwoMItxp7iQg==",
+        "shared-rand-commit 1 sha3-256 "
+        + "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4 "
+        + "AAAAAFieVAA26LuAu9z2UhalmV7zuczWauSkqp1c/bsPA3AkH85iGw==" });
+
+    private static RelayNetworkStatusVote createWithSharedRandCommitLines(
+        List<String> lines) throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.sharedRandCommitLines = lines;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
+
+    private String sharedRandPreviousValueLine =
+        "shared-rand-previous-value 8 "
+        + "grwbnD6I40odtsdtWYxqs0DvPweCur6qG2Fo5p5ivS4=";
+
+    private static RelayNetworkStatusVote createWithSharedRandPreviousValueLine(
+        String line) throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.sharedRandPreviousValueLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
+
+    private String sharedRandCurrentValueLine =
+        "shared-rand-current-value 8 "
+        + "D88plxd8YeLfCIVAR9gjiFlWB1WqpC53kWr350o1pzw=";
+
+    private static RelayNetworkStatusVote createWithSharedRandCurrentValueLine(
+        String line) throws DescriptorParseException {
+      VoteBuilder vb = new VoteBuilder();
+      vb.sharedRandCurrentValueLine = line;
+      return new RelayNetworkStatusVoteImpl(vb.buildVote(), true);
+    }
+
     private String legacyDirKeyLine = null;
 
     private static RelayNetworkStatusVote
@@ -571,6 +617,20 @@ public class RelayNetworkStatusVoteImplTest {
       }
       if (this.contactLine != null) {
         sb.append(this.contactLine).append("\n");
+      }
+      if (this.sharedRandParticipateLine != null) {
+        sb.append(this.sharedRandParticipateLine).append("\n");
+      }
+      if (this.sharedRandCommitLines != null) {
+        for (String line : this.sharedRandCommitLines) {
+          sb.append(line).append("\n");
+        }
+      }
+      if (this.sharedRandPreviousValueLine != null) {
+        sb.append(this.sharedRandPreviousValueLine).append("\n");
+      }
+      if (this.sharedRandCurrentValueLine != null) {
+        sb.append(this.sharedRandCurrentValueLine).append("\n");
       }
       if (this.legacyDirKeyLine != null) {
         sb.append(this.legacyDirKeyLine).append("\n");
@@ -1250,6 +1310,43 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithContactLine("contact 4096R/E012B42D Jacob "
         + "Appelbaum <jacob@appelbaum.net>\ncontact 4096R/E012B42D Jacob "
         + "Appelbaum <jacob@appelbaum.net>");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testSharedRandParticipateLineDuplicate()
+      throws DescriptorParseException {
+    VoteBuilder.createWithSharedRandParticipateLine("shared-rand-participate\n"
+        + "shared-rand-participate");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testSharedRandParticipateLineArg()
+      throws DescriptorParseException {
+    VoteBuilder.createWithSharedRandParticipateLine(
+        "shared-rand-participate 1");
+  }
+
+  @Test()
+  public void testSharedRandCommitLinesEmpty() throws DescriptorParseException {
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithSharedRandCommitLines(null);
+    assertNull(vote.getSharedRandCommitLines());
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testSharedRandPreviousValueBeforeNumReveals()
+      throws DescriptorParseException {
+    VoteBuilder.createWithSharedRandPreviousValueLine(
+        "shared-rand-previous-value "
+        + "grwbnD6I40odtsdtWYxqs0DvPweCur6qG2Fo5p5ivS4= 8");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testSharedRandCurrentNoNumReveals()
+      throws DescriptorParseException {
+    VoteBuilder.createWithSharedRandCurrentValueLine(
+        "shared-rand-current-value "
+            + "D88plxd8YeLfCIVAR9gjiFlWB1WqpC53kWr350o1pzw=");
   }
 
   @Test()

@@ -16,6 +16,7 @@
    - Parse "proto" lines in server descriptors, "pr" lines in status
      entries, and "(recommended|required)-(client|relay)-protocols"
      lines in consensuses and votes.
+   - Parse "shared-rand-.*" lines in consensuses and votes.
 
 
 # Changes in version 1.5.0 - 2016-10-19

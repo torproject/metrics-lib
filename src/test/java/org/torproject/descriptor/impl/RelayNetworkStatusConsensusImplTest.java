@@ -855,6 +855,21 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder.createWithParamsLine("params max=2147483648");
   }
 
+  @Test(expected = DescriptorParseException.class)
+  public void testSharedRandPreviousNumRevealsOnly()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithSharedRandPreviousValueLine(
+        "shared-rand-previous-value 8");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testSharedRandPreviousExtraArg()
+      throws DescriptorParseException {
+    ConsensusBuilder.createWithSharedRandCurrentValueLine(
+        "shared-rand-current-value 8 "
+            + "D88plxd8YeLfCIVAR9gjiFlWB1WqpC53kWr350o1pzw= -1.0");
+  }
+
   @Test()
   public void testDirSourceLegacyNickname()
       throws DescriptorParseException {

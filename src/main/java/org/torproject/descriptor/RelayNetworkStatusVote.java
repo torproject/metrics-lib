@@ -306,6 +306,61 @@ public interface RelayNetworkStatusVote extends Descriptor {
   public String getContactLine();
 
   /**
+   * Return whether this directory authority supports and can participate in
+   * the shared random protocol.
+   *
+   * @since 1.6.0
+   */
+  public boolean isSharedRandParticipate();
+
+  /**
+   * Return all currently known directory authority commit lines for the shared
+   * randomness protocol in the original format as they are contained in this
+   * vote, or null if this vote does not contain any such line.
+   *
+   * <pre>
+   * "shared-rand-commit" SP Version SP AlgName SP Identity SP Commit
+   *     [SP Reveal] NL
+   * </pre>
+   *
+   * @since 1.6.0
+   */
+  public List<String> getSharedRandCommitLines();
+
+  /**
+   * Return the number of commits used to generate the second-to-last shared
+   * random value, or -1 if this vote does not contain a second-to-last shared
+   * random value.
+   *
+   * @since 1.6.0
+   */
+  public int getSharedRandPreviousNumReveals();
+
+  /**
+   * Return the second-to-last shared random value, encoded in base64, or null
+   * if this vote does not contain a second-to-last shared random value.
+   *
+   * @since 1.6.0
+   */
+  public String getSharedRandPreviousValue();
+
+  /**
+   * Return the number of commits used to generate the latest shared random
+   * value, or -1 if this vote does not contain the latest shared random value.
+   *
+   * @since 1.6.0
+   */
+  public int getSharedRandCurrentNumReveals();
+
+  /**
+   * Return the latest shared random value, encoded in base64, or null if this
+   * vote does not contain the latest shared random value.
+   *
+   * @since 1.6.0
+   */
+  public String getSharedRandCurrentValue();
+
+  /**
    * Return the version of the directory key certificate used by this
    * authority, which must be 3 or higher.
    *

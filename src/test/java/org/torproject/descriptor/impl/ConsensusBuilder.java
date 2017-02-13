@@ -188,6 +188,30 @@ public class ConsensusBuilder {
     return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
   }
 
+  private String sharedRandPreviousValueLine =
+      "shared-rand-previous-value 8 "
+      + "grwbnD6I40odtsdtWYxqs0DvPweCur6qG2Fo5p5ivS4=";
+
+  protected static RelayNetworkStatusConsensus
+      createWithSharedRandPreviousValueLine(String line)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.sharedRandPreviousValueLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
+
+  private String sharedRandCurrentValueLine =
+      "shared-rand-current-value 8 "
+      + "D88plxd8YeLfCIVAR9gjiFlWB1WqpC53kWr350o1pzw=";
+
+  protected static RelayNetworkStatusConsensus
+      createWithSharedRandCurrentValueLine(String line)
+      throws DescriptorParseException {
+    ConsensusBuilder cb = new ConsensusBuilder();
+    cb.sharedRandCurrentValueLine = line;
+    return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+  }
+
   List<String> dirSources = new ArrayList<>();
 
   List<String> statusEntries = new ArrayList<>();
@@ -384,6 +408,12 @@ public class ConsensusBuilder {
     }
     if (this.paramsLine != null) {
       sb.append(this.paramsLine).append("\n");
+    }
+    if (this.sharedRandPreviousValueLine != null) {
+      sb.append(this.sharedRandPreviousValueLine).append("\n");
+    }
+    if (this.sharedRandCurrentValueLine != null) {
+      sb.append(this.sharedRandCurrentValueLine).append("\n");
     }
     if (this.unrecognizedHeaderLine != null) {
       sb.append(this.unrecognizedHeaderLine).append("\n");
