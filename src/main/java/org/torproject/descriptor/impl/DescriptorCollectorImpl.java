@@ -32,6 +32,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * Download files from a CollecTor instance based on the remote instance's
+ * directory listings.
+ *
+ * @deprecated Replaced by {@link DescriptorIndexCollector} which uses the
+ *     remote instance's index.json file as a more robust alternative to parsing
+ *     the remote instance's directory listings.
+ */
 public class DescriptorCollectorImpl implements DescriptorCollector {
 
   private static Logger log = LoggerFactory

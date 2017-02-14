@@ -14,6 +14,9 @@ import java.util.Set;
  * setting any configuration options and initiating the download
  * process.</p>
  *
+ * @deprecated Removed as descriptor source in favor of the much more widely
+ *     used {@link DescriptorCollector}.
+ *
  * @since 1.0.0
  */
 public interface DescriptorDownloader {

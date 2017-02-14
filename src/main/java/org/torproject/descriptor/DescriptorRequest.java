@@ -15,6 +15,10 @@ import java.util.List;
  * {@link Descriptor} interface.  This container also stores potentially
  * useful meta-data about the descriptor request.</p>
  *
+ * @deprecated Removed as descriptor container together with
+ *     {@link DescriptorDownloader} in favor of the much more widely used
+ *     {@link DescriptorCollector}.
+ *
  * @since 1.0.0
  */
 public interface DescriptorRequest {

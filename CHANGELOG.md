@@ -1,5 +1,9 @@
 # Changes in version 1.6.0 - 2016-??-??
 
+ * Major changes
+   - Deprecate DescriptorDownloader in favor of the much more widely
+     used DescriptorCollector.
+
  * Medium changes
    - Add two methods for loading and saving a parse history file in
      the descriptor reader to avoid situations where applications fail
@@ -17,6 +21,8 @@
      entries, and "(recommended|required)-(client|relay)-protocols"
      lines in consensuses and votes.
    - Parse "shared-rand-.*" lines in consensuses and votes.
+   - Deprecate DescriptorCollectorImpl now that
+     DescriptorIndexCollector is the default.
 
 
 # Changes in version 1.5.0 - 2016-10-19
