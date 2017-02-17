@@ -1,4 +1,4 @@
-# Changes in version 1.6.0 - 2016-??-??
+# Changes in version 1.6.0 - 2017-02-17
 
  * Major changes
    - Deprecate DescriptorDownloader in favor of the much more widely
