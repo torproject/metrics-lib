@@ -68,9 +68,9 @@ public interface DescriptorReader {
    * <p>Lines in the history file contain the last modified time in
    * milliseconds since the epoch and the absolute path of a file.</p>
    *
-   * @deprecated Replaced by {@link #setHistoryFile()} and
-   *     {@link #saveHistoryFile()} which let the application explicitly tell us
-   *     when it's done processing read descriptors.
+   * @deprecated Replaced by {@link #setHistoryFile(File)} and
+   *     {@link #saveHistoryFile(File)} which let the application explicitly
+   *     tell us when it's done processing read descriptors.
    *
    * @since 1.0.0
    */
