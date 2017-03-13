@@ -89,3 +89,11 @@ jarsigner -verify descriptor-1.0.0.jar
 jarsigner -verify descriptor-1.0.0-sources.jar
 ```
 
+
+Tutorial
+--------
+
+The Metrics website has a tutorial for getting started with metrics-lib:
+
+https://metrics.torproject.org/metrics-lib.html
+
