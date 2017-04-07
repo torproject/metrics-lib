@@ -1652,6 +1652,14 @@ public class ServerDescriptorImplTest {
         + ROUTER_SIG_ED25519_LINE);
   }
 
+  @Test(expected = DescriptorParseException.class)
+  public void testEd25519FollowedbyUnrecognizedLine()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
+        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE
+        + "\nunrecognized-line 1");
+  }
+
   private static final String ONION_KEY_CROSSCERT_LINES =
       "onion-key-crosscert\n"
       + "-----BEGIN CROSSCERT-----\n"

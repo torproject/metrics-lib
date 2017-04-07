@@ -270,9 +270,9 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
                 }
                 this.unrecognizedLines.addAll(cryptoLines);
               }
-              cryptoLines = null;
-              nextCrypto = "";
           }
+          cryptoLines = null;
+          nextCrypto = "";
           break;
         default:
           if (cryptoLines != null) {

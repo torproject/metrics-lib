@@ -1,3 +1,10 @@
+# Changes in version ???
+
+ # Medium changes
+   - Fix a bug where unrecognized lines in extra-info descriptors
+     below crypto blocks were silently skipped.
+
+
 # Changes in version 1.6.0 - 2017-02-17
 
  * Major changes

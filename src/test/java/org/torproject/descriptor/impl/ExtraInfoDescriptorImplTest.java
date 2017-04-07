@@ -1805,6 +1805,14 @@ public class ExtraInfoDescriptorImplTest {
         + ROUTER_SIG_ED25519_LINE);
   }
 
+  @Test(expected = DescriptorParseException.class)
+  public void testEd25519FollowedbyUnrecognizedLine()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
+        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE
+        + "\nunrecognized-line 1");
+  }
+
   @Test()
   public void testExtraInfoDigestSha256Relay()
       throws DescriptorParseException {
