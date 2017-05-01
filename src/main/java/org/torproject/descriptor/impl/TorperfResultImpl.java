@@ -147,6 +147,24 @@ public class TorperfResultImpl extends DescriptorImpl
         case "USED_BY":
           this.parseUsedBy(value, keyValue, line);
           break;
+        case "ENDPOINTLOCAL":
+          this.parseEndpointLocal(value, keyValue, line);
+          break;
+        case "ENDPOINTPROXY":
+          this.parseEndpointProxy(value, keyValue, line);
+          break;
+        case "ENDPOINTREMOTE":
+          this.parseEndpointRemote(value, keyValue, line);
+          break;
+        case "HOSTNAMELOCAL":
+          this.parseHostnameLocal(value, keyValue, line);
+          break;
+        case "HOSTNAMEREMOTE":
+          this.parseHostnameRemote(value, keyValue, line);
+          break;
+        case "SOURCEADDRESS":
+          this.parseSourceAddress(value, keyValue, line);
+          break;
         default:
           if (key.startsWith("DATAPERC")) {
             this.parseDataPercentile(value, keyValue, line);
@@ -359,6 +377,30 @@ public class TorperfResultImpl extends DescriptorImpl
     this.usedBy = this.parseInt(value, keyValue, line);
   }
 
+  private void parseEndpointLocal(String value, String keyValue, String line) {
+    this.endpointLocal = value;
+  }
+
+  private void parseEndpointProxy(String value, String keyValue, String line) {
+    this.endpointProxy = value;
+  }
+
+  private void parseEndpointRemote(String value, String keyValue, String line) {
+    this.endpointRemote = value;
+  }
+
+  private void parseHostnameLocal(String value, String keyValue, String line) {
+    this.hostnameLocal = value;
+  }
+
+  private void parseHostnameRemote(String value, String keyValue, String line) {
+    this.hostnameRemote = value;
+  }
+
+  private void parseSourceAddress(String value, String keyValue, String line) {
+    this.sourceAddress = value;
+  }
+
   private long parseTimestamp(String value, String keyValue, String line)
       throws DescriptorParseException {
     long timestamp = -1L;
@@ -569,6 +611,48 @@ public class TorperfResultImpl extends DescriptorImpl
   @Override
   public int getUsedBy() {
     return this.usedBy;
+  }
+
+  private String endpointLocal;
+
+  @Override
+  public String getEndpointLocal() {
+    return this.endpointLocal;
+  }
+
+  private String endpointProxy;
+
+  @Override
+  public String getEndpointProxy() {
+    return this.endpointProxy;
+  }
+
+  private String endpointRemote;
+
+  @Override
+  public String getEndpointRemote() {
+    return this.endpointRemote;
+  }
+
+  private String hostnameLocal;
+
+  @Override
+  public String getHostnameLocal() {
+    return this.hostnameLocal;
+  }
+
+  private String hostnameRemote;
+
+  @Override
+  public String getHostnameRemote() {
+    return this.hostnameRemote;
+  }
+
+  private String sourceAddress;
+
+  @Override
+  public String getSourceAddress() {
+    return this.sourceAddress;
   }
 }
 

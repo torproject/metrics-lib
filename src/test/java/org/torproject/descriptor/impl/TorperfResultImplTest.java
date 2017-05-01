@@ -5,8 +5,10 @@ package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.torproject.descriptor.Descriptor;
+import org.torproject.descriptor.DescriptorParseException;
 
 import org.junit.Test;
 
@@ -94,6 +96,46 @@ public class TorperfResultImplTest {
     assertEquals(1, torperfResult.getUnrecognizedKeys().size());
     assertEquals("DATAPERMILLE",
         torperfResult.getUnrecognizedKeys().firstKey());
+  }
+
+  private static final String input2 =
+      "BUILDTIMES=0.490000009537,0.610000133514,0.75 CIRC_ID=8522 "
+      + "CONNECT=1493397365.14 DATACOMPLETE=1493397368.13 "
+      + "DATAPERC0=1493397367.67 DATAPERC10=1493397367.81 "
+      + "DATAPERC100=1493397368.13 DATAPERC20=1493397367.87 "
+      + "DATAPERC30=1493397367.87 DATAPERC40=1493397367.90 "
+      + "DATAPERC50=1493397367.91 DATAPERC60=1493397367.97 "
+      + "DATAPERC70=1493397367.97 DATAPERC80=1493397367.99 "
+      + "DATAPERC90=1493397367.99 DATAREQUEST=1493397367.33 "
+      + "DATARESPONSE=1493397367.67 DIDTIMEOUT=0 "
+      + "ENDPOINTLOCAL=localhost:127.0.0.1:42436 "
+      + "ENDPOINTPROXY=localhost:127.0.0.1:52265 "
+      + "ENDPOINTREMOTE=4jocm7xwo4ltrvzp.onion:0.0.0.0:80 FILESIZE=51200 "
+      + "HOSTNAMELOCAL=op-us HOSTNAMEREMOTE=op-us LAUNCH=1493396168.1 "
+      + "NEGOTIATE=1493397365.14 "
+      + "PATH=$F69BED36177ED727706512BA6A97755025EEA0FB,"
+      + "$91D23D8A539B83D2FB56AA67ECD4D75CC093AC55,"
+      + "$4DD902046E7155BBE79C34EE6D53BF7408B98CE4 QUANTILE=0.8 "
+      + "READBYTES=51269 REQUEST=1493397365.14 RESPONSE=1493397367.32 "
+      + "SOCKET=1493397365.14 SOURCE=op-us SOURCEADDRESS=199.119.112.144 "
+      + "START=1493397365.14 TIMEOUT=1500 USED_AT=1493397368.14 "
+      + "USED_BY=17429 WRITEBYTES=54";
+
+  @Test()
+  public void testEndpointsHostnamesSourceAddress()
+      throws DescriptorParseException {
+    List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
+        input2.getBytes(), true);
+    assertEquals(1, result.size());
+    TorperfResultImpl torperfResult = (TorperfResultImpl) result.get(0);
+    assertNull(torperfResult.getUnrecognizedKeys());
+    assertEquals("localhost:127.0.0.1:42436", torperfResult.getEndpointLocal());
+    assertEquals("localhost:127.0.0.1:52265", torperfResult.getEndpointProxy());
+    assertEquals("4jocm7xwo4ltrvzp.onion:0.0.0.0:80",
+        torperfResult.getEndpointRemote());
+    assertEquals("op-us", torperfResult.getHostnameLocal());
+    assertEquals("op-us", torperfResult.getHostnameRemote());
+    assertEquals("199.119.112.144", torperfResult.getSourceAddress());
   }
 }
 
