@@ -1245,11 +1245,11 @@ public class ServerDescriptorImplTest {
         "write-history 2012-01-01 03:51:44 (900 ");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testWriteHistoryTrailingNumber()
+  @Test()
+  public void testWriteHistoryExtraArg()
       throws DescriptorParseException {
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
-        + "2012-01-01 03:51:44 (900 s) 4345856 1");
+        + "2012-01-01 03:51:44 (900 s) 4345856 bin_size=1024");
   }
 
   @Test()

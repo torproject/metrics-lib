@@ -1093,6 +1093,14 @@ public class ExtraInfoDescriptorImplTest {
         + "81281024,,60625920,67922944");
   }
 
+  @Test()
+  public void testDirreqWriteHistoryExtraArg() throws DescriptorParseException {
+    DescriptorBuilder.createWithDirreqWriteHistoryLine(
+        "dirreq-write-history "
+        + "2012-02-11 09:03:39 (900 s) 81281024,64996352,60625920,"
+        + "67922944 bin_size=1024");
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testDirreqReadHistoryMissingBytesEnd()
       throws DescriptorParseException {
@@ -1131,10 +1139,32 @@ public class ExtraInfoDescriptorImplTest {
   }
 
   @Test()
+  public void testGeoipDbDigestExtraArg() throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder
+        .createWithGeoip6DbDigestLine("geoip-db-digest "
+            + "916A3CA8B7DF61473D5AE5B21711F35F301CE9E8 "
+            + "yblgrXtEgF3glaKv5ZvHhRREUI1t1c37SxparXSmYR4Q1yiK5zg4HE8eT9ILPRW9"
+            + "3I5W/pZGQxL8Bu42dGjnAQ");
+    assertEquals("916A3CA8B7DF61473D5AE5B21711F35F301CE9E8",
+        descriptor.getGeoipDbDigest());
+  }
+
+  @Test()
   public void testGeoip6DbDigestValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
         .createWithGeoip6DbDigestLine("geoip6-db-digest "
         + "916A3CA8B7DF61473D5AE5B21711F35F301CE9E8");
+    assertEquals("916A3CA8B7DF61473D5AE5B21711F35F301CE9E8",
+        descriptor.getGeoip6DbDigest());
+  }
+
+  @Test()
+  public void testGeoip6DbDigestExtraArg() throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder
+        .createWithGeoip6DbDigestLine("geoip6-db-digest "
+            + "916A3CA8B7DF61473D5AE5B21711F35F301CE9E8 "
+            + "yblgrXtEgF3glaKv5ZvHhRREUI1t1c37SxparXSmYR4Q1yiK5zg4HE8eT9ILPRW9"
+            + "3I5W/pZGQxL8Bu42dGjnAQ");
     assertEquals("916A3CA8B7DF61473D5AE5B21711F35F301CE9E8",
         descriptor.getGeoip6DbDigest());
   }
@@ -1242,6 +1272,14 @@ public class ExtraInfoDescriptorImplTest {
   }
 
   @Test()
+  public void testGeoipClientOriginsExtraArg()
+      throws DescriptorParseException {
+    GeoipStatsBuilder.createWithGeoipClientOriginsLine(
+        "geoip-client-origins de=1152,de=952,cn=896,us=712,it=504 "
+            + "ru=352 fr=208 gb=208 ir=200");
+  }
+
+  @Test()
   public void testDirreqStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DirreqStatsBuilder
         .createWithDefaultLines();
@@ -1279,11 +1317,25 @@ public class ExtraInfoDescriptorImplTest {
         + "2012-02-11 00:59:53 (172800 s)");
   }
 
+  @Test()
+  public void testDirreqStatsExtraArg()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqStatsEndLine("dirreq-stats-end "
+        + "2012-02-11 00:59:53 (172800 s) XXXXXXXXXXXXXXXXXXXXXXXXXXX");
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testDirreqV3IpsThreeLetterCountry()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV3IpsLine("dirreq-v3-ips "
         + "usa=1544");
+  }
+
+  @Test()
+  public void testDirreqV3IpsExtraArg()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3IpsLine("dirreq-v3-ips "
+        + "ab=12,cd=34 ef=56");
   }
 
   @Test()
@@ -1312,6 +1364,13 @@ public class ExtraInfoDescriptorImplTest {
         + "ok==10848");
   }
 
+  @Test()
+  public void testDirreqV3RespExtraArg()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3RespLine("dirreq-v3-resp "
+        + "ok=1084 4801=ko");
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testDirreqV2RespNull()
       throws DescriptorParseException {
@@ -1331,6 +1390,13 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV3ShareLine("dirreq-v3-share "
         + "0.37");
+  }
+
+  @Test()
+  public void testDirreqV3ShareExtraArg()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV3ShareLine("dirreq-v3-share "
+        + "0.37% 123456");
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1359,6 +1425,13 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV2TunneledDlLine(
         "dirreq-v2-tunneled-dl complete=0.001");
+  }
+
+  @Test()
+  public void testDirreqV3TunneledDlExtraArg()
+      throws DescriptorParseException {
+    DirreqStatsBuilder.createWithDirreqV2TunneledDlLine(
+        "dirreq-v2-tunneled-dl complete=-8 incomplete=1/-8");
   }
 
   @Test()
@@ -1443,6 +1516,13 @@ public class ExtraInfoDescriptorImplTest {
   }
 
   @Test()
+  public void testCellCircuitsPerDecileExtraArg()
+      throws DescriptorParseException {
+    CellStatsBuilder.createWithCellCircuitsPerDecileLine(
+        "cell-circuits-per-decile 866 866 866 866 866");
+  }
+
+  @Test()
   public void testConnBiDirectValid()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
@@ -1462,6 +1542,13 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     DescriptorBuilder.createWithConnBiDirectLine("conn-bi-direct "
         + "2012-02-11 01:59:39 (86400 s) 42173,1591,1310,1744,42");
+  }
+
+  @Test()
+  public void testConnBiDirectStatsExtraArg()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithConnBiDirectLine("conn-bi-direct "
+        + "2012-02-11 01:59:39 (86400 s) 42173,1591,1310,1744 +1");
   }
 
   @Test()
@@ -1541,6 +1628,12 @@ public class ExtraInfoDescriptorImplTest {
   }
 
   @Test()
+  public void testExitStatsStreamsExtraArg() throws DescriptorParseException {
+    ExitStatsBuilder.createWithExitStreamsOpenedLine(
+        "exit-streams-opened 25=21474 3648");
+  }
+
+  @Test()
   public void testBridgeStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = BridgeStatsBuilder
         .createWithDefaultLines();
@@ -1570,6 +1663,13 @@ public class ExtraInfoDescriptorImplTest {
         + "2012-02-11 01:59:39 (0 s)");
   }
 
+  @Test()
+  public void testBridgeStatsEndExtraArg()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeStatsEndLine("bridge-stats-end "
+        + "2012-02-11 01:59:39 (86400 s) 99999999999999999999999999999999");
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testBridgeIpsDouble()
       throws DescriptorParseException {
@@ -1585,11 +1685,24 @@ public class ExtraInfoDescriptorImplTest {
         0x69, 0x70, 0x73 }, false);               // "ips" (no newline)
   }
 
+  @Test()
+  public void testBridgeIpsExtraArg()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeIpsLine("bridge-ips ir=24 5");
+  }
+
   @Test(expected = DescriptorParseException.class)
   public void testBridgeIpVersionsDouble()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpVersionsLine(
         "bridge-ip-versions v4=24.5");
+  }
+
+  @Test()
+  public void testBridgeIpVersionsExtraArg()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeIpVersionsLine(
+        "bridge-ip-versions v4=24 5");
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1604,6 +1717,13 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpTransportsLine(
         "bridge-ip-transports meek=32,obfs3_websocket=8,websocket=64");
+  }
+
+  @Test()
+  public void testBridgeIpTransportsExtraArg()
+      throws DescriptorParseException {
+    BridgeStatsBuilder.createWithBridgeIpTransportsLine(
+        "bridge-ip-transports obfs2=24 5");
   }
 
   @Test()
@@ -1667,6 +1787,13 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     HidservStatsBuilder.createWithHidservDirOnionsSeenLine(
         "hidserv-dir-onions-seen -3 delta_f=A epsilon=B bin_size=C");
+  }
+
+  @Test()
+  public void testHidservDirOnionsSeenExtraArg()
+      throws DescriptorParseException {
+    HidservStatsBuilder.createWithHidservDirOnionsSeenLine(
+        "hidserv-dir-onions-seen -3 delta_f=8 epsilon=0.30 bin_size=8 pi=3");
   }
 
   @Test()

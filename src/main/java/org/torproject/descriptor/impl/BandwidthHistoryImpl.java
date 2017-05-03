@@ -15,7 +15,7 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
       String[] partsNoOpt) throws DescriptorParseException {
     boolean isValid = false;
     this.line = line;
-    if (partsNoOpt.length == 5 || partsNoOpt.length == 6) {
+    if (partsNoOpt.length >= 5) {
       try {
         this.historyEndMillis = ParseHelper.parseTimestampAtIndex(line,
             partsNoOpt, 1, 2);
@@ -32,7 +32,7 @@ public class BandwidthHistoryImpl implements BandwidthHistory {
               && partsNoOpt[4].equals("s)")) {
             /* There are no bandwidth values to parse. */
             isValid = true;
-          } else if (partsNoOpt.length == 6) {
+          } else if (partsNoOpt.length >= 6) {
             /* There are bandwidth values to parse. */
             values = partsNoOpt[5].split(",", -1);
           } else if (partsNoOpt[4].length() > 2) {

@@ -5,6 +5,10 @@
      below crypto blocks were silently skipped.
    - Add support for six new key-value pairs added by OnionPerf.
 
+ * Minor changes
+   - Accept extra arguments in statistics-related extra-info
+     descriptor lines, as permitted by dir-spec.txt.
+
 
 # Changes in version 1.6.0 - 2017-02-17
 

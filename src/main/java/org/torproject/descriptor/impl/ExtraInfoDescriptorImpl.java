@@ -324,7 +324,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseGeoipDbDigestLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (partsNoOpt.length != 2) {
+    if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line
           + "' in extra-info descriptor.");
     }
@@ -334,7 +334,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseGeoip6DbDigestLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (partsNoOpt.length != 2) {
+    if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line
           + "' in extra-info descriptor.");
     }
@@ -344,7 +344,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private void parseGeoipStartTimeLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (partsNoOpt.length != 3) {
+    if (partsNoOpt.length < 3) {
       throw new DescriptorParseException("Illegal line '" + line
           + "' in extra-info descriptor.");
     }
@@ -369,7 +369,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   private long[] parseStatsEndLine(String line, String[] partsNoOpt,
       int partsNoOptExpectedLength) throws DescriptorParseException {
-    if (partsNoOpt.length != partsNoOptExpectedLength
+    if (partsNoOpt.length < partsNoOptExpectedLength
         || partsNoOpt[3].length() < 2 || !partsNoOpt[3].startsWith("(")
         || !partsNoOpt[4].equals("s)")) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -424,7 +424,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private double parseShareLine(String line, String[] partsNoOpt)
       throws DescriptorParseException {
     double share = -1.0;
-    if (partsNoOpt.length == 2 && partsNoOpt[1].length() >= 2
+    if (partsNoOpt.length >= 2 && partsNoOpt[1].length() >= 2
         && partsNoOpt[1].endsWith("%")) {
       String shareString = partsNoOpt[1];
       shareString = shareString.substring(0, shareString.length() - 1);
@@ -550,7 +550,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
       String lineNoOpt, String[] partsNoOpt)
       throws DescriptorParseException {
     int circuits = -1;
-    if (partsNoOpt.length == 2) {
+    if (partsNoOpt.length >= 2) {
       try {
         circuits = Integer.parseInt(partsNoOpt[1]);
       } catch (NumberFormatException e) {

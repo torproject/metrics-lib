@@ -341,10 +341,6 @@ public class ParseHelper {
     if (partsNoOpt.length < index) {
       throw new DescriptorParseException("Line '" + line + "' does not "
           + "contain a key-value list at index " + index + ".");
-    } else if (partsNoOpt.length > index + 1 ) {
-      throw new DescriptorParseException("Line '" + line + "' contains "
-          + "unrecognized values beyond the expected key-value list at "
-          + "index " + index + ".");
     } else if (partsNoOpt.length > index) {
       if (!commaSeparatedKeyValueListPatterns.containsKey(keyLength)) {
         String keyPattern = "[0-9a-zA-Z?<>\\-_]"
@@ -390,10 +386,6 @@ public class ParseHelper {
     if (partsNoOpt.length < index) {
       throw new DescriptorParseException("Line '" + line + "' does not "
           + "contain a key-value list at index " + index + ".");
-    } else if (partsNoOpt.length > index + 1 ) {
-      throw new DescriptorParseException("Line '" + line + "' contains "
-          + "unrecognized values beyond the expected key-value list at "
-          + "index " + index + ".");
     } else if (partsNoOpt.length > index) {
       String[] listElements = partsNoOpt[index].split(",", -1);
       for (String listElement : listElements) {
@@ -428,10 +420,6 @@ public class ParseHelper {
       throw new DescriptorParseException("Line '" + line + "' does not "
           + "contain a comma-separated value list at index " + index
           + ".");
-    } else if (partsNoOpt.length > index + 1) {
-      throw new DescriptorParseException("Line '" + line + "' contains "
-          + "unrecognized values beyond the expected comma-separated "
-          + "value list at index " + index + ".");
     } else if (partsNoOpt.length > index) {
       String[] listElements = partsNoOpt[index].split(",", -1);
       result = new Integer[listElements.length];
@@ -456,10 +444,6 @@ public class ParseHelper {
       throw new DescriptorParseException("Line '" + line + "' does not "
           + "contain a comma-separated value list at index " + index
           + ".");
-    } else if (partsNoOpt.length > index + 1) {
-      throw new DescriptorParseException("Line '" + line + "' contains "
-          + "unrecognized values beyond the expected comma-separated "
-          + "value list at index " + index + ".");
     } else if (partsNoOpt.length > index) {
       String[] listElements = partsNoOpt[index].split(",", -1);
       result = new Double[listElements.length];
