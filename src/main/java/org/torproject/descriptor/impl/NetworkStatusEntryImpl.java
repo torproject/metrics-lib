@@ -337,6 +337,11 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   @Override
   public Set<String> getMicrodescriptorDigests() {
+    return this.getMicrodescriptorDigestsSha256Base64();
+  }
+
+  @Override
+  public Set<String> getMicrodescriptorDigestsSha256Base64() {
     return this.microdescriptorDigests == null ? null
         : new HashSet<>(this.microdescriptorDigests);
   }

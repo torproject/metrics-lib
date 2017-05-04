@@ -51,18 +51,41 @@ public interface ServerDescriptor extends Descriptor {
    * characters, that is used to reference this descriptor from a network
    * status descriptor.
    *
+   * @deprecated Renamed to {@link #getDigestSha1Hex()}.
+   *
    * @since 1.0.0
    */
   public String getServerDescriptorDigest();
+
+  /**
+   * Return the SHA-1 descriptor digest, encoded as 40 lower-case (relay
+   * descriptors) or upper-case (bridge descriptors) hexadecimal
+   * characters, that is used to reference this descriptor from a network
+   * status descriptor.
+   *
+   * @since 1.7.0
+   */
+  public String getDigestSha1Hex();
 
   /**
    * Return the SHA-256 descriptor digest, encoded as 43 base64
    * characters without padding characters, that may be used to reference
    * this server descriptor from a network status descriptor.
    *
+   * @deprecated Renamed to {@link #getDigestSha256Base64()}.
+   *
    * @since 1.1.0
    */
   public String getServerDescriptorDigestSha256();
+
+  /**
+   * Return the SHA-256 descriptor digest, encoded as 43 base64
+   * characters without padding characters, that may be used to reference
+   * this server descriptor from a network status descriptor.
+   *
+   * @since 1.7.0
+   */
+  public String getDigestSha256Base64();
 
   /**
    * Return the server's nickname consisting of 1 to 19 alphanumeric
@@ -299,9 +322,20 @@ public interface ServerDescriptor extends Descriptor {
    * encoded as 40 upper-case hexadecimal characters, or null if the
    * server did not upload a corresponding extra-info descriptor.
    *
+   * @deprecated Renamed to {@link #getExtraInfoDigestSha1Hex()}.
+   *
    * @since 1.0.0
    */
   public String getExtraInfoDigest();
+
+  /**
+   * Return the SHA-1 digest of the server's extra-info descriptor,
+   * encoded as 40 upper-case hexadecimal characters, or null if the
+   * server did not upload a corresponding extra-info descriptor.
+   *
+   * @since 1.7.0
+   */
+  public String getExtraInfoDigestSha1Hex();
 
   /**
    * Return the SHA-256 digest of the server's extra-info descriptor,
@@ -309,9 +343,21 @@ public interface ServerDescriptor extends Descriptor {
    * if the server either did not upload a corresponding extra-info
    * descriptor or did not refer to it using a SHA-256 digest.
    *
+   * @deprecated Renamed to {@link #getExtraInfoDigestSha256Base64()}.
+   *
    * @since 1.1.0
    */
   public String getExtraInfoDigestSha256();
+
+  /**
+   * Return the SHA-256 digest of the server's extra-info descriptor,
+   * encoded as 43 base64 characters without padding characters, or null
+   * if the server either did not upload a corresponding extra-info
+   * descriptor or did not refer to it using a SHA-256 digest.
+   *
+   * @since 1.7.0
+   */
+  public String getExtraInfoDigestSha256Base64();
 
   /**
    * Return the list of hidden service descriptor version numbers that

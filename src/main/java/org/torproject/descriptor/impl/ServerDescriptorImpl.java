@@ -743,6 +743,11 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   @Override
   public String getServerDescriptorDigest() {
+    return this.getDigestSha1Hex();
+  }
+
+  @Override
+  public String getDigestSha1Hex() {
     return this.serverDescriptorDigest;
   }
 
@@ -750,6 +755,11 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   @Override
   public String getServerDescriptorDigestSha256() {
+    return this.getDigestSha256Base64();
+  }
+
+  @Override
+  public String getDigestSha256Base64() {
     return this.serverDescriptorDigestSha256;
   }
 
@@ -933,6 +943,11 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   @Override
   public String getExtraInfoDigest() {
+    return this.getExtraInfoDigestSha1Hex();
+  }
+
+  @Override
+  public String getExtraInfoDigestSha1Hex() {
     return this.extraInfoDigest;
   }
 
@@ -940,6 +955,11 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   @Override
   public String getExtraInfoDigestSha256() {
+    return this.getExtraInfoDigestSha256Base64();
+  }
+
+  @Override
+  public String getExtraInfoDigestSha256Base64() {
     return this.extraInfoDigestSha256;
   }
 

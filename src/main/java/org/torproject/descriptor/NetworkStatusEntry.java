@@ -93,9 +93,20 @@ public interface NetworkStatusEntry {
    * containing network status is a vote or microdesc consensus, or null
    * otherwise.
    *
+   * @deprecated Renamed to {@link #getMicrodescriptorDigestsSha256Base64()}.
+   *
    * @since 1.0.0
    */
   public Set<String> getMicrodescriptorDigests();
+
+  /**
+   * Return the (possibly empty) set of microdescriptor digests if the
+   * containing network status is a vote or microdesc consensus, or null
+   * otherwise.
+   *
+   * @since 1.7.0
+   */
+  public Set<String> getMicrodescriptorDigestsSha256Base64();
 
   /**
    * Return additional IP addresses and TCP ports where this server

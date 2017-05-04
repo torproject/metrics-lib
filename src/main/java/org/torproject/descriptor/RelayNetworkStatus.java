@@ -169,8 +169,19 @@ public interface RelayNetworkStatus extends Descriptor {
    * characters, that the directory authority used to sign the network
    * status.
    *
+   * @deprecated Renamed to {@link #getDigestSha1Hex()}.
+   *
    * @since 1.0.0
    */
   public String getStatusDigest();
+
+  /**
+   * Return the SHA-1 status digest, encoded as 40 lower-case hexadecimal
+   * characters, that the directory authority used to sign the network
+   * status.
+   *
+   * @since 1.7.0
+   */
+  public String getDigestSha1Hex();
 }
 

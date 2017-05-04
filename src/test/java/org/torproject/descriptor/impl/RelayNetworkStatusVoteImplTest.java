@@ -734,7 +734,7 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals("80550987E1D626E3EBA5E5E75A458DE0626D088C",
         signature.getIdentity());
     assertEquals("EEB9299D295C1C815E289FBF2F2BBEA5F52FDD19",
-        signature.getSigningKeyDigest());
+        signature.getSigningKeyDigestSha1Hex());
     assertEquals("-----BEGIN SIGNATURE-----\n"
         + "iHEU3Iidya5RIrjyYgv8tlU0R+rF56/3/MmaaZi0a67e7ZkISfQ4dghScHxn"
         + "F3Yh\nrXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40Oi"
@@ -1512,15 +1512,18 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals("sha256", firstSignature.getAlgorithm());
     assertEquals(identitySha256, firstSignature.getIdentity());
     assertEquals(signingKeyDigestSha256,
-        firstSignature.getSigningKeyDigest());
+        firstSignature.getSigningKeyDigestSha1Hex());
     assertEquals(signatureSha256 + "\n", firstSignature.getSignature());
     DirectorySignature secondSignature = vote.getSignatures().get(1);
     assertEquals("sha1", secondSignature.getAlgorithm());
     assertEquals(identitySha1, secondSignature.getIdentity());
     assertEquals(signingKeyDigestSha1,
-        secondSignature.getSigningKeyDigest());
+        secondSignature.getSigningKeyDigestSha1Hex());
     assertEquals(signatureSha1 + "\n", secondSignature.getSignature());
     assertEquals(signingKeyDigestSha1, vote.getSigningKeyDigest());
+    System.out.println(new String(vote.getRawDescriptorBytes()));
+    assertEquals("c0d58c8d3c3695526f6eb5c0d9f8452b2234d303",
+        vote.getDigestSha1Hex());
   }
 
   @Test()

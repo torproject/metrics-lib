@@ -109,6 +109,11 @@ public class DirectorySignatureImpl implements DirectorySignature {
 
   @Override
   public String getSigningKeyDigest() {
+    return this.getSigningKeyDigestSha1Hex();
+  }
+
+  @Override
+  public String getSigningKeyDigestSha1Hex() {
     return this.signingKeyDigest;
   }
 

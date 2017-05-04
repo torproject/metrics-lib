@@ -397,6 +397,11 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   @Override
   public String getConsensusDigest() {
+    return this.getDigestSha1Hex();
+  }
+
+  @Override
+  public String getDigestSha1Hex() {
     return this.consensusDigest;
   }
 

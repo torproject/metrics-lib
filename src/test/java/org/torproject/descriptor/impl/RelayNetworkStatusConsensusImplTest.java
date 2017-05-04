@@ -389,7 +389,7 @@ public class RelayNetworkStatusConsensusImplTest {
       if ("14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4".equals(
           signature.getIdentity())) {
         assertEquals("3509BA5A624403A905C74DA5C8A0CEC9E0D3AF86",
-            signature.getSigningKeyDigest());
+            signature.getSigningKeyDigestSha1Hex());
       }
     }
     assertEquals(285, (int) consensus.getBandwidthWeights().get("Wbd"));

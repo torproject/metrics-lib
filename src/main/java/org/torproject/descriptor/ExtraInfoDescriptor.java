@@ -48,18 +48,41 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * characters, that is used to reference this descriptor from a server
    * descriptor.
    *
+   * @deprecated Renamed to {@link #getDigestSha1Hex()}.
+   *
    * @since 1.0.0
    */
   public String getExtraInfoDigest();
+
+  /**
+   * Return the SHA-1 descriptor digest, encoded as 40 lower-case (relay
+   * descriptors) or upper-case (bridge descriptors) hexadecimal
+   * characters, that is used to reference this descriptor from a server
+   * descriptor.
+   *
+   * @since 1.7.0
+   */
+  public String getDigestSha1Hex();
 
   /**
    * Return the SHA-256 descriptor digest, encoded as 43 base64
    * characters without padding characters, that may be used to reference
    * this descriptor from a server descriptor.
    *
+   * @deprecated Renamed to {@link #getDigestSha256Base64()}.
+   *
    * @since 1.1.0
    */
   public String getExtraInfoDigestSha256();
+
+  /**
+   * Return the SHA-256 descriptor digest, encoded as 43 base64
+   * characters without padding characters, that may be used to reference
+   * this descriptor from a server descriptor.
+   *
+   * @since 1.7.0
+   */
+  public String getDigestSha256Base64();
 
   /**
    * Return the server's nickname consisting of 1 to 19 alphanumeric
@@ -112,9 +135,21 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * upper-case hexadecimal characters, or null if no GeoIP database
    * digest is included.
    *
+   * @deprecated Renamed to {@link #getGeoipDbDigestSha1Hex()}.
+   *
    * @since 1.0.0
    */
   public String getGeoipDbDigest();
+
+  /**
+   * Return a SHA-1 digest of the GeoIP database file used by this server
+   * to resolve client IP addresses to country codes, encoded as 40
+   * upper-case hexadecimal characters, or null if no GeoIP database
+   * digest is included.
+   *
+   * @since 1.7.0
+   */
+  public String getGeoipDbDigestSha1Hex();
 
   /**
    * Return a SHA-1 digest of the GeoIPv6 database file used by this
@@ -122,9 +157,21 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * upper-case hexadecimal characters, or null if no GeoIPv6 database
    * digest is included.
    *
+   * @deprecated Renamed to {@link #getGeoip6DbDigestSha1Hex()}.
+   *
    * @since 1.0.0
    */
   public String getGeoip6DbDigest();
+
+  /**
+   * Return a SHA-1 digest of the GeoIPv6 database file used by this
+   * server to resolve client IP addresses to country codes, encoded as 40
+   * upper-case hexadecimal characters, or null if no GeoIPv6 database
+   * digest is included.
+   *
+   * @since 1.7.0
+   */
+  public String getGeoip6DbDigestSha1Hex();
 
   /**
    * Return the time in milliseconds since the epoch when the included

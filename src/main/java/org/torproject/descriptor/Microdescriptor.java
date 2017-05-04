@@ -28,9 +28,20 @@ public interface Microdescriptor extends Descriptor {
    * characters without padding characters, that is used to reference this
    * descriptor from a vote or microdescriptor consensus.
    *
+   * @deprecated Renamed to {@link #getDigestSha256Base64()}.
+   *
    * @since 1.0.0
    */
   public String getMicrodescriptorDigest();
+
+  /**
+   * Return the SHA-256 descriptor digest, encoded as 43 base64
+   * characters without padding characters, that is used to reference this
+   * descriptor from a vote or microdescriptor consensus.
+   *
+   * @since 1.7.0
+   */
+  public String getDigestSha256Base64();
 
   /**
    * Return the RSA-1024 public key in PEM format used to encrypt CREATE

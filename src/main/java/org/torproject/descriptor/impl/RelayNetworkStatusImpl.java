@@ -299,6 +299,11 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   @Override
   public String getStatusDigest() {
+    return this.getDigestSha1Hex();
+  }
+
+  @Override
+  public String getDigestSha1Hex() {
     return this.statusDigest;
   }
 

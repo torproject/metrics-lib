@@ -556,6 +556,11 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   @Override
   public String getDirectoryDigest() {
+    return this.getDigestSha1Hex();
+  }
+
+  @Override
+  public String getDigestSha1Hex() {
     return this.directoryDigest;
   }
 }

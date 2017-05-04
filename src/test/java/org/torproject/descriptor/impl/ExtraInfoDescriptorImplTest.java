@@ -1115,7 +1115,7 @@ public class ExtraInfoDescriptorImplTest {
         .createWithGeoipDbDigestLine("geoip-db-digest "
         + "916A3CA8B7DF61473D5AE5B21711F35F301CE9E8");
     assertEquals("916A3CA8B7DF61473D5AE5B21711F35F301CE9E8",
-        descriptor.getGeoipDbDigest());
+        descriptor.getGeoipDbDigestSha1Hex());
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1155,7 +1155,7 @@ public class ExtraInfoDescriptorImplTest {
         .createWithGeoip6DbDigestLine("geoip6-db-digest "
         + "916A3CA8B7DF61473D5AE5B21711F35F301CE9E8");
     assertEquals("916A3CA8B7DF61473D5AE5B21711F35F301CE9E8",
-        descriptor.getGeoip6DbDigest());
+        descriptor.getGeoip6DbDigestSha1Hex());
   }
 
   @Test()
@@ -1969,7 +1969,7 @@ public class ExtraInfoDescriptorImplTest {
     RelayExtraInfoDescriptor descriptor =
         new RelayExtraInfoDescriptorImpl(descriptorBytes, true);
     assertEquals("Pt1BtzfRwhYqGCDo8jjchS8nJP3ovrDyHGn+dqPbMgw",
-        descriptor.getExtraInfoDigestSha256());
+        descriptor.getDigestSha256Base64());
   }
 
   @Test()
@@ -1993,7 +1993,7 @@ public class ExtraInfoDescriptorImplTest {
     BridgeExtraInfoDescriptor descriptor =
         new BridgeExtraInfoDescriptorImpl(descriptorBytes, true);
     assertEquals("TvrqpjI7OmCtwGwair/NHUxg5ROVVQYz6/EDyXsDHR4",
-        descriptor.getExtraInfoDigestSha256());
+        descriptor.getDigestSha256Base64());
   }
 }
 

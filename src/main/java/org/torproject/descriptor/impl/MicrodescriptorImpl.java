@@ -264,6 +264,11 @@ public class MicrodescriptorImpl extends DescriptorImpl
 
   @Override
   public String getMicrodescriptorDigest() {
+    return this.getDigestSha256Base64();
+  }
+
+  @Override
+  public String getDigestSha256Base64() {
     return this.microdescriptorDigest;
   }
 

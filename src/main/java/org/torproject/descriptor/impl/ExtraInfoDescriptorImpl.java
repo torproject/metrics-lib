@@ -889,6 +889,11 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   @Override
   public String getExtraInfoDigest() {
+    return this.getDigestSha1Hex();
+  }
+
+  @Override
+  public String getDigestSha1Hex() {
     return this.extraInfoDigest;
   }
 
@@ -896,6 +901,11 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   @Override
   public String getExtraInfoDigestSha256() {
+    return this.getDigestSha256Base64();
+  }
+
+  @Override
+  public String getDigestSha256Base64() {
     return this.extraInfoDigestSha256;
   }
 
@@ -938,6 +948,11 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   @Override
   public String getGeoipDbDigest() {
+    return this.getGeoipDbDigestSha1Hex();
+  }
+
+  @Override
+  public String getGeoipDbDigestSha1Hex() {
     return this.geoipDbDigest;
   }
 
@@ -945,6 +960,11 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
 
   @Override
   public String getGeoip6DbDigest() {
+    return this.getGeoip6DbDigestSha1Hex();
+  }
+
+  @Override
+  public String getGeoip6DbDigestSha1Hex() {
     return this.geoip6DbDigest;
   }
 

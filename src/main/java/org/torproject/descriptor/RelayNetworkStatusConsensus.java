@@ -282,12 +282,23 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   public SortedMap<String, Integer> getBandwidthWeights();
 
   /**
-   * Return the SHA-1 digest of this consensus, encoded as 40 upper-case
+   * Return the SHA-1 digest of this consensus, encoded as 40 lower-case
    * hexadecimal characters that directory authorities use to sign the
    * consensus.
+   *
+   * @deprecated Renamed to {@link #getDigestSha1Hex()}.
    *
    * @since 1.0.0
    */
   public String getConsensusDigest();
+
+  /**
+   * Return the SHA-1 digest of this consensus, encoded as 40 lower-case
+   * hexadecimal characters that directory authorities use to sign the
+   * consensus.
+   *
+   * @since 1.7.0
+   */
+  public String getDigestSha1Hex();
 }
 

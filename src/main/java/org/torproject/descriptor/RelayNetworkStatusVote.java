@@ -415,7 +415,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    * @deprecated Removed in order to be more explicit that authorities may
    *     use different digest algorithms than "sha1"; see
    *     {@link #getSignatures()} and
-   *     {@link DirectorySignature#getSigningKeyDigest()} for
+   *     {@link DirectorySignature#getSigningKeyDigestSha1Hex()} for
    *     alternatives.
    *
    * @since 1.0.0
@@ -491,5 +491,13 @@ public interface RelayNetworkStatusVote extends Descriptor {
    * @since 1.3.0
    */
   public List<DirectorySignature> getSignatures();
+
+  /**
+   * Return the SHA-1 digest of this vote, encoded as 40 lower-case hexadecimal
+   * characters that is used to reference this vote from a consensus.
+   *
+   * @since 1.7.0
+   */
+  public String getDigestSha1Hex();
 }
 

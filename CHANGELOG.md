@@ -6,10 +6,12 @@
    - Add support for six new key-value pairs added by OnionPerf.
    - Fix a bug where DescriptorIndexCollector would not delete
      extraneous local files if remote paths start with /.
+   - Add previously missing method to obtain the digest of a vote.
 
  * Minor changes
    - Accept extra arguments in statistics-related extra-info
      descriptor lines, as permitted by dir-spec.txt.
+   - Streamline digest method names.
 
 
 # Changes in version 1.6.0 - 2017-02-17

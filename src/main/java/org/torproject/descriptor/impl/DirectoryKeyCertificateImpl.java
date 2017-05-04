@@ -312,6 +312,11 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
 
   @Override
   public String getCertificateDigest() {
+    return this.getDigestSha1Hex();
+  }
+
+  @Override
+  public String getDigestSha1Hex() {
     return this.certificateDigest;
   }
 }

@@ -228,6 +228,11 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   @Override
   public String getVoteDigest() {
+    return this.getVoteDigestSha1Hex();
+  }
+
+  @Override
+  public String getVoteDigestSha1Hex() {
     return this.voteDigest;
   }
 }

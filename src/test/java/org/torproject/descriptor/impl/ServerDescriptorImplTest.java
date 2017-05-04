@@ -472,7 +472,7 @@ public class ServerDescriptorImplTest {
     assertEquals(51200, (int) descriptor.getBandwidthBurst());
     assertEquals(53470, (int) descriptor.getBandwidthObserved());
     assertEquals("1469D1550738A25B1E7B47CDDBCD7B2899F51B74",
-        descriptor.getExtraInfoDigest());
+        descriptor.getExtraInfoDigestSha1Hex());
     assertEquals(Arrays.asList(new Integer[] {2}),
         descriptor.getHiddenServiceDirVersions());
     assertEquals("Random Person <nobody AT example dot com>",
@@ -828,7 +828,7 @@ public class ServerDescriptorImplTest {
         .createWithExtraInfoDigestLine("extra-info-digest "
         + "1469D1550738A25B1E7B47CDDBCD7B2899F51B74");
     assertEquals("1469D1550738A25B1E7B47CDDBCD7B2899F51B74",
-        descriptor.getExtraInfoDigest());
+        descriptor.getExtraInfoDigestSha1Hex());
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -858,7 +858,7 @@ public class ServerDescriptorImplTest {
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExtraInfoDigestLine(null);
-    assertNull(descriptor.getExtraInfoDigest());
+    assertNull(descriptor.getExtraInfoDigestSha1Hex());
   }
 
   @Test()
@@ -871,7 +871,7 @@ public class ServerDescriptorImplTest {
         extraInfoDigest, additionalExtraInfoDigest);
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExtraInfoDigestLine(extraInfoDigestLine);
-    assertEquals(extraInfoDigest, descriptor.getExtraInfoDigest());
+    assertEquals(extraInfoDigest, descriptor.getExtraInfoDigestSha1Hex());
   }
 
   @Test()
