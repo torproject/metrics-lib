@@ -144,7 +144,9 @@ public class DescriptorIndexCollector implements DescriptorCollector {
       File localDir, SortedMap<String, Long> locals) {
     for (String localPath : locals.keySet()) {
       for (String remoteDirectory : remoteDirectories) {
-        if (localPath.startsWith(remoteDirectory)) {
+        String remDir = remoteDirectory.charAt(0) == '/'
+            ? remoteDirectory.substring(1) : remoteDirectory;
+        if (localPath.startsWith(remDir)) {
           if (!remoteFiles.containsKey(localPath)) {
             File extraneousLocalFile = new File(localDir, localPath);
             log.debug("Deleting extraneous local file {}.",
