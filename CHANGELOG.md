@@ -1,6 +1,6 @@
-# Changes in version ???
+# Changes in version 1.7.0 - ???
 
- # Medium changes
+ * Medium changes
    - Fix a bug where unrecognized lines in extra-info descriptors
      below crypto blocks were silently skipped.
    - Add support for six new key-value pairs added by OnionPerf.
