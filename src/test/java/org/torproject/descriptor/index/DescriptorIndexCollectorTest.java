@@ -158,7 +158,49 @@ public class DescriptorIndexCollectorTest {
 
     new DescriptorIndexCollector()
         .collectDescriptors(indexFile.toURL().toString(),
-            new String[]{"a/b", "a/b/c"}, 1451606400_000L, localFolder, true);
+            new String[]{"a/b/", "a/b/c"}, 1451606400_000L, localFolder, true);
+
+    // verify file addition, including that the non-synced dir is not touched.
+    checkContains(true,
+        DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
+        "a/b/y2", "a/b/x2", "a/b/c/u2", "d/p1");
+
+    // verify that invalid files weren't fetched.
+    checkContains(false,
+        DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
+        "a/b/c/w2", "a/b/c/z2");
+
+    // verify file deletion.
+    checkContains(false,
+        DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
+        "a/b/x1", "a/b/y1", "a/b/c/w1", "a/b/c/z1", "a/b/c/u1");
+  }
+
+  @Test()
+  public void testSlashesInCollectionWithDeletion() throws Exception {
+    File localFolder = tmpf.newFolder();
+    makeStructure(localFolder, "1");
+    File nonSyncedDir = makeDirs(localFolder.toString(), "d");
+    makeFiles(nonSyncedDir, "p1");
+
+    File remoteDirectory = tmpf.newFolder();
+    makeStructure(remoteDirectory, "2");
+
+    File indexFile = newIndexFile("testindexDelete.json",
+        remoteDirectory.toURL().toString());
+
+    // verify precondition for test.
+    checkContains(true,
+        DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
+        "a/b/x1", "a/b/y1", "a/b/c/w1", "a/b/c/z1", "a/b/c/u1");
+    checkContains(false,
+        DescriptorIndexCollector.statLocalDirectory(localFolder).toString(),
+        "a/b/y2","a/b/x2");
+
+    new DescriptorIndexCollector()
+        .collectDescriptors(indexFile.toURL().toString(),
+            new String[]{"/a/b", "/a/b/c/"}, 1451606400_000L,
+            localFolder, true);
 
     // verify file addition, including that the non-synced dir is not touched.
     checkContains(true,
