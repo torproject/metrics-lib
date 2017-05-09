@@ -45,8 +45,10 @@ public interface DescriptorCollector {
    *     e.g., {@code "https://collector.torproject.org"}
    * @param remoteDirectories Remote directories to collect descriptors
    *     from, e.g.,
-   *     {@code "/recent/relay-descriptors/server-descriptors/"}, without
-   *     processing subdirectories unless they are explicitly listed
+   *     {@code "recent/relay-descriptors/server-descriptors"}, without
+   *     processing subdirectories unless they are explicitly listed.
+   *     Leading and trailing slashes will be ignored, i.e., {@code "/abc/xyz/"}
+   *     results in the same downloads as  {@code "abc/xyz"}.
    * @param minLastModified Minimum last-modified time in milliseconds of
    *     files to be collected, or 0 for collecting all files
    * @param localDirectory Directory where collected files will be written
