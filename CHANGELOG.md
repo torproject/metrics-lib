@@ -4,6 +4,8 @@
    - Fix a bug where unrecognized lines in extra-info descriptors
      below crypto blocks were silently skipped.
    - Add support for six new key-value pairs added by OnionPerf.
+   - Fix a bug where DescriptorIndexCollector would not delete
+     extraneous local files if remote paths start with /.
 
  * Minor changes
    - Accept extra arguments in statistics-related extra-info
