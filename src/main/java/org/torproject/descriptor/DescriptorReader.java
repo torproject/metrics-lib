@@ -142,6 +142,10 @@ public interface DescriptorReader {
    * versions.  But some applications may want to handle unrecognized
    * descriptor lines explicitly.</p>
    *
+   * @deprecated Removed in an attempt to simplify the interface.  Applications
+   *     that must fail descriptors with unrecognized lines can instead check
+   *     whether {@link Descriptor#getUnrecognizedLines()} returns any lines.
+   *
    * @since 1.0.0
    */
   public void setFailUnrecognizedDescriptorLines();

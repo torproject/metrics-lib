@@ -7,6 +7,10 @@
    - Fix a bug where DescriptorIndexCollector would not delete
      extraneous local files if remote paths start with /.
    - Add previously missing method to obtain the digest of a vote.
+   - Deprecated setFailUnrecognizedDescriptorLines() in
+     DescriptorParser and DescriptorReader and refer to
+     getUnrecognizedLines() in Descriptor if applications really need
+     to fail descriptors containing unrecognized lines.
 
  * Minor changes
    - Accept extra arguments in statistics-related extra-info
