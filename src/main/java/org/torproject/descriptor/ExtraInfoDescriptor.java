@@ -650,6 +650,30 @@ public interface ExtraInfoDescriptor extends Descriptor {
   public Map<String, Double> getHidservDirOnionsSeenParameters();
 
   /**
+   * Return the time in milliseconds since the epoch when the included
+   * padding-counts statistics ended, or -1 if no such statistics are included.
+   *
+   * @since 1.7.0
+   */
+  public long getPaddingCountsStatsEndMillis();
+
+  /**
+   * Return the interval length of the included padding-counts statistics in
+   * seconds, or -1 if no such statistics are included.
+   *
+   * @since 1.7.0
+   */
+  public long getPaddingCountsStatsIntervalLength();
+
+  /**
+   * Return padding-counts statistics, or <code>null</code> if no such
+   * statistics are included.
+   *
+   * @since 1.7.0
+   */
+  public Map<String, Long> getPaddingCounts();
+
+  /**
    * Return the RSA-1024 signature of the PKCS1-padded descriptor digest,
    * taken from the beginning of the router line through the newline after
    * the router-signature line, or null if the descriptor doesn't contain

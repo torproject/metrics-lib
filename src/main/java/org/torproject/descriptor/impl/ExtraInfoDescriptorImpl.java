@@ -66,6 +66,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     atMostOnceKeywords.addAll(connBiDirectStatsKeywords);
     atMostOnceKeywords.addAll(exitStatsKeywords);
     atMostOnceKeywords.addAll(bridgeStatsKeywords);
+    atMostOnceKeywords.add("padding-counts");
     this.checkAtMostOnceKeywords(atMostOnceKeywords);
     this.checkKeywordsDependOn(dirreqStatsKeywords, "dirreq-stats-end");
     this.checkKeywordsDependOn(entryStatsKeywords, "entry-stats-end");
@@ -219,6 +220,9 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
           break;
         case "hidserv-dir-onions-seen":
           this.parseHidservDirOnionsSeenLine(line, lineNoOpt, partsNoOpt);
+          break;
+        case "padding-counts":
+          this.parsePaddingCountsLine(line, lineNoOpt, partsNoOpt);
           break;
         case "identity-ed25519":
           this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
@@ -754,6 +758,16 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.hidservDirOnionsSeenParameters =
         ParseHelper.parseSpaceSeparatedStringKeyDoubleValueMap(line,
         partsNoOpt, 2);
+  }
+
+  private void parsePaddingCountsLine(String line, String lineNoOpt,
+      String[] partsNoOpt) throws DescriptorParseException {
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        6);
+    this.paddingCountsStatsEndMillis = parsedStatsEndData[0];
+    this.paddingCountsStatsIntervalLength = parsedStatsEndData[1];
+    this.paddingCounts = ParseHelper.parseSpaceSeparatedStringKeyLongValueMap(
+        line, partsNoOpt, 5);
   }
 
   private void parseRouterSignatureLine(String line, String lineNoOpt,
@@ -1339,6 +1353,28 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   public Map<String, Double> getHidservDirOnionsSeenParameters() {
     return this.hidservDirOnionsSeenParameters == null ? null
         : new HashMap<>(this.hidservDirOnionsSeenParameters);
+  }
+
+  private long paddingCountsStatsEndMillis = -1L;
+
+  @Override
+  public long getPaddingCountsStatsEndMillis() {
+    return this.paddingCountsStatsEndMillis;
+  }
+
+  private long paddingCountsStatsIntervalLength = -1L;
+
+  @Override
+  public long getPaddingCountsStatsIntervalLength() {
+    return this.paddingCountsStatsIntervalLength;
+  }
+
+  private Map<String, Long> paddingCounts;
+
+  @Override
+  public Map<String, Long> getPaddingCounts() {
+    return this.paddingCounts == null ? null
+        : new HashMap<>(this.paddingCounts);
   }
 
   private String routerSignature;

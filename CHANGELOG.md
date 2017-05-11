@@ -11,6 +11,7 @@
      DescriptorParser and DescriptorReader and refer to
      getUnrecognizedLines() in Descriptor if applications really need
      to fail descriptors containing unrecognized lines.
+   - Parse "padding-counts" lines in extra-info descriptors.
 
  * Minor changes
    - Accept extra arguments in statistics-related extra-info

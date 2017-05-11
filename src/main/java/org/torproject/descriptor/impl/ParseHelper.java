@@ -493,6 +493,39 @@ public class ParseHelper {
     return result;
   }
 
+  protected static Map<String, Long>
+      parseSpaceSeparatedStringKeyLongValueMap(String line,
+      String[] partsNoOpt, int startIndex)
+      throws DescriptorParseException {
+    Map<String, Long> result = new LinkedHashMap<>();
+    if (partsNoOpt.length < startIndex) {
+      throw new DescriptorParseException("Line '" + line + "' does not "
+          + "contain a key-value list starting at index " + startIndex
+          + ".");
+    }
+    for (int i = startIndex; i < partsNoOpt.length; i++) {
+      String listElement = partsNoOpt[i];
+      String[] keyAndValue = listElement.split("=");
+      String key = null;
+      Long value = null;
+      if (keyAndValue.length == 2) {
+        try {
+          value = Long.parseLong(keyAndValue[1]);
+          key = keyAndValue[0];
+        } catch (NumberFormatException e) {
+          /* Handle below. */
+        }
+      }
+      if (key == null) {
+        throw new DescriptorParseException("Line '" + line + "' contains "
+            + "an illegal key or value in list element '" + listElement
+            + "'.");
+      }
+      result.put(key, value);
+    }
+    return result;
+  }
+
   protected static String
       parseMasterKeyEd25519FromIdentityEd25519CryptoBlock(
       String identityEd25519CryptoBlock) throws DescriptorParseException {

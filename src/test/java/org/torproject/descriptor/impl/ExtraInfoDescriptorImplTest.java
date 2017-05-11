@@ -180,6 +180,15 @@ public class ExtraInfoDescriptorImplTest {
       return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
     }
 
+    private String paddingCountsLine = null;
+
+    private static ExtraInfoDescriptor createWithPaddingCountsLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.paddingCountsLine = line;
+      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+    }
+
     private String unrecognizedLine = null;
 
     private static ExtraInfoDescriptor createWithUnrecognizedLine(
@@ -287,6 +296,9 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.hidservStatsLines != null) {
         sb.append(this.hidservStatsLines).append("\n");
+      }
+      if (this.paddingCountsLine != null) {
+        sb.append(this.paddingCountsLine).append("\n");
       }
       if (this.unrecognizedLine != null) {
         sb.append(this.unrecognizedLine).append("\n");
@@ -1724,6 +1736,69 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpTransportsLine(
         "bridge-ip-transports obfs2=24 5");
+  }
+
+  @Test()
+  public void testPaddingCountsValid()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder
+        .createWithPaddingCountsLine("padding-counts 2017-05-10 01:48:43 "
+        + "(86400 s) bin-size=10000 write-drop=10000 write-pad=10000 "
+        + "write-total=10000 read-drop=10000 read-pad=10000 read-total=70000 "
+        + "enabled-read-pad=0 enabled-read-total=0 enabled-write-pad=0 "
+        + "enabled-write-total=0 max-chanpad-timers=0");
+    assertEquals(1494380923000L,
+        descriptor.getPaddingCountsStatsEndMillis());
+    assertEquals(86400, descriptor.getPaddingCountsStatsIntervalLength());
+    assertEquals(10000L,
+        (long) descriptor.getPaddingCounts().get("bin-size"));
+    assertEquals(10000L,
+        (long) descriptor.getPaddingCounts().get("write-drop"));
+    assertEquals(10000L,
+        (long) descriptor.getPaddingCounts().get("write-pad"));
+    assertEquals(10000L,
+        (long) descriptor.getPaddingCounts().get("write-total"));
+    assertEquals(10000L,
+        (long) descriptor.getPaddingCounts().get("read-drop"));
+    assertEquals(10000L,
+        (long) descriptor.getPaddingCounts().get("read-pad"));
+    assertEquals(70000L,
+        (long) descriptor.getPaddingCounts().get("read-total"));
+    assertEquals(0L,
+        (long) descriptor.getPaddingCounts().get("enabled-read-pad"));
+    assertEquals(0L,
+        (long) descriptor.getPaddingCounts().get("enabled-read-total"));
+    assertEquals(0L,
+        (long) descriptor.getPaddingCounts().get("enabled-write-pad"));
+    assertEquals(0L,
+        (long) descriptor.getPaddingCounts().get("enabled-write-total"));
+    assertEquals(0L,
+        (long) descriptor.getPaddingCounts().get("max-chanpad-timers"));
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testPaddingCountsNoTime() throws DescriptorParseException {
+    DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
+        + "(86400 s) bin-size=10000 write-drop=10000");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testPaddingCountsNoInterval() throws DescriptorParseException {
+    DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
+        + "01:48:43 bin-size=10000 write-drop=10000");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testPaddingCountsCommaSeparatedList()
+      throws DescriptorParseException {
+    DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
+        + "(86400 s) bin-size=10000,write-drop=10000");
+  }
+
+  @Test(expected = DescriptorParseException.class)
+  public void testPaddingCountsNoList() throws DescriptorParseException {
+    DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
+        + "(86400 s)");
   }
 
   @Test()
