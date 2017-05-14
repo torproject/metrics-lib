@@ -13,7 +13,10 @@ import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExtraInfoDescriptor;
 import org.torproject.descriptor.RelayExtraInfoDescriptor;
 
+import org.hamcrest.Matchers;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,6 +27,9 @@ import java.util.SortedMap;
 
 /* Test parsing of extra-info descriptors. */
 public class ExtraInfoDescriptorImplTest {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   /* Helper class to build a descriptor based on default data and
    * modifications requested by test methods. */
@@ -1747,33 +1753,57 @@ public class ExtraInfoDescriptorImplTest {
         + "write-total=10000 read-drop=10000 read-pad=10000 read-total=70000 "
         + "enabled-read-pad=0 enabled-read-total=0 enabled-write-pad=0 "
         + "enabled-write-total=0 max-chanpad-timers=0");
+    checkPaddingCounts(descriptor, new String[] { "bin-size", "write-drop",
+        "write-pad", "write-total", "read-drop", "read-pad", "read-total",
+        "enabled-read-pad", "enabled-read-total", "enabled-write-pad",
+        "enabled-write-total", "max-chanpad-timers"},
+        new long[] { 10000L, 10000L, 10000L, 10000L, 10000L, 10000L, 70000L,
+        0L, 0L, 0L, 0L, 0L});
+  }
+
+  @Test()
+  public void testPaddingOtherCountsValid()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder
+        .createWithPaddingCountsLine("padding-counts 2017-05-10 01:48:43 "
+        + "(86400 s) xbin-size=10000 xwrite-drop=10000 xwrite-pad=10000 "
+        + "write-total=10000 xread-drop=10000 xread-pad=10000 read-total=70000 "
+        + "enabled-read-pad=0 enabled-read-total=0 xenabled-write-pad=0 "
+        + "enabled-write-total=0");
+    checkPaddingCounts(descriptor, new String[] { "xbin-size", "xwrite-drop",
+        "xwrite-pad", "write-total", "xread-drop", "xread-pad", "read-total",
+        "enabled-read-pad", "enabled-read-total", "xenabled-write-pad",
+        "enabled-write-total"},
+        new long[] { 10000L, 10000L, 10000L, 10000L, 10000L, 10000L, 70000L,
+        0L, 0L, 0L, 0L});
+  }
+
+  private void checkPaddingCounts(ExtraInfoDescriptor descriptor,
+      String[] keys, long[] vals) {
     assertEquals(1494380923000L,
         descriptor.getPaddingCountsStatsEndMillis());
     assertEquals(86400, descriptor.getPaddingCountsStatsIntervalLength());
-    assertEquals(10000L,
-        (long) descriptor.getPaddingCounts().get("bin-size"));
-    assertEquals(10000L,
-        (long) descriptor.getPaddingCounts().get("write-drop"));
-    assertEquals(10000L,
-        (long) descriptor.getPaddingCounts().get("write-pad"));
-    assertEquals(10000L,
-        (long) descriptor.getPaddingCounts().get("write-total"));
-    assertEquals(10000L,
-        (long) descriptor.getPaddingCounts().get("read-drop"));
-    assertEquals(10000L,
-        (long) descriptor.getPaddingCounts().get("read-pad"));
-    assertEquals(70000L,
-        (long) descriptor.getPaddingCounts().get("read-total"));
-    assertEquals(0L,
-        (long) descriptor.getPaddingCounts().get("enabled-read-pad"));
-    assertEquals(0L,
-        (long) descriptor.getPaddingCounts().get("enabled-read-total"));
-    assertEquals(0L,
-        (long) descriptor.getPaddingCounts().get("enabled-write-pad"));
-    assertEquals(0L,
-        (long) descriptor.getPaddingCounts().get("enabled-write-total"));
-    assertEquals(0L,
-        (long) descriptor.getPaddingCounts().get("max-chanpad-timers"));
+    for (int k = 0; k < keys.length; k++) {
+      assertEquals(vals[k],
+          (long) descriptor.getPaddingCounts().get(keys[k]));
+    }
+  }
+
+  @Test()
+  public void testPaddingCountsValidFutureProof()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder
+        .createWithPaddingCountsLine("padding-counts 2017-05-10 01:48:43 "
+        + "(86400 s) write-drop=10000 write-pad=10000 bin-size=10000 "
+        + "write-total=10000 read-drop=10000 read-pad=10000 read-total=70000 "
+        + "enabled-read-pad=0 enabled-read-total=0 enabled-write-pad=0 "
+        + "enabled-write-total=0 max-chanpad-timers=0 some-new-value=42");
+    checkPaddingCounts(descriptor, new String[] { "bin-size", "write-drop",
+        "write-pad", "write-total", "read-drop", "read-pad", "read-total",
+        "enabled-read-pad", "enabled-read-total", "enabled-write-pad",
+        "enabled-write-total", "max-chanpad-timers", "some-new-value"},
+        new long[] { 10000L, 10000L, 10000L, 10000L, 10000L, 10000L, 70000L,
+        0L, 0L, 0L, 0L, 0L, 42L});
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1782,21 +1812,64 @@ public class ExtraInfoDescriptorImplTest {
         + "(86400 s) bin-size=10000 write-drop=10000");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
   public void testPaddingCountsNoInterval() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(Matchers
+        .allOf(Matchers.containsString("Illegal line"), Matchers
+        .containsString("'padding-counts 2017-05-10 01:48:43 "
+        + "bin-size=10000 write-drop=10000'")));
     DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
         + "01:48:43 bin-size=10000 write-drop=10000");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testPaddingCountsCommaSeparatedList()
-      throws DescriptorParseException {
+  @Test()
+  public void testPaddingCountsNoKey() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(Matchers
+        .allOf(Matchers.containsString("illegal key or value in list element"),
+        Matchers.containsString("=7")));
     DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
-        + "(86400 s) bin-size=10000,write-drop=10000");
+        + "01:48:43 (86400 s) write-total=9 write-drop=10000 =7 x=8");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test()
+  public void testPaddingCountsNoValue() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(Matchers
+        .allOf(Matchers.containsString("illegal key or value in list element"),
+        Matchers.containsString("'write-drop='")));
+    DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
+        + "01:48:43 (86400 s) write-total=7 write-drop= bin-size=10000 ");
+  }
+
+  @Test()
+  public void testPaddingCountsKeyRepeated() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(Matchers
+        .allOf(Matchers.containsString("contains an already defined key"),
+        Matchers.containsString("'a'")));
+    DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
+        + "01:48:43 (86400 s) a=1 b=2 a=3 b=4");
+  }
+
+  @Test()
+  public void testPaddingCountsCommaSeparatedList()
+      throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(Matchers
+        .allOf(Matchers.containsString("Line 'padding-counts 2017-05-10 "),
+        Matchers.containsString("'bin-size=10000,write-drop=10000'")));
+    DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
+        + "01:48:43 (86400 s) bin-size=10000,write-drop=10000");
+  }
+
+  @Test()
   public void testPaddingCountsNoList() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(Matchers
+        .allOf(Matchers.containsString("Illegal line"),
+        Matchers.containsString("'padding-counts 2017-05-10 (86400 s)'")));
     DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
         + "(86400 s)");
   }
