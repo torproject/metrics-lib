@@ -516,10 +516,14 @@ public class ParseHelper {
           /* Handle below. */
         }
       }
-      if (key == null) {
+      if (key == null || key.isEmpty()) {
         throw new DescriptorParseException("Line '" + line + "' contains "
             + "an illegal key or value in list element '" + listElement
             + "'.");
+      }
+      if (result.keySet().contains(key)) {
+        throw new DescriptorParseException("Line '" + line + "' contains "
+            + "an already defined key '" + key + "'.");
       }
       result.put(key, value);
     }
