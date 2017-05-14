@@ -401,7 +401,7 @@ public class ParseHelper {
             /* Handle below. */
           }
         }
-        if (key == null) {
+        if (null == key) {
           throw new DescriptorParseException("Line '" + line + "' "
               + "contains an illegal key or value in list element '"
               + listElement + "'.");
@@ -483,7 +483,7 @@ public class ParseHelper {
           /* Handle below. */
         }
       }
-      if (key == null) {
+      if (null == key) {
         throw new DescriptorParseException("Line '" + line + "' contains "
             + "an illegal key or value in list element '" + listElement
             + "'.");
@@ -516,7 +516,7 @@ public class ParseHelper {
           /* Handle below. */
         }
       }
-      if (key == null || key.isEmpty()) {
+      if (null == key || key.isEmpty()) {
         throw new DescriptorParseException("Line '" + line + "' contains "
             + "an illegal key or value in list element '" + listElement
             + "'.");
