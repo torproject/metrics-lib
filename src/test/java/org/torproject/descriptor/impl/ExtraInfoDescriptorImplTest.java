@@ -1383,6 +1383,15 @@ public class ExtraInfoDescriptorImplTest {
   }
 
   @Test()
+  public void testDirreqV3RespEmptyString()
+      throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Line 'dirreq-v3-resp =10848' contains an illegal key or value.");
+    DirreqStatsBuilder.createWithDirreqV3RespLine("dirreq-v3-resp =10848");
+  }
+
+  @Test()
   public void testDirreqV3RespExtraArg()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV3RespLine("dirreq-v3-resp "
@@ -1622,6 +1631,16 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     ExitStatsBuilder.createWithExitKibibytesWrittenLine(
         "exit-kibibytes-written unknown=74647");
+  }
+
+  @Test()
+  public void testExitStatsWrittenEmptyString()
+      throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'exit-kibibytes-written =74647' contains "
+        + "an illegal key or value in list element '=74647'.");
+    ExitStatsBuilder.createWithExitKibibytesWrittenLine(
+        "exit-kibibytes-written =74647");
   }
 
   @Test(expected = DescriptorParseException.class)
