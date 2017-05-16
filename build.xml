@@ -6,7 +6,7 @@
 
 <project default="usage" name="descriptor" basedir=".">
 
-  <property name="release.version" value="1.6.0-dev" />
+  <property name="release.version" value="1.7.0" />
   <property name="javadoc-title" value="DescripTor API Documentation"/>
   <property name="javadoc-excludes" value="**/impl/** **/index/**" />
   <property name="implementation-title" value="DescripTor" />

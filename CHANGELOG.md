@@ -1,4 +1,4 @@
-# Changes in version 1.7.0 - ???
+# Changes in version 1.7.0 - 2017-05-17
 
  * Medium changes
    - Fix a bug where unrecognized lines in extra-info descriptors
