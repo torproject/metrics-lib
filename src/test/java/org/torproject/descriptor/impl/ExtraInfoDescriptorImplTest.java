@@ -1777,7 +1777,7 @@ public class ExtraInfoDescriptorImplTest {
         "enabled-read-pad", "enabled-read-total", "enabled-write-pad",
         "enabled-write-total", "max-chanpad-timers"},
         new long[] { 10000L, 10000L, 10000L, 10000L, 10000L, 10000L, 70000L,
-        0L, 0L, 0L, 0L, 0L});
+            0L, 0L, 0L, 0L, 0L});
   }
 
   @Test()
@@ -1794,7 +1794,7 @@ public class ExtraInfoDescriptorImplTest {
         "enabled-read-pad", "enabled-read-total", "xenabled-write-pad",
         "enabled-write-total"},
         new long[] { 10000L, 10000L, 10000L, 10000L, 10000L, 10000L, 70000L,
-        0L, 0L, 0L, 0L});
+            0L, 0L, 0L, 0L});
   }
 
   private void checkPaddingCounts(ExtraInfoDescriptor descriptor,
@@ -1822,7 +1822,7 @@ public class ExtraInfoDescriptorImplTest {
         "enabled-read-pad", "enabled-read-total", "enabled-write-pad",
         "enabled-write-total", "max-chanpad-timers", "some-new-value"},
         new long[] { 10000L, 10000L, 10000L, 10000L, 10000L, 10000L, 70000L,
-        0L, 0L, 0L, 0L, 0L, 42L});
+            0L, 0L, 0L, 0L, 0L, 42L});
   }
 
   @Test(expected = DescriptorParseException.class)
