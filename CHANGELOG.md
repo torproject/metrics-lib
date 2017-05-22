@@ -4,6 +4,7 @@
    - Turn keyword strings into enums and use the appropriate enum sets
      and maps to avoid repeating string literals and to use more speedy
      collection types.
+   - Simplify and avoid repetition in parse helper methods.
 
 
 # Changes in version 1.7.0 - 2017-05-17

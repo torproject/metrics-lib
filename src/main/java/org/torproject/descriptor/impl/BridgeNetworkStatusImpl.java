@@ -110,7 +110,7 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
           + line + "'.");
     }
     SortedMap<String, String> flagThresholds =
-        ParseHelper.parseKeyValueStringPairs(line, parts, 1, "=");
+        ParseHelper.parseKeyValueStringPairs(line, parts, 1);
     try {
       for (Map.Entry<String, String> e : flagThresholds.entrySet()) {
         switch (e.getKey()) {

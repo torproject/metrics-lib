@@ -420,7 +420,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           + line + "'.");
     }
     SortedMap<String, String> flagThresholds =
-        ParseHelper.parseKeyValueStringPairs(line, parts, 1, "=");
+        ParseHelper.parseKeyValueStringPairs(line, parts, 1);
     try {
       for (Map.Entry<String, String> e : flagThresholds.entrySet()) {
         switch (e.getKey()) {
@@ -467,7 +467,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   private void parseParamsLine(String line, String[] parts)
       throws DescriptorParseException {
     this.consensusParams = ParseHelper.parseKeyValueIntegerPairs(line,
-        parts, 1, "=");
+        parts, 1);
   }
 
   private void parseDirSourceLine(String line, String[] parts)

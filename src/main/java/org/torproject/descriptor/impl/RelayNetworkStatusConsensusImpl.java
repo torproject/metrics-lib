@@ -354,7 +354,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   private void parseParamsLine(String line, String[] parts)
       throws DescriptorParseException {
     this.consensusParams = ParseHelper.parseKeyValueIntegerPairs(line,
-        parts, 1, "=");
+        parts, 1);
   }
 
   private void parseSharedRandPreviousValueLine(String line, String[] parts)
@@ -390,7 +390,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   private void parseBandwidthWeightsLine(String line, String[] parts)
       throws DescriptorParseException {
     this.bandwidthWeights = ParseHelper.parseKeyValueIntegerPairs(line,
-        parts, 1, "=");
+        parts, 1);
   }
 
   private String consensusDigest;

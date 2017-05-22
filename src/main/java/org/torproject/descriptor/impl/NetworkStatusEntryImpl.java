@@ -201,7 +201,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
       throws DescriptorParseException {
     this.parsedAtMostOnceKey(Key.W);
     SortedMap<String, Integer> pairs =
-        ParseHelper.parseKeyValueIntegerPairs(line, parts, 1, "=");
+        ParseHelper.parseKeyValueIntegerPairs(line, parts, 1);
     if (pairs.isEmpty()) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }

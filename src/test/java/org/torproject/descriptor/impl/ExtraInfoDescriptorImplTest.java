@@ -1278,12 +1278,9 @@ public class ExtraInfoDescriptorImplTest {
         + "gb=208,");
   }
 
-  @Test()
+  @Test(expected = DescriptorParseException.class)
   public void testGeoipClientOriginsDuplicate()
       throws DescriptorParseException {
-    /* dir-spec.txt doesn't say anything about duplicate country codes, so
-     * this line is valid, even though it leads to a somewhat undefined
-     * parse result. */
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins de=1152,de=952,cn=896,us=712,it=504,"
         + "ru=352,fr=208,gb=208,ir=200");
@@ -1293,8 +1290,8 @@ public class ExtraInfoDescriptorImplTest {
   public void testGeoipClientOriginsExtraArg()
       throws DescriptorParseException {
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
-        "geoip-client-origins de=1152,de=952,cn=896,us=712,it=504 "
-            + "ru=352 fr=208 gb=208 ir=200");
+        "geoip-client-origins de=1152,cn=896,us=712,it=504 ru=352 fr=208 "
+        + "gb=208 ir=200");
   }
 
   @Test()
@@ -1387,7 +1384,8 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(
-        "Line 'dirreq-v3-resp =10848' contains an illegal key or value.");
+        "Line 'dirreq-v3-resp =10848' contains an illegal key in list element "
+        + "'=10848'.");
     DirreqStatsBuilder.createWithDirreqV3RespLine("dirreq-v3-resp =10848");
   }
 
@@ -1638,7 +1636,7 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("Line 'exit-kibibytes-written =74647' contains "
-        + "an illegal key or value in list element '=74647'.");
+        + "an illegal key in list element '=74647'.");
     ExitStatsBuilder.createWithExitKibibytesWrittenLine(
         "exit-kibibytes-written =74647");
   }
@@ -1846,7 +1844,7 @@ public class ExtraInfoDescriptorImplTest {
   public void testPaddingCountsNoKey() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(Matchers
-        .allOf(Matchers.containsString("illegal key or value in list element"),
+        .allOf(Matchers.containsString("illegal key in list element"),
         Matchers.containsString("=7")));
     DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
         + "01:48:43 (86400 s) write-total=9 write-drop=10000 =7 x=8");
@@ -1856,7 +1854,7 @@ public class ExtraInfoDescriptorImplTest {
   public void testPaddingCountsNoValue() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(Matchers
-        .allOf(Matchers.containsString("illegal key or value in list element"),
+        .allOf(Matchers.containsString("illegal value in list element"),
         Matchers.containsString("'write-drop='")));
     DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
         + "01:48:43 (86400 s) write-total=7 write-drop= bin-size=10000 ");
@@ -1866,7 +1864,7 @@ public class ExtraInfoDescriptorImplTest {
   public void testPaddingCountsKeyRepeated() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(Matchers
-        .allOf(Matchers.containsString("contains an already defined key"),
+        .allOf(Matchers.containsString("contains duplicate key"),
         Matchers.containsString("'a'")));
     DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
         + "01:48:43 (86400 s) a=1 b=2 a=3 b=4");
