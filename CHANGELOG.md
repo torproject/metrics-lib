@@ -1,3 +1,11 @@
+# Changes in version 1.8.0 - ??
+
+ * Minor changes
+   - Turn keyword strings into enums and use the appropriate enum sets
+     and maps to avoid repeating string literals and to use more speedy
+     collection types.
+
+
 # Changes in version 1.7.0 - 2017-05-17
 
  * Medium changes
@@ -17,11 +25,6 @@
    - Accept extra arguments in statistics-related extra-info
      descriptor lines, as permitted by dir-spec.txt.
    - Streamline digest method names.
-
- * Minor changes
-   - Turn keyword strings into enums and use the appropriate enum sets
-     and maps to avoid repeating string literals and to use more speedy
-     collection types.
 
 
 # Changes in version 1.6.0 - 2017-02-17
