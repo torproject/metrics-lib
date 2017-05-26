@@ -71,16 +71,16 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     this.enoughMtbfInfo = -1;
     this.ignoringAdvertisedBws = -1;
 
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "published":
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case PUBLISHED:
           this.parsePublishedLine(line, parts);
           break;
-        case "flag-thresholds":
+        case FLAG_THRESHOLDS:
           this.parseFlagThresholdsLine(line, parts);
           break;
         default:

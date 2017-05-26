@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -28,6 +28,16 @@ import javax.xml.bind.DatatypeConverter;
 public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     implements ExtraInfoDescriptor {
 
+  private Set<Key> exactlyOnceKeys = EnumSet.of(
+      Key.EXTRA_INFO, Key.PUBLISHED);
+
+  private static final Set<Key> atMostOnceKeys = EnumSet.of(
+      Key.IDENTITY_ED25519, Key.MASTER_KEY_ED25519, Key.READ_HISTORY,
+      Key.WRITE_HISTORY, Key.DIRREQ_READ_HISTORY, Key.DIRREQ_WRITE_HISTORY,
+      Key.GEOIP_DB_DIGEST, Key.GEOIP6_DB_DIGEST, Key.ROUTER_SIG_ED25519,
+      Key.ROUTER_SIGNATURE, Key.ROUTER_DIGEST_SHA256, Key.ROUTER_DIGEST,
+      Key.PADDING_COUNTS);
+
   protected ExtraInfoDescriptorImpl(byte[] descriptorBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
@@ -35,231 +45,223 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.parseDescriptorBytes();
     this.calculateDigest();
     this.calculateDigestSha256();
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
-        "extra-info,published").split(",")));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> dirreqStatsKeywords = new HashSet<>(Arrays.asList((
-        "dirreq-stats-end,dirreq-v2-ips,dirreq-v3-ips,dirreq-v2-reqs,"
-        + "dirreq-v3-reqs,dirreq-v2-share,dirreq-v3-share,dirreq-v2-resp,"
-        + "dirreq-v3-resp,dirreq-v2-direct-dl,dirreq-v3-direct-dl,"
-        + "dirreq-v2-tunneled-dl,dirreq-v3-tunneled-dl,").split(",")));
-    Set<String> entryStatsKeywords = new HashSet<>(Arrays.asList(
-        "entry-stats-end,entry-ips".split(",")));
-    Set<String> cellStatsKeywords = new HashSet<>(Arrays.asList((
-        "cell-stats-end,cell-processed-cells,cell-queued-cells,"
-        + "cell-time-in-queue,cell-circuits-per-decile").split(",")));
-    Set<String> connBiDirectStatsKeywords = new HashSet<>(
-        Arrays.asList("conn-bi-direct".split(",")));
-    Set<String> exitStatsKeywords = new HashSet<>(Arrays.asList((
-        "exit-stats-end,exit-kibibytes-written,exit-kibibytes-read,"
-        + "exit-streams-opened").split(",")));
-    Set<String> bridgeStatsKeywords = new HashSet<>(Arrays.asList(
-        "bridge-stats-end,bridge-stats-ips".split(",")));
-    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "identity-ed25519,master-key-ed25519,read-history,write-history,"
-        + "dirreq-read-history,dirreq-write-history,geoip-db-digest,"
-        + "router-sig-ed25519,router-signature,router-digest-sha256,"
-        + "router-digest").split(",")));
-    atMostOnceKeywords.addAll(dirreqStatsKeywords);
-    atMostOnceKeywords.addAll(entryStatsKeywords);
-    atMostOnceKeywords.addAll(cellStatsKeywords);
-    atMostOnceKeywords.addAll(connBiDirectStatsKeywords);
-    atMostOnceKeywords.addAll(exitStatsKeywords);
-    atMostOnceKeywords.addAll(bridgeStatsKeywords);
-    atMostOnceKeywords.add("padding-counts");
-    this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    this.checkKeywordsDependOn(dirreqStatsKeywords, "dirreq-stats-end");
-    this.checkKeywordsDependOn(entryStatsKeywords, "entry-stats-end");
-    this.checkKeywordsDependOn(cellStatsKeywords, "cell-stats-end");
-    this.checkKeywordsDependOn(exitStatsKeywords, "exit-stats-end");
-    this.checkKeywordsDependOn(bridgeStatsKeywords, "bridge-stats-end");
-    this.checkFirstKeyword("extra-info");
-    this.clearParsedKeywords();
+    this.checkExactlyOnceKeys(exactlyOnceKeys);
+    Set<Key> dirreqStatsKeys = EnumSet.of(
+        Key.DIRREQ_STATS_END, Key.DIRREQ_V2_IPS, Key.DIRREQ_V3_IPS,
+        Key.DIRREQ_V2_REQS, Key.DIRREQ_V3_REQS, Key.DIRREQ_V2_SHARE,
+        Key.DIRREQ_V3_SHARE, Key.DIRREQ_V2_RESP, Key.DIRREQ_V3_RESP,
+        Key.DIRREQ_V2_DIRECT_DL, Key.DIRREQ_V3_DIRECT_DL,
+        Key.DIRREQ_V2_TUNNELED_DL, Key.DIRREQ_V3_TUNNELED_DL);
+    Set<Key> entryStatsKeys = EnumSet.of(
+        Key.ENTRY_STATS_END, Key.ENTRY_IPS);
+    Set<Key> cellStatsKeys = EnumSet.of(
+        Key.CELL_STATS_END, Key.CELL_PROCESSED_CELLS, Key.CELL_QUEUED_CELLS,
+        Key.CELL_TIME_IN_QUEUE, Key.CELL_CIRCUITS_PER_DECILE);
+    Set<Key> connBiDirectStatsKeys = EnumSet.of(Key.CONN_BI_DIRECT);
+    Set<Key> exitStatsKeys = EnumSet.of(
+        Key.EXIT_STATS_END, Key.EXIT_KIBIBYTES_WRITTEN, Key.EXIT_KIBIBYTES_READ,
+        Key.EXIT_STREAMS_OPENED);
+    Set<Key> bridgeStatsKeys = EnumSet.of(
+        Key.BRIDGE_STATS_END, Key.BRIDGE_IPS);
+    atMostOnceKeys.addAll(dirreqStatsKeys);
+    atMostOnceKeys.addAll(entryStatsKeys);
+    atMostOnceKeys.addAll(cellStatsKeys);
+    atMostOnceKeys.addAll(connBiDirectStatsKeys);
+    atMostOnceKeys.addAll(exitStatsKeys);
+    atMostOnceKeys.addAll(bridgeStatsKeys);
+    this.checkAtMostOnceKeys(atMostOnceKeys);
+    this.checkKeysDependOn(dirreqStatsKeys, Key.DIRREQ_STATS_END);
+    this.checkKeysDependOn(entryStatsKeys, Key.ENTRY_STATS_END);
+    this.checkKeysDependOn(cellStatsKeys, Key.CELL_STATS_END);
+    this.checkKeysDependOn(exitStatsKeys, Key.EXIT_STATS_END);
+    this.checkKeysDependOn(bridgeStatsKeys, Key.BRIDGE_STATS_END);
+    this.checkFirstKey(Key.EXTRA_INFO);
+    this.clearParsedKeys();
     return;
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter("\n");
-    String nextCrypto = "";
+        .useDelimiter(NL);
+    Key nextCrypto = Key.EMPTY;
     List<String> cryptoLines = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
-      String lineNoOpt = line.startsWith("opt ")
-          ? line.substring("opt ".length()) : line;
+      String lineNoOpt = line.startsWith(Key.OPT.keyword + SP)
+          ? line.substring(Key.OPT.keyword.length() + 1) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");
-      String keyword = partsNoOpt[0];
-      switch (keyword) {
-        case "extra-info":
+      Key key = Key.get(partsNoOpt[0]);
+      switch (key) {
+        case EXTRA_INFO:
           this.parseExtraInfoLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "published":
+        case PUBLISHED:
           this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "read-history":
+        case READ_HISTORY:
           this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "write-history":
+        case WRITE_HISTORY:
           this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "geoip-db-digest":
+        case GEOIP_DB_DIGEST:
           this.parseGeoipDbDigestLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "geoip6-db-digest":
+        case GEOIP6_DB_DIGEST:
           this.parseGeoip6DbDigestLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "geoip-start-time":
+        case GEOIP_START_TIME:
           this.parseGeoipStartTimeLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "geoip-client-origins":
+        case GEOIP_CLIENT_ORIGINS:
           this.parseGeoipClientOriginsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-stats-end":
+        case DIRREQ_STATS_END:
           this.parseDirreqStatsEndLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v2-ips":
+        case DIRREQ_V2_IPS:
           this.parseDirreqV2IpsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v3-ips":
+        case DIRREQ_V3_IPS:
           this.parseDirreqV3IpsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v2-reqs":
+        case DIRREQ_V2_REQS:
           this.parseDirreqV2ReqsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v3-reqs":
+        case DIRREQ_V3_REQS:
           this.parseDirreqV3ReqsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v2-share":
+        case DIRREQ_V2_SHARE:
           this.parseDirreqV2ShareLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v3-share":
+        case DIRREQ_V3_SHARE:
           this.parseDirreqV3ShareLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v2-resp":
+        case DIRREQ_V2_RESP:
           this.parseDirreqV2RespLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v3-resp":
+        case DIRREQ_V3_RESP:
           this.parseDirreqV3RespLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v2-direct-dl":
+        case DIRREQ_V2_DIRECT_DL:
           this.parseDirreqV2DirectDlLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v3-direct-dl":
+        case DIRREQ_V3_DIRECT_DL:
           this.parseDirreqV3DirectDlLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v2-tunneled-dl":
+        case DIRREQ_V2_TUNNELED_DL:
           this.parseDirreqV2TunneledDlLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-v3-tunneled-dl":
+        case DIRREQ_V3_TUNNELED_DL:
           this.parseDirreqV3TunneledDlLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-read-history":
+        case DIRREQ_READ_HISTORY:
           this.parseDirreqReadHistoryLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dirreq-write-history":
+        case DIRREQ_WRITE_HISTORY:
           this.parseDirreqWriteHistoryLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "entry-stats-end":
+        case ENTRY_STATS_END:
           this.parseEntryStatsEndLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "entry-ips":
+        case ENTRY_IPS:
           this.parseEntryIpsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "cell-stats-end":
+        case CELL_STATS_END:
           this.parseCellStatsEndLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "cell-processed-cells":
+        case CELL_PROCESSED_CELLS:
           this.parseCellProcessedCellsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "cell-queued-cells":
+        case CELL_QUEUED_CELLS:
           this.parseCellQueuedCellsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "cell-time-in-queue":
+        case CELL_TIME_IN_QUEUE:
           this.parseCellTimeInQueueLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "cell-circuits-per-decile":
+        case CELL_CIRCUITS_PER_DECILE:
           this.parseCellCircuitsPerDecileLine(line, lineNoOpt,
               partsNoOpt);
           break;
-        case "conn-bi-direct":
+        case CONN_BI_DIRECT:
           this.parseConnBiDirectLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "exit-stats-end":
+        case EXIT_STATS_END:
           this.parseExitStatsEndLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "exit-kibibytes-written":
+        case EXIT_KIBIBYTES_WRITTEN:
           this.parseExitKibibytesWrittenLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "exit-kibibytes-read":
+        case EXIT_KIBIBYTES_READ:
           this.parseExitKibibytesReadLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "exit-streams-opened":
+        case EXIT_STREAMS_OPENED:
           this.parseExitStreamsOpenedLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "bridge-stats-end":
+        case BRIDGE_STATS_END:
           this.parseBridgeStatsEndLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "bridge-ips":
+        case BRIDGE_IPS:
           this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "bridge-ip-versions":
+        case BRIDGE_IP_VERSIONS:
           this.parseBridgeIpVersionsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "bridge-ip-transports":
+        case BRIDGE_IP_TRANSPORTS:
           this.parseBridgeIpTransportsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "transport":
+        case TRANSPORT:
           this.parseTransportLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "hidserv-stats-end":
+        case HIDSERV_STATS_END:
           this.parseHidservStatsEndLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "hidserv-rend-relayed-cells":
+        case HIDSERV_REND_RELAYED_CELLS:
           this.parseHidservRendRelayedCellsLine(line, lineNoOpt,
               partsNoOpt);
           break;
-        case "hidserv-dir-onions-seen":
+        case HIDSERV_DIR_ONIONS_SEEN:
           this.parseHidservDirOnionsSeenLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "padding-counts":
+        case PADDING_COUNTS:
           this.parsePaddingCountsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "identity-ed25519":
+        case IDENTITY_ED25519:
           this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "identity-ed25519";
+          nextCrypto = key;
           break;
-        case "master-key-ed25519":
+        case MASTER_KEY_ED25519:
           this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
           break;
-        case "router-sig-ed25519":
+        case ROUTER_SIG_ED25519:
           this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
           break;
-        case "router-signature":
+        case ROUTER_SIGNATURE:
           this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "router-signature";
+          nextCrypto = key;
           break;
-        case "router-digest":
+        case ROUTER_DIGEST:
           this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "router-digest-sha256":
+        case ROUTER_DIGEST_SHA256:
           this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           cryptoLines = new ArrayList<>();
           cryptoLines.add(line);
           break;
-        case "-----END":
+        case CRYPTO_END:
           cryptoLines.add(line);
           StringBuilder sb = new StringBuilder();
           for (String cryptoLine : cryptoLines) {
-            sb.append("\n").append(cryptoLine);
+            sb.append(NL).append(cryptoLine);
           }
           String cryptoString = sb.toString().substring(1);
           switch (nextCrypto) {
-            case "router-signature":
+            case ROUTER_SIGNATURE:
               this.routerSignature = cryptoString;
               break;
-            case "identity-ed25519":
+            case IDENTITY_ED25519:
               this.identityEd25519 = cryptoString;
               this.parseIdentityEd25519CryptoBlock(cryptoString);
               break;
@@ -276,7 +278,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
               }
           }
           cryptoLines = null;
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
         default:
           if (cryptoLines != null) {
@@ -845,8 +847,8 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     }
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "extra-info ";
-      String sigToken = "\nrouter-signature\n";
+      String startToken = Key.EXTRA_INFO.keyword + SP;
+      String sigToken = NL + Key.ROUTER_SIGNATURE.keyword + NL;
       int start = ascii.indexOf(startToken);
       int sig = ascii.indexOf(sigToken) + sigToken.length();
       if (start >= 0 && sig >= 0 && sig > start) {
@@ -876,7 +878,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     }
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "extra-info ";
+      String startToken = Key.EXTRA_INFO.keyword + SP;
       String sigToken = "\n-----END SIGNATURE-----\n";
       int start = ascii.indexOf(startToken);
       int sig = ascii.indexOf(sigToken) + sigToken.length();

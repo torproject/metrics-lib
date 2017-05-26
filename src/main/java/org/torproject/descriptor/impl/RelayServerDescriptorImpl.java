@@ -19,7 +19,7 @@ public class RelayServerDescriptorImpl extends ServerDescriptorImpl
     List<ServerDescriptor> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        "router ");
+        Key.ROUTER.keyword + SP);
     for (byte[] descriptorBytes : splitDescriptorsBytes) {
       ServerDescriptor parsedDescriptor =
           new RelayServerDescriptorImpl(descriptorBytes,

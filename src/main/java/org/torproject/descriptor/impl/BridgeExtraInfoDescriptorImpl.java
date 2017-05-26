@@ -19,7 +19,7 @@ public class BridgeExtraInfoDescriptorImpl
     List<ExtraInfoDescriptor> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        "extra-info ");
+        Key.EXTRA_INFO.keyword + SP);
     for (byte[] descriptorBytes : splitDescriptorsBytes) {
       ExtraInfoDescriptor parsedDescriptor =
           new BridgeExtraInfoDescriptorImpl(descriptorBytes,

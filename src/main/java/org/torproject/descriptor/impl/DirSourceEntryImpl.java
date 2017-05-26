@@ -3,14 +3,17 @@
 
 package org.torproject.descriptor.impl;
 
+import static org.torproject.descriptor.impl.DescriptorImpl.NL;
+import static org.torproject.descriptor.impl.DescriptorImpl.SP;
+
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DirSourceEntry;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Set;
 
 public class DirSourceEntryImpl implements DirSourceEntry {
 
@@ -37,72 +40,67 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     this.dirSourceEntryBytes = dirSourceEntryBytes;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
-    this.initializeKeywords();
     this.parseDirSourceEntryBytes();
-    this.checkAndClearKeywords();
+    this.checkAndClearKeys();
   }
 
-  private SortedSet<String> exactlyOnceKeywords;
+  private Set<Key> exactlyOnceKeys = EnumSet.of(
+      Key.DIR_SOURCE, Key.VOTE_DIGEST);
 
-  private SortedSet<String> atMostOnceKeywords;
+  private Set<Key> atMostOnceKeys = EnumSet.of(Key.CONTACT);
 
-  private void initializeKeywords() {
-    this.exactlyOnceKeywords = new TreeSet<>();
-    this.exactlyOnceKeywords.add("dir-source");
-    this.exactlyOnceKeywords.add("vote-digest");
-    this.atMostOnceKeywords = new TreeSet<>();
-    this.atMostOnceKeywords.add("contact");
-  }
-
-  private void parsedExactlyOnceKeyword(String keyword)
+  private void parsedExactlyOnceKey(Key key)
       throws DescriptorParseException {
-    if (!this.exactlyOnceKeywords.contains(keyword)) {
-      throw new DescriptorParseException("Duplicate '" + keyword
+    if (!this.exactlyOnceKeys.contains(key)) {
+      throw new DescriptorParseException("Duplicate '" + key.keyword
           + "' line in dir-source.");
     }
-    this.exactlyOnceKeywords.remove(keyword);
+    this.exactlyOnceKeys.remove(key);
   }
 
-  private void parsedAtMostOnceKeyword(String keyword)
+  private void parsedAtMostOnceKey(Key key)
       throws DescriptorParseException {
-    if (!this.atMostOnceKeywords.contains(keyword)) {
-      throw new DescriptorParseException("Duplicate " + keyword + "line "
+    if (!this.atMostOnceKeys.contains(key)) {
+      throw new DescriptorParseException("Duplicate " + key.keyword + "line "
           + "in dir-source.");
     }
-    this.atMostOnceKeywords.remove(keyword);
+    this.atMostOnceKeys.remove(key);
   }
 
-  private void checkAndClearKeywords() throws DescriptorParseException {
-    if (!this.exactlyOnceKeywords.isEmpty()) {
-      throw new DescriptorParseException("dir-source does not contain a '"
-          + this.exactlyOnceKeywords.first() + "' line.");
+  private void checkAndClearKeys() throws DescriptorParseException {
+    if (!this.exactlyOnceKeys.isEmpty()) {
+      for (Key key : this.exactlyOnceKeys) {
+        throw new DescriptorParseException("dir-source does not contain a '"
+            + key.keyword + "' line.");
+      }
     }
-    this.exactlyOnceKeywords = null;
-    this.atMostOnceKeywords = null;
+    this.exactlyOnceKeys = null;
+    this.atMostOnceKeys = null;
   }
 
   private void parseDirSourceEntryBytes()
       throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(this.dirSourceEntryBytes))
-        .useDelimiter("\n");
+        .useDelimiter(NL);
     boolean skipCrypto = false;
     while (scanner.hasNext()) {
       String line = scanner.next();
-      String[] parts = line.split(" ");
-      switch (parts[0]) {
-        case "dir-source":
+      String[] parts = line.split(SP);
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case DIR_SOURCE:
           this.parseDirSourceLine(line);
           break;
-        case "contact":
+        case CONTACT:
           this.parseContactLine(line);
           break;
-        case "vote-digest":
+        case VOTE_DIGEST:
           this.parseVoteDigestLine(line);
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           skipCrypto = true;
           break;
-        case "-----END":
+        case CRYPTO_END:
           skipCrypto = false;
           break;
         default:
@@ -123,7 +121,7 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   private void parseDirSourceLine(String line)
       throws DescriptorParseException {
-    this.parsedExactlyOnceKeyword("dir-source");
+    this.parsedExactlyOnceKey(Key.DIR_SOURCE);
     String[] parts = line.split("[ \t]+");
     if (parts.length != 7) {
       throw new DescriptorParseException("Invalid line '" + line + "'.");
@@ -133,7 +131,7 @@ public class DirSourceEntryImpl implements DirSourceEntry {
       nickname = nickname.substring(0, nickname.length()
           - "-legacy".length());
       this.isLegacy = true;
-      this.parsedExactlyOnceKeyword("vote-digest");
+      this.parsedExactlyOnceKey(Key.VOTE_DIGEST);
     }
     this.nickname = ParseHelper.parseNickname(line, nickname);
     this.identity = ParseHelper.parseTwentyByteHexString(line, parts[2]);
@@ -149,9 +147,9 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   private void parseContactLine(String line)
       throws DescriptorParseException {
-    this.parsedAtMostOnceKeyword("contact");
-    if (line.length() > "contact ".length()) {
-      this.contactLine = line.substring("contact ".length());
+    this.parsedAtMostOnceKey(Key.CONTACT);
+    if (line.length() > Key.CONTACT.keyword.length() + 1) {
+      this.contactLine = line.substring(Key.CONTACT.keyword.length() + 1);
     } else {
       this.contactLine = "";
     }
@@ -159,7 +157,7 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   private void parseVoteDigestLine(String line)
       throws DescriptorParseException {
-    this.parsedExactlyOnceKeyword("vote-digest");
+    this.parsedExactlyOnceKey(Key.VOTE_DIGEST);
     String[] parts = line.split("[ \t]+");
     if (parts.length != 2) {
       throw new DescriptorParseException("Invalid line '" + line + "'.");

@@ -12,8 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -29,7 +28,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
     List<RelayDirectory> parsedDirectories = new ArrayList<>();
     List<byte[]> splitDirectoriesBytes =
         DescriptorImpl.splitRawDescriptorBytes(directoriesBytes,
-        "signed-directory\n");
+        Key.SIGNED_DIRECTORY.keyword + NL);
     for (byte[] directoryBytes : splitDirectoriesBytes) {
       RelayDirectory parsedDirectory =
           new RelayDirectoryImpl(directoryBytes,
@@ -45,28 +44,28 @@ public class RelayDirectoryImpl extends DescriptorImpl
     super(directoryBytes, failUnrecognizedDescriptorLines, true);
     this.splitAndParseParts(rawDescriptorBytes);
     this.calculateDigest();
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
-        "signed-directory,recommended-software,"
-        + "directory-signature").split(",")));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList(
-        "dir-signing-key,running-routers,router-status".split(",")));
-    this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    this.checkFirstKeyword("signed-directory");
-    this.clearParsedKeywords();
+    Set<Key> exactlyOnceKeys = EnumSet.of(
+        Key.SIGNED_DIRECTORY, Key.RECOMMENDED_SOFTWARE,
+        Key.DIRECTORY_SIGNATURE);
+    this.checkExactlyOnceKeys(exactlyOnceKeys);
+    Set<Key> atMostOnceKeys = EnumSet.of(
+        Key.DIR_SIGNING_KEY, Key.RUNNING_ROUTERS, Key.ROUTER_STATUS);
+    this.checkAtMostOnceKeys(atMostOnceKeys);
+    this.checkFirstKey(Key.SIGNED_DIRECTORY);
+    this.clearParsedKeys();
   }
 
   private void calculateDigest() throws DescriptorParseException {
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "signed-directory\n";
-      String sigToken = "\ndirectory-signature ";
+      String startToken = Key.SIGNED_DIRECTORY.keyword + NL;
+      String sigToken = NL + Key.DIRECTORY_SIGNATURE.keyword + SP;
       if (!ascii.contains(sigToken)) {
         return;
       }
       int start = ascii.indexOf(startToken);
       int sig = ascii.indexOf(sigToken) + sigToken.length();
-      sig = ascii.indexOf("\n", sig) + 1;
+      sig = ascii.indexOf(NL, sig) + 1;
       if (start >= 0 && sig >= 0 && sig > start) {
         byte[] forDigest = new byte[sig - start];
         System.arraycopy(this.getRawDescriptorBytes(), start,
@@ -94,9 +93,9 @@ public class RelayDirectoryImpl extends DescriptorImpl
     String descriptorString = new String(rawDescriptorBytes);
     int startIndex = 0;
     int firstRouterIndex = this.findFirstIndexOfKeyword(descriptorString,
-        "router");
+        Key.ROUTER.keyword);
     int directorySignatureIndex = this.findFirstIndexOfKeyword(
-        descriptorString, "directory-signature");
+        descriptorString, Key.DIRECTORY_SIGNATURE.keyword);
     int endIndex = descriptorString.length();
     if (directorySignatureIndex < 0) {
       directorySignatureIndex = endIndex;
@@ -122,10 +121,10 @@ public class RelayDirectoryImpl extends DescriptorImpl
       String keyword) {
     if (descriptorString.startsWith(keyword)) {
       return 0;
-    } else if (descriptorString.contains("\n" + keyword + " ")) {
-      return descriptorString.indexOf("\n" + keyword + " ") + 1;
-    } else if (descriptorString.contains("\n" + keyword + "\n")) {
-      return descriptorString.indexOf("\n" + keyword + "\n") + 1;
+    } else if (descriptorString.contains(NL + keyword + SP)) {
+      return descriptorString.indexOf(NL + keyword + SP) + 1;
+    } else if (descriptorString.contains(NL + keyword + NL)) {
+      return descriptorString.indexOf(NL + keyword + NL) + 1;
     } else {
       return -1;
     }
@@ -142,7 +141,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
   private void parseServerDescriptorBytes(String descriptorString,
       int start, int end) throws DescriptorParseException {
     List<byte[]> splitServerDescriptorBytes =
-        this.splitByKeyword(descriptorString, "router", start, end);
+        this.splitByKeyword(descriptorString, Key.ROUTER.keyword, start, end);
     for (byte[] statusEntryBytes : splitServerDescriptorBytes) {
       this.parseServerDescriptor(statusEntryBytes);
     }
@@ -162,9 +161,9 @@ public class RelayDirectoryImpl extends DescriptorImpl
     List<byte[]> splitParts = new ArrayList<>();
     int from = start;
     while (from < end) {
-      int to = descriptorString.indexOf("\n" + keyword + " ", from);
+      int to = descriptorString.indexOf(NL + keyword + SP, from);
       if (to < 0) {
-        to = descriptorString.indexOf("\n" + keyword + "\n", from);
+        to = descriptorString.indexOf(NL + keyword + NL, from);
       }
       if (to < 0) {
         to = end;
@@ -187,9 +186,9 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   private void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
     String publishedLine = null;
-    String nextCrypto = "";
+    Key nextCrypto = Key.EMPTY;
     String runningRoutersLine = null;
     String routerStatusLine = null;
     StringBuilder crypto = null;
@@ -198,15 +197,15 @@ public class RelayDirectoryImpl extends DescriptorImpl
       if (line.isEmpty() || line.startsWith("@")) {
         continue;
       }
-      String lineNoOpt = line.startsWith("opt ")
-          ? line.substring("opt ".length()) : line;
+      String lineNoOpt = line.startsWith(Key.OPT.keyword + SP)
+          ? line.substring(Key.OPT.keyword.length() + 1) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");
-      String keyword = partsNoOpt[0];
-      switch (keyword) {
-        case "signed-directory":
+      Key key = Key.get(partsNoOpt[0]);
+      switch (key) {
+        case SIGNED_DIRECTORY:
           this.parseSignedDirectoryLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "published":
+        case PUBLISHED:
           if (publishedLine != null) {
             throw new DescriptorParseException("Keyword 'published' is "
                 + "contained more than once, but must be contained "
@@ -215,39 +214,39 @@ public class RelayDirectoryImpl extends DescriptorImpl
             publishedLine = line;
           }
           break;
-        case "dir-signing-key":
+        case DIR_SIGNING_KEY:
           this.parseDirSigningKeyLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "dir-signing-key";
+          nextCrypto = key;
           break;
-        case "recommended-software":
+        case RECOMMENDED_SOFTWARE:
           this.parseRecommendedSoftwareLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "running-routers":
+        case RUNNING_ROUTERS:
           runningRoutersLine = line;
           break;
-        case "router-status":
+        case ROUTER_STATUS:
           routerStatusLine = line;
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           crypto = new StringBuilder();
-          crypto.append(line).append("\n");
+          crypto.append(line).append(NL);
           break;
-        case "-----END":
-          crypto.append(line).append("\n");
+        case CRYPTO_END:
+          crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
-          if (nextCrypto.equals("dir-signing-key")
+          if (nextCrypto.equals(Key.DIR_SIGNING_KEY)
               && this.dirSigningKey == null) {
             this.dirSigningKey = cryptoString;
           } else {
             throw new DescriptorParseException("Unrecognized crypto "
                 + "block in v1 directory.");
           }
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
         default:
           if (crypto != null) {
-            crypto.append(line).append("\n");
+            crypto.append(line).append(NL);
           } else {
             if (this.failUnrecognizedDescriptorLines) {
               throw new DescriptorParseException("Unrecognized line '"
@@ -265,15 +264,17 @@ public class RelayDirectoryImpl extends DescriptorImpl
       throw new DescriptorParseException("Keyword 'published' is "
           + "contained 0 times, but must be contained exactly once.");
     } else {
-      String publishedLineNoOpt = publishedLine.startsWith("opt ")
-          ? publishedLine.substring("opt ".length()) : publishedLine;
+      String publishedLineNoOpt = publishedLine.startsWith(Key.OPT.keyword + SP)
+          ? publishedLine.substring(Key.OPT.keyword.length() + 1)
+          : publishedLine;
       String[] publishedPartsNoOpt = publishedLineNoOpt.split("[ \t]+");
       this.parsePublishedLine(publishedLine, publishedLineNoOpt,
           publishedPartsNoOpt);
     }
     if (routerStatusLine != null) {
-      String routerStatusLineNoOpt = routerStatusLine.startsWith("opt ")
-          ? routerStatusLine.substring("opt ".length())
+      String routerStatusLineNoOpt =
+          routerStatusLine.startsWith(Key.OPT.keyword + SP)
+          ? routerStatusLine.substring(Key.OPT.keyword.length() + 1)
           : routerStatusLine;
       String[] routerStatusPartsNoOpt =
           routerStatusLineNoOpt.split("[ \t]+");
@@ -281,8 +282,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
           routerStatusPartsNoOpt);
     } else if (runningRoutersLine != null) {
       String runningRoutersLineNoOpt =
-          runningRoutersLine.startsWith("opt ")
-          ? runningRoutersLine.substring("opt ".length())
+          runningRoutersLine.startsWith(Key.OPT.keyword + SP)
+          ? runningRoutersLine.substring(Key.OPT.keyword.length() + 1)
           : runningRoutersLine;
       String[] runningRoutersPartsNoOpt =
           runningRoutersLineNoOpt.split("[ \t]+");
@@ -308,39 +309,39 @@ public class RelayDirectoryImpl extends DescriptorImpl
   private void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(directorySignatureBytes))
-        .useDelimiter("\n");
-    String nextCrypto = "";
+        .useDelimiter(NL);
+    Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
-      String lineNoOpt = line.startsWith("opt ")
-          ? line.substring("opt ".length()) : line;
+      String lineNoOpt = line.startsWith(Key.OPT.keyword + SP)
+          ? line.substring(Key.OPT.keyword.length() + 1) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");
-      String keyword = partsNoOpt[0];
-      switch (keyword) {
-        case "directory-signature":
+      Key key = Key.get(partsNoOpt[0]);
+      switch (key) {
+        case DIRECTORY_SIGNATURE:
           this.parseDirectorySignatureLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "directory-signature";
+          nextCrypto = key;
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           crypto = new StringBuilder();
-          crypto.append(line).append("\n");
+          crypto.append(line).append(NL);
           break;
-        case "-----END":
-          crypto.append(line).append("\n");
+        case CRYPTO_END:
+          crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
-          if (nextCrypto.equals("directory-signature")) {
+          if (nextCrypto.equals(Key.DIRECTORY_SIGNATURE)) {
             this.directorySignature = cryptoString;
           } else {
             throw new DescriptorParseException("Unrecognized crypto "
                 + "block in v2 network status.");
           }
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
         default:
           if (crypto != null) {
-            crypto.append(line).append("\n");
+            crypto.append(line).append(NL);
           } else if (this.failUnrecognizedDescriptorLines) {
             throw new DescriptorParseException("Unrecognized line '"
                 + line + "' in v2 network status.");
@@ -356,7 +357,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
 
   private void parseSignedDirectoryLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (!lineNoOpt.equals("signed-directory")) {
+    if (!lineNoOpt.equals(Key.SIGNED_DIRECTORY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
@@ -379,11 +380,11 @@ public class RelayDirectoryImpl extends DescriptorImpl
       sb.append("-----BEGIN RSA PUBLIC KEY-----\n");
       String keyString = partsNoOpt[1];
       while (keyString.length() > 64) {
-        sb.append(keyString.substring(0, 64)).append("\n");
+        sb.append(keyString.substring(0, 64)).append(NL);
         keyString = keyString.substring(64);
       }
       if (keyString.length() > 0) {
-        sb.append(keyString).append("\n");
+        sb.append(keyString).append(NL);
       }
       sb.append("-----END RSA PUBLIC KEY-----\n");
       this.dirSigningKey = sb.toString();

@@ -3,11 +3,15 @@
 
 package org.torproject.descriptor.impl;
 
+import static org.torproject.descriptor.impl.DescriptorImpl.NL;
+import static org.torproject.descriptor.impl.DescriptorImpl.SP;
+
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.NetworkStatusEntry;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,34 +50,25 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.microdescConsensus = microdescConsensus;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
-    this.initializeKeywords();
     this.parseStatusEntryBytes();
-    this.clearAtMostOnceKeywords();
+    this.clearAtMostOnceKeys();
   }
 
-  private SortedSet<String> atMostOnceKeywords;
+  private Set<Key> atMostOnceKeys = EnumSet.of(
+      Key.S, Key.V, Key.PR, Key.W, Key.P);
 
-  private void initializeKeywords() {
-    this.atMostOnceKeywords = new TreeSet<>();
-    this.atMostOnceKeywords.add("s");
-    this.atMostOnceKeywords.add("v");
-    this.atMostOnceKeywords.add("pr");
-    this.atMostOnceKeywords.add("w");
-    this.atMostOnceKeywords.add("p");
-  }
-
-  private void parsedAtMostOnceKeyword(String keyword)
+  private void parsedAtMostOnceKey(Key key)
       throws DescriptorParseException {
-    if (!this.atMostOnceKeywords.contains(keyword)) {
-      throw new DescriptorParseException("Duplicate '" + keyword
+    if (!this.atMostOnceKeys.contains(key)) {
+      throw new DescriptorParseException("Duplicate '" + key.keyword
           + "' line in status entry.");
     }
-    this.atMostOnceKeywords.remove(keyword);
+    this.atMostOnceKeys.remove(key);
   }
 
   private void parseStatusEntryBytes() throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(this.statusEntryBytes))
-        .useDelimiter("\n");
+        .useDelimiter(NL);
     String line = null;
     if (!scanner.hasNext() || !(line = scanner.next()).startsWith("r ")) {
       throw new DescriptorParseException("Status entry must start with "
@@ -83,32 +78,33 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.parseRLine(line, rlineParts);
     while (scanner.hasNext()) {
       line = scanner.next();
-      String[] parts = !line.startsWith("opt ") ? line.split("[ \t]+")
-          : line.substring("opt ".length()).split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "a":
+      String[] parts = !line.startsWith(Key.OPT.keyword + SP)
+          ? line.split("[ \t]+")
+          : line.substring(Key.OPT.keyword.length() + 1).split("[ \t]+");
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case A:
           this.parseALine(line, parts);
           break;
-        case "s":
+        case S:
           this.parseSLine(line, parts);
           break;
-        case "v":
+        case V:
           this.parseVLine(line, parts);
           break;
-        case "pr":
+        case PR:
           this.parsePrLine(line, parts);
           break;
-        case "w":
+        case W:
           this.parseWLine(line, parts);
           break;
-        case "p":
+        case P:
           this.parsePLine(line, parts);
           break;
-        case "m":
+        case M:
           this.parseMLine(line, parts);
           break;
-        case "id":
+        case ID:
           this.parseIdLine(line, parts);
           break;
         default:
@@ -167,7 +163,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private void parseSLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.parsedAtMostOnceKeyword("s");
+    this.parsedAtMostOnceKey(Key.S);
     BitSet flags = new BitSet(flagIndexes.size());
     for (int i = 1; i < parts.length; i++) {
       String flag = parts[i];
@@ -182,9 +178,9 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private void parseVLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.parsedAtMostOnceKeyword("v");
+    this.parsedAtMostOnceKey(Key.V);
     String noOptLine = line;
-    if (noOptLine.startsWith("opt ")) {
+    if (noOptLine.startsWith(Key.OPT.keyword + SP)) {
       noOptLine = noOptLine.substring(4);
     }
     if (noOptLine.length() < 3) {
@@ -197,13 +193,13 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private void parsePrLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.parsedAtMostOnceKeyword("pr");
+    this.parsedAtMostOnceKey(Key.PR);
     this.protocols = ParseHelper.parseProtocolVersions(line, line, parts);
   }
 
   private void parseWLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.parsedAtMostOnceKeyword("w");
+    this.parsedAtMostOnceKey(Key.W);
     SortedMap<String, Integer> pairs =
         ParseHelper.parseKeyValueIntegerPairs(line, parts, 1, "=");
     if (pairs.isEmpty()) {
@@ -225,7 +221,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private void parsePLine(String line, String[] parts)
       throws DescriptorParseException {
-    this.parsedAtMostOnceKeyword("p");
+    this.parsedAtMostOnceKey(Key.P);
     boolean isValid = true;
     if (parts.length != 3) {
       isValid = false;
@@ -280,8 +276,8 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     }
   }
 
-  private void clearAtMostOnceKeywords() {
-    this.atMostOnceKeywords = null;
+  private void clearAtMostOnceKeys() {
+    this.atMostOnceKeys = null;
   }
 
   private String nickname;

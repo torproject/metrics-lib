@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -42,29 +42,29 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(statusBytes, failUnrecognizedDescriptorLines, false, true);
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
-        "network-status-version,dir-source,fingerprint,contact,"
-        + "dir-signing-key,published").split(",")));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList(
-        "dir-options,client-versions,server-versions".split(",")));
-    this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    this.checkFirstKeyword("network-status-version");
-    this.clearParsedKeywords();
+    Set<Key> exactlyOnceKeys = EnumSet.of(
+        Key.NETWORK_STATUS_VERSION, Key.DIR_SOURCE, Key.FINGERPRINT,
+        Key.CONTACT, Key.DIR_SIGNING_KEY, Key.PUBLISHED);
+    this.checkExactlyOnceKeys(exactlyOnceKeys);
+    Set<Key> atMostOnceKeys = EnumSet.of(
+        Key.DIR_OPTIONS, Key.CLIENT_VERSIONS, Key.SERVER_VERSIONS);
+    this.checkAtMostOnceKeys(atMostOnceKeys);
+    this.checkFirstKey(Key.NETWORK_STATUS_VERSION);
+    this.clearParsedKeys();
     this.calculateDigest();
   }
 
   private void calculateDigest() throws DescriptorParseException {
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "network-status-version ";
-      String sigToken = "\ndirectory-signature ";
+      String startToken = Key.NETWORK_STATUS_VERSION.keyword + SP;
+      String sigToken = NL + Key.DIRECTORY_SIGNATURE.keyword + SP;
       if (!ascii.contains(sigToken)) {
         return;
       }
       int start = ascii.indexOf(startToken);
       int sig = ascii.indexOf(sigToken) + sigToken.length();
-      sig = ascii.indexOf("\n", sig) + 1;
+      sig = ascii.indexOf(NL, sig) + 1;
       if (start >= 0 && sig >= 0 && sig > start) {
         byte[] forDigest = new byte[sig - start];
         System.arraycopy(this.getRawDescriptorBytes(), start,
@@ -86,8 +86,8 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
-    String nextCrypto = "";
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
+    Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
@@ -95,55 +95,55 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         continue;
       }
       String[] parts = line.split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "network-status-version":
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case NETWORK_STATUS_VERSION:
           this.parseNetworkStatusVersionLine(line, parts);
           break;
-        case "dir-source":
+        case DIR_SOURCE:
           this.parseDirSourceLine(line, parts);
           break;
-        case "fingerprint":
+        case FINGERPRINT:
           this.parseFingerprintLine(line, parts);
           break;
-        case "contact":
+        case CONTACT:
           this.parseContactLine(line, parts);
           break;
-        case "dir-signing-key":
+        case DIR_SIGNING_KEY:
           this.parseDirSigningKeyLine(line, parts);
-          nextCrypto = "dir-signing-key";
+          nextCrypto = key;
           break;
-        case "client-versions":
+        case CLIENT_VERSIONS:
           this.parseClientVersionsLine(line, parts);
           break;
-        case "server-versions":
+        case SERVER_VERSIONS:
           this.parseServerVersionsLine(line, parts);
           break;
-        case "published":
+        case PUBLISHED:
           this.parsePublishedLine(line, parts);
           break;
-        case "dir-options":
+        case DIR_OPTIONS:
           this.parseDirOptionsLine(line, parts);
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           crypto = new StringBuilder();
-          crypto.append(line).append("\n");
+          crypto.append(line).append(NL);
           break;
-        case "-----END":
-          crypto.append(line).append("\n");
+        case CRYPTO_END:
+          crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
-          if (nextCrypto.equals("dir-signing-key")) {
+          if (nextCrypto.equals(Key.DIR_SIGNING_KEY)) {
             this.dirSigningKey = cryptoString;
           } else {
             throw new DescriptorParseException("Unrecognized crypto "
                 + "block in v2 network status.");
           }
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
         default:
           if (crypto != null) {
-            crypto.append(line).append("\n");
+            crypto.append(line).append(NL);
           } else if (this.failUnrecognizedDescriptorLines) {
             throw new DescriptorParseException("Unrecognized line '"
                 + line + "' in v2 network status.");
@@ -166,37 +166,37 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
   protected void parseDirectorySignature(byte[] directorySignatureBytes)
       throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(directorySignatureBytes))
-        .useDelimiter("\n");
-    String nextCrypto = "";
+        .useDelimiter(NL);
+    Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "directory-signature":
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case DIRECTORY_SIGNATURE:
           this.parseDirectorySignatureLine(line, parts);
-          nextCrypto = "directory-signature";
+          nextCrypto = key;
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           crypto = new StringBuilder();
-          crypto.append(line).append("\n");
+          crypto.append(line).append(NL);
           break;
-        case "-----END":
-          crypto.append(line).append("\n");
+        case CRYPTO_END:
+          crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
-          if (nextCrypto.equals("directory-signature")) {
+          if (nextCrypto.equals(Key.DIRECTORY_SIGNATURE)) {
             this.directorySignature = cryptoString;
           } else {
             throw new DescriptorParseException("Unrecognized crypto "
                 + "block in v2 network status.");
           }
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
         default:
           if (crypto != null) {
-            crypto.append(line).append("\n");
+            crypto.append(line).append(NL);
           } else if (this.failUnrecognizedDescriptorLines) {
             throw new DescriptorParseException("Unrecognized line '"
                 + line + "' in v2 network status.");
@@ -212,7 +212,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   private void parseNetworkStatusVersionLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("network-status-version 2")) {
+    if (!line.equals(Key.NETWORK_STATUS_VERSION.keyword + SP + "2")) {
       throw new DescriptorParseException("Illegal network status version "
           + "number in line '" + line + "'.");
     }
@@ -246,8 +246,8 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   private void parseContactLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (line.length() > "contact ".length()) {
-      this.contactLine = line.substring("contact ".length());
+    if (line.length() > Key.CONTACT.keyword.length() + 1) {
+      this.contactLine = line.substring(Key.CONTACT.keyword.length() + 1);
     } else {
       this.contactLine = "";
     }
@@ -255,7 +255,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   private void parseDirSigningKeyLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-signing-key")) {
+    if (!line.equals(Key.DIR_SIGNING_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }

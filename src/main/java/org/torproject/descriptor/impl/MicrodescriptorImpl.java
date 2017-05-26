@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -28,7 +28,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
     List<Microdescriptor> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        "onion-key\n");
+        Key.ONION_KEY + NL);
     for (byte[] descriptorBytes : splitDescriptorsBytes) {
       Microdescriptor parsedDescriptor =
           new MicrodescriptorImpl(descriptorBytes,
@@ -44,21 +44,19 @@ public class MicrodescriptorImpl extends DescriptorImpl
     super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList(
-        "onion-key".split(",")));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "ntor-onion-key,family,p,p6,id").split(",")));
-    this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    this.checkFirstKeyword("onion-key");
-    this.clearParsedKeywords();
+    this.checkExactlyOnceKeys(EnumSet.of(Key.ONION_KEY));
+    Set<Key> atMostOnceKeys = EnumSet.of(
+        Key.NTOR_ONION_KEY, Key.FAMILY, Key.P, Key.P6, Key.ID);
+    this.checkAtMostOnceKeys(atMostOnceKeys);
+    this.checkFirstKey(Key.ONION_KEY);
+    this.clearParsedKeys();
     return;
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter("\n");
-    String nextCrypto = "";
+        .useDelimiter(NL);
+    Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
@@ -66,49 +64,49 @@ public class MicrodescriptorImpl extends DescriptorImpl
         continue;
       }
       String[] parts = line.split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "onion-key":
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case ONION_KEY:
           this.parseOnionKeyLine(line, parts);
-          nextCrypto = "onion-key";
+          nextCrypto = key;
           break;
-        case "ntor-onion-key":
+        case NTOR_ONION_KEY:
           this.parseNtorOnionKeyLine(line, parts);
           break;
-        case "a":
+        case A:
           this.parseALine(line, parts);
           break;
-        case "family":
+        case FAMILY:
           this.parseFamilyLine(line, parts);
           break;
-        case "p":
+        case P:
           this.parsePLine(line, parts);
           break;
-        case "p6":
+        case P6:
           this.parseP6Line(line, parts);
           break;
-        case "id":
+        case ID:
           this.parseIdLine(line, parts);
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           crypto = new StringBuilder();
-          crypto.append(line).append("\n");
+          crypto.append(line).append(NL);
           break;
-        case "-----END":
-          crypto.append(line).append("\n");
+        case CRYPTO_END:
+          crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
-          if (nextCrypto.equals("onion-key")) {
+          if (nextCrypto.equals(Key.ONION_KEY)) {
             this.onionKey = cryptoString;
           } else {
             throw new DescriptorParseException("Unrecognized crypto "
                 + "block in microdescriptor.");
           }
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
         default:
           if (crypto != null) {
-            crypto.append(line).append("\n");
+            crypto.append(line).append(NL);
           } else {
             ParseHelper.parseKeyword(line, parts[0]);
             if (this.failUnrecognizedDescriptorLines) {

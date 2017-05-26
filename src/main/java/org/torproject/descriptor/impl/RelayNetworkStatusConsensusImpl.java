@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         new ArrayList<>();
     List<byte[]> splitConsensusBytes =
         DescriptorImpl.splitRawDescriptorBytes(consensusesBytes,
-        "network-status-version 3");
+        Key.NETWORK_STATUS_VERSION.keyword + SP + "3");
     for (byte[] consensusBytes : splitConsensusBytes) {
       RelayNetworkStatusConsensus parsedConsensus =
           new RelayNetworkStatusConsensusImpl(consensusBytes,
@@ -47,27 +47,27 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(consensusBytes, failUnrecognizedDescriptorLines, true, false);
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
-        "vote-status,consensus-method,valid-after,fresh-until,"
-        + "valid-until,voting-delay,known-flags").split(",")));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "client-versions,server-versions,recommended-client-protocols,"
-        + "recommended-relay-protocols,required-client-protocols,"
-        + "required-relay-protocols,params,shared-rand-previous-value,"
-        + "shared-rand-current-value,directory-footer,bandwidth-weights")
-        .split(",")));
-    this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    this.checkFirstKeyword("network-status-version");
-    this.clearParsedKeywords();
+    Set<Key> exactlyOnceKeys = EnumSet.of(
+        Key.VOTE_STATUS, Key.CONSENSUS_METHOD, Key.VALID_AFTER, Key.FRESH_UNTIL,
+        Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS);
+    this.checkExactlyOnceKeys(exactlyOnceKeys);
+    Set<Key> atMostOnceKeys = EnumSet.of(
+        Key.CLIENT_VERSIONS, Key.SERVER_VERSIONS,
+        Key.RECOMMENDED_CLIENT_PROTOCOLS, Key.RECOMMENDED_RELAY_PROTOCOLS,
+        Key.REQUIRED_CLIENT_PROTOCOLS, Key.REQUIRED_RELAY_PROTOCOLS, Key.PARAMS,
+        Key.SHARED_RAND_PREVIOUS_VALUE, Key.SHARED_RAND_CURRENT_VALUE,
+        Key.DIRECTORY_FOOTER, Key.BANDWIDTH_WEIGHTS);
+    this.checkAtMostOnceKeys(atMostOnceKeys);
+    this.checkFirstKey(Key.NETWORK_STATUS_VERSION);
+    this.clearParsedKeys();
     this.calculateDigest();
   }
 
   private void calculateDigest() throws DescriptorParseException {
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "network-status-version ";
-      String sigToken = "\ndirectory-signature ";
+      String startToken = Key.NETWORK_STATUS_VERSION.keyword + SP;
+      String sigToken = NL + Key.DIRECTORY_SIGNATURE.keyword + SP;
       if (!ascii.contains(sigToken)) {
         return;
       }
@@ -94,64 +94,64 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   protected void parseHeader(byte[] headerBytes)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "network-status-version":
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case NETWORK_STATUS_VERSION:
           this.parseNetworkStatusVersionLine(line, parts);
           break;
-        case "vote-status":
+        case VOTE_STATUS:
           this.parseVoteStatusLine(line, parts);
           break;
-        case "consensus-method":
+        case CONSENSUS_METHOD:
           this.parseConsensusMethodLine(line, parts);
           break;
-        case "valid-after":
+        case VALID_AFTER:
           this.parseValidAfterLine(line, parts);
           break;
-        case "fresh-until":
+        case FRESH_UNTIL:
           this.parseFreshUntilLine(line, parts);
           break;
-        case "valid-until":
+        case VALID_UNTIL:
           this.parseValidUntilLine(line, parts);
           break;
-        case "voting-delay":
+        case VOTING_DELAY:
           this.parseVotingDelayLine(line, parts);
           break;
-        case "client-versions":
+        case CLIENT_VERSIONS:
           this.parseClientVersionsLine(line, parts);
           break;
-        case "server-versions":
+        case SERVER_VERSIONS:
           this.parseServerVersionsLine(line, parts);
           break;
-        case "recommended-client-protocols":
+        case RECOMMENDED_CLIENT_PROTOCOLS:
           this.parseRecommendedClientProtocolsLine(line, parts);
           break;
-        case "recommended-relay-protocols":
+        case RECOMMENDED_RELAY_PROTOCOLS:
           this.parseRecommendedRelayProtocolsLine(line, parts);
           break;
-        case "required-client-protocols":
+        case REQUIRED_CLIENT_PROTOCOLS:
           this.parseRequiredClientProtocolsLine(line, parts);
           break;
-        case "required-relay-protocols":
+        case REQUIRED_RELAY_PROTOCOLS:
           this.parseRequiredRelayProtocolsLine(line, parts);
           break;
-        case "package":
+        case PACKAGE:
           this.parsePackageLine(line, parts);
           break;
-        case "known-flags":
+        case KNOWN_FLAGS:
           this.parseKnownFlagsLine(line, parts);
           break;
-        case "params":
+        case PARAMS:
           this.parseParamsLine(line, parts);
           break;
-        case "shared-rand-previous-value":
+        case SHARED_RAND_PREVIOUS_VALUE:
           this.parseSharedRandPreviousValueLine(line, parts);
           break;
-        case "shared-rand-current-value":
+        case SHARED_RAND_CURRENT_VALUE:
           this.parseSharedRandCurrentValueLine(line, parts);
           break;
         default:
@@ -188,15 +188,15 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   protected void parseFooter(byte[] footerBytes)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(footerBytes)).useDelimiter("\n");
+    Scanner scanner = new Scanner(new String(footerBytes)).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "directory-footer":
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case DIRECTORY_FOOTER:
           break;
-        case "bandwidth-weights":
+        case BANDWIDTH_WEIGHTS:
           this.parseBandwidthWeightsLine(line, parts);
           break;
         default:
@@ -215,7 +215,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   private void parseNetworkStatusVersionLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.startsWith("network-status-version 3")) {
+    if (!line.startsWith(Key.NETWORK_STATUS_VERSION.keyword + SP + "3")) {
       throw new DescriptorParseException("Illegal network status version "
           + "number in line '" + line + "'.");
     }
@@ -335,7 +335,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     if (this.packageLines == null) {
       this.packageLines = new ArrayList<>();
     }
-    this.packageLines.add(line.substring("package ".length()));
+    this.packageLines.add(line.substring(Key.PACKAGE.keyword.length() + 1));
   }
 
   private void parseKnownFlagsLine(String line, String[] parts)

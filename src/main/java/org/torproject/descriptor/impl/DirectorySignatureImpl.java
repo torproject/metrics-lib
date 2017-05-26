@@ -3,6 +3,9 @@
 
 package org.torproject.descriptor.impl;
 
+import static org.torproject.descriptor.impl.DescriptorImpl.NL;
+import static org.torproject.descriptor.impl.DescriptorImpl.SP;
+
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DirectorySignature;
 
@@ -36,14 +39,14 @@ public class DirectorySignatureImpl implements DirectorySignature {
   private void parseDirectorySignatureBytes()
       throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(this.directorySignatureBytes))
-        .useDelimiter("\n");
+        .useDelimiter(NL);
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
-      String[] parts = line.split(" ", -1);
-      String keyword = parts[0];
-      switch (keyword) {
-        case "directory-signature":
+      String[] parts = line.split(SP, -1);
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case DIRECTORY_SIGNATURE:
           int algorithmOffset = 0;
           switch (parts.length) {
             case 4:
@@ -61,19 +64,19 @@ public class DirectorySignatureImpl implements DirectorySignature {
           this.signingKeyDigest = ParseHelper.parseHexString(
               line, parts[2 + algorithmOffset]);
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           crypto = new StringBuilder();
-          crypto.append(line).append("\n");
+          crypto.append(line).append(NL);
           break;
-        case "-----END":
-          crypto.append(line).append("\n");
+        case CRYPTO_END:
+          crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
           this.signature = cryptoString;
           break;
         default:
           if (crypto != null) {
-            crypto.append(line).append("\n");
+            crypto.append(line).append(NL);
           } else {
             if (this.failUnrecognizedDescriptorLines) {
               throw new DescriptorParseException("Unrecognized line '"

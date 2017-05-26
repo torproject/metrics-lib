@@ -10,8 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -27,7 +26,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     List<DirectoryKeyCertificate> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DirectoryKeyCertificateImpl.splitRawDescriptorBytes(
-            descriptorsBytes, "dir-key-certificate-version ");
+            descriptorsBytes, Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP);
     for (byte[] descriptorBytes : splitDescriptorsBytes) {
       DirectoryKeyCertificate parsedDescriptor =
           new DirectoryKeyCertificateImpl(descriptorBytes,
@@ -43,90 +42,90 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigest();
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
-        "dir-key-certificate-version,fingerprint,dir-identity-key,"
-        + "dir-key-published,dir-key-expires,dir-signing-key,"
-        + "dir-key-certification").split(",")));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "dir-address,dir-key-crosscert").split(",")));
-    this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    this.checkFirstKeyword("dir-key-certificate-version");
-    this.checkLastKeyword("dir-key-certification");
-    this.clearParsedKeywords();
+    Set<Key> exactlyOnceKeys = EnumSet.of(
+        Key.DIR_KEY_CERTIFICATE_VERSION, Key.FINGERPRINT, Key.DIR_IDENTITY_KEY,
+        Key.DIR_KEY_PUBLISHED, Key.DIR_KEY_EXPIRES, Key.DIR_SIGNING_KEY,
+        Key.DIR_KEY_CERTIFICATION);
+    this.checkExactlyOnceKeys(exactlyOnceKeys);
+    Set<Key> atMostOnceKeys = EnumSet.of(
+        Key.DIR_ADDRESS, Key.DIR_KEY_CROSSCERT);
+    this.checkAtMostOnceKeys(atMostOnceKeys);
+    this.checkFirstKey(Key.DIR_KEY_CERTIFICATE_VERSION);
+    this.checkLastKey(Key.DIR_KEY_CERTIFICATION);
+    this.clearParsedKeys();
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter("\n");
-    String nextCrypto = "";
+        .useDelimiter(NL);
+    Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "dir-key-certificate-version":
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case DIR_KEY_CERTIFICATE_VERSION:
           this.parseDirKeyCertificateVersionLine(line, parts);
           break;
-        case "dir-address":
+        case DIR_ADDRESS:
           this.parseDirAddressLine(line, parts);
           break;
-        case "fingerprint":
+        case FINGERPRINT:
           this.parseFingerprintLine(line, parts);
           break;
-        case "dir-identity-key":
+        case DIR_IDENTITY_KEY:
           this.parseDirIdentityKeyLine(line, parts);
-          nextCrypto = "dir-identity-key";
+          nextCrypto = key;
           break;
-        case "dir-key-published":
+        case DIR_KEY_PUBLISHED:
           this.parseDirKeyPublishedLine(line, parts);
           break;
-        case "dir-key-expires":
+        case DIR_KEY_EXPIRES:
           this.parseDirKeyExpiresLine(line, parts);
           break;
-        case "dir-signing-key":
+        case DIR_SIGNING_KEY:
           this.parseDirSigningKeyLine(line, parts);
-          nextCrypto = "dir-signing-key";
+          nextCrypto = key;
           break;
-        case "dir-key-crosscert":
+        case DIR_KEY_CROSSCERT:
           this.parseDirKeyCrosscertLine(line, parts);
-          nextCrypto = "dir-key-crosscert";
+          nextCrypto = key;
           break;
-        case "dir-key-certification":
+        case DIR_KEY_CERTIFICATION:
           this.parseDirKeyCertificationLine(line, parts);
-          nextCrypto = "dir-key-certification";
+          nextCrypto = key;
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           crypto = new StringBuilder();
-          crypto.append(line).append("\n");
+          crypto.append(line).append(NL);
           break;
-        case "-----END":
-          crypto.append(line).append("\n");
+        case CRYPTO_END:
+          crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
           switch (nextCrypto) {
-            case "dir-identity-key":
+            case DIR_IDENTITY_KEY:
               this.dirIdentityKey = cryptoString;
               break;
-            case "dir-signing-key":
+            case DIR_SIGNING_KEY:
               this.dirSigningKey = cryptoString;
               break;
-            case "dir-key-crosscert":
+            case DIR_KEY_CROSSCERT:
               this.dirKeyCrosscert = cryptoString;
               break;
-            case "dir-key-certification":
+            case DIR_KEY_CERTIFICATION:
               this.dirKeyCertification = cryptoString;
               break;
             default:
               throw new DescriptorParseException("Unrecognized crypto "
                   + "block in directory key certificate.");
           }
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
         default:
           if (crypto != null) {
-            crypto.append(line).append("\n");
+            crypto.append(line).append(NL);
           } else {
             if (this.failUnrecognizedDescriptorLines) {
               throw new DescriptorParseException("Unrecognized line '"
@@ -144,7 +143,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
 
   private void parseDirKeyCertificateVersionLine(String line,
       String[] parts) throws DescriptorParseException {
-    if (!line.equals("dir-key-certificate-version 3")) {
+    if (!line.equals(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP + "3")) {
       throw new DescriptorParseException("Illegal directory key "
           + "certificate version number in line '" + line + "'.");
     }
@@ -174,7 +173,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
 
   private void parseDirIdentityKeyLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-identity-key")) {
+    if (!line.equals(Key.DIR_IDENTITY_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
@@ -193,21 +192,21 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
 
   private void parseDirSigningKeyLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-signing-key")) {
+    if (!line.equals(Key.DIR_SIGNING_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
   private void parseDirKeyCrosscertLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-key-crosscert")) {
+    if (!line.equals(Key.DIR_KEY_CROSSCERT.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
   private void parseDirKeyCertificationLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-key-certification")) {
+    if (!line.equals(Key.DIR_KEY_CERTIFICATION.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
@@ -215,8 +214,8 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   private void calculateDigest() throws DescriptorParseException {
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "dir-key-certificate-version ";
-      String sigToken = "\ndir-key-certification\n";
+      String startToken = Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP;
+      String sigToken = NL + Key.DIR_KEY_CERTIFICATION.keyword + NL;
       int start = ascii.indexOf(startToken);
       int sig = ascii.indexOf(sigToken) + sigToken.length();
       if (start >= 0 && sig >= 0 && sig > start) {

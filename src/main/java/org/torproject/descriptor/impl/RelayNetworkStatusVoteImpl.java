@@ -12,7 +12,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -33,7 +33,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     List<RelayNetworkStatusVote> parsedVotes = new ArrayList<>();
     List<byte[]> splitVotesBytes =
         DescriptorImpl.splitRawDescriptorBytes(votesBytes,
-        "network-status-version 3");
+        Key.NETWORK_STATUS_VERSION.keyword + SP + "3");
     for (byte[] voteBytes : splitVotesBytes) {
       RelayNetworkStatusVote parsedVote =
           new RelayNetworkStatusVoteImpl(voteBytes,
@@ -47,27 +47,25 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(voteBytes, failUnrecognizedDescriptorLines, false, false);
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList((
-        "vote-status,published,valid-after,fresh-until,"
-        + "valid-until,voting-delay,known-flags,dir-source,"
-        + "dir-key-certificate-version,fingerprint,dir-key-published,"
-        + "dir-key-expires,dir-identity-key,dir-signing-key,"
-        + "dir-key-certification").split(",")));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "consensus-methods,client-versions,server-versions,"
-        + "recommended-client-protocols,recommended-relay-protocols,"
-        + "required-client-protocols,required-relay-protocols,"
-        + "flag-thresholds,params,contact,shared-rand-participate,"
-        + "shared-rand-previous-value,shared-rand-current-value,"
-        + "legacy-key,dir-key-crosscert,dir-address,directory-footer")
-        .split(",")));
-    this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    Set<String> atLeastOnceKeywords = new HashSet<>(Arrays.asList(
-        "directory-signature"));
-    this.checkAtLeastOnceKeywords(atLeastOnceKeywords);
-    this.checkFirstKeyword("network-status-version");
-    this.clearParsedKeywords();
+    Set<Key> exactlyOnceKeys = EnumSet.of(
+        Key.VOTE_STATUS, Key.PUBLISHED, Key.VALID_AFTER, Key.FRESH_UNTIL,
+        Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS, Key.DIR_SOURCE,
+        Key.DIR_KEY_CERTIFICATE_VERSION, Key.FINGERPRINT, Key.DIR_KEY_PUBLISHED,
+        Key.DIR_KEY_EXPIRES, Key.DIR_IDENTITY_KEY, Key.DIR_SIGNING_KEY,
+        Key.DIR_KEY_CERTIFICATION);
+    this.checkExactlyOnceKeys(exactlyOnceKeys);
+    Set<Key> atMostOnceKeys = EnumSet.of(
+        Key.CONSENSUS_METHODS, Key.CLIENT_VERSIONS, Key.SERVER_VERSIONS,
+        Key.RECOMMENDED_CLIENT_PROTOCOLS, Key.RECOMMENDED_RELAY_PROTOCOLS,
+        Key.REQUIRED_CLIENT_PROTOCOLS, Key.REQUIRED_RELAY_PROTOCOLS,
+        Key.FLAG_THRESHOLDS, Key.PARAMS, Key.CONTACT,
+        Key.SHARED_RAND_PARTICIPATE, Key.SHARED_RAND_PREVIOUS_VALUE,
+        Key.SHARED_RAND_CURRENT_VALUE, Key.LEGACY_KEY, Key.DIR_KEY_CROSSCERT,
+        Key.DIR_ADDRESS, Key.DIRECTORY_FOOTER);
+    this.checkAtMostOnceKeys(atMostOnceKeys);
+    this.checkAtLeastOnceKeys(EnumSet.of(Key.DIRECTORY_SIGNATURE));
+    this.checkFirstKey(Key.NETWORK_STATUS_VERSION);
+    this.clearParsedKeys();
     this.calculateDigest();
   }
 
@@ -116,150 +114,150 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.enoughMtbfInfo = -1;
     this.ignoringAdvertisedBws = -1;
 
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter("\n");
-    String nextCrypto = "";
+    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
+    Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "network-status-version":
+      Key key = Key.get(parts[0]);
+      switch (key) {
+        case NETWORK_STATUS_VERSION:
           this.parseNetworkStatusVersionLine(line, parts);
           break;
-        case "vote-status":
+        case VOTE_STATUS:
           this.parseVoteStatusLine(line, parts);
           break;
-        case "consensus-methods":
+        case CONSENSUS_METHODS:
           this.parseConsensusMethodsLine(line, parts);
           break;
-        case "published":
+        case PUBLISHED:
           this.parsePublishedLine(line, parts);
           break;
-        case "valid-after":
+        case VALID_AFTER:
           this.parseValidAfterLine(line, parts);
           break;
-        case "fresh-until":
+        case FRESH_UNTIL:
           this.parseFreshUntilLine(line, parts);
           break;
-        case "valid-until":
+        case VALID_UNTIL:
           this.parseValidUntilLine(line, parts);
           break;
-        case "voting-delay":
+        case VOTING_DELAY:
           this.parseVotingDelayLine(line, parts);
           break;
-        case "client-versions":
+        case CLIENT_VERSIONS:
           this.parseClientVersionsLine(line, parts);
           break;
-        case "server-versions":
+        case SERVER_VERSIONS:
           this.parseServerVersionsLine(line, parts);
           break;
-        case "recommended-client-protocols":
+        case RECOMMENDED_CLIENT_PROTOCOLS:
           this.parseRecommendedClientProtocolsLine(line, parts);
           break;
-        case "recommended-relay-protocols":
+        case RECOMMENDED_RELAY_PROTOCOLS:
           this.parseRecommendedRelayProtocolsLine(line, parts);
           break;
-        case "required-client-protocols":
+        case REQUIRED_CLIENT_PROTOCOLS:
           this.parseRequiredClientProtocolsLine(line, parts);
           break;
-        case "required-relay-protocols":
+        case REQUIRED_RELAY_PROTOCOLS:
           this.parseRequiredRelayProtocolsLine(line, parts);
           break;
-        case "package":
+        case PACKAGE:
           this.parsePackageLine(line, parts);
           break;
-        case "known-flags":
+        case KNOWN_FLAGS:
           this.parseKnownFlagsLine(line, parts);
           break;
-        case "flag-thresholds":
+        case FLAG_THRESHOLDS:
           this.parseFlagThresholdsLine(line, parts);
           break;
-        case "params":
+        case PARAMS:
           this.parseParamsLine(line, parts);
           break;
-        case "dir-source":
+        case DIR_SOURCE:
           this.parseDirSourceLine(line, parts);
           break;
-        case "contact":
+        case CONTACT:
           this.parseContactLine(line, parts);
           break;
-        case "shared-rand-participate":
+        case SHARED_RAND_PARTICIPATE:
           this.parseSharedRandParticipateLine(line, parts);
           break;
-        case "shared-rand-commit":
+        case SHARED_RAND_COMMIT:
           this.parseSharedRandCommitLine(line, parts);
           break;
-        case "shared-rand-previous-value":
+        case SHARED_RAND_PREVIOUS_VALUE:
           this.parseSharedRandPreviousValueLine(line, parts);
           break;
-        case "shared-rand-current-value":
+        case SHARED_RAND_CURRENT_VALUE:
           this.parseSharedRandCurrentValueLine(line, parts);
           break;
-        case "dir-key-certificate-version":
+        case DIR_KEY_CERTIFICATE_VERSION:
           this.parseDirKeyCertificateVersionLine(line, parts);
           break;
-        case "dir-address":
+        case DIR_ADDRESS:
           this.parseDirAddressLine(line, parts);
           break;
-        case "fingerprint":
+        case FINGERPRINT:
           this.parseFingerprintLine(line, parts);
           break;
-        case "legacy-dir-key":
+        case LEGACY_DIR_KEY:
           this.parseLegacyDirKeyLine(line, parts);
           break;
-        case "dir-key-published":
+        case DIR_KEY_PUBLISHED:
           this.parseDirKeyPublished(line, parts);
           break;
-        case "dir-key-expires":
+        case DIR_KEY_EXPIRES:
           this.parseDirKeyExpiresLine(line, parts);
           break;
-        case "dir-identity-key":
+        case DIR_IDENTITY_KEY:
           this.parseDirIdentityKeyLine(line, parts);
-          nextCrypto = "dir-identity-key";
+          nextCrypto = key;
           break;
-        case "dir-signing-key":
+        case DIR_SIGNING_KEY:
           this.parseDirSigningKeyLine(line, parts);
-          nextCrypto = "dir-signing-key";
+          nextCrypto = key;
           break;
-        case "dir-key-crosscert":
+        case DIR_KEY_CROSSCERT:
           this.parseDirKeyCrosscertLine(line, parts);
-          nextCrypto = "dir-key-crosscert";
+          nextCrypto = key;
           break;
-        case "dir-key-certification":
+        case DIR_KEY_CERTIFICATION:
           this.parseDirKeyCertificationLine(line, parts);
-          nextCrypto = "dir-key-certification";
+          nextCrypto = key;
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           crypto = new StringBuilder();
-          crypto.append(line).append("\n");
+          crypto.append(line).append(NL);
           break;
-        case "-----END":
-          crypto.append(line).append("\n");
+        case CRYPTO_END:
+          crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
           switch (nextCrypto) {
-            case "dir-identity-key":
+            case DIR_IDENTITY_KEY:
               this.dirIdentityKey = cryptoString;
               break;
-            case "dir-signing-key":
+            case DIR_SIGNING_KEY:
               this.dirSigningKey = cryptoString;
               break;
-            case "dir-key-crosscert":
+            case DIR_KEY_CROSSCERT:
               this.dirKeyCrosscert = cryptoString;
               break;
-            case "dir-key-certification":
+            case DIR_KEY_CERTIFICATION:
               this.dirKeyCertification = cryptoString;
               break;
             default:
               throw new DescriptorParseException("Unrecognized crypto "
                   + "block in vote.");
           }
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
         default:
           if (crypto != null) {
-            crypto.append(line).append("\n");
+            crypto.append(line).append(NL);
           } else {
             if (this.failUnrecognizedDescriptorLines) {
               throw new DescriptorParseException("Unrecognized line '"
@@ -277,7 +275,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   private void parseNetworkStatusVersionLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("network-status-version 3")) {
+    if (!line.equals(Key.NETWORK_STATUS_VERSION.keyword + SP + "3")) {
       throw new DescriptorParseException("Illegal network status version "
           + "number in line '" + line + "'.");
     }
@@ -399,7 +397,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     if (this.packageLines == null) {
       this.packageLines = new ArrayList<>();
     }
-    this.packageLines.add(line.substring("package ".length()));
+    this.packageLines.add(line.substring(Key.PACKAGE.keyword.length() + 1));
   }
 
   private void parseKnownFlagsLine(String line, String[] parts)
@@ -492,8 +490,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   private void parseContactLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (line.length() > "contact ".length()) {
-      this.contactLine = line.substring("contact ".length());
+    if (line.length() > Key.CONTACT.keyword.length() + 1) {
+      this.contactLine = line.substring(Key.CONTACT.keyword.length() + 1);
     } else {
       this.contactLine = "";
     }
@@ -604,38 +602,38 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   private void parseDirIdentityKeyLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-identity-key")) {
+    if (!line.equals(Key.DIR_IDENTITY_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
   private void parseDirSigningKeyLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-signing-key")) {
+    if (!line.equals(Key.DIR_SIGNING_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
   private void parseDirKeyCrosscertLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-key-crosscert")) {
+    if (!line.equals(Key.DIR_KEY_CROSSCERT.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
   private void parseDirKeyCertificationLine(String line, String[] parts)
       throws DescriptorParseException {
-    if (!line.equals("dir-key-certification")) {
+    if (!line.equals(Key.DIR_KEY_CERTIFICATION.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
   protected void parseFooter(byte[] footerBytes)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(footerBytes)).useDelimiter("\n");
+    Scanner scanner = new Scanner(new String(footerBytes)).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
-      if (!line.equals("directory-footer")) {
+      if (!line.equals(Key.DIRECTORY_FOOTER.keyword)) {
         if (this.failUnrecognizedDescriptorLines) {
           throw new DescriptorParseException("Unrecognized line '"
               + line + "' in vote.");

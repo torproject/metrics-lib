@@ -7,11 +7,9 @@ import org.torproject.descriptor.BridgePoolAssignment;
 import org.torproject.descriptor.DescriptorParseException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -24,7 +22,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
     List<BridgePoolAssignment> parsedDescriptors = new ArrayList<>();
     List<byte[]> splitDescriptorsBytes =
         DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        "bridge-pool-assignment ");
+        Key.BRIDGE_POOL_ASSIGNMENT.keyword + SP);
     for (byte[] descriptorBytes : splitDescriptorsBytes) {
       BridgePoolAssignment parsedDescriptor =
           new BridgePoolAssignmentImpl(descriptorBytes,
@@ -39,20 +37,18 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList(
-        new String[] { "bridge-pool-assignment" }));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    this.checkFirstKeyword("bridge-pool-assignment");
-    this.clearParsedKeywords();
+    this.checkExactlyOnceKeys(EnumSet.of(Key.BRIDGE_POOL_ASSIGNMENT));
+    this.checkFirstKey(Key.BRIDGE_POOL_ASSIGNMENT);
+    this.clearParsedKeys();
     return;
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter("\n");
+        .useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
-      if (line.startsWith("bridge-pool-assignment ")) {
+      if (line.startsWith(Key.BRIDGE_POOL_ASSIGNMENT.keyword + SP)) {
         this.parseBridgePoolAssignmentLine(line);
       } else {
         this.parseBridgeLine(line);
@@ -80,7 +76,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
     }
     String fingerprint = ParseHelper.parseTwentyByteHexString(line,
         parts[0]);
-    String poolAndDetails = line.substring(line.indexOf(" ") + 1);
+    String poolAndDetails = line.substring(line.indexOf(SP) + 1);
     this.entries.put(fingerprint, poolAndDetails);
   }
 

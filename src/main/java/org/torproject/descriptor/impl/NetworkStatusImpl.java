@@ -34,15 +34,16 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       throw new DescriptorParseException("Descriptor is empty.");
     }
     String descriptorString = new String(rawDescriptorBytes);
-    int firstRIndex = this.findFirstIndexOfKeyword(descriptorString, "r");
+    int firstRIndex = this.findFirstIndexOfKeyword(descriptorString,
+        Key.R.keyword);
     int endIndex = descriptorString.length();
     int firstDirectorySignatureIndex = this.findFirstIndexOfKeyword(
-        descriptorString, "directory-signature");
+        descriptorString, Key.DIRECTORY_SIGNATURE.keyword);
     if (firstDirectorySignatureIndex < 0) {
       firstDirectorySignatureIndex = endIndex;
     }
     int directoryFooterIndex = this.findFirstIndexOfKeyword(
-        descriptorString, "directory-footer");
+        descriptorString, Key.DIRECTORY_FOOTER.keyword);
     if (directoryFooterIndex < 0) {
       directoryFooterIndex = firstDirectorySignatureIndex;
     }
@@ -50,7 +51,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       firstRIndex = directoryFooterIndex;
     }
     int firstDirSourceIndex = !containsDirSourceEntries ? -1
-        : this.findFirstIndexOfKeyword(descriptorString, "dir-source");
+        : this.findFirstIndexOfKeyword(descriptorString,
+        Key.DIR_SOURCE.keyword);
     if (firstDirSourceIndex < 0) {
       firstDirSourceIndex = firstRIndex;
     }
@@ -79,10 +81,10 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       String keyword) {
     if (descriptorString.startsWith(keyword)) {
       return 0;
-    } else if (descriptorString.contains("\n" + keyword + " ")) {
-      return descriptorString.indexOf("\n" + keyword + " ") + 1;
-    } else if (descriptorString.contains("\n" + keyword + "\n")) {
-      return descriptorString.indexOf("\n" + keyword + "\n") + 1;
+    } else if (descriptorString.contains(NL + keyword + SP)) {
+      return descriptorString.indexOf(NL + keyword + SP) + 1;
+    } else if (descriptorString.contains(NL + keyword + NL)) {
+      return descriptorString.indexOf(NL + keyword + NL) + 1;
     } else {
       return -1;
     }
@@ -99,7 +101,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   private void parseDirSourceBytes(String descriptorString, int start,
       int end) throws DescriptorParseException {
     List<byte[]> splitDirSourceBytes =
-        this.splitByKeyword(descriptorString, "dir-source", start, end);
+        this.splitByKeyword(
+            descriptorString, Key.DIR_SOURCE.keyword, start, end);
     for (byte[] dirSourceBytes : splitDirSourceBytes) {
       this.parseDirSource(dirSourceBytes);
     }
@@ -108,7 +111,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   private void parseStatusEntryBytes(String descriptorString, int start,
       int end) throws DescriptorParseException {
     List<byte[]> splitStatusEntryBytes =
-        this.splitByKeyword(descriptorString, "r", start, end);
+        this.splitByKeyword(descriptorString, Key.R.keyword, start, end);
     for (byte[] statusEntryBytes : splitStatusEntryBytes) {
       this.parseStatusEntry(statusEntryBytes);
     }
@@ -125,7 +128,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   private void parseDirectorySignatureBytes(String descriptorString,
       int start, int end) throws DescriptorParseException {
     List<byte[]> splitDirectorySignatureBytes = this.splitByKeyword(
-        descriptorString, "directory-signature", start, end);
+        descriptorString, Key.DIRECTORY_SIGNATURE.keyword, start, end);
     for (byte[] directorySignatureBytes : splitDirectorySignatureBytes) {
       this.parseDirectorySignature(directorySignatureBytes);
     }
@@ -136,9 +139,9 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     List<byte[]> splitParts = new ArrayList<>();
     int from = start;
     while (from < end) {
-      int to = descriptorString.indexOf("\n" + keyword + " ", from);
+      int to = descriptorString.indexOf(NL + keyword + SP, from);
       if (to < 0) {
-        to = descriptorString.indexOf("\n" + keyword + "\n", from);
+        to = descriptorString.indexOf(NL + keyword + NL, from);
       }
       if (to < 0) {
         to = end;

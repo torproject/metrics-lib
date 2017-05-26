@@ -12,7 +12,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -25,6 +25,20 @@ import javax.xml.bind.DatatypeConverter;
 public abstract class ServerDescriptorImpl extends DescriptorImpl
     implements ServerDescriptor {
 
+  private static final Set<Key> atMostOnce = EnumSet.of(
+      Key.IDENTITY_ED25519, Key.MASTER_KEY_ED25519, Key.PLATFORM, Key.PROTO,
+      Key.FINGERPRINT, Key.HIBERNATING, Key.UPTIME, Key.CONTACT, Key.FAMILY,
+      Key.READ_HISTORY, Key.WRITE_HISTORY, Key.EVENTDNS, Key.CACHES_EXTRA_INFO,
+      Key.EXTRA_INFO_DIGEST, Key.HIDDEN_SERVICE_DIR, Key.PROTOCOLS,
+      Key.ALLOW_SINGLE_HOP_EXITS, Key.ONION_KEY, Key.SIGNING_KEY,
+      Key.IPV6_POLICY, Key.NTOR_ONION_KEY, Key.ONION_KEY_CROSSCERT,
+      Key.NTOR_ONION_KEY_CROSSCERT, Key.TUNNELLED_DIR_SERVER,
+      Key.ROUTER_SIG_ED25519, Key.ROUTER_SIGNATURE, Key.ROUTER_DIGEST_SHA256,
+      Key.ROUTER_DIGEST);
+
+  private static final Set<Key> exactlyOnce = EnumSet.of(
+      Key.ROUTER, Key.BANDWIDTH, Key.PUBLISHED);
+
   protected ServerDescriptorImpl(byte[] descriptorBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
@@ -32,184 +46,173 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.parseDescriptorBytes();
     this.calculateDigest();
     this.calculateDigestSha256();
-    Set<String> exactlyOnceKeywords = new HashSet<>(Arrays.asList(
-        "router,bandwidth,published".split(",")));
-    this.checkExactlyOnceKeywords(exactlyOnceKeywords);
-    Set<String> atMostOnceKeywords = new HashSet<>(Arrays.asList((
-        "identity-ed25519,master-key-ed25519,platform,proto,fingerprint,"
-        + "hibernating,uptime,contact,family,read-history,write-history,"
-        + "eventdns,caches-extra-info,extra-info-digest,"
-        + "hidden-service-dir,protocols,allow-single-hop-exits,onion-key,"
-        + "signing-key,ipv6-policy,ntor-onion-key,onion-key-crosscert,"
-        + "ntor-onion-key-crosscert,tunnelled-dir-server,"
-        + "router-sig-ed25519,router-signature,router-digest-sha256,"
-        + "router-digest").split(",")));
-    this.checkAtMostOnceKeywords(atMostOnceKeywords);
-    this.checkFirstKeyword("router");
-    if (this.getKeywordCount("accept") == 0
-        && this.getKeywordCount("reject") == 0) {
+    this.checkExactlyOnceKeys(exactlyOnce);
+    this.checkAtMostOnceKeys(atMostOnce);
+    this.checkFirstKey(Key.ROUTER);
+    if (this.getKeyCount(Key.ACCEPT) == 0
+        && this.getKeyCount(Key.REJECT) == 0) {
       throw new DescriptorParseException("Either keyword 'accept' or "
           + "'reject' must be contained at least once.");
     }
-    this.clearParsedKeywords();
+    this.clearParsedKeys();
     return;
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
     Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter("\n");
-    String nextCrypto = "";
+        .useDelimiter(NL);
+    Key nextCrypto = Key.EMPTY;
     List<String> cryptoLines = null;
     while (scanner.hasNext()) {
       String line = scanner.next();
       if (line.startsWith("@")) {
         continue;
       }
-      String lineNoOpt = line.startsWith("opt ")
-          ? line.substring("opt ".length()) : line;
+      String lineNoOpt = line.startsWith(Key.OPT.keyword + SP)
+          ? line.substring(Key.OPT.keyword.length() + 1) : line;
       String[] partsNoOpt = lineNoOpt.split("[ \t]+");
-      String keyword = partsNoOpt[0];
-      switch (keyword) {
-        case "router":
+      Key key = Key.get(partsNoOpt[0]);
+      switch (key) {
+        case ROUTER:
           this.parseRouterLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "or-address":
+        case OR_ADDRESS:
           this.parseOrAddressLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "bandwidth":
+        case BANDWIDTH:
           this.parseBandwidthLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "platform":
+        case PLATFORM:
           this.parsePlatformLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "proto":
+        case PROTO:
           this.parseProtoLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "published":
+        case PUBLISHED:
           this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "fingerprint":
+        case FINGERPRINT:
           this.parseFingerprintLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "hibernating":
+        case HIBERNATING:
           this.parseHibernatingLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "uptime":
+        case UPTIME:
           this.parseUptimeLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "onion-key":
+        case ONION_KEY:
           this.parseOnionKeyLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "onion-key";
+          nextCrypto = key;
           break;
-        case "signing-key":
+        case SIGNING_KEY:
           this.parseSigningKeyLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "signing-key";
+          nextCrypto = key;
           break;
-        case "accept":
+        case ACCEPT:
           this.parseAcceptLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "reject":
+        case REJECT:
           this.parseRejectLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "router-signature":
+        case ROUTER_SIGNATURE:
           this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "router-signature";
+          nextCrypto = key;
           break;
-        case "contact":
+        case CONTACT:
           this.parseContactLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "family":
+        case FAMILY:
           this.parseFamilyLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "read-history":
+        case READ_HISTORY:
           this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "write-history":
+        case WRITE_HISTORY:
           this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "eventdns":
+        case EVENTDNS:
           this.parseEventdnsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "caches-extra-info":
+        case CACHES_EXTRA_INFO:
           this.parseCachesExtraInfoLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "extra-info-digest":
+        case EXTRA_INFO_DIGEST:
           this.parseExtraInfoDigestLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "hidden-service-dir":
+        case HIDDEN_SERVICE_DIR:
           this.parseHiddenServiceDirLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "protocols":
+        case PROTOCOLS:
           this.parseProtocolsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "allow-single-hop-exits":
+        case ALLOW_SINGLE_HOP_EXITS:
           this.parseAllowSingleHopExitsLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "dircacheport":
+        case DIRCACHEPORT:
           this.parseDircacheportLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "router-digest":
+        case ROUTER_DIGEST:
           this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "router-digest-sha256":
+        case ROUTER_DIGEST_SHA256:
           this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
           break;
-        case "ipv6-policy":
+        case IPV6_POLICY:
           this.parseIpv6PolicyLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "ntor-onion-key":
+        case NTOR_ONION_KEY:
           this.parseNtorOnionKeyLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "identity-ed25519":
+        case IDENTITY_ED25519:
           this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "identity-ed25519";
+          nextCrypto = key;
           break;
-        case "master-key-ed25519":
+        case MASTER_KEY_ED25519:
           this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
           break;
-        case "router-sig-ed25519":
+        case ROUTER_SIG_ED25519:
           this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
           break;
-        case "onion-key-crosscert":
+        case ONION_KEY_CROSSCERT:
           this.parseOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "onion-key-crosscert";
+          nextCrypto = key;
           break;
-        case "ntor-onion-key-crosscert":
+        case NTOR_ONION_KEY_CROSSCERT:
           this.parseNtorOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
-          nextCrypto = "ntor-onion-key-crosscert";
+          nextCrypto = key;
           break;
-        case "tunnelled-dir-server":
+        case TUNNELLED_DIR_SERVER:
           this.parseTunnelledDirServerLine(line, lineNoOpt, partsNoOpt);
           break;
-        case "-----BEGIN":
+        case CRYPTO_BEGIN:
           cryptoLines = new ArrayList<>();
           cryptoLines.add(line);
           break;
-        case "-----END":
+        case CRYPTO_END:
           cryptoLines.add(line);
           StringBuilder sb = new StringBuilder();
           for (String cryptoLine : cryptoLines) {
-            sb.append("\n").append(cryptoLine);
+            sb.append(NL).append(cryptoLine);
           }
           String cryptoString = sb.toString().substring(1);
           switch (nextCrypto) {
-            case "onion-key":
+            case ONION_KEY:
               this.onionKey = cryptoString;
               break;
-            case "signing-key":
+            case SIGNING_KEY:
               this.signingKey = cryptoString;
               break;
-            case "router-signature":
+            case ROUTER_SIGNATURE:
               this.routerSignature = cryptoString;
               break;
-            case "identity-ed25519":
+            case IDENTITY_ED25519:
               this.identityEd25519 = cryptoString;
               this.parseIdentityEd25519CryptoBlock(cryptoString);
               break;
-            case "onion-key-crosscert":
+            case ONION_KEY_CROSSCERT:
               this.onionKeyCrosscert = cryptoString;
               break;
-            case "ntor-onion-key-crosscert":
+            case NTOR_ONION_KEY_CROSSCERT:
               this.ntorOnionKeyCrosscert = cryptoString;
               break;
             default:
@@ -224,8 +227,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
               }
           }
           cryptoLines = null;
-          nextCrypto = "";
+          nextCrypto = Key.EMPTY;
           break;
+        case INVALID:
         default:
           if (cryptoLines != null) {
             cryptoLines.add(line);
@@ -301,8 +305,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   private void parsePlatformLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (lineNoOpt.length() > "platform ".length()) {
-      this.platform = lineNoOpt.substring("platform ".length());
+    if (lineNoOpt.length() > Key.PLATFORM.keyword.length() + 1) {
+      this.platform = lineNoOpt.substring(Key.PLATFORM.keyword.length() + 1);
     } else {
       this.platform = "";
     }
@@ -322,11 +326,12 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseFingerprintLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (lineNoOpt.length() != "fingerprint".length() + 5 * 10) {
+    if (lineNoOpt.length() != Key.FINGERPRINT.keyword.length() + 5 * 10) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.fingerprint = ParseHelper.parseTwentyByteHexString(line,
-        lineNoOpt.substring("fingerprint ".length()).replaceAll(" ", ""));
+        lineNoOpt.substring(Key.FINGERPRINT.keyword.length() + 1)
+            .replaceAll(SP, ""));
   }
 
   private void parseHibernatingLine(String line, String lineNoOpt,
@@ -358,14 +363,14 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseOnionKeyLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (!lineNoOpt.equals("onion-key")) {
+    if (!lineNoOpt.equals(Key.ONION_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
   private void parseSigningKeyLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (!lineNoOpt.equals("signing-key")) {
+    if (!lineNoOpt.equals(Key.SIGNING_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
@@ -391,15 +396,15 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseRouterSignatureLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (!lineNoOpt.equals("router-signature")) {
+    if (!lineNoOpt.equals(Key.ROUTER_SIGNATURE.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
   private void parseContactLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (lineNoOpt.length() > "contact ".length()) {
-      this.contact = lineNoOpt.substring("contact ".length());
+    if (lineNoOpt.length() > Key.CONTACT.keyword.length() + 1) {
+      this.contact = lineNoOpt.substring(Key.CONTACT.keyword.length() + 1);
     } else {
       this.contact = "";
     }
@@ -455,7 +460,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseCachesExtraInfoLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (!lineNoOpt.equals("caches-extra-info")) {
+    if (!lineNoOpt.equals(Key.CACHES_EXTRA_INFO.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.cachesExtraInfo = true;
@@ -532,7 +537,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseAllowSingleHopExitsLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (!lineNoOpt.equals("allow-single-hop-exits")) {
+    if (!lineNoOpt.equals(Key.ALLOW_SINGLE_HOP_EXITS.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.allowSingleHopExits = true;
@@ -568,9 +573,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 3) {
       isValid = false;
     } else {
-      switch (partsNoOpt[1]) {
-        case "accept":
-        case "reject":
+      switch (Key.get(partsNoOpt[1])) {
+        case ACCEPT:
+        case REJECT:
           this.ipv6DefaultPolicy = partsNoOpt[1];
           this.ipv6PortList = partsNoOpt[2];
           String[] ports = partsNoOpt[2].split(",", -1);
@@ -581,6 +586,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
             }
           }
           break;
+        case INVALID:
         default:
           isValid = false;
       }
@@ -626,7 +632,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
 
   private void parseTunnelledDirServerLine(String line, String lineNoOpt,
       String[] partsNoOpt) throws DescriptorParseException {
-    if (!lineNoOpt.equals("tunnelled-dir-server")) {
+    if (!lineNoOpt.equals(Key.TUNNELLED_DIR_SERVER.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.tunnelledDirServer = true;
@@ -684,8 +690,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "router ";
-      String sigToken = "\nrouter-signature\n";
+      String startToken = Key.ROUTER.keyword + SP;
+      String sigToken = NL + Key.ROUTER_SIGNATURE.keyword + NL;
       int start = ascii.indexOf(startToken);
       int sig = ascii.indexOf(sigToken) + sigToken.length();
       if (start >= 0 && sig >= 0 && sig > start) {
@@ -715,7 +721,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
     try {
       String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "router ";
+      String startToken = Key.ROUTER.keyword + SP;
       String sigToken = "\n-----END SIGNATURE-----\n";
       int start = ascii.indexOf(startToken);
       int sig = ascii.indexOf(sigToken) + sigToken.length();
