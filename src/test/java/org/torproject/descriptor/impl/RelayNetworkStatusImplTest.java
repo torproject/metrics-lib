@@ -24,8 +24,15 @@ public class RelayNetworkStatusImplTest {
       + "c6JWYUWZSPpW1uyjyLPUI/ikyyH7zmtR4MfhSeNdt2zSakojYNaPAgMBAAE=\n"
       + "-----END RSA PUBLIC KEY-----\n";
 
+  private static final String validFooter = "directory-signature dizum\n"
+      + "-----BEGIN SIGNATURE-----\n"
+      + "G62xrsrqpmJKSHP672o2Wv/5hdKmy+LoWwdQl/JvT7WN7VfdlfBpo5UgsxvIHGSF\n"
+      + "MGVROgjL1+EW4vezm5U0/Tz02CbCaw5Gs2hu4fviT0qKTV+QTP+l9a4SeY36a1qL\n"
+      + "TZiThjmOWg5C5ru2eOZKzst2wGW0WDPmsVRpWO7UMzs=\n"
+      + "-----END SIGNATURE-----\n";
+
   private static final String validStatus =
-      "@type network-status-2 1.0\n" + validHeader;
+      "@type network-status-2 1.0\n" + validHeader + validFooter;
 
   @Test(expected = DescriptorParseException.class)
   public void testParseBrokenHeader() throws DescriptorParseException {

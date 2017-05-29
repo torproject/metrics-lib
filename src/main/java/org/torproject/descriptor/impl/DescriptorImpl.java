@@ -371,8 +371,12 @@ public abstract class DescriptorImpl implements Descriptor {
       String ascii = new String(this.rawDescriptorBytes,
           StandardCharsets.US_ASCII);
       int start = ascii.indexOf(startToken);
-      int end = (null == endToken) ? ascii.length()
-          : (ascii.indexOf(endToken) + endToken.length());
+      int end = -1;
+      if (null == endToken) {
+        end = ascii.length();
+      } else if (ascii.contains(endToken)) {
+        end = ascii.indexOf(endToken) + endToken.length();
+      }
       if (start >= 0 && end >= 0 && end > start) {
         byte[] forDigest = new byte[end - start];
         System.arraycopy(this.rawDescriptorBytes, start, forDigest, 0,
@@ -408,8 +412,12 @@ public abstract class DescriptorImpl implements Descriptor {
       String ascii = new String(this.rawDescriptorBytes,
           StandardCharsets.US_ASCII);
       int start = ascii.indexOf(startToken);
-      int end = (null == endToken) ? ascii.length()
-          : (ascii.indexOf(endToken) + endToken.length());
+      int end = -1;
+      if (null == endToken) {
+        end = ascii.length();
+      } else if (ascii.contains(endToken)) {
+        end = ascii.indexOf(endToken) + endToken.length();
+      }
       if (start >= 0 && end >= 0 && end > start) {
         byte[] forDigest = new byte[end - start];
         System.arraycopy(this.rawDescriptorBytes, start, forDigest, 0,

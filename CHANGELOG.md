@@ -8,6 +8,8 @@
    - Fix a bug where Microdescriptor's getDigestSha256Base64() returns
      a hex string rather than a base64 string.
    - Move descriptor digest computation to DescriptorImpl.
+   - Fix a bug in digest computation by making sure that the
+     descriptor string actually contains the end token.
 
 
 # Changes in version 1.7.0 - 2017-05-17

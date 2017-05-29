@@ -1027,14 +1027,14 @@ public class ServerDescriptorImplTest {
         descriptor.getExitPolicyLines());
   }
 
-  @Test()
-  public void testRouterSignatureOpt()
-      throws DescriptorParseException {
-    DescriptorBuilder.createWithRouterSignatureLines("opt "
-        + "router-signature\n"
+  @Test(expected = DescriptorParseException.class)
+  public void testEndSignatureFourDashes() throws DescriptorParseException {
+    DescriptorBuilder.createWithRouterSignatureLines("router-signature\n"
         + "-----BEGIN SIGNATURE-----\n"
-        + "crypto lines are ignored anyway\n"
-        + "-----END SIGNATURE-----");
+        + "o4j+kH8UQfjBwepUnr99v0ebN8RpzHJ/lqYsTojXHy9kMr1RNI9IDeSzA7PSqT"
+        + "uV\n4PL8QsGtlfwthtIoZpB2srZeyN/mcpA9fa1JXUrt/UN9K/+32Cyaad7h0n"
+        + "HE6Xfb\njqpXDpnBpvk4zjmzjjKYnIsUWTnADmu0fo3xTRqXi7g=\n"
+        + "-----END SIGNATURE----");
   }
 
   @Test(expected = DescriptorParseException.class)
