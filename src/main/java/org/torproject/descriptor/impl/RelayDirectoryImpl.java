@@ -8,6 +8,7 @@ import org.torproject.descriptor.RelayDirectory;
 import org.torproject.descriptor.RouterStatusEntry;
 import org.torproject.descriptor.ServerDescriptor;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -56,7 +57,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
     if (this.rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
-    String descriptorString = new String(rawDescriptorBytes);
+    String descriptorString = new String(rawDescriptorBytes,
+        StandardCharsets.US_ASCII);
     int startIndex = 0;
     int firstRouterIndex = this.findFirstIndexOfKeyword(descriptorString,
         Key.ROUTER.keyword);

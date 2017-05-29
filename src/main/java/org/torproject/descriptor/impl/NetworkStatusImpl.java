@@ -8,6 +8,7 @@ import org.torproject.descriptor.DirSourceEntry;
 import org.torproject.descriptor.DirectorySignature;
 import org.torproject.descriptor.NetworkStatusEntry;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
@@ -33,7 +34,8 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     if (this.rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
-    String descriptorString = new String(rawDescriptorBytes);
+    String descriptorString = new String(rawDescriptorBytes,
+        StandardCharsets.US_ASCII);
     int firstRIndex = this.findFirstIndexOfKeyword(descriptorString,
         Key.R.keyword);
     int endIndex = descriptorString.length();

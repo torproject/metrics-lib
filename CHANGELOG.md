@@ -10,6 +10,10 @@
    - Move descriptor digest computation to DescriptorImpl.
    - Fix a bug in digest computation by making sure that the
      descriptor string actually contains the end token.
+   - Fix a bug where both RelayDirectoryImpl and all NetworkStatusImpl
+     subclasses fail to get indexes right if parts of raw descriptor
+     strings contain non-ASCII chars.  In practice, this only affects
+     version 1 directories which were last archived in 2007.
 
 
 # Changes in version 1.7.0 - 2017-05-17
