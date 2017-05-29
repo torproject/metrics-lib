@@ -7,9 +7,6 @@ import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ServerDescriptor;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -18,8 +15,6 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
-
-import javax.xml.bind.DatatypeConverter;
 
 /* Contains a server descriptor. */
 public abstract class ServerDescriptorImpl extends DescriptorImpl
@@ -44,8 +39,10 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
-    this.calculateDigest();
-    this.calculateDigestSha256();
+    this.calculateDigestSha1Hex(Key.ROUTER.keyword + SP,
+        NL + Key.ROUTER_SIGNATURE.keyword + NL);
+    this.calculateDigestSha256Base64(Key.ROUTER.keyword + SP,
+        NL + "-----END SIGNATURE-----" + NL);
     this.checkExactlyOnceKeys(exactlyOnce);
     this.checkAtMostOnceKeys(atMostOnce);
     this.checkFirstKey(Key.ROUTER);
@@ -563,8 +560,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    this.serverDescriptorDigest = ParseHelper.parseTwentyByteHexString(
-        line, partsNoOpt[1]);
+    this.setDigestSha1Hex(ParseHelper.parseTwentyByteHexString(
+        line, partsNoOpt[1]));
   }
 
   private void parseIpv6PolicyLine(String line, String lineNoOpt,
@@ -679,73 +676,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     ParseHelper.parseThirtyTwoByteBase64String(line, partsNoOpt[1]);
-    this.serverDescriptorDigestSha256 = partsNoOpt[1];
+    this.setDigestSha256Base64(partsNoOpt[1]);
   }
-
-  private void calculateDigest() throws DescriptorParseException {
-    if (this.serverDescriptorDigest != null) {
-      /* We already learned the descriptor digest of this bridge
-       * descriptor from a "router-digest" line. */
-      return;
-    }
-    try {
-      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = Key.ROUTER.keyword + SP;
-      String sigToken = NL + Key.ROUTER_SIGNATURE.keyword + NL;
-      int start = ascii.indexOf(startToken);
-      int sig = ascii.indexOf(sigToken) + sigToken.length();
-      if (start >= 0 && sig >= 0 && sig > start) {
-        byte[] forDigest = new byte[sig - start];
-        System.arraycopy(this.getRawDescriptorBytes(), start,
-            forDigest, 0, sig - start);
-        this.serverDescriptorDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest))
-            .toLowerCase();
-      }
-    } catch (UnsupportedEncodingException e) {
-      /* Handle below. */
-    } catch (NoSuchAlgorithmException e) {
-      /* Handle below. */
-    }
-    if (this.serverDescriptorDigest == null) {
-      throw new DescriptorParseException("Could not calculate server "
-          + "descriptor digest.");
-    }
-  }
-
-  private void calculateDigestSha256() throws DescriptorParseException {
-    if (this.serverDescriptorDigestSha256 != null) {
-      /* We already learned the descriptor digest of this bridge
-       * descriptor from a "router-digest-sha256" line. */
-      return;
-    }
-    try {
-      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = Key.ROUTER.keyword + SP;
-      String sigToken = "\n-----END SIGNATURE-----\n";
-      int start = ascii.indexOf(startToken);
-      int sig = ascii.indexOf(sigToken) + sigToken.length();
-      if (start >= 0 && sig >= 0 && sig > start) {
-        byte[] forDigest = new byte[sig - start];
-        System.arraycopy(this.getRawDescriptorBytes(), start, forDigest,
-            0, sig - start);
-        this.serverDescriptorDigestSha256 =
-            DatatypeConverter.printBase64Binary(
-            MessageDigest.getInstance("SHA-256").digest(forDigest))
-            .replaceAll("=", "");
-      }
-    } catch (UnsupportedEncodingException e) {
-      /* Handle below. */
-    } catch (NoSuchAlgorithmException e) {
-      /* Handle below. */
-    }
-    if (this.serverDescriptorDigestSha256 == null) {
-      throw new DescriptorParseException("Could not calculate server "
-          + "descriptor SHA-256 digest.");
-    }
-  }
-
-  private String serverDescriptorDigest;
 
   @Override
   public String getServerDescriptorDigest() {
@@ -753,20 +685,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   }
 
   @Override
-  public String getDigestSha1Hex() {
-    return this.serverDescriptorDigest;
-  }
-
-  private String serverDescriptorDigestSha256;
-
-  @Override
   public String getServerDescriptorDigestSha256() {
     return this.getDigestSha256Base64();
-  }
-
-  @Override
-  public String getDigestSha256Base64() {
-    return this.serverDescriptorDigestSha256;
   }
 
   private String nickname;

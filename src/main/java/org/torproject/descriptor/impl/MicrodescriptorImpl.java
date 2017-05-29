@@ -6,17 +6,12 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.Microdescriptor;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-
-import javax.xml.bind.DatatypeConverter;
 
 /* Contains a microdescriptor. */
 public class MicrodescriptorImpl extends DescriptorImpl
@@ -43,7 +38,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(descriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
-    this.calculateDigest();
+    this.calculateDigestSha256Base64(Key.ONION_KEY.keyword + NL);
     this.checkExactlyOnceKeys(EnumSet.of(Key.ONION_KEY));
     Set<Key> atMostOnceKeys = EnumSet.of(
         Key.NTOR_ONION_KEY, Key.FAMILY, Key.P, Key.P6, Key.ID);
@@ -233,41 +228,9 @@ public class MicrodescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void calculateDigest() throws DescriptorParseException {
-    try {
-      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "onion-key\n";
-      int start = ascii.indexOf(startToken);
-      int end = ascii.length();
-      if (start >= 0 && end > start) {
-        byte[] forDigest = new byte[end - start];
-        System.arraycopy(this.getRawDescriptorBytes(), start,
-            forDigest, 0, end - start);
-        this.microdescriptorDigest = DatatypeConverter.printBase64Binary(
-            MessageDigest.getInstance("SHA-256").digest(forDigest))
-            .replaceAll("=", "");
-      }
-    } catch (UnsupportedEncodingException e) {
-      /* Handle below. */
-    } catch (NoSuchAlgorithmException e) {
-      /* Handle below. */
-    }
-    if (this.microdescriptorDigest == null) {
-      throw new DescriptorParseException("Could not calculate "
-          + "microdescriptor digest.");
-    }
-  }
-
-  private String microdescriptorDigest;
-
   @Override
   public String getMicrodescriptorDigest() {
     return this.getDigestSha256Base64();
-  }
-
-  @Override
-  public String getDigestSha256Base64() {
-    return this.microdescriptorDigest;
   }
 
   private String onionKey;

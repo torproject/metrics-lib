@@ -1969,16 +1969,6 @@ public class ExtraInfoDescriptorImplTest {
         "hidserv-dir-onions-seen -3 delta_f=8 epsilon=0.30 bin_size=8 pi=3");
   }
 
-  @Test()
-  public void testRouterSignatureOpt()
-      throws DescriptorParseException {
-    DescriptorBuilder.createWithRouterSignatureLines("opt "
-        + "router-signature\n"
-        + "-----BEGIN SIGNATURE-----\n"
-        + "crypto lines are ignored anyway\n"
-        + "-----END SIGNATURE-----");
-  }
-
   @Test(expected = DescriptorParseException.class)
   public void testRouterSignatureNotLastLine()
       throws DescriptorParseException {

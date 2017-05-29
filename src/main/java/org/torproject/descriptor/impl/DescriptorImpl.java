@@ -7,12 +7,17 @@ import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+
+import javax.xml.bind.DatatypeConverter;
 
 public abstract class DescriptorImpl implements Descriptor {
 
@@ -352,6 +357,85 @@ public abstract class DescriptorImpl implements Descriptor {
 
   protected void clearParsedKeys() {
     this.parsedKeys = null;
+  }
+
+  private String digestSha1Hex;
+
+  protected void setDigestSha1Hex(String digestSha1Hex) {
+    this.digestSha1Hex = digestSha1Hex;
+  }
+
+  protected void calculateDigestSha1Hex(String startToken, String endToken)
+      throws DescriptorParseException {
+    if (null == this.digestSha1Hex) {
+      String ascii = new String(this.rawDescriptorBytes,
+          StandardCharsets.US_ASCII);
+      int start = ascii.indexOf(startToken);
+      int end = (null == endToken) ? ascii.length()
+          : (ascii.indexOf(endToken) + endToken.length());
+      if (start >= 0 && end >= 0 && end > start) {
+        byte[] forDigest = new byte[end - start];
+        System.arraycopy(this.rawDescriptorBytes, start, forDigest, 0,
+            end - start);
+        try {
+          this.digestSha1Hex = DatatypeConverter.printHexBinary(
+              MessageDigest.getInstance("SHA-1").digest(forDigest))
+              .toLowerCase();
+        } catch (NoSuchAlgorithmException e) {
+          /* Handle below. */
+        }
+      }
+    }
+    if (null == this.digestSha1Hex) {
+      throw new DescriptorParseException("Could not calculate descriptor "
+          + "digest.");
+    }
+  }
+
+  public String getDigestSha1Hex() {
+    return this.digestSha1Hex;
+  }
+
+  private String digestSha256Base64;
+
+  protected void setDigestSha256Base64(String digestSha256Base64) {
+    this.digestSha256Base64 = digestSha256Base64;
+  }
+
+  protected void calculateDigestSha256Base64(String startToken,
+      String endToken) throws DescriptorParseException {
+    if (null == this.digestSha256Base64) {
+      String ascii = new String(this.rawDescriptorBytes,
+          StandardCharsets.US_ASCII);
+      int start = ascii.indexOf(startToken);
+      int end = (null == endToken) ? ascii.length()
+          : (ascii.indexOf(endToken) + endToken.length());
+      if (start >= 0 && end >= 0 && end > start) {
+        byte[] forDigest = new byte[end - start];
+        System.arraycopy(this.rawDescriptorBytes, start, forDigest, 0,
+            end - start);
+        try {
+          this.digestSha256Base64 = DatatypeConverter.printBase64Binary(
+              MessageDigest.getInstance("SHA-256").digest(forDigest))
+              .replaceAll("=", "");
+        } catch (NoSuchAlgorithmException e) {
+          /* Handle below. */
+        }
+      }
+    }
+    if (null == this.digestSha256Base64) {
+      throw new DescriptorParseException("Could not calculate descriptor "
+          + "digest.");
+    }
+  }
+
+  protected void calculateDigestSha256Base64(String startToken)
+      throws DescriptorParseException {
+    this.calculateDigestSha256Base64(startToken, null);
+  }
+
+  public String getDigestSha256Base64() {
+    return this.digestSha256Base64;
   }
 }
 

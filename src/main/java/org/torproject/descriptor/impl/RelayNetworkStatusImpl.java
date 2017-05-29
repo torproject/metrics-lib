@@ -6,9 +6,6 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.RelayNetworkStatus;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -17,8 +14,6 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import javax.xml.bind.DatatypeConverter;
 
 public class RelayNetworkStatusImpl extends NetworkStatusImpl
     implements RelayNetworkStatus {
@@ -51,37 +46,8 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     this.checkAtMostOnceKeys(atMostOnceKeys);
     this.checkFirstKey(Key.NETWORK_STATUS_VERSION);
     this.clearParsedKeys();
-    this.calculateDigest();
-  }
-
-  private void calculateDigest() throws DescriptorParseException {
-    try {
-      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = Key.NETWORK_STATUS_VERSION.keyword + SP;
-      String sigToken = NL + Key.DIRECTORY_SIGNATURE.keyword + SP;
-      if (!ascii.contains(sigToken)) {
-        return;
-      }
-      int start = ascii.indexOf(startToken);
-      int sig = ascii.indexOf(sigToken) + sigToken.length();
-      sig = ascii.indexOf(NL, sig) + 1;
-      if (start >= 0 && sig >= 0 && sig > start) {
-        byte[] forDigest = new byte[sig - start];
-        System.arraycopy(this.getRawDescriptorBytes(), start,
-            forDigest, 0, sig - start);
-        this.statusDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest))
-            .toLowerCase();
-      }
-    } catch (UnsupportedEncodingException e) {
-      /* Handle below. */
-    } catch (NoSuchAlgorithmException e) {
-      /* Handle below. */
-    }
-    if (this.statusDigest == null) {
-      throw new DescriptorParseException("Could not calculate status "
-          + "digest.");
-    }
+    this.calculateDigestSha1Hex(Key.NETWORK_STATUS_VERSION.keyword + SP,
+        NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
   }
 
   protected void parseHeader(byte[] headerBytes)
@@ -295,16 +261,9 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     this.nickname = ParseHelper.parseNickname(line, parts[1]);
   }
 
-  private String statusDigest;
-
   @Override
   public String getStatusDigest() {
     return this.getDigestSha1Hex();
-  }
-
-  @Override
-  public String getDigestSha1Hex() {
-    return this.statusDigest;
   }
 
   private int networkStatusVersion;

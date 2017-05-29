@@ -6,16 +6,11 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DirectoryKeyCertificate;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-
-import javax.xml.bind.DatatypeConverter;
 
 public class DirectoryKeyCertificateImpl extends DescriptorImpl
     implements DirectoryKeyCertificate {
@@ -41,7 +36,8 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
-    this.calculateDigest();
+    this.calculateDigestSha1Hex(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP,
+        NL + Key.DIR_KEY_CERTIFICATION.keyword + NL);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.DIR_KEY_CERTIFICATE_VERSION, Key.FINGERPRINT, Key.DIR_IDENTITY_KEY,
         Key.DIR_KEY_PUBLISHED, Key.DIR_KEY_EXPIRES, Key.DIR_SIGNING_KEY,
@@ -211,32 +207,6 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     }
   }
 
-  private void calculateDigest() throws DescriptorParseException {
-    try {
-      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP;
-      String sigToken = NL + Key.DIR_KEY_CERTIFICATION.keyword + NL;
-      int start = ascii.indexOf(startToken);
-      int sig = ascii.indexOf(sigToken) + sigToken.length();
-      if (start >= 0 && sig >= 0 && sig > start) {
-        byte[] forDigest = new byte[sig - start];
-        System.arraycopy(this.getRawDescriptorBytes(), start,
-            forDigest, 0, sig - start);
-        this.certificateDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest))
-            .toLowerCase();
-      }
-    } catch (UnsupportedEncodingException e) {
-      /* Handle below. */
-    } catch (NoSuchAlgorithmException e) {
-      /* Handle below. */
-    }
-    if (this.certificateDigest == null) {
-      throw new DescriptorParseException("Could not calculate "
-          + "certificate digest.");
-    }
-  }
-
   private int dirKeyCertificateVersion;
 
   @Override
@@ -307,16 +277,9 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     return this.dirKeyCertification;
   }
 
-  private String certificateDigest;
-
   @Override
   public String getCertificateDigest() {
     return this.getDigestSha1Hex();
-  }
-
-  @Override
-  public String getDigestSha1Hex() {
-    return this.certificateDigest;
   }
 }
 

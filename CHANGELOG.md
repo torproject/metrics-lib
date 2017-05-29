@@ -7,6 +7,7 @@
    - Simplify and avoid repetition in parse helper methods.
    - Fix a bug where Microdescriptor's getDigestSha256Base64() returns
      a hex string rather than a base64 string.
+   - Move descriptor digest computation to DescriptorImpl.
 
 
 # Changes in version 1.7.0 - 2017-05-17

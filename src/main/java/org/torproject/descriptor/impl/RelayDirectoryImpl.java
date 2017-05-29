@@ -8,16 +8,11 @@ import org.torproject.descriptor.RelayDirectory;
 import org.torproject.descriptor.RouterStatusEntry;
 import org.torproject.descriptor.ServerDescriptor;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-
-import javax.xml.bind.DatatypeConverter;
 
 public class RelayDirectoryImpl extends DescriptorImpl
     implements RelayDirectory {
@@ -43,7 +38,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
       throws DescriptorParseException {
     super(directoryBytes, failUnrecognizedDescriptorLines, true);
     this.splitAndParseParts(rawDescriptorBytes);
-    this.calculateDigest();
+    this.calculateDigestSha1Hex(Key.SIGNED_DIRECTORY.keyword + NL,
+        NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.SIGNED_DIRECTORY, Key.RECOMMENDED_SOFTWARE,
         Key.DIRECTORY_SIGNATURE);
@@ -53,36 +49,6 @@ public class RelayDirectoryImpl extends DescriptorImpl
     this.checkAtMostOnceKeys(atMostOnceKeys);
     this.checkFirstKey(Key.SIGNED_DIRECTORY);
     this.clearParsedKeys();
-  }
-
-  private void calculateDigest() throws DescriptorParseException {
-    try {
-      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = Key.SIGNED_DIRECTORY.keyword + NL;
-      String sigToken = NL + Key.DIRECTORY_SIGNATURE.keyword + SP;
-      if (!ascii.contains(sigToken)) {
-        return;
-      }
-      int start = ascii.indexOf(startToken);
-      int sig = ascii.indexOf(sigToken) + sigToken.length();
-      sig = ascii.indexOf(NL, sig) + 1;
-      if (start >= 0 && sig >= 0 && sig > start) {
-        byte[] forDigest = new byte[sig - start];
-        System.arraycopy(this.getRawDescriptorBytes(), start,
-            forDigest, 0, sig - start);
-        this.directoryDigest = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest))
-            .toLowerCase();
-      }
-    } catch (UnsupportedEncodingException e) {
-      /* Handle below. */
-    } catch (NoSuchAlgorithmException e) {
-      /* Handle below. */
-    }
-    if (this.directoryDigest == null) {
-      throw new DescriptorParseException("Could not calculate v1 "
-          + "directory digest.");
-    }
   }
 
   private void splitAndParseParts(byte[] rawDescriptorBytes)
@@ -553,16 +519,9 @@ public class RelayDirectoryImpl extends DescriptorImpl
     return this.nickname;
   }
 
-  private String directoryDigest;
-
   @Override
   public String getDirectoryDigest() {
     return this.getDigestSha1Hex();
-  }
-
-  @Override
-  public String getDigestSha1Hex() {
-    return this.directoryDigest;
   }
 }
 

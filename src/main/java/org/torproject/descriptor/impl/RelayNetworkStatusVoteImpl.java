@@ -7,9 +7,6 @@ import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DirectorySignature;
 import org.torproject.descriptor.RelayNetworkStatusVote;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -21,7 +18,6 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import javax.xml.bind.DatatypeConverter;
 
 /* Contains a network status vote. */
 public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
@@ -66,36 +62,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.checkAtLeastOnceKeys(EnumSet.of(Key.DIRECTORY_SIGNATURE));
     this.checkFirstKey(Key.NETWORK_STATUS_VERSION);
     this.clearParsedKeys();
-    this.calculateDigest();
-  }
-
-  private void calculateDigest() throws DescriptorParseException {
-    try {
-      String ascii = new String(this.getRawDescriptorBytes(), "US-ASCII");
-      String startToken = "network-status-version ";
-      String sigToken = "\ndirectory-signature ";
-      if (!ascii.contains(sigToken)) {
-        return;
-      }
-      int start = ascii.indexOf(startToken);
-      int sig = ascii.indexOf(sigToken) + sigToken.length();
-      if (start >= 0 && sig >= 0 && sig > start) {
-        byte[] forDigest = new byte[sig - start];
-        System.arraycopy(this.getRawDescriptorBytes(), start,
-            forDigest, 0, sig - start);
-        this.digestSha1Hex = DatatypeConverter.printHexBinary(
-            MessageDigest.getInstance("SHA-1").digest(forDigest))
-            .toLowerCase();
-      }
-    } catch (UnsupportedEncodingException e) {
-      /* Handle below. */
-    } catch (NoSuchAlgorithmException e) {
-      /* Handle below. */
-    }
-    if (this.digestSha1Hex == null) {
-      throw new DescriptorParseException("Could not calculate vote "
-          + "digest.");
-    }
+    this.calculateDigestSha1Hex(Key.NETWORK_STATUS_VERSION.keyword + SP,
+        NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
   }
 
   protected void parseHeader(byte[] headerBytes)
@@ -645,13 +613,6 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         }
       }
     }
-  }
-
-  private String digestSha1Hex;
-
-  @Override
-  public String getDigestSha1Hex() {
-    return this.digestSha1Hex;
   }
 
   private String nickname;
