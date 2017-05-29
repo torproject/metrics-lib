@@ -5,6 +5,8 @@
      and maps to avoid repeating string literals and to use more speedy
      collection types.
    - Simplify and avoid repetition in parse helper methods.
+   - Fix a bug where Microdescriptor's getDigestSha256Base64() returns
+     a hex string rather than a base64 string.
 
 
 # Changes in version 1.7.0 - 2017-05-17

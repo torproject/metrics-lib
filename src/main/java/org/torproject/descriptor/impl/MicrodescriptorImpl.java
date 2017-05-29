@@ -243,9 +243,9 @@ public class MicrodescriptorImpl extends DescriptorImpl
         byte[] forDigest = new byte[end - start];
         System.arraycopy(this.getRawDescriptorBytes(), start,
             forDigest, 0, end - start);
-        this.microdescriptorDigest = DatatypeConverter.printHexBinary(
+        this.microdescriptorDigest = DatatypeConverter.printBase64Binary(
             MessageDigest.getInstance("SHA-256").digest(forDigest))
-            .toLowerCase();
+            .replaceAll("=", "");
       }
     } catch (UnsupportedEncodingException e) {
       /* Handle below. */

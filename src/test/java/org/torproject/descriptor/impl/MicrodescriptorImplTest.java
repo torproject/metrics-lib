@@ -3,6 +3,8 @@
 
 package org.torproject.descriptor.impl;
 
+import static org.junit.Assert.assertEquals;
+
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.Microdescriptor;
 
@@ -57,7 +59,9 @@ public class MicrodescriptorImplTest {
 
   @Test()
   public void testDefaults() throws DescriptorParseException {
-    DescriptorBuilder.createWithDefaultLines();
+    Microdescriptor micro = DescriptorBuilder.createWithDefaultLines();
+    assertEquals("ER1AC4KqT//o3pJDrqlmej5G2qW1EQYEr/IrMQHNc6I",
+        micro.getDigestSha256Base64());
   }
 
   @Test(expected = DescriptorParseException.class)
