@@ -8,7 +8,6 @@ import org.torproject.descriptor.RelayDirectory;
 import org.torproject.descriptor.RouterStatusEntry;
 import org.torproject.descriptor.ServerDescriptor;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -18,27 +17,12 @@ import java.util.Set;
 public class RelayDirectoryImpl extends DescriptorImpl
     implements RelayDirectory {
 
-  protected static List<RelayDirectory> parseDirectories(
-      byte[] directoriesBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<RelayDirectory> parsedDirectories = new ArrayList<>();
-    List<byte[]> splitDirectoriesBytes =
-        DescriptorImpl.splitRawDescriptorBytes(directoriesBytes,
-        Key.SIGNED_DIRECTORY.keyword + NL);
-    for (byte[] directoryBytes : splitDirectoriesBytes) {
-      RelayDirectory parsedDirectory =
-          new RelayDirectoryImpl(directoryBytes,
-          failUnrecognizedDescriptorLines);
-      parsedDirectories.add(parsedDirectory);
-    }
-    return parsedDirectories;
-  }
-
-  protected RelayDirectoryImpl(byte[] directoryBytes,
+  protected RelayDirectoryImpl(byte[] directoryBytes, int[] offsetAndLength,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(directoryBytes, failUnrecognizedDescriptorLines, true);
-    this.splitAndParseParts(rawDescriptorBytes);
+    super(directoryBytes, offsetAndLength, failUnrecognizedDescriptorLines,
+        true);
+    this.splitAndParseParts();
     this.calculateDigestSha1Hex(Key.SIGNED_DIRECTORY.keyword + NL,
         NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
     Set<Key> exactlyOnceKeys = EnumSet.of(
@@ -52,19 +36,12 @@ public class RelayDirectoryImpl extends DescriptorImpl
     this.clearParsedKeys();
   }
 
-  private void splitAndParseParts(byte[] rawDescriptorBytes)
-      throws DescriptorParseException {
-    if (this.rawDescriptorBytes.length == 0) {
-      throw new DescriptorParseException("Descriptor is empty.");
-    }
-    String descriptorString = new String(rawDescriptorBytes,
-        StandardCharsets.US_ASCII);
+  private void splitAndParseParts() throws DescriptorParseException {
     int startIndex = 0;
-    int firstRouterIndex = this.findFirstIndexOfKeyword(descriptorString,
-        Key.ROUTER.keyword);
-    int directorySignatureIndex = this.findFirstIndexOfKeyword(
-        descriptorString, Key.DIRECTORY_SIGNATURE.keyword);
-    int endIndex = descriptorString.length();
+    int firstRouterIndex = this.findFirstIndexOfKey(Key.ROUTER);
+    int directorySignatureIndex = this.findFirstIndexOfKey(
+        Key.DIRECTORY_SIGNATURE);
+    int endIndex = this.offset + this.length;
     if (directorySignatureIndex < 0) {
       directorySignatureIndex = endIndex;
     }
@@ -72,89 +49,39 @@ public class RelayDirectoryImpl extends DescriptorImpl
       firstRouterIndex = directorySignatureIndex;
     }
     if (firstRouterIndex > startIndex) {
-      this.parseHeaderBytes(descriptorString, startIndex,
-          firstRouterIndex);
+      this.parseHeader(startIndex, firstRouterIndex - startIndex);
     }
     if (directorySignatureIndex > firstRouterIndex) {
-      this.parseServerDescriptorBytes(descriptorString, firstRouterIndex,
-          directorySignatureIndex);
+      this.parseServerDescriptors(firstRouterIndex,
+          directorySignatureIndex - firstRouterIndex);
     }
     if (endIndex > directorySignatureIndex) {
-      this.parseDirectorySignatureBytes(descriptorString,
-          directorySignatureIndex, endIndex);
+      this.parseDirectorySignatures(directorySignatureIndex,
+          endIndex - directorySignatureIndex);
     }
   }
 
-  private int findFirstIndexOfKeyword(String descriptorString,
-      String keyword) {
-    if (descriptorString.startsWith(keyword)) {
-      return 0;
-    } else if (descriptorString.contains(NL + keyword + SP)) {
-      return descriptorString.indexOf(NL + keyword + SP) + 1;
-    } else if (descriptorString.contains(NL + keyword + NL)) {
-      return descriptorString.indexOf(NL + keyword + NL) + 1;
-    } else {
-      return -1;
-    }
-  }
-
-  private void parseHeaderBytes(String descriptorString, int start,
-      int end) throws DescriptorParseException {
-    byte[] headerBytes = new byte[end - start];
-    System.arraycopy(this.rawDescriptorBytes, start,
-        headerBytes, 0, end - start);
-    this.parseHeader(headerBytes);
-  }
-
-  private void parseServerDescriptorBytes(String descriptorString,
-      int start, int end) throws DescriptorParseException {
-    List<byte[]> splitServerDescriptorBytes =
-        this.splitByKeyword(descriptorString, Key.ROUTER.keyword, start, end);
-    for (byte[] statusEntryBytes : splitServerDescriptorBytes) {
-      this.parseServerDescriptor(statusEntryBytes);
-    }
-  }
-
-  private void parseDirectorySignatureBytes(String descriptorString,
-      int start, int end) throws DescriptorParseException {
-    List<byte[]> splitDirectorySignatureBytes = this.splitByKeyword(
-        descriptorString, "directory-signature", start, end);
-    for (byte[] directorySignatureBytes : splitDirectorySignatureBytes) {
-      this.parseDirectorySignature(directorySignatureBytes);
-    }
-  }
-
-  private List<byte[]> splitByKeyword(String descriptorString,
-      String keyword, int start, int end) {
-    List<byte[]> splitParts = new ArrayList<>();
-    int from = start;
-    while (from < end) {
-      int to = descriptorString.indexOf(NL + keyword + SP, from);
-      if (to < 0) {
-        to = descriptorString.indexOf(NL + keyword + NL, from);
-      }
-      if (to < 0) {
-        to = end;
-      } else {
-        to += 1;
-      }
-      int toNoNewline = to;
-      while (toNoNewline > from
-          && descriptorString.charAt(toNoNewline - 1) == '\n') {
-        toNoNewline--;
-      }
-      byte[] part = new byte[toNoNewline - from];
-      System.arraycopy(this.rawDescriptorBytes, from, part, 0,
-          toNoNewline - from);
-      from = to;
-      splitParts.add(part);
-    }
-    return splitParts;
-  }
-
-  private void parseHeader(byte[] headerBytes)
+  private void parseServerDescriptors(int offset, int length)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
+    List<int[]> offsetsAndLengths = this.splitByKey(Key.ROUTER, offset, length,
+        true);
+    for (int[] offsetAndLength : offsetsAndLengths) {
+      this.parseServerDescriptor(offsetAndLength[0], offsetAndLength[1]);
+    }
+  }
+
+  private void parseDirectorySignatures(int offset, int length)
+      throws DescriptorParseException {
+    List<int[]> offsetsAndLengths = this.splitByKey(Key.DIRECTORY_SIGNATURE,
+        offset, length, false);
+    for (int[] offsetAndLength : offsetsAndLengths) {
+      this.parseDirectorySignature(offsetAndLength[0], offsetAndLength[1]);
+    }
+  }
+
+  private void parseHeader(int offset, int length)
+      throws DescriptorParseException {
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     String publishedLine = null;
     Key nextCrypto = Key.EMPTY;
     String runningRoutersLine = null;
@@ -263,21 +190,20 @@ public class RelayDirectoryImpl extends DescriptorImpl
     }
   }
 
-  protected void parseServerDescriptor(byte[] serverDescriptorBytes) {
+  protected void parseServerDescriptor(int offset, int length) {
     try {
       ServerDescriptorImpl serverDescriptor =
-          new RelayServerDescriptorImpl(serverDescriptorBytes,
-          this.failUnrecognizedDescriptorLines);
+          new RelayServerDescriptorImpl(this.rawDescriptorBytes,
+          new int[] { offset, length }, this.failUnrecognizedDescriptorLines);
       this.serverDescriptors.add(serverDescriptor);
     } catch (DescriptorParseException e) {
       this.serverDescriptorParseExceptions.add(e);
     }
   }
 
-  private void parseDirectorySignature(byte[] directorySignatureBytes)
+  private void parseDirectorySignature(int offset, int length)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(directorySignatureBytes))
-        .useDelimiter(NL);
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {

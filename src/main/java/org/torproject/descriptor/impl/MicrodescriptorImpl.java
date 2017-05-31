@@ -17,26 +17,11 @@ import java.util.Set;
 public class MicrodescriptorImpl extends DescriptorImpl
     implements Microdescriptor {
 
-  protected static List<Microdescriptor> parseDescriptors(
-      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<Microdescriptor> parsedDescriptors = new ArrayList<>();
-    List<byte[]> splitDescriptorsBytes =
-        DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        Key.ONION_KEY + NL);
-    for (byte[] descriptorBytes : splitDescriptorsBytes) {
-      Microdescriptor parsedDescriptor =
-          new MicrodescriptorImpl(descriptorBytes,
-          failUnrecognizedDescriptorLines);
-      parsedDescriptors.add(parsedDescriptor);
-    }
-    return parsedDescriptors;
-  }
-
-  protected MicrodescriptorImpl(byte[] descriptorBytes,
+  protected MicrodescriptorImpl(byte[] descriptorBytes, int[] offsetAndLength,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, failUnrecognizedDescriptorLines, false);
+    super(descriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
+        false);
     this.parseDescriptorBytes();
     this.calculateDigestSha256Base64(Key.ONION_KEY.keyword + NL);
     this.checkExactlyOnceKeys(EnumSet.of(Key.ONION_KEY));
@@ -49,8 +34,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter(NL);
+    Scanner scanner = this.newScanner().useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {

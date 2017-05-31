@@ -26,6 +26,7 @@ public class TorperfResultImpl extends DescriptorImpl
       throw new DescriptorParseException("Descriptor is empty.");
     }
     List<Descriptor> parsedDescriptors = new ArrayList<>();
+    /* XXX21932 */
     String descriptorString = new String(rawDescriptorBytes);
     Scanner scanner = new Scanner(descriptorString).useDelimiter("\r?\n");
     String typeAnnotation = "";
@@ -44,6 +45,7 @@ public class TorperfResultImpl extends DescriptorImpl
         }
         typeAnnotation = line + "\n";
       } else {
+        /* XXX21932 */
         parsedDescriptors.add(new TorperfResultImpl(
             (typeAnnotation + line).getBytes(),
             failUnrecognizedDescriptorLines));
@@ -56,17 +58,18 @@ public class TorperfResultImpl extends DescriptorImpl
   protected TorperfResultImpl(byte[] rawDescriptorBytes,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
-    this.parseTorperfResultLine(new String(rawDescriptorBytes));
+    super(rawDescriptorBytes, new int[] { 0, rawDescriptorBytes.length },
+        failUnrecognizedDescriptorLines, false);
+    this.parseTorperfResultLine();
   }
 
-  private void parseTorperfResultLine(String inputLine)
+  private void parseTorperfResultLine()
       throws DescriptorParseException {
-    String line = inputLine;
-    while (line.startsWith("@") && line.contains("\n")) {
+    String line = this.newScanner().nextLine();
+    while (null != line && line.startsWith("@") && line.contains("\n")) {
       line = line.split("\n")[1];
     }
-    if (line.isEmpty()) {
+    if (null == line || line.isEmpty()) {
       throw new DescriptorParseException("Blank lines are not allowed.");
     }
     String[] parts = line.split(" ");

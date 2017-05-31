@@ -21,8 +21,9 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
   protected ExitListImpl(byte[] rawDescriptorBytes, String fileName,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
-    this.splitAndParseExitListEntries(rawDescriptorBytes);
+    super(rawDescriptorBytes, new int[] { 0, rawDescriptorBytes.length },
+        failUnrecognizedDescriptorLines, false);
+    this.splitAndParseExitListEntries();
     this.setPublishedMillisFromFileName(fileName);
   }
 
@@ -46,13 +47,9 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
     }
   }
 
-  private void splitAndParseExitListEntries(byte[] rawDescriptorBytes)
+  private void splitAndParseExitListEntries()
       throws DescriptorParseException {
-    if (this.rawDescriptorBytes.length == 0) {
-      throw new DescriptorParseException("Descriptor is empty.");
-    }
-    String descriptorString = new String(rawDescriptorBytes);
-    Scanner scanner = new Scanner(descriptorString).useDelimiter(EOL);
+    Scanner scanner = this.newScanner().useDelimiter(EOL);
     StringBuilder sb = new StringBuilder();
     boolean firstEntry = true;
     while (scanner.hasNext()) {
@@ -73,7 +70,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
           break;
         case "ExitNode":
           if (!firstEntry) {
-            this.parseExitListEntry(sb.toString().getBytes());
+            this.parseExitListEntry(sb.toString());
           } else {
             firstEntry = false;
           }
@@ -102,13 +99,13 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
       }
     }
     /* Parse the last entry. */
-    this.parseExitListEntry(sb.toString().getBytes());
+    this.parseExitListEntry(sb.toString());
   }
 
-  protected void parseExitListEntry(byte[] exitListEntryBytes)
+  protected void parseExitListEntry(String exitListEntryString)
       throws DescriptorParseException {
     ExitListEntryImpl exitListEntry = new ExitListEntryImpl(
-        exitListEntryBytes, this.failUnrecognizedDescriptorLines);
+        exitListEntryString, this.failUnrecognizedDescriptorLines);
     this.exitListEntries.add(exitListEntry);
     this.oldExitListEntries.addAll(exitListEntry.oldEntries());
     List<String> unrecognizedExitListEntryLines = exitListEntry

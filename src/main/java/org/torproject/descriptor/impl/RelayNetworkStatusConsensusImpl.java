@@ -21,27 +21,11 @@ import java.util.TreeSet;
 public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     implements RelayNetworkStatusConsensus {
 
-  protected static List<RelayNetworkStatusConsensus> parseConsensuses(
-      byte[] consensusesBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<RelayNetworkStatusConsensus> parsedConsensuses =
-        new ArrayList<>();
-    List<byte[]> splitConsensusBytes =
-        DescriptorImpl.splitRawDescriptorBytes(consensusesBytes,
-        Key.NETWORK_STATUS_VERSION.keyword + SP + "3");
-    for (byte[] consensusBytes : splitConsensusBytes) {
-      RelayNetworkStatusConsensus parsedConsensus =
-          new RelayNetworkStatusConsensusImpl(consensusBytes,
-              failUnrecognizedDescriptorLines);
-      parsedConsensuses.add(parsedConsensus);
-    }
-    return parsedConsensuses;
-  }
-
   protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes,
-      boolean failUnrecognizedDescriptorLines)
+      int[] offsetAndLimit, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(consensusBytes, failUnrecognizedDescriptorLines, true, false);
+    super(consensusBytes, offsetAndLimit, failUnrecognizedDescriptorLines, true,
+        false);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.VOTE_STATUS, Key.CONSENSUS_METHOD, Key.VALID_AFTER, Key.FRESH_UNTIL,
         Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS);
@@ -59,9 +43,9 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
         NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
   }
 
-  protected void parseHeader(byte[] headerBytes)
+  protected void parseHeader(int offset, int length)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");
@@ -137,10 +121,10 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
 
   private boolean microdescConsensus = false;
 
-  protected void parseStatusEntry(byte[] statusEntryBytes)
+  protected void parseStatusEntry(int offset, int length)
       throws DescriptorParseException {
-    NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
-        statusEntryBytes, this.microdescConsensus,
+    NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(this,
+        offset, length, this.microdescConsensus,
         this.failUnrecognizedDescriptorLines);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
     List<String> unrecognizedStatusEntryLines = statusEntry
@@ -153,9 +137,9 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     }
   }
 
-  protected void parseFooter(byte[] footerBytes)
+  protected void parseFooter(int offset, int length)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(footerBytes)).useDelimiter(NL);
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");

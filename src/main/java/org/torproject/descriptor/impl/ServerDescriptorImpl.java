@@ -34,10 +34,11 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   private static final Set<Key> exactlyOnce = EnumSet.of(
       Key.ROUTER, Key.BANDWIDTH, Key.PUBLISHED);
 
-  protected ServerDescriptorImpl(byte[] descriptorBytes,
+  protected ServerDescriptorImpl(byte[] descriptorBytes, int[] offsetAndLength,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, failUnrecognizedDescriptorLines, false);
+    super(descriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
+        false);
     this.parseDescriptorBytes();
     this.calculateDigestSha1Hex(Key.ROUTER.keyword + SP,
         NL + Key.ROUTER_SIGNATURE.keyword + NL);
@@ -56,8 +57,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter(NL);
+    Scanner scanner = this.newScanner().useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     List<String> cryptoLines = null;
     while (scanner.hasNext()) {

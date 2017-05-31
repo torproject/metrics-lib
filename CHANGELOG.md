@@ -1,5 +1,10 @@
 # Changes in version 1.8.0 - ??
 
+ * Medium changes
+   - Store raw descriptor contents as offset and length into a
+     referenced byte[], rather than copying contents into a separate
+     byte[] per descriptor.
+
  * Minor changes
    - Turn keyword strings into enums and use the appropriate enum sets
      and maps to avoid repeating string literals and to use more speedy

@@ -6,9 +6,7 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.BridgePoolAssignment;
 import org.torproject.descriptor.DescriptorParseException;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -16,26 +14,11 @@ import java.util.TreeMap;
 public class BridgePoolAssignmentImpl extends DescriptorImpl
     implements BridgePoolAssignment {
 
-  protected static List<BridgePoolAssignment> parseDescriptors(
-      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
+  protected BridgePoolAssignmentImpl(byte[] rawDescriptorBytes,
+      int[] offsetAndlength, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    List<BridgePoolAssignment> parsedDescriptors = new ArrayList<>();
-    List<byte[]> splitDescriptorsBytes =
-        DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        Key.BRIDGE_POOL_ASSIGNMENT.keyword + SP);
-    for (byte[] descriptorBytes : splitDescriptorsBytes) {
-      BridgePoolAssignment parsedDescriptor =
-          new BridgePoolAssignmentImpl(descriptorBytes,
-              failUnrecognizedDescriptorLines);
-      parsedDescriptors.add(parsedDescriptor);
-    }
-    return parsedDescriptors;
-  }
-
-  protected BridgePoolAssignmentImpl(byte[] descriptorBytes,
-      boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(descriptorBytes, failUnrecognizedDescriptorLines, false);
+    super(rawDescriptorBytes, offsetAndlength, failUnrecognizedDescriptorLines,
+        false);
     this.parseDescriptorBytes();
     this.checkExactlyOnceKeys(EnumSet.of(Key.BRIDGE_POOL_ASSIGNMENT));
     this.checkFirstKey(Key.BRIDGE_POOL_ASSIGNMENT);
@@ -44,8 +27,7 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter(NL);
+    Scanner scanner = this.newScanner().useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
       if (line.startsWith(Key.BRIDGE_POOL_ASSIGNMENT.keyword + SP)) {

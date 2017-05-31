@@ -8,7 +8,6 @@ import org.torproject.descriptor.DirSourceEntry;
 import org.torproject.descriptor.DirectorySignature;
 import org.torproject.descriptor.NetworkStatusEntry;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
@@ -19,33 +18,25 @@ import java.util.TreeMap;
  * delegate the specific parts to the subclasses. */
 public abstract class NetworkStatusImpl extends DescriptorImpl {
 
-  protected NetworkStatusImpl(byte[] rawDescriptorBytes,
+  protected NetworkStatusImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
       boolean failUnrecognizedDescriptorLines,
       boolean containsDirSourceEntries, boolean blankLinesAllowed)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, failUnrecognizedDescriptorLines,
+    super(rawDescriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
         blankLinesAllowed);
-    this.splitAndParseParts(this.rawDescriptorBytes,
-        containsDirSourceEntries);
+    this.splitAndParseParts(containsDirSourceEntries);
   }
 
-  private void splitAndParseParts(byte[] rawDescriptorBytes,
-      boolean containsDirSourceEntries) throws DescriptorParseException {
-    if (this.rawDescriptorBytes.length == 0) {
-      throw new DescriptorParseException("Descriptor is empty.");
-    }
-    String descriptorString = new String(rawDescriptorBytes,
-        StandardCharsets.US_ASCII);
-    int firstRIndex = this.findFirstIndexOfKeyword(descriptorString,
-        Key.R.keyword);
-    int endIndex = descriptorString.length();
-    int firstDirectorySignatureIndex = this.findFirstIndexOfKeyword(
-        descriptorString, Key.DIRECTORY_SIGNATURE.keyword);
+  private void splitAndParseParts(boolean containsDirSourceEntries)
+      throws DescriptorParseException {
+    int firstRIndex = this.findFirstIndexOfKey(Key.R);
+    int firstDirectorySignatureIndex = this.findFirstIndexOfKey(
+        Key.DIRECTORY_SIGNATURE);
+    int endIndex = this.offset + this.length;
     if (firstDirectorySignatureIndex < 0) {
       firstDirectorySignatureIndex = endIndex;
     }
-    int directoryFooterIndex = this.findFirstIndexOfKeyword(
-        descriptorString, Key.DIRECTORY_FOOTER.keyword);
+    int directoryFooterIndex = this.findFirstIndexOfKey(Key.DIRECTORY_FOOTER);
     if (directoryFooterIndex < 0) {
       directoryFooterIndex = firstDirectorySignatureIndex;
     }
@@ -53,119 +44,64 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       firstRIndex = directoryFooterIndex;
     }
     int firstDirSourceIndex = !containsDirSourceEntries ? -1
-        : this.findFirstIndexOfKeyword(descriptorString,
-        Key.DIR_SOURCE.keyword);
+        : this.findFirstIndexOfKey(Key.DIR_SOURCE);
     if (firstDirSourceIndex < 0) {
       firstDirSourceIndex = firstRIndex;
     }
-    if (firstDirSourceIndex > 0) {
-      this.parseHeaderBytes(descriptorString, 0, firstDirSourceIndex);
+    if (firstDirSourceIndex > this.offset) {
+      this.parseHeader(this.offset, firstDirSourceIndex - this.offset);
     }
     if (firstRIndex > firstDirSourceIndex) {
-      this.parseDirSourceBytes(descriptorString, firstDirSourceIndex,
-          firstRIndex);
+      this.parseDirSources(firstDirSourceIndex, firstRIndex
+          - firstDirSourceIndex);
     }
     if (directoryFooterIndex > firstRIndex) {
-      this.parseStatusEntryBytes(descriptorString, firstRIndex,
-          directoryFooterIndex);
+      this.parseStatusEntries(firstRIndex, directoryFooterIndex - firstRIndex);
     }
     if (firstDirectorySignatureIndex > directoryFooterIndex) {
-      this.parseDirectoryFooterBytes(descriptorString,
-          directoryFooterIndex, firstDirectorySignatureIndex);
+      this.parseFooter(directoryFooterIndex, firstDirectorySignatureIndex
+          - directoryFooterIndex);
     }
     if (endIndex > firstDirectorySignatureIndex) {
-      this.parseDirectorySignatureBytes(descriptorString,
-          firstDirectorySignatureIndex, endIndex);
+      this.parseDirectorySignatures(firstDirectorySignatureIndex,
+          endIndex - firstDirectorySignatureIndex);
     }
   }
 
-  private int findFirstIndexOfKeyword(String descriptorString,
-      String keyword) {
-    if (descriptorString.startsWith(keyword)) {
-      return 0;
-    } else if (descriptorString.contains(NL + keyword + SP)) {
-      return descriptorString.indexOf(NL + keyword + SP) + 1;
-    } else if (descriptorString.contains(NL + keyword + NL)) {
-      return descriptorString.indexOf(NL + keyword + NL) + 1;
-    } else {
-      return -1;
+  private void parseDirSources(int offset, int length)
+      throws DescriptorParseException {
+    List<int[]> offsetsAndLengths = this.splitByKey(Key.DIR_SOURCE, offset,
+        length, false);
+    for (int[] offsetAndLength : offsetsAndLengths) {
+      this.parseDirSource(offsetAndLength[0], offsetAndLength[1]);
     }
   }
 
-  private void parseHeaderBytes(String descriptorString, int start,
-      int end) throws DescriptorParseException {
-    byte[] headerBytes = new byte[end - start];
-    System.arraycopy(this.rawDescriptorBytes, start,
-        headerBytes, 0, end - start);
-    this.parseHeader(headerBytes);
-  }
-
-  private void parseDirSourceBytes(String descriptorString, int start,
-      int end) throws DescriptorParseException {
-    List<byte[]> splitDirSourceBytes =
-        this.splitByKeyword(
-            descriptorString, Key.DIR_SOURCE.keyword, start, end);
-    for (byte[] dirSourceBytes : splitDirSourceBytes) {
-      this.parseDirSource(dirSourceBytes);
+  private void parseStatusEntries(int offset, int length)
+      throws DescriptorParseException {
+    List<int[]> offsetsAndLengths = this.splitByKey(Key.R, offset, length,
+        false);
+    for (int[] offsetAndLength : offsetsAndLengths) {
+      this.parseStatusEntry(offsetAndLength[0], offsetAndLength[1]);
     }
   }
 
-  private void parseStatusEntryBytes(String descriptorString, int start,
-      int end) throws DescriptorParseException {
-    List<byte[]> splitStatusEntryBytes =
-        this.splitByKeyword(descriptorString, Key.R.keyword, start, end);
-    for (byte[] statusEntryBytes : splitStatusEntryBytes) {
-      this.parseStatusEntry(statusEntryBytes);
+  private void parseDirectorySignatures(int offset, int length)
+      throws DescriptorParseException {
+    List<int[]> offsetsAndLengths = this.splitByKey(Key.DIRECTORY_SIGNATURE,
+        offset, length, false);
+    for (int[] offsetAndLength : offsetsAndLengths) {
+      this.parseDirectorySignature(offsetAndLength[0], offsetAndLength[1]);
     }
   }
 
-  private void parseDirectoryFooterBytes(String descriptorString,
-      int start, int end) throws DescriptorParseException {
-    byte[] directoryFooterBytes = new byte[end - start];
-    System.arraycopy(this.rawDescriptorBytes, start,
-        directoryFooterBytes, 0, end - start);
-    this.parseFooter(directoryFooterBytes);
-  }
-
-  private void parseDirectorySignatureBytes(String descriptorString,
-      int start, int end) throws DescriptorParseException {
-    List<byte[]> splitDirectorySignatureBytes = this.splitByKeyword(
-        descriptorString, Key.DIRECTORY_SIGNATURE.keyword, start, end);
-    for (byte[] directorySignatureBytes : splitDirectorySignatureBytes) {
-      this.parseDirectorySignature(directorySignatureBytes);
-    }
-  }
-
-  private List<byte[]> splitByKeyword(String descriptorString,
-      String keyword, int start, int end) {
-    List<byte[]> splitParts = new ArrayList<>();
-    int from = start;
-    while (from < end) {
-      int to = descriptorString.indexOf(NL + keyword + SP, from);
-      if (to < 0) {
-        to = descriptorString.indexOf(NL + keyword + NL, from);
-      }
-      if (to < 0) {
-        to = end;
-      } else {
-        to += 1;
-      }
-      byte[] part = new byte[to - from];
-      System.arraycopy(this.rawDescriptorBytes, from, part, 0,
-          to - from);
-      from = to;
-      splitParts.add(part);
-    }
-    return splitParts;
-  }
-
-  protected abstract void parseHeader(byte[] headerBytes)
+  protected abstract void parseHeader(int offset, int length)
       throws DescriptorParseException;
 
-  protected void parseDirSource(byte[] dirSourceBytes)
+  protected void parseDirSource(int offset, int length)
       throws DescriptorParseException {
     DirSourceEntryImpl dirSourceEntry = new DirSourceEntryImpl(
-        dirSourceBytes, this.failUnrecognizedDescriptorLines);
+        this, offset, length, this.failUnrecognizedDescriptorLines);
     this.dirSourceEntries.put(dirSourceEntry.getIdentity(),
         dirSourceEntry);
     List<String> unrecognizedDirSourceLines = dirSourceEntry
@@ -201,10 +137,10 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     return result;
   }
 
-  protected void parseStatusEntry(byte[] statusEntryBytes)
+  protected void parseStatusEntry(int offset, int length)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
-        statusEntryBytes, false, this.failUnrecognizedDescriptorLines);
+        this, offset, length, false, this.failUnrecognizedDescriptorLines);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
     List<String> unrecognizedStatusEntryLines = statusEntry
         .getAndClearUnrecognizedLines();
@@ -216,16 +152,16 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
     }
   }
 
-  protected abstract void parseFooter(byte[] footerBytes)
+  protected abstract void parseFooter(int offset, int length)
       throws DescriptorParseException;
 
-  protected void parseDirectorySignature(byte[] directorySignatureBytes)
+  protected void parseDirectorySignature(int offset, int length)
       throws DescriptorParseException {
     if (this.signatures == null) {
       this.signatures = new ArrayList<>();
     }
     DirectorySignatureImpl signature = new DirectorySignatureImpl(
-        directorySignatureBytes, failUnrecognizedDescriptorLines);
+        this, offset, length, failUnrecognizedDescriptorLines);
     this.signatures.add(signature);
     List<String> unrecognizedStatusEntryLines = signature
         .getAndClearUnrecognizedLines();

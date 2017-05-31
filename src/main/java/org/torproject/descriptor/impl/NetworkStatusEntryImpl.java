@@ -24,11 +24,18 @@ import java.util.TreeSet;
 
 public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
-  private byte[] statusEntryBytes;
+  private DescriptorImpl parent;
+
+  private int offset;
+
+  private int length;
 
   @Override
   public byte[] getStatusEntryBytes() {
-    return this.statusEntryBytes;
+    /* We need to pass this.offset and this.length, because the overloaded
+     * method without arguments would use this.parent.offset and
+     * this.parent.length as bounds, which is not what we want! */
+    return this.parent.getRawDescriptorBytes(this.offset, this.length);
   }
 
   private boolean microdescConsensus;
@@ -43,10 +50,12 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     return lines;
   }
 
-  protected NetworkStatusEntryImpl(byte[] statusEntryBytes,
-      boolean microdescConsensus, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    this.statusEntryBytes = statusEntryBytes;
+  protected NetworkStatusEntryImpl(DescriptorImpl parent, int offset,
+      int length, boolean microdescConsensus,
+      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+    this.parent = parent;
+    this.offset = offset;
+    this.length = length;
     this.microdescConsensus = microdescConsensus;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
@@ -67,7 +76,10 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private void parseStatusEntryBytes() throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.statusEntryBytes))
+    /* We need to pass this.offset and this.length, because the overloaded
+     * method without arguments would use this.parent.offset and
+     * this.parent.length as bounds, which is not what we want! */
+    Scanner scanner = this.parent.newScanner(this.offset, this.length)
         .useDelimiter(NL);
     String line = null;
     if (!scanner.hasNext() || !(line = scanner.next()).startsWith("r ")) {

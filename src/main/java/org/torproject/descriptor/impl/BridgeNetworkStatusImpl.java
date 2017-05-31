@@ -18,10 +18,11 @@ import java.util.TimeZone;
 public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     implements BridgeNetworkStatus {
 
-  protected BridgeNetworkStatusImpl(byte[] statusBytes,
-      String fileName, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(statusBytes, failUnrecognizedDescriptorLines, false, false);
+  protected BridgeNetworkStatusImpl(byte[] rawDescriptorBytes,
+      int[] offsetAndLength, String fileName,
+      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+    super(rawDescriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
+        false, false);
     this.setPublishedMillisFromFileName(fileName);
   }
 
@@ -55,7 +56,7 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     }
   }
 
-  protected void parseHeader(byte[] headerBytes)
+  protected void parseHeader(int offset, int length)
       throws DescriptorParseException {
     /* Initialize flag-thresholds values here for the case that the status
      * doesn't contain those values.  Initializing them in the constructor
@@ -71,7 +72,7 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     this.enoughMtbfInfo = -1;
     this.ignoringAdvertisedBws = -1;
 
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
       String[] parts = line.split("[ \t]+");
@@ -154,19 +155,19 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     }
   }
 
-  protected void parseDirSource(byte[] dirSourceBytes)
+  protected void parseDirSource(int offset, int length)
       throws DescriptorParseException {
     throw new DescriptorParseException("No directory source expected in "
         + "bridge network status.");
   }
 
-  protected void parseFooter(byte[] footerBytes)
+  protected void parseFooter(int offset, int length)
       throws DescriptorParseException {
     throw new DescriptorParseException("No directory footer expected in "
         + "bridge network status.");
   }
 
-  protected void parseDirectorySignature(byte[] directorySignatureBytes)
+  protected void parseDirectorySignature(int offset, int length)
       throws DescriptorParseException {
     throw new DescriptorParseException("No directory signature expected "
         + "in bridge network status.");

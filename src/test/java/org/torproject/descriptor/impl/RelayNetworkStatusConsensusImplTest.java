@@ -38,8 +38,7 @@ public class RelayNetworkStatusConsensusImplTest {
         throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.dirSources.add(dirSourceString);
-      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
-          true);
+      return cb.buildConsensus(true);
     }
 
     private String nickname = "gabelmoo";
@@ -152,8 +151,7 @@ public class RelayNetworkStatusConsensusImplTest {
         throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.statusEntries.add(statusEntryString);
-      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
-          true);
+      return cb.buildConsensus(true);
     }
 
     private String nickname = "right2privassy3";
@@ -311,8 +309,7 @@ public class RelayNetworkStatusConsensusImplTest {
         throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.addDirectorySignature(directorySignatureString);
-      return new RelayNetworkStatusConsensusImpl(cb.buildConsensus(),
-          true);
+      return cb.buildConsensus(true);
     }
 
     private String identity = "ED03BB616EB2F60BEC80151114BB25CEF515B226";
@@ -353,8 +350,7 @@ public class RelayNetworkStatusConsensusImplTest {
   @Test()
   public void testSampleConsensus() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
-    RelayNetworkStatusConsensus consensus =
-        new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
     assertEquals(3, consensus.getNetworkStatusVersion());
     assertEquals(11, consensus.getConsensusMethod());
     assertEquals(1322643600000L, consensus.getValidAfterMillis());
@@ -636,8 +632,7 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.clientVersionsLine = null;
     cb.serverVersionsLine = null;
-    RelayNetworkStatusConsensus consensus =
-        new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
     assertNull(consensus.getRecommendedClientVersions());
     assertNull(consensus.getRecommendedServerVersions());
   }
@@ -1103,7 +1098,7 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.sLine = sb.sLine + "\n" + sb.sLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    cb.buildConsensus(true);
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1112,7 +1107,7 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.prLine = sb.prLine + "\n" + sb.prLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    cb.buildConsensus(true);
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1136,7 +1131,7 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.wLine = sb.wLine + "\n" + sb.wLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    cb.buildConsensus(true);
   }
 
   @Test()
@@ -1145,8 +1140,7 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.wLine = "w Bandwidth=42424242 Unmeasured=1";
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    RelayNetworkStatusConsensus consensus =
-        new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
     for (NetworkStatusEntry s : consensus.getStatusEntries().values()) {
       if (s.getBandwidth() == 42424242L) {
         assertTrue(s.getUnmeasured());
@@ -1189,15 +1183,14 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.pLine = sb.pLine + "\n" + sb.pLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    cb.buildConsensus(true);
   }
 
   @Test()
   public void testNoStatusEntries() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.clear();
-    RelayNetworkStatusConsensus consensus =
-        new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
     assertFalse(consensus.containsStatusEntry(
         "00795A6E8D91C270FC23B30F388A495553E01894"));
   }
@@ -1218,8 +1211,7 @@ public class RelayNetworkStatusConsensusImplTest {
     cb.setBandwidthWeightsLine(null);
     /* This does not break, because directory footers were optional before
      * consensus method 9. */
-    RelayNetworkStatusConsensus consensus =
-        new RelayNetworkStatusConsensusImpl(cb.buildConsensus(), true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
     assertNull(consensus.getBandwidthWeights());
   }
 
@@ -1305,9 +1297,10 @@ public class RelayNetworkStatusConsensusImplTest {
   @Test(expected = DescriptorParseException.class)
   public void testNonAsciiByte20() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
-    byte[] consensusBytes = cb.buildConsensus();
+    byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[20] = (byte) 200;
-    new RelayNetworkStatusConsensusImpl(consensusBytes, true);
+    new RelayNetworkStatusConsensusImpl(consensusBytes,
+        new int[] { 0, consensusBytes.length }, true);
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1315,9 +1308,10 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.networkStatusVersionLine = "Xnetwork-status-version 3";
-    byte[] consensusBytes = cb.buildConsensus();
+    byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[0] = (byte) 200;
-    new RelayNetworkStatusConsensusImpl(consensusBytes, true);
+    new RelayNetworkStatusConsensusImpl(consensusBytes,
+        new int[] { 0, consensusBytes.length }, true);
   }
 
   @Test(expected = DescriptorParseException.class)

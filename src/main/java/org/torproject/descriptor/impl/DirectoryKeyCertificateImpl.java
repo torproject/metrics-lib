@@ -8,33 +8,17 @@ import org.torproject.descriptor.DirectoryKeyCertificate;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
 public class DirectoryKeyCertificateImpl extends DescriptorImpl
     implements DirectoryKeyCertificate {
 
-  protected static List<DirectoryKeyCertificate> parseDescriptors(
-      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<DirectoryKeyCertificate> parsedDescriptors = new ArrayList<>();
-    List<byte[]> splitDescriptorsBytes =
-        DirectoryKeyCertificateImpl.splitRawDescriptorBytes(
-            descriptorsBytes, Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP);
-    for (byte[] descriptorBytes : splitDescriptorsBytes) {
-      DirectoryKeyCertificate parsedDescriptor =
-          new DirectoryKeyCertificateImpl(descriptorBytes,
-          failUnrecognizedDescriptorLines);
-      parsedDescriptors.add(parsedDescriptor);
-    }
-    return parsedDescriptors;
-  }
-
   protected DirectoryKeyCertificateImpl(byte[] rawDescriptorBytes,
-      boolean failUnrecognizedDescriptorLines)
+      int[] offsetAndLength, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, failUnrecognizedDescriptorLines, false);
+    super(rawDescriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
+        false);
     this.parseDescriptorBytes();
     this.calculateDigestSha1Hex(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP,
         NL + Key.DIR_KEY_CERTIFICATION.keyword + NL);
@@ -52,8 +36,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter(NL);
+    Scanner scanner = this.newScanner().useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {

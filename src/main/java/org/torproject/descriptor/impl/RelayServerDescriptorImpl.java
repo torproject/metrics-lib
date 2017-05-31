@@ -5,34 +5,14 @@ package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.RelayServerDescriptor;
-import org.torproject.descriptor.ServerDescriptor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RelayServerDescriptorImpl extends ServerDescriptorImpl
     implements RelayServerDescriptor {
 
-  protected static List<ServerDescriptor> parseDescriptors(
-      byte[] descriptorsBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<ServerDescriptor> parsedDescriptors = new ArrayList<>();
-    List<byte[]> splitDescriptorsBytes =
-        DescriptorImpl.splitRawDescriptorBytes(descriptorsBytes,
-        Key.ROUTER.keyword + SP);
-    for (byte[] descriptorBytes : splitDescriptorsBytes) {
-      ServerDescriptor parsedDescriptor =
-          new RelayServerDescriptorImpl(descriptorBytes,
-          failUnrecognizedDescriptorLines);
-      parsedDescriptors.add(parsedDescriptor);
-    }
-    return parsedDescriptors;
-  }
-
   protected RelayServerDescriptorImpl(byte[] descriptorBytes,
-      boolean failUnrecognizedDescriptorLines)
+      int[] offsetAndLength, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, failUnrecognizedDescriptorLines);
+    super(descriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines);
   }
 }
 

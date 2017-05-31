@@ -6,7 +6,7 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 
-import java.io.UnsupportedEncodingException;
+import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,162 +25,146 @@ public abstract class DescriptorImpl implements Descriptor {
 
   public static final String SP = " ";
 
-  protected static List<Descriptor> parseDescriptors(
-      byte[] rawDescriptorBytes, String fileName,
-      boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<Descriptor> parsedDescriptors = new ArrayList<>();
-    if (rawDescriptorBytes == null) {
-      return parsedDescriptors;
-    }
-    byte[] first100Chars = new byte[Math.min(100,
-        rawDescriptorBytes.length)];
-    System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,
-        first100Chars.length);
-    String firstLines = new String(first100Chars);
-    if (firstLines.startsWith("@type network-status-consensus-3 1.")
-        || firstLines.startsWith(
-            "@type network-status-microdesc-consensus-3 1.")
-        || ((firstLines.startsWith(
-            Key.NETWORK_STATUS_VERSION.keyword + SP + "3")
-        || firstLines.contains(
-            NL + Key.NETWORK_STATUS_VERSION.keyword + SP + "3"))
-        && firstLines.contains(
-            NL + Key.VOTE_STATUS.keyword + SP + "consensus" + NL))) {
-      parsedDescriptors.addAll(RelayNetworkStatusConsensusImpl
-          .parseConsensuses(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type network-status-vote-3 1.")
-        || ((firstLines.startsWith(
-            Key.NETWORK_STATUS_VERSION.keyword + SP + "3" + NL)
-        || firstLines.contains(
-            NL + Key.NETWORK_STATUS_VERSION.keyword + SP + "3" + NL))
-        && firstLines.contains(
-            NL + Key.VOTE_STATUS.keyword + SP + "vote" + NL))) {
-      parsedDescriptors.addAll(RelayNetworkStatusVoteImpl
-          .parseVotes(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type bridge-network-status 1.")
-        || firstLines.startsWith(Key.R.keyword + SP)) {
-      parsedDescriptors.add(new BridgeNetworkStatusImpl(
-          rawDescriptorBytes, fileName, failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type bridge-server-descriptor 1.")) {
-      parsedDescriptors.addAll(BridgeServerDescriptorImpl
-          .parseDescriptors(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type server-descriptor 1.")
-        || firstLines.startsWith(Key.ROUTER.keyword + SP)
-        || firstLines.contains(NL + Key.ROUTER.keyword + SP)) {
-      parsedDescriptors.addAll(RelayServerDescriptorImpl
-          .parseDescriptors(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type bridge-extra-info 1.")) {
-      parsedDescriptors.addAll(BridgeExtraInfoDescriptorImpl
-          .parseDescriptors(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type extra-info 1.")
-        || firstLines.startsWith(Key.EXTRA_INFO.keyword + SP)
-        || firstLines.contains(NL + Key.EXTRA_INFO.keyword + SP)) {
-      parsedDescriptors.addAll(RelayExtraInfoDescriptorImpl
-          .parseDescriptors(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type microdescriptor 1.")
-        || firstLines.startsWith(Key.ONION_KEY.keyword + NL)
-        || firstLines.contains(NL + Key.ONION_KEY.keyword + NL)) {
-      parsedDescriptors.addAll(MicrodescriptorImpl
-          .parseDescriptors(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type bridge-pool-assignment 1.")
-        || firstLines.startsWith(Key.BRIDGE_POOL_ASSIGNMENT.keyword + SP)
-        || firstLines.contains(NL + Key.BRIDGE_POOL_ASSIGNMENT.keyword + SP)) {
-      parsedDescriptors.addAll(BridgePoolAssignmentImpl
-          .parseDescriptors(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type dir-key-certificate-3 1.")
-        || firstLines.startsWith(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP)
-        || firstLines.contains(
-            NL + Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP)) {
-      parsedDescriptors.addAll(DirectoryKeyCertificateImpl
-          .parseDescriptors(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type tordnsel 1.")
-        || firstLines.startsWith("ExitNode" + SP)
-        || firstLines.contains(NL + "ExitNode" + SP)) {
-      parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, fileName,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type network-status-2 1.")
-        || firstLines.startsWith(
-            Key.NETWORK_STATUS_VERSION.keyword + SP + "2" + NL)
-        || firstLines.contains(
-            NL + Key.NETWORK_STATUS_VERSION.keyword + SP + "2" + NL)) {
-      parsedDescriptors.add(new RelayNetworkStatusImpl(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type directory 1.")
-        || firstLines.startsWith(Key.SIGNED_DIRECTORY.keyword + NL)
-        || firstLines.contains(NL + Key.SIGNED_DIRECTORY.keyword + NL)) {
-      parsedDescriptors.add(new RelayDirectoryImpl(rawDescriptorBytes,
-          failUnrecognizedDescriptorLines));
-    } else if (firstLines.startsWith("@type torperf 1.")) {
-      parsedDescriptors.addAll(TorperfResultImpl.parseTorperfResults(
-          rawDescriptorBytes, failUnrecognizedDescriptorLines));
-    } else {
-      throw new DescriptorParseException("Could not detect descriptor "
-          + "type in descriptor starting with '" + firstLines + "'.");
-    }
-    return parsedDescriptors;
-  }
-
-  protected static List<byte[]> splitRawDescriptorBytes(
-      byte[] rawDescriptorBytes, String startToken) {
-    List<byte[]> rawDescriptors = new ArrayList<>();
-    String splitToken = NL + startToken;
-    String ascii;
-    try {
-      ascii = new String(rawDescriptorBytes, "US-ASCII");
-    } catch (UnsupportedEncodingException e) {
-      return rawDescriptors;
-    }
-    int endAllDescriptors = rawDescriptorBytes.length;
-    int startAnnotations = 0;
-    boolean containsAnnotations = ascii.startsWith("@")
-        || ascii.contains(NL + "@");
-    while (startAnnotations < endAllDescriptors) {
-      int startDescriptor;
-      if (ascii.indexOf(startToken, startAnnotations) == 0) {
-        startDescriptor = startAnnotations;
-      } else {
-        startDescriptor = ascii.indexOf(splitToken, startAnnotations - 1);
-        if (startDescriptor < 0) {
-          break;
-        } else {
-          startDescriptor += 1;
-        }
-      }
-      int endDescriptor = -1;
-      if (containsAnnotations) {
-        endDescriptor = ascii.indexOf(NL + "@", startDescriptor);
-      }
-      if (endDescriptor < 0) {
-        endDescriptor = ascii.indexOf(splitToken, startDescriptor);
-      }
-      if (endDescriptor < 0) {
-        endDescriptor = endAllDescriptors - 1;
-      }
-      endDescriptor += 1;
-      byte[] rawDescriptor = new byte[endDescriptor - startAnnotations];
-      System.arraycopy(rawDescriptorBytes, startAnnotations,
-          rawDescriptor, 0, endDescriptor - startAnnotations);
-      startAnnotations = endDescriptor;
-      rawDescriptors.add(rawDescriptor);
-    }
-    return rawDescriptors;
-  }
-
   protected byte[] rawDescriptorBytes;
 
+  /**
+   * The index of the first byte of this descriptor in
+   * {@link #rawDescriptorBytes} which may contain more than just one
+   * descriptor.
+   */
+  protected int offset;
+
+  /**
+   * The number of bytes of this descriptor in {@link #rawDescriptorBytes} which
+   * may contain more than just one descriptor.
+   */
+  protected int length;
+
+  /**
+   * Returns a <emph>copy</emph> of the full raw descriptor bytes.
+   *
+   * <p>If possible, subclasses should avoid retrieving raw descriptor bytes and
+   * converting them to a String themselves and instead rely on
+   * {@link #newScanner()} and related methods to parse the descriptor.</p>
+   *
+   * @return Copy of the full raw descriptor bytes.
+   */
   @Override
   public byte[] getRawDescriptorBytes() {
-    return this.rawDescriptorBytes;
+    return this.getRawDescriptorBytes(this.offset, this.length);
+  }
+
+  /**
+   * Returns a <emph>copy</emph> of raw descriptor bytes starting at
+   * <code>offset</code> and containing <code>length</code> bytes.
+   *
+   * <p>If possible, subclasses should avoid retrieving raw descriptor bytes and
+   * converting them to a String themselves and instead rely on
+   * {@link #newScanner()} and related methods to parse the descriptor.</p>
+   *
+   * @param offset The index of the first byte to include.
+   * @param length The number of bytes to include.
+   * @return Copy of the given raw descriptor bytes.
+   */
+  protected byte[] getRawDescriptorBytes(int offset, int length) {
+    if (offset < this.offset || offset + length > this.offset + this.length
+        || length < 0) {
+      throw new IndexOutOfBoundsException("offset=" + offset + " length="
+          + length + " this.offset=" + this.offset + " this.length="
+          + this.length);
+    }
+    byte[] result = new byte[length];
+    System.arraycopy(this.rawDescriptorBytes, offset, result, 0, length);
+    return result;
+  }
+
+  /**
+   * Returns a new {@link Scanner} for parsing the full raw descriptor starting
+   * using the platform's default charset.
+   *
+   * @return Scanner for the full raw descriptor bytes.
+   */
+  protected Scanner newScanner() {
+    return this.newScanner(this.offset, this.length);
+  }
+
+  /**
+   * Returns a new {@link Scanner} for parsing the raw descriptor starting at
+   * byte <code>offset</code> containing <code>length</code> bytes using the
+   * platform's default charset.
+   *
+   * @param offset The index of the first byte to parse.
+   * @param length The number of bytes to parse.
+   * @return Scanner for the given raw descriptor bytes.
+   */
+  protected Scanner newScanner(int offset, int length) {
+    /* XXX21932 */
+    return new Scanner(new ByteArrayInputStream(this.rawDescriptorBytes, offset,
+        length));
+  }
+
+  /**
+   * Returns the index within the raw descriptor of the first occurrence of the
+   * given <code>key</code>, or <code>-1</code> if the key is not contained.
+   *
+   * @param key Key to search for.
+   * @return Index of the first occurrence, or -1.
+   */
+  protected int findFirstIndexOfKey(Key key) {
+    String ascii = new String(this.rawDescriptorBytes, this.offset, this.length,
+        StandardCharsets.US_ASCII);
+    if (ascii.startsWith(key.keyword + SP)
+        || ascii.startsWith(key.keyword + NL)) {
+      return this.offset;
+    }
+    int keywordIndex = ascii.indexOf(NL + key.keyword + SP);
+    if (keywordIndex < 0) {
+      keywordIndex = ascii.indexOf(NL + key.keyword + NL);
+    }
+    if (keywordIndex < 0) {
+      return -1;
+    } else {
+      return this.offset + keywordIndex + 1;
+    }
+  }
+
+  /**
+   * Returns a list of two-element arrays containing offsets and lengths of
+   * descriptors starting with the given <code>key</code> in the raw descriptor
+   * starting at byte <code>offset</code> containing <code>length</code> bytes.
+   *
+   * @param key Key to search for.
+   * @param offset The index of the first byte to split.
+   * @param length The number of bytes to split.
+   * @param truncateTrailingNewlines Whether trailing newlines shall be
+   *      truncated.
+   * @return List of two-element arrays containing offsets and lengths.
+   */
+  protected List<int[]> splitByKey(Key key, int offset, int length,
+      boolean truncateTrailingNewlines) {
+    List<int[]> splitParts = new ArrayList<>();
+    String ascii = new String(this.rawDescriptorBytes, offset, length,
+        StandardCharsets.US_ASCII);
+    int from = 0;
+    while (from < length) {
+      int to = ascii.indexOf(NL + key.keyword + SP, from);
+      if (to < 0) {
+        to = ascii.indexOf(NL + key.keyword + NL, from);
+      }
+      if (to < 0) {
+        to = length;
+      } else {
+        to += 1;
+      }
+      int toNoNewline = to;
+      while (truncateTrailingNewlines && toNoNewline > from
+          && ascii.charAt(toNoNewline - 1) == '\n') {
+        toNoNewline--;
+      }
+      splitParts.add(new int[] { offset + from, toNoNewline - from });
+      from = to;
+    }
+    return splitParts;
   }
 
   protected boolean failUnrecognizedDescriptorLines = false;
@@ -193,23 +177,33 @@ public abstract class DescriptorImpl implements Descriptor {
         : new ArrayList<>(this.unrecognizedLines);
   }
 
-  protected DescriptorImpl(byte[] rawDescriptorBytes,
+  protected DescriptorImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
       boolean failUnrecognizedDescriptorLines, boolean blankLinesAllowed)
       throws DescriptorParseException {
+    int offset = offsetAndLength[0];
+    int length = offsetAndLength[1];
+    if (offset < 0 || offset + length > rawDescriptorBytes.length
+        || length < 0) {
+      throw new IndexOutOfBoundsException("Invalid bounds: "
+          + "rawDescriptorBytes.length=" + rawDescriptorBytes.length
+          + " offset=" + offset + " length=" + length);
+    }
     this.rawDescriptorBytes = rawDescriptorBytes;
+    this.offset = offset;
+    this.length = length;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
-    this.cutOffAnnotations(rawDescriptorBytes);
+    this.cutOffAnnotations();
     this.countKeys(rawDescriptorBytes, blankLinesAllowed);
   }
 
   /* Parse annotation lines from the descriptor bytes. */
   private List<String> annotations = new ArrayList<>();
 
-  private void cutOffAnnotations(byte[] rawDescriptorBytes)
-      throws DescriptorParseException {
-    String ascii = new String(rawDescriptorBytes);
+  private void cutOffAnnotations() throws DescriptorParseException {
     int start = 0;
+    String ascii = new String(this.getRawDescriptorBytes(),
+        StandardCharsets.US_ASCII);
     while ((start == 0 && ascii.startsWith("@"))
         || (start > 0 && ascii.indexOf(NL + "@", start - 1) >= 0)) {
       int end = ascii.indexOf(NL, start);
@@ -220,13 +214,8 @@ public abstract class DescriptorImpl implements Descriptor {
       this.annotations.add(ascii.substring(start, end));
       start = end + 1;
     }
-    if (start > 0) {
-      int length = rawDescriptorBytes.length;
-      byte[] rawDescriptor = new byte[length - start];
-      System.arraycopy(rawDescriptorBytes, start, rawDescriptor, 0,
-          length - start);
-      this.rawDescriptorBytes = rawDescriptor;
-    }
+    this.offset += start;
+    this.length -= start;
   }
 
   @Override
@@ -246,16 +235,13 @@ public abstract class DescriptorImpl implements Descriptor {
     if (rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
-    String descriptorString = new String(rawDescriptorBytes);
-    if (!blankLinesAllowed && (descriptorString.startsWith(NL)
-        || descriptorString.contains(NL + NL))) {
-      throw new DescriptorParseException("Blank lines are not allowed.");
-    }
     boolean skipCrypto = false;
-    Scanner scanner = new Scanner(descriptorString).useDelimiter(NL);
+    Scanner scanner = this.newScanner().useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
-      if (line.startsWith(Key.CRYPTO_BEGIN.keyword)) {
+      if (line.isEmpty() && !blankLinesAllowed) {
+        throw new DescriptorParseException("Blank lines are not allowed.");
+      } else if (line.startsWith(Key.CRYPTO_BEGIN.keyword)) {
         skipCrypto = true;
       } else if (line.startsWith(Key.CRYPTO_END.keyword)) {
         skipCrypto = false;
@@ -368,8 +354,8 @@ public abstract class DescriptorImpl implements Descriptor {
   protected void calculateDigestSha1Hex(String startToken, String endToken)
       throws DescriptorParseException {
     if (null == this.digestSha1Hex) {
-      String ascii = new String(this.rawDescriptorBytes,
-          StandardCharsets.US_ASCII);
+      String ascii = new String(this.rawDescriptorBytes, this.offset,
+          this.length, StandardCharsets.US_ASCII);
       int start = ascii.indexOf(startToken);
       int end = -1;
       if (null == endToken) {
@@ -378,12 +364,10 @@ public abstract class DescriptorImpl implements Descriptor {
         end = ascii.indexOf(endToken) + endToken.length();
       }
       if (start >= 0 && end >= 0 && end > start) {
-        byte[] forDigest = new byte[end - start];
-        System.arraycopy(this.rawDescriptorBytes, start, forDigest, 0,
-            end - start);
         try {
-          this.digestSha1Hex = DatatypeConverter.printHexBinary(
-              MessageDigest.getInstance("SHA-1").digest(forDigest))
+          MessageDigest md = MessageDigest.getInstance("SHA-1");
+          md.update(this.rawDescriptorBytes, this.offset + start, end - start);
+          this.digestSha1Hex = DatatypeConverter.printHexBinary(md.digest())
               .toLowerCase();
         } catch (NoSuchAlgorithmException e) {
           /* Handle below. */
@@ -409,8 +393,8 @@ public abstract class DescriptorImpl implements Descriptor {
   protected void calculateDigestSha256Base64(String startToken,
       String endToken) throws DescriptorParseException {
     if (null == this.digestSha256Base64) {
-      String ascii = new String(this.rawDescriptorBytes,
-          StandardCharsets.US_ASCII);
+      String ascii = new String(this.rawDescriptorBytes, this.offset,
+          this.length, StandardCharsets.US_ASCII);
       int start = ascii.indexOf(startToken);
       int end = -1;
       if (null == endToken) {
@@ -419,13 +403,11 @@ public abstract class DescriptorImpl implements Descriptor {
         end = ascii.indexOf(endToken) + endToken.length();
       }
       if (start >= 0 && end >= 0 && end > start) {
-        byte[] forDigest = new byte[end - start];
-        System.arraycopy(this.rawDescriptorBytes, start, forDigest, 0,
-            end - start);
         try {
+          MessageDigest md = MessageDigest.getInstance("SHA-256");
+          md.update(this.rawDescriptorBytes, this.offset + start, end - start);
           this.digestSha256Base64 = DatatypeConverter.printBase64Binary(
-              MessageDigest.getInstance("SHA-256").digest(forDigest))
-              .replaceAll("=", "");
+              md.digest()).replaceAll("=", "");
         } catch (NoSuchAlgorithmException e) {
           /* Handle below. */
         }

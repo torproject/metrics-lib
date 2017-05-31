@@ -43,7 +43,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.extraInfoLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String publishedLine = "published 2012-02-11 09:08:36";
@@ -52,7 +52,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.publishedLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String writeHistoryLine = "write-history 2012-02-11 09:03:39 "
@@ -62,7 +62,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.writeHistoryLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String readHistoryLine = "read-history 2012-02-11 09:03:39 "
@@ -72,7 +72,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.readHistoryLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String dirreqWriteHistoryLine = "dirreq-write-history "
@@ -83,7 +83,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.dirreqWriteHistoryLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String dirreqReadHistoryLine = "dirreq-read-history "
@@ -94,7 +94,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.dirreqReadHistoryLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String geoipDbDigestLine = null;
@@ -103,7 +103,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.geoipDbDigestLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String geoip6DbDigestLine = null;
@@ -112,7 +112,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.geoip6DbDigestLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String geoipStatsLines = null;
@@ -121,7 +121,7 @@ public class ExtraInfoDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.geoipStatsLines = lines;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String dirreqStatsLines = null;
@@ -130,7 +130,7 @@ public class ExtraInfoDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.dirreqStatsLines = lines;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String entryStatsLines = null;
@@ -139,7 +139,7 @@ public class ExtraInfoDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.entryStatsLines = lines;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String cellStatsLines = null;
@@ -148,7 +148,7 @@ public class ExtraInfoDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.cellStatsLines = lines;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String connBiDirectLine = null;
@@ -157,7 +157,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.connBiDirectLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String exitStatsLines = null;
@@ -166,7 +166,7 @@ public class ExtraInfoDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.exitStatsLines = lines;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String bridgeStatsLines = null;
@@ -175,7 +175,7 @@ public class ExtraInfoDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.bridgeStatsLines = lines;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String hidservStatsLines = null;
@@ -184,7 +184,7 @@ public class ExtraInfoDescriptorImplTest {
         String lines) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.hidservStatsLines = lines;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String paddingCountsLine = null;
@@ -193,7 +193,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.paddingCountsLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String unrecognizedLine = null;
@@ -203,8 +203,7 @@ public class ExtraInfoDescriptorImplTest {
         throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.unrecognizedLine = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(),
-          failUnrecognizedDescriptorLines);
+      return db.buildDescriptor(failUnrecognizedDescriptorLines);
     }
 
     private byte[] nonAsciiLineBytes = null;
@@ -214,8 +213,7 @@ public class ExtraInfoDescriptorImplTest {
         throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.nonAsciiLineBytes = lineBytes;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(),
-          failUnrecognizedDescriptorLines);
+      return db.buildDescriptor(failUnrecognizedDescriptorLines);
     }
 
     private String routerSignatureLines = "router-signature\n"
@@ -229,7 +227,7 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.routerSignatureLines = line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
     private String identityEd25519Lines = null;
@@ -245,10 +243,10 @@ public class ExtraInfoDescriptorImplTest {
       db.identityEd25519Lines = identityEd25519Lines;
       db.masterKeyEd25519Line = masterKeyEd25519Line;
       db.routerSigEd25519Line = routerSigEd25519Line;
-      return new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+      return db.buildDescriptor(true);
     }
 
-    private byte[] buildDescriptor() {
+    private byte[] buildDescriptorBytes() {
       StringBuilder sb = new StringBuilder();
       if (this.extraInfoLine != null) {
         sb.append(this.extraInfoLine).append("\n");
@@ -331,6 +329,15 @@ public class ExtraInfoDescriptorImplTest {
         sb.append(this.routerSignatureLines).append("\n");
       }
       return sb.toString().getBytes();
+    }
+
+    private ExtraInfoDescriptor buildDescriptor(
+        boolean failUnrecognizedDescriptorLines)
+        throws DescriptorParseException {
+      byte[] descriptorBytes = this.buildDescriptorBytes();
+      return new RelayExtraInfoDescriptorImpl(descriptorBytes,
+          new int[] { 0, descriptorBytes.length},
+          failUnrecognizedDescriptorLines);
     }
   }
 
@@ -947,8 +954,7 @@ public class ExtraInfoDescriptorImplTest {
   @Test()
   public void testSampleDescriptor() throws DescriptorParseException {
     DescriptorBuilder db = new DescriptorBuilder();
-    ExtraInfoDescriptor descriptor =
-        new RelayExtraInfoDescriptorImpl(db.buildDescriptor(), true);
+    ExtraInfoDescriptor descriptor = db.buildDescriptor(true);
     assertEquals("chaoscomputerclub5", descriptor.getNickname());
     assertEquals("A9C039A5FD02FCA06303DCFAABE25C5912C63B26",
         descriptor.getFingerprint());
@@ -2130,7 +2136,8 @@ public class ExtraInfoDescriptorImplTest {
         + "-----END SIGNATURE-----\n"
         + "").getBytes();
     RelayExtraInfoDescriptor descriptor =
-        new RelayExtraInfoDescriptorImpl(descriptorBytes, true);
+        new RelayExtraInfoDescriptorImpl(descriptorBytes,
+            new int[] { 0, descriptorBytes.length }, true);
     assertEquals("Pt1BtzfRwhYqGCDo8jjchS8nJP3ovrDyHGn+dqPbMgw",
         descriptor.getDigestSha256Base64());
   }
@@ -2154,7 +2161,8 @@ public class ExtraInfoDescriptorImplTest {
         + "router-digest 00B98F076B586272C3172B7F3DA29ADEE75F2ED8\n")
         .getBytes();
     BridgeExtraInfoDescriptor descriptor =
-        new BridgeExtraInfoDescriptorImpl(descriptorBytes, true);
+        new BridgeExtraInfoDescriptorImpl(descriptorBytes,
+            new int[] { 0, descriptorBytes.length }, true);
     assertEquals("TvrqpjI7OmCtwGwair/NHUxg5ROVVQYz6/EDyXsDHR4",
         descriptor.getDigestSha256Base64());
   }

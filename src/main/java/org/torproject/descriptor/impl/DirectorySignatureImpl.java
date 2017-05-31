@@ -15,7 +15,11 @@ import java.util.Scanner;
 
 public class DirectorySignatureImpl implements DirectorySignature {
 
-  private byte[] directorySignatureBytes;
+  private DescriptorImpl parent;
+
+  private int offset;
+
+  private int length;
 
   private boolean failUnrecognizedDescriptorLines;
 
@@ -27,10 +31,12 @@ public class DirectorySignatureImpl implements DirectorySignature {
     return lines;
   }
 
-  protected DirectorySignatureImpl(byte[] directorySignatureBytes,
-      boolean failUnrecognizedDescriptorLines)
+  protected DirectorySignatureImpl(DescriptorImpl parent, int offset,
+      int length, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    this.directorySignatureBytes = directorySignatureBytes;
+    this.parent = parent;
+    this.offset = offset;
+    this.length = length;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
     this.parseDirectorySignatureBytes();
@@ -38,7 +44,7 @@ public class DirectorySignatureImpl implements DirectorySignature {
 
   private void parseDirectorySignatureBytes()
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.directorySignatureBytes))
+    Scanner scanner = this.parent.newScanner(this.offset, this.length)
         .useDelimiter(NL);
     StringBuilder crypto = null;
     while (scanner.hasNext()) {

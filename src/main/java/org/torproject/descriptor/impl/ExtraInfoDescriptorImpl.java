@@ -34,9 +34,10 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
       Key.PADDING_COUNTS);
 
   protected ExtraInfoDescriptorImpl(byte[] descriptorBytes,
-      boolean failUnrecognizedDescriptorLines)
+      int[] offsetAndLimit, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, failUnrecognizedDescriptorLines, false);
+    super(descriptorBytes, offsetAndLimit, failUnrecognizedDescriptorLines,
+        false);
     this.parseDescriptorBytes();
     this.calculateDigestSha1Hex(Key.EXTRA_INFO.keyword + SP,
         NL + Key.ROUTER_SIGNATURE.keyword + NL);
@@ -78,8 +79,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.rawDescriptorBytes))
-        .useDelimiter(NL);
+    Scanner scanner = this.newScanner().useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     List<String> cryptoLines = null;
     while (scanner.hasNext()) {

@@ -23,26 +23,11 @@ import java.util.TreeSet;
 public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     implements RelayNetworkStatusVote {
 
-  protected static List<RelayNetworkStatusVote> parseVotes(
-      byte[] votesBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<RelayNetworkStatusVote> parsedVotes = new ArrayList<>();
-    List<byte[]> splitVotesBytes =
-        DescriptorImpl.splitRawDescriptorBytes(votesBytes,
-        Key.NETWORK_STATUS_VERSION.keyword + SP + "3");
-    for (byte[] voteBytes : splitVotesBytes) {
-      RelayNetworkStatusVote parsedVote =
-          new RelayNetworkStatusVoteImpl(voteBytes,
-              failUnrecognizedDescriptorLines);
-      parsedVotes.add(parsedVote);
-    }
-    return parsedVotes;
-  }
-
-  protected RelayNetworkStatusVoteImpl(byte[] voteBytes,
+  protected RelayNetworkStatusVoteImpl(byte[] voteBytes, int[] offsetAndLength,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(voteBytes, failUnrecognizedDescriptorLines, false, false);
+    super(voteBytes, offsetAndLength, failUnrecognizedDescriptorLines, false,
+        false);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.VOTE_STATUS, Key.PUBLISHED, Key.VALID_AFTER, Key.FRESH_UNTIL,
         Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS, Key.DIR_SOURCE,
@@ -66,7 +51,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
   }
 
-  protected void parseHeader(byte[] headerBytes)
+  protected void parseHeader(int offset, int length)
       throws DescriptorParseException {
     /* Initialize flag-thresholds values here for the case that the vote
      * doesn't contain those values.  Initializing them in the constructor
@@ -82,7 +67,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.enoughMtbfInfo = -1;
     this.ignoringAdvertisedBws = -1;
 
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
@@ -596,9 +581,9 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     }
   }
 
-  protected void parseFooter(byte[] footerBytes)
+  protected void parseFooter(int offset, int length)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(footerBytes)).useDelimiter(NL);
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();
       if (!line.equals(Key.DIRECTORY_FOOTER.keyword)) {

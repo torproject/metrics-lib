@@ -17,11 +17,18 @@ import java.util.Set;
 
 public class DirSourceEntryImpl implements DirSourceEntry {
 
-  private byte[] dirSourceEntryBytes;
+  private DescriptorImpl parent;
+
+  private int offset;
+
+  private int length;
 
   @Override
   public byte[] getDirSourceEntryBytes() {
-    return this.dirSourceEntryBytes;
+    /* We need to pass this.offset and this.length, because the overloaded
+     * method without arguments would use this.parent.offset and
+     * this.parent.length as bounds, which is not what we want! */
+    return this.parent.getRawDescriptorBytes(this.offset, this.length);
   }
 
   private boolean failUnrecognizedDescriptorLines;
@@ -34,10 +41,12 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     return lines;
   }
 
-  protected DirSourceEntryImpl(byte[] dirSourceEntryBytes,
+  protected DirSourceEntryImpl(DescriptorImpl parent, int offset, int length,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    this.dirSourceEntryBytes = dirSourceEntryBytes;
+    this.parent = parent;
+    this.offset = offset;
+    this.length = length;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
     this.parseDirSourceEntryBytes();
@@ -80,7 +89,10 @@ public class DirSourceEntryImpl implements DirSourceEntry {
 
   private void parseDirSourceEntryBytes()
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.dirSourceEntryBytes))
+    /* We need to pass this.offset and this.length, because the overloaded
+     * method without arguments would use this.parent.offset and
+     * this.parent.length as bounds, which is not what we want! */
+    Scanner scanner = this.parent.newScanner(this.offset, this.length)
         .useDelimiter(NL);
     boolean skipCrypto = false;
     while (scanner.hasNext()) {

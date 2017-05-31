@@ -18,25 +18,11 @@ import java.util.TreeSet;
 public class RelayNetworkStatusImpl extends NetworkStatusImpl
     implements RelayNetworkStatus {
 
-  protected static List<RelayNetworkStatus> parseStatuses(
-      byte[] statusesBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    List<RelayNetworkStatus> parsedStatuses = new ArrayList<>();
-    List<byte[]> splitStatusBytes =
-        DescriptorImpl.splitRawDescriptorBytes(statusesBytes,
-        "network-status-version 2");
-    for (byte[] statusBytes : splitStatusBytes) {
-      RelayNetworkStatus parsedStatus = new RelayNetworkStatusImpl(
-          statusBytes, failUnrecognizedDescriptorLines);
-      parsedStatuses.add(parsedStatus);
-    }
-    return parsedStatuses;
-  }
-
-  protected RelayNetworkStatusImpl(byte[] statusBytes,
+  protected RelayNetworkStatusImpl(byte[] statusBytes, int[] offsetAndLength,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(statusBytes, failUnrecognizedDescriptorLines, false, true);
+    super(statusBytes, offsetAndLength, failUnrecognizedDescriptorLines, false,
+        true);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.NETWORK_STATUS_VERSION, Key.DIR_SOURCE, Key.FINGERPRINT,
         Key.CONTACT, Key.DIR_SIGNING_KEY, Key.PUBLISHED);
@@ -50,9 +36,9 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
   }
 
-  protected void parseHeader(byte[] headerBytes)
+  protected void parseHeader(int offset, int length)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(headerBytes)).useDelimiter(NL);
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {
@@ -123,16 +109,15 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     }
   }
 
-  protected void parseFooter(byte[] footerBytes)
+  protected void parseFooter(int offset, int length)
       throws DescriptorParseException {
     throw new DescriptorParseException("No directory footer expected in "
         + "v2 network status.");
   }
 
-  protected void parseDirectorySignature(byte[] directorySignatureBytes)
+  protected void parseDirectorySignature(int offset, int length)
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(directorySignatureBytes))
-        .useDelimiter(NL);
+    Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
     while (scanner.hasNext()) {

@@ -11,6 +11,8 @@ import org.junit.Test;
 
 public class RelayNetworkStatusImplTest {
 
+  private static final String validAnnotation = "@type network-status-2 1.0\n";
+
   private static final String validHeader = "network-status-version 2\n"
       + "dir-source 194.109.206.212 194.109.206.212 80\n"
       + "fingerprint 7EA6EAD6FD83083C538F44038BBFA077587DD755\n"
@@ -32,20 +34,22 @@ public class RelayNetworkStatusImplTest {
       + "-----END SIGNATURE-----\n";
 
   private static final String validStatus =
-      "@type network-status-2 1.0\n" + validHeader + validFooter;
+      validAnnotation + validHeader + validFooter;
 
   @Test(expected = DescriptorParseException.class)
   public void testParseBrokenHeader() throws DescriptorParseException {
-    RelayNetworkStatusImpl rnsi
-        = new RelayNetworkStatusImpl(validStatus.getBytes(), true);
-    rnsi.parseHeader("network-status-version 2\nxyx\nabc".getBytes());
+    String invalidHeader = "network-status-version 2\nxyx\nabc";
+    byte[] statusBytes = (validAnnotation + invalidHeader + validFooter)
+        .getBytes();
+    new RelayNetworkStatusImpl(statusBytes, new int[] { 0, statusBytes.length },
+        true);
   }
 
   @Test()
   public void testValidHeader() throws DescriptorParseException {
-    RelayNetworkStatusImpl rnsi =
-        new RelayNetworkStatusImpl(validStatus.getBytes(), true);
-    rnsi.parseHeader(validHeader.getBytes());
+    byte[] statusBytes = validStatus.getBytes();
+    RelayNetworkStatusImpl rnsi = new RelayNetworkStatusImpl(statusBytes,
+        new int[] { 0, statusBytes.length }, true);
     assertEquals(rnsi.getContactLine(),
         "1024R/8D56913D Alex de Joode <adejoode@sabotage.org>");
   }

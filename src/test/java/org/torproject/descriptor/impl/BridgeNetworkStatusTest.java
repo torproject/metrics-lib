@@ -30,8 +30,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.fileName = fileName;
-      return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
-          true);
+      return sb.buildStatus(true);
     }
 
     private String publishedLine = "published 2015-11-21 17:39:36";
@@ -41,8 +40,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.publishedLine = line;
-      return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
-          true);
+      return sb.buildStatus(true);
     }
 
     private String flagThresholdsLine = "flag-thresholds "
@@ -56,8 +54,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.flagThresholdsLine = line;
-      return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
-          true);
+      return sb.buildStatus(true);
     }
 
     private List<String> statusEntries = new ArrayList<>();
@@ -70,8 +67,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.unrecognizedHeaderLine = line;
-      return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
-          failUnrecognizedDescriptorLines);
+      return sb.buildStatus(failUnrecognizedDescriptorLines);
     }
 
     private String unrecognizedStatusEntryLine = null;
@@ -82,8 +78,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.unrecognizedStatusEntryLine = line;
-      return new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName,
-          failUnrecognizedDescriptorLines);
+      return sb.buildStatus(failUnrecognizedDescriptorLines);
     }
 
     private StatusBuilder() {
@@ -93,11 +88,20 @@ public class BridgeNetworkStatusTest {
           + "w Bandwidth=264\np reject 1-65535");
     }
 
-    private byte[] buildStatus() {
+    private byte[] buildStatusBytes() {
       StringBuilder sb = new StringBuilder();
       this.appendHeader(sb);
       this.appendStatusEntries(sb);
       return sb.toString().getBytes();
+    }
+
+    private BridgeNetworkStatus buildStatus(
+        boolean failUnrecognizedDescriptorLines)
+        throws DescriptorParseException {
+      byte[] statusBytes = this.buildStatusBytes();
+      return new BridgeNetworkStatusImpl(statusBytes,
+          new int[] { 0, statusBytes.length }, this.fileName,
+          failUnrecognizedDescriptorLines);
     }
 
     private void appendHeader(StringBuilder sb) {
@@ -125,8 +129,7 @@ public class BridgeNetworkStatusTest {
   @Test()
   public void testSampleStatus() throws DescriptorParseException {
     StatusBuilder sb = new StatusBuilder();
-    BridgeNetworkStatus status =
-        new BridgeNetworkStatusImpl(sb.buildStatus(), sb.fileName, true);
+    BridgeNetworkStatus status = sb.buildStatus(true);
     assertEquals(1448127576000L, status.getPublishedMillis());
     assertEquals(3105080L, status.getStableUptime());
     assertEquals(2450615L, status.getStableMtbf());

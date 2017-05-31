@@ -17,7 +17,7 @@ import java.util.TreeSet;
 
 public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
 
-  private byte[] exitListEntryBytes;
+  private String exitListEntryString;
 
   private boolean failUnrecognizedDescriptorLines;
 
@@ -54,14 +54,14 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
     return result;
   }
 
-  protected ExitListEntryImpl(byte[] exitListEntryBytes,
+  protected ExitListEntryImpl(String exitListEntryString,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    this.exitListEntryBytes = exitListEntryBytes;
+    this.exitListEntryString = exitListEntryString;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
     this.initializeKeywords();
-    this.parseExitListEntryBytes();
+    this.parseExitListEntry();
     this.checkAndClearKeywords();
   }
 
@@ -92,9 +92,9 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
     this.keywordCountingSet = null;
   }
 
-  private void parseExitListEntryBytes()
+  private void parseExitListEntry()
       throws DescriptorParseException {
-    Scanner scanner = new Scanner(new String(this.exitListEntryBytes))
+    Scanner scanner = new Scanner(this.exitListEntryString)
         .useDelimiter(ExitList.EOL);
     while (scanner.hasNext()) {
       String line = scanner.next();
