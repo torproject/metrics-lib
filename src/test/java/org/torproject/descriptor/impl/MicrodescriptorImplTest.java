@@ -8,9 +8,14 @@ import static org.junit.Assert.assertEquals;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.Microdescriptor;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class MicrodescriptorImplTest {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   /* Helper class to build a microdescriptor based on default data and
    * modifications requested by test methods. */
@@ -73,25 +78,39 @@ public class MicrodescriptorImplTest {
         micro.getDigestSha256Base64());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testIdRsa1024TooShort() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'AAAA' in line 'id rsa1024 AAAA' is not a "
+        + "valid base64-encoded 20-byte value.");
     DescriptorBuilder.createWithIdLine("id rsa1024 AAAA");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testIdRsa1024TooLong() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' in line 'id ed25519 "
+        + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        + "AAAAAAAAAAAAAAAAAAA' is not a valid base64-encoded 32-byte value.");
     DescriptorBuilder.createWithIdLine("id ed25519 AAAAAAAAAAAAAAAAAAAAAA"
         + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testIdRsa512() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal line 'id rsa512 bvegfGxp8k7T9QFpjPTrPaJTa/8'.");
     DescriptorBuilder.createWithIdLine("id rsa512 "
         + "bvegfGxp8k7T9QFpjPTrPaJTa/8");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testIdEd25519Duplicate() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'id' is contained 2 times, but must be"
+        + " contained at most once.");
     DescriptorBuilder.createWithIdLine(
         "id rsa1024 bvegfGxp8k7T9QFpjPTrPaJTa/8\n"
         + "id rsa1024 bvegfGxp8k7T9QFpjPTrPaJTa/8");

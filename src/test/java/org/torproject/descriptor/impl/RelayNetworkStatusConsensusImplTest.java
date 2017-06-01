@@ -14,7 +14,9 @@ import org.torproject.descriptor.DirectorySignature;
 import org.torproject.descriptor.NetworkStatusEntry;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +30,9 @@ import java.util.TreeSet;
  * no matter what gets fed into it.  A secondary focus is to ensure that
  * a parsed consensus is fully compatible to dir-spec.txt. */
 public class RelayNetworkStatusConsensusImplTest {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   /* Helper class to build a directory source based on default data and
    * modifications requested by test methods. */
@@ -392,22 +397,29 @@ public class RelayNetworkStatusConsensusImplTest {
     assertTrue(consensus.getUnrecognizedLines().isEmpty());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionNoLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'network-status-version' must be "
+        + "contained in the first line.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionNewLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Blank lines are not allowed.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version 3\n");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionNewLineSpace()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal keyword in line ' '.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version 3\n ");
   }
@@ -419,72 +431,104 @@ public class RelayNetworkStatusConsensusImplTest {
         "@consensus\nnetwork-status-version 3");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionPrefixLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line 'directory-footer' in consensus.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "directory-footer\nnetwork-status-version 3");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionPrefixLinePoundChar()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized line '#consensus' in consensus.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "#consensus\nnetwork-status-version 3");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionNoSpace()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal network status version number in line "
+        + "'network-status-version'.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionOneSpace()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal network status version number in line "
+        + "'network-status-version '.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersion42()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal network status version number in line "
+        + "'network-status-version 42'.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version 42");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionFourtyTwo()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal network status version number in line "
+        + "'network-status-version FourtyTwo'.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "network-status-version FourtyTwo");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVoteStatusNoLine() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'vote-status' is contained 0 times, "
+        + "but must be contained exactly once.");
     ConsensusBuilder.createWithVoteStatusLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNetworkStatusVersionSpaceBefore()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal keyword in line ' network-status-version 3'.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         " network-status-version 3");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVoteStatusSpaceBefore() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal keyword in line ' vote-status consensus'.");
     ConsensusBuilder.createWithVoteStatusLine(" vote-status consensus");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVoteStatusNoSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Line 'vote-status' indicates that this is not a consensus.");
     ConsensusBuilder.createWithVoteStatusLine("vote-status");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVoteStatusOneSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Line 'vote-status ' indicates that this is not a consensus.");
     ConsensusBuilder.createWithVoteStatusLine("vote-status ");
   }
 
@@ -494,135 +538,201 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder.createWithVoteStatusLine("vote-status consensus ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVoteStatusVote() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Line 'vote-status vote' indicates that this is not a consensus.");
     ConsensusBuilder.createWithVoteStatusLine("vote-status vote");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVoteStatusTheMagicVoteStatus()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'vote-status TheMagicVoteStatus' indicates "
+        + "that this is not a consensus.");
     ConsensusBuilder.createWithVoteStatusLine(
         "vote-status TheMagicVoteStatus");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testConsensusMethodNoLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'consensus-method' is contained 0 "
+        + "times, but must be contained exactly once.");
     ConsensusBuilder.createWithConsensusMethodLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testConsensusMethodNoSpace()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'consensus-method' in consensus.");
     ConsensusBuilder.createWithConsensusMethodLine("consensus-method");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testConsensusMethodOneSpace()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'consensus-method ' in consensus.");
     ConsensusBuilder.createWithConsensusMethodLine("consensus-method ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testConsensusMethodEleven()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal consensus method number in line 'consensus-method eleven'.");
     ConsensusBuilder.createWithConsensusMethodLine(
         "consensus-method eleven");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testConsensusMethodMinusOne()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal consensus method number in line "
+        + "'consensus-method -1'.");
     ConsensusBuilder.createWithConsensusMethodLine("consensus-method -1");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testConsensusMethodNinePeriod()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal consensus method number in line "
+        + "'consensus-method 99999999999999999999999999999999999999999999"
+        + "9999999999999999'.");
     ConsensusBuilder.createWithConsensusMethodLine("consensus-method "
         + "999999999999999999999999999999999999999999999999999999999999");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testConsensusMethodTwoLines()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'consensus-method' is contained 2 times,"
+        + " but must be contained exactly once.");
     ConsensusBuilder.createWithConsensusMethodLine(
         "consensus-method 1\nconsensus-method 1");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testValidAfterNoLine() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'valid-after' is contained 0 times, "
+        + "but must be contained exactly once.");
     ConsensusBuilder.createWithValidAfterLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testValidAfterNoSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'valid-after' does not contain a "
+        + "timestamp at the expected position.");
     ConsensusBuilder.createWithValidAfterLine("valid-after");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testValidAfterOneSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'valid-after ' does not contain a timestamp"
+        + " at the expected position.");
     ConsensusBuilder.createWithValidAfterLine("valid-after ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testValidAfterLongAgo() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal timestamp format in line 'valid-after long ago'.");
     ConsensusBuilder.createWithValidAfterLine("valid-after long ago");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testValidAfterFeb30() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line "
+        + "'valid-after 2011-02-30 09:00:00'.");
     ConsensusBuilder.createWithValidAfterLine(
         "valid-after 2011-02-30 09:00:00");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFreshUntilNoLine() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'fresh-until' is contained 0 times, "
+        + "but must be contained exactly once.");
     ConsensusBuilder.createWithFreshUntilLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFreshUntilAroundTen() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line "
+        + "'fresh-until 2011-11-30 around ten'.");
     ConsensusBuilder.createWithFreshUntilLine(
         "fresh-until 2011-11-30 around ten");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testValidUntilTomorrowMorning()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal timestamp format in line 'valid-until tomorrow morning'.");
     ConsensusBuilder.createWithValidUntilLine(
         "valid-until tomorrow morning");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVotingDelayNoLine() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'voting-delay' is contained 0 times, "
+        + "but must be contained exactly once.");
     ConsensusBuilder.createWithVotingDelayLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVotingDelayNoSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Wrong number of values in line 'voting-delay'.");
     ConsensusBuilder.createWithVotingDelayLine("voting-delay");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVotingDelayOneSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Wrong number of values in line 'voting-delay '.");
     ConsensusBuilder.createWithVotingDelayLine("voting-delay ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVotingDelayTriple() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Wrong number of values in line 'voting-delay 300 300 300'.");
     ConsensusBuilder.createWithVotingDelayLine(
         "voting-delay 300 300 300");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVotingDelaySingle() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Wrong number of values in line 'voting-delay 300'.");
     ConsensusBuilder.createWithVotingDelayLine("voting-delay 300");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testVotingDelayOneTwo() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal values in line 'voting-delay one two'.");
     ConsensusBuilder.createWithVotingDelayLine("voting-delay one two");
   }
 
@@ -671,14 +781,19 @@ public class RelayNetworkStatusConsensusImplTest {
     assertTrue(consensus.getRecommendedClientVersions().isEmpty());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testClientVersionsComma() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal versions line 'client-versions ,'.");
     ConsensusBuilder.createWithClientVersionsLine("client-versions ,");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testClientVersionsCommaVersion()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal versions line 'client-versions ,0.2.2.34'.");
     ConsensusBuilder.createWithClientVersionsLine(
         "client-versions ,0.2.2.34");
   }
@@ -724,9 +839,12 @@ public class RelayNetworkStatusConsensusImplTest {
         consensus.getRequiredRelayProtocols().get("Cons"));
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testRequiredRelayProtocolsTwice()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'required-relay-protocols' is contained "
+        + "2 times, but must be contained at most once.");
     ConsensusBuilder.createWithRequiredRelayProtocolsLine(
         "required-relay-protocols Cons=1\nrequired-relay-protocols Cons=1");
   }
@@ -761,24 +879,34 @@ public class RelayNetworkStatusConsensusImplTest {
     }
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPackageIncomplete() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Wrong number of values in line 'package shouldbesecond 0 http'.");
     String packageLine = "package shouldbesecond 0 http";
     ConsensusBuilder.createWithPackageLines(packageLine);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testKnownFlagsNoLine() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'known-flags' is contained 0 times, "
+        + "but must be contained exactly once.");
     ConsensusBuilder.createWithKnownFlagsLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testKnownFlagsNoSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("No known flags in line 'known-flags'.");
     ConsensusBuilder.createWithKnownFlagsLine("known-flags");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testKnownFlagsOneSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("No known flags in line 'known-flags '.");
     ConsensusBuilder.createWithKnownFlagsLine("known-flags ");
   }
 
@@ -813,14 +941,20 @@ public class RelayNetworkStatusConsensusImplTest {
     assertTrue(consensus.getConsensusParams().isEmpty());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testParamsNoEqualSign() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'params key-value' contains an illegal "
+        + "value in list element 'key-value'.");
     ConsensusBuilder.createWithParamsLine("params key-value");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testParamsOneTooLargeNegative()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'params min=-2147483649' contains an "
+        + "illegal value in list element 'min=-2147483649'.");
     ConsensusBuilder.createWithParamsLine("params min=-2147483649");
   }
 
@@ -844,22 +978,31 @@ public class RelayNetworkStatusConsensusImplTest {
         (int) consensus.getConsensusParams().get("max"));
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testParamsOneTooLargePositive()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'params max=2147483648' contains an illegal"
+        + " value in list element 'max=2147483648'.");
     ConsensusBuilder.createWithParamsLine("params max=2147483648");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testSharedRandPreviousNumRevealsOnly()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal line 'shared-rand-previous-value 8' in vote.");
     ConsensusBuilder.createWithSharedRandPreviousValueLine(
         "shared-rand-previous-value 8");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testSharedRandPreviousExtraArg()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'shared-rand-current-value 8 "
+        + "D88plxd8YeLfCIVAR9gjiFlWB1WqpC53kWr350o1pzw= -1.0' in vote.");
     ConsensusBuilder.createWithSharedRandCurrentValueLine(
         "shared-rand-current-value 8 "
             + "D88plxd8YeLfCIVAR9gjiFlWB1WqpC53kWr350o1pzw= -1.0");
@@ -880,62 +1023,101 @@ public class RelayNetworkStatusConsensusImplTest {
         "81349FC1F2DBA2C2C11B45CB9706637D480AB913").isLegacy());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceNicknameTooLong()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal nickname in line 'dir-source "
+        + "gabelmooisfinebutthisistoolong ED03BB616EB2F60BEC80151114BB25CEF5"
+        + "15B226 212.112.245.170 212.112.245.170 80 443'.");
     DirSourceBuilder.createWithNickname("gabelmooisfinebutthisistoolong");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceIdentityTooShort()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'dir-source gabelmoo "
+        + "ED03BB616EB2F60BEC8015111 212.112.245.170 212.112.245.170 80 443'.");
     DirSourceBuilder.createWithIdentity("ED03BB616EB2F60BEC8015111");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceIdentityTooLong()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'dir-source gabelmoo "
+        + "ED03BB616EB2F60BEC80151114BB25CEF515B226ED03BB616EB2F60BEC8 "
+        + "212.112.245.170 212.112.245.170 80 443'.");
     DirSourceBuilder.createWithIdentity("ED03BB616EB2F60BEC8015111"
         + "4BB25CEF515B226ED03BB616EB2F60BEC8");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceHostnameMissing()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid line 'dir-source gabelmoo "
+        + "ED03BB616EB2F60BEC80151114BB25CEF515B226  212.112.245.170 80 443'.");
     DirSourceBuilder.createWithHostName("");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceAddress24() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'212.112.245' in line 'dir-source "
+        + "gabelmoo ED03BB616EB2F60BEC80151114BB25CEF515B226 212.112.245.170 "
+        + "212.112.245 80 443' is not a valid IPv4 address.");
     DirSourceBuilder.createWithAddress("212.112.245");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceAddress40() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "'212.112.245.170.123' in line 'dir-source gabelmoo "
+        + "ED03BB616EB2F60BEC80151114BB25CEF515B226 212.112.245.170 212.112.245"
+        + ".170.123 80 443' is not a valid IPv4 address.");
     DirSourceBuilder.createWithAddress("212.112.245.170.123");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceDirPortMinusOne()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'-1' in line 'dir-source gabelmoo "
+        + "ED03BB616EB2F60BEC80151114BB25CEF515B226 212.112.245.170 "
+        + "212.112.245.170 -1 443' is not a valid port number.");
     DirSourceBuilder.createWithDirPort("-1");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceDirPort66666()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'66666' in line 'dir-source gabelmoo "
+        + "ED03BB616EB2F60BEC80151114BB25CEF515B226 212.112.245.170 "
+        + "212.112.245.170 66666 443' is not a valid port number.");
     DirSourceBuilder.createWithDirPort("66666");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceDirPortOnions()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'onions' in line 'dir-source gabelmoo "
+        + "ED03BB616EB2F60BEC80151114BB25CEF515B226 212.112.245.170 "
+        + "212.112.245.170 onions 443' is not a valid port number.");
     DirSourceBuilder.createWithDirPort("onions");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceOrPortOnions()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'onions' in line 'dir-source gabelmoo "
+        + "ED03BB616EB2F60BEC80151114BB25CEF515B226 212.112.245.170 "
+        + "212.112.245.170 80 onions' is not a valid port number.");
     DirSourceBuilder.createWithOrPort("onions");
   }
 
@@ -966,113 +1148,193 @@ public class RelayNetworkStatusConsensusImplTest {
         "ED03BB616EB2F60BEC80151114BB25CEF515B226").getContactLine());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceVoteDigestNoLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "dir-source does not contain a 'vote-digest' line.");
     DirSourceBuilder.createWithVoteDigestLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceVoteDigestLineNoSpace()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid line 'vote-digest'.");
     DirSourceBuilder.createWithVoteDigestLine("vote-digest");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirSourceVoteDigestLineOneSpace()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid line 'vote-digest '.");
     DirSourceBuilder.createWithVoteDigestLine("vote-digest ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNicknameNotAllowedChars()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal nickname in line 'r notAll()wed "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 "
+        + "21:34:27 50.63.8.215 9023 0'.");
     StatusEntryBuilder.createWithNickname("notAll()wed");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNicknameTooLong() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal nickname in line "
+        + "'r 1234567890123456789tooLong ADQ6gCT3DiFHKPDFr3rODBUI8HM "
+        + "Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 21:34:27 50.63.8.215 "
+        + "9023 0'.");
     StatusEntryBuilder.createWithNickname("1234567890123456789tooLong");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintTooShort() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'TooShort' in line 'r right2privassy3 TooShort "
+        + "Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 21:34:27 50.63.8.215 9023 0' "
+        + "is not a valid base64-encoded 20-byte value.");
     StatusEntryBuilder.createWithFingerprintBase64("TooShort");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintEndsWithEqualSign()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'ADQ6gCT3DiFHKPDFr3rODBUI8H=' in line 'r "
+        + "right2privassy3 ADQ6gCT3DiFHKPDFr3rODBUI8H= Yiti+nayuT2Efe2X1+M4"
+        + "nslwVuU 2011-11-29 21:34:27 50.63.8.215 9023 0' is not a valid "
+        + "base64-encoded 20-byte value.");
     StatusEntryBuilder.createWithFingerprintBase64(
         "ADQ6gCT3DiFHKPDFr3rODBUI8H=");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintTooLong() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'ADQ6gCT3DiFHKPDFr3rODBUI8HMAAAA' in line "
+        + "'r right2privassy3 ADQ6gCT3DiFHKPDFr3rODBUI8HMAAAA Yiti+nayuT2Efe2X1"
+        + "+M4nslwVuU 2011-11-29 21:34:27 50.63.8.215 9023 0' is not a valid "
+        + "base64-encoded 20-byte value.");
     StatusEntryBuilder.createWithFingerprintBase64(
         "ADQ6gCT3DiFHKPDFr3rODBUI8HMAAAA");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDescriptorTooShort() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'TooShort' in line 'r right2privassy3 "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8HM TooShort 2011-11-29 21:34:27 50.63.8.215"
+        + " 9023 0' is not a valid base64-encoded 20-byte value.");
     StatusEntryBuilder.createWithDescriptorBase64("TooShort");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDescriptorEndsWithEqualSign()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'ADQ6gCT3DiFHKPDFr3rODBUI8H=' in line "
+        + "'r right2privassy3 ADQ6gCT3DiFHKPDFr3rODBUI8HM "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8H= 2011-11-29 21:34:27 50.63.8.215 9023 0' "
+        + "is not a valid base64-encoded 20-byte value.");
     StatusEntryBuilder.createWithDescriptorBase64(
         "ADQ6gCT3DiFHKPDFr3rODBUI8H=");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDescriptorTooLong() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'Yiti+nayuT2Efe2X1+M4nslwVuUAAAA' in line "
+        + "'r right2privassy3 ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4n"
+        + "slwVuUAAAA 2011-11-29 21:34:27 50.63.8.215 9023 0' is not a valid "
+        + "base64-encoded 20-byte value.");
     StatusEntryBuilder.createWithDescriptorBase64(
         "Yiti+nayuT2Efe2X1+M4nslwVuUAAAA");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPublished1960() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line 'r "
+        + "right2privassy3 ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4ns"
+        + "lwVuU 1960-11-29 21:34:27 50.63.8.215 9023 0'.");
     StatusEntryBuilder.createWithPublishedString("1960-11-29 21:34:27");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPublished9999() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line 'r "
+        + "right2privassy3 ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+"
+        + "M4nslwVuU 9999-11-29 21:34:27 50.63.8.215 9023 0'.");
     StatusEntryBuilder.createWithPublishedString("9999-11-29 21:34:27");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testAddress256() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'256.63.8.215' in line 'r right2privassy3 "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 "
+        + "21:34:27 256.63.8.215 9023 0' is not a valid IPv4 address.");
     StatusEntryBuilder.createWithAddress("256.63.8.215");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testAddress24() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'50.63.8/24' in line 'r right2privassy3 "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 "
+        + "21:34:27 50.63.8/24 9023 0' is not a valid IPv4 address.");
     StatusEntryBuilder.createWithAddress("50.63.8/24");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testAddressV6() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'::1' in line 'r right2privassy3 "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 "
+        + "21:34:27 ::1 9023 0' is not a valid IPv4 address.");
     StatusEntryBuilder.createWithAddress("::1");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testOrPort66666() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'66666' in line 'r right2privassy3 "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 "
+        + "21:34:27 50.63.8.215 66666 0' is not a valid port number.");
     StatusEntryBuilder.createWithOrPort("66666");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testOrPortEighty() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'eighty' in line 'r right2privassy3 "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 "
+        + "21:34:27 50.63.8.215 eighty 0' is not a valid port number.");
     StatusEntryBuilder.createWithOrPort("eighty");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirPortMinusOne() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'-1' in line 'r right2privassy3 ADQ6gCT3DiFHKP"
+        + "DFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 21:34:27 "
+        + "50.63.8.215 9023 -1' is not a valid port number.");
     StatusEntryBuilder.createWithDirPort("-1");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirPortZero() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'zero' in line 'r right2privassy3 "
+        + "ADQ6gCT3DiFHKPDFr3rODBUI8HM Yiti+nayuT2Efe2X1+M4nslwVuU 2011-11-29 "
+        + "21:34:27 50.63.8.215 9023 zero' is not a valid port number.");
     StatusEntryBuilder.createWithDirPort("zero");
   }
 
@@ -1092,8 +1354,10 @@ public class RelayNetworkStatusConsensusImplTest {
         "00343A8024F70E214728F0C5AF7ACE0C1508F073").getFlags().isEmpty());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTwoSLines() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Duplicate 's' line in status entry.");
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.sLine = sb.sLine + "\n" + sb.sLine;
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -1101,8 +1365,10 @@ public class RelayNetworkStatusConsensusImplTest {
     cb.buildConsensus(true);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTwoPrLines() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Duplicate 'pr' line in status entry.");
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.prLine = sb.prLine + "\n" + sb.prLine;
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -1110,13 +1376,17 @@ public class RelayNetworkStatusConsensusImplTest {
     cb.buildConsensus(true);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWLineNoSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'w'.");
     StatusEntryBuilder.createWithWLine("w");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWLineOneSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'w '.");
     StatusEntryBuilder.createWithWLine("w ");
   }
 
@@ -1125,8 +1395,10 @@ public class RelayNetworkStatusConsensusImplTest {
     StatusEntryBuilder.createWithWLine("w Warp=7");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTwoWLines() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Duplicate 'w' line in status entry.");
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.wLine = sb.wLine + "\n" + sb.wLine;
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -1157,28 +1429,38 @@ public class RelayNetworkStatusConsensusImplTest {
     }
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPLineNoPolicy() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'p 80'.");
     StatusEntryBuilder.createWithPLine("p 80");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPLineNoPorts() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'p accept'.");
     StatusEntryBuilder.createWithPLine("p accept");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPLineNoPolicyNoPorts() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'p '.");
     StatusEntryBuilder.createWithPLine("p ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPLineProject() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'p project 80'.");
     StatusEntryBuilder.createWithPLine("p project 80");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTwoPLines() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Duplicate 'p' line in status entry.");
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.pLine = sb.pLine + "\n" + sb.pLine;
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -1195,9 +1477,14 @@ public class RelayNetworkStatusConsensusImplTest {
         "00795A6E8D91C270FC23B30F388A495553E01894"));
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirectoryFooterNoLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized line 'bandwidth-weights Wbd=285 "
+        + "Wbe=0 Wbg=0 Wbm=10000 Wdb=10000 Web=10000 Wed=1021 Wee=10000 "
+        + "Weg=1021 Wem=10000 Wgb=10000 Wgd=8694 Wgg=10000 Wgm=10000 Wmb=10000 "
+        + "Wmd=285 Wme=0 Wmg=0 Wmm=10000' in status entry.");
     /* This breaks, because a bandwidth-weights line without a preceding
      * directory-footer line is not allowed. */
     ConsensusBuilder.createWithDirectoryFooterLine(null);
@@ -1245,16 +1532,22 @@ public class RelayNetworkStatusConsensusImplTest {
     assertNotNull(consensus.getBandwidthWeights());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBandwidthWeightsLineNoEqualSign()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'bandwidth-weights Wbd-285' contains an "
+        + "illegal value in list element 'Wbd-285'.");
     ConsensusBuilder.createWithBandwidthWeightsLine(
         "bandwidth-weights Wbd-285");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirectorySignatureIdentityTooShort()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'directory-signature "
+        + "ED03BB616EB2F60 845CF1D0B370CA443A8579D18E7987E7E532F639'.");
     DirectorySignatureBuilder.createWithIdentity("ED03BB616EB2F60");
   }
 
@@ -1277,9 +1570,12 @@ public class RelayNetworkStatusConsensusImplTest {
     DirectorySignatureBuilder.createWithSigningKey("845CF1D0B370CA");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirectorySignatureSigningKeyTooShortOddNumber()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'directory-signature "
+        + "ED03BB616EB2F60BEC80151114BB25CEF515B226 845'.");
     /* We don't accept this hex string, because it contains an odd number
      * of hex characters. */
     DirectorySignatureBuilder.createWithSigningKey("845");
@@ -1294,8 +1590,11 @@ public class RelayNetworkStatusConsensusImplTest {
         "845CF1D0B370CA443A8579D18E7987E7E532F639845CF1D0B370CA443A");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNonAsciiByte20() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized line 'network-status-versi�n 3' in "
+        + "consensus.");
     ConsensusBuilder cb = new ConsensusBuilder();
     byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[20] = (byte) 200;
@@ -1303,9 +1602,12 @@ public class RelayNetworkStatusConsensusImplTest {
         new int[] { 0, consensusBytes.length }, true);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNonAsciiByteMinusOne()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line '�network-status-version 3' in consensus.");
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.networkStatusVersionLine = "Xnetwork-status-version 3";
     byte[] consensusBytes = cb.buildConsensusBytes();
@@ -1314,9 +1616,12 @@ public class RelayNetworkStatusConsensusImplTest {
         new int[] { 0, consensusBytes.length }, true);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUnrecognizedHeaderLineFail()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line 'unrecognized-line 1' in consensus.");
     String unrecognizedLine = "unrecognized-line 1";
     ConsensusBuilder.createWithUnrecognizedHeaderLine(unrecognizedLine,
         true);
@@ -1333,9 +1638,12 @@ public class RelayNetworkStatusConsensusImplTest {
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUnrecognizedDirSourceLineFail()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line 'unrecognized-line 1' in dir-source entry.");
     String unrecognizedLine = "unrecognized-line 1";
     ConsensusBuilder.createWithUnrecognizedDirSourceLine(unrecognizedLine,
         true);
@@ -1352,9 +1660,12 @@ public class RelayNetworkStatusConsensusImplTest {
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUnrecognizedStatusEntryLineFail()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized line 'unrecognized-line 1' in "
+        + "status entry.");
     String unrecognizedLine = "unrecognized-line 1";
     ConsensusBuilder.createWithUnrecognizedStatusEntryLine(
         unrecognizedLine, true);
@@ -1371,9 +1682,12 @@ public class RelayNetworkStatusConsensusImplTest {
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUnrecognizedDirectoryFooterLineFail()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line 'unrecognized-line 1' in consensus.");
     String unrecognizedLine = "unrecognized-line 1";
     ConsensusBuilder.createWithUnrecognizedFooterLine(unrecognizedLine,
         true);
@@ -1390,9 +1704,12 @@ public class RelayNetworkStatusConsensusImplTest {
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUnrecognizedDirectorySignatureLineFail()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line 'unrecognized-line 1' in dir-source entry.");
     String unrecognizedLine = "unrecognized-line 1";
     ConsensusBuilder.createWithUnrecognizedDirectorySignatureLine(
         unrecognizedLine, true);

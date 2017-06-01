@@ -970,8 +970,11 @@ public class ExtraInfoDescriptorImplTest {
     assertNotNull(descriptor.getDirreqReadHistory());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExtraInfoLineMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'extra-info' is contained 0 times, but "
+        + "must be contained exactly once.");
     DescriptorBuilder.createWithExtraInfoLine(null);
   }
 
@@ -996,55 +999,81 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getFingerprint());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExtraInfoLineNotFirst()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Keyword 'extra-info' must be contained in the first line.");
     DescriptorBuilder.createWithExtraInfoLine("geoip-db-digest "
         + "916A3CA8B7DF61473D5AE5B21711F35F301CE9E8\n"
         + "extra-info chaoscomputerclub5 "
         + "A9C039A5FD02FCA06303DCFAABE25C5912C63B26");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNicknameMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'extra-info  "
+        + "A9C039A5FD02FCA06303DCFAABE25C5912C63B26' "
+        + "in extra-info descriptor.");
     DescriptorBuilder.createWithExtraInfoLine("extra-info  "
         + "A9C039A5FD02FCA06303DCFAABE25C5912C63B26");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNicknameInvalidChar() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal nickname in line 'extra-info "
+        + "chaoscomputerclub% A9C039A5FD02FCA06303DCFAABE25C5912C63B26'.");
     DescriptorBuilder.createWithExtraInfoLine("extra-info "
         + "chaoscomputerclub% A9C039A5FD02FCA06303DCFAABE25C5912C63B26");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNicknameTooLong() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal nickname in line 'extra-info "
+        + "chaoscomputerclub5ReallyLongNickname "
+        + "A9C039A5FD02FCA06303DCFAABE25C5912C63B26'.");
     DescriptorBuilder.createWithExtraInfoLine("extra-info "
         + "chaoscomputerclub5ReallyLongNickname "
         + "A9C039A5FD02FCA06303DCFAABE25C5912C63B26");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintG() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'extra-info "
+        + "chaoscomputerclub5 G9C039A5FD02FCA06303DCFAABE25C5912C63B26'.");
     DescriptorBuilder.createWithExtraInfoLine("extra-info "
         + "chaoscomputerclub5 G9C039A5FD02FCA06303DCFAABE25C5912C63B26");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintTooShort() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'extra-info "
+        + "chaoscomputerclub5 A9C039A5FD02FCA06303DCFAABE25C5912C6'.");
     DescriptorBuilder.createWithExtraInfoLine("extra-info "
         + "chaoscomputerclub5 A9C039A5FD02FCA06303DCFAABE25C5912C6");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintTooLong() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'extra-info "
+        + "chaoscomputerclub5 A9C039A5FD02FCA06303DCFAABE25C5912C63B26A9C0'.");
     DescriptorBuilder.createWithExtraInfoLine("extra-info "
         + "chaoscomputerclub5 A9C039A5FD02FCA06303DCFAABE25C5912C63B26"
         + "A9C0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPublishedMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'published' is contained 0 times, "
+        + "but must be contained exactly once.");
     DescriptorBuilder.createWithPublishedLine(null);
   }
 
@@ -1062,9 +1091,13 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(1328951316000L, descriptor.getPublishedMillis());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWriteHistoryNegativeBytes()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Negative bandwidth values are not allowed in "
+        + "line 'write-history 2012-02-11 09:03:39 (900 s) -4713350144,"
+        + "-4723824640,-4710717440,-4572675072'.");
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
         + "2012-02-11 09:03:39 (900 s) "
         + "-4713350144,-4723824640,-4710717440,-4572675072");
@@ -1086,9 +1119,13 @@ public class ExtraInfoDescriptorImplTest {
         + "4707695616,4699666432,4650004480,4489718784");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testReadHistoryNegativeInterval()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Only positive interval lengths are allowed in "
+        + "line 'read-history 2012-02-11 09:03:39 (-900 s) 4707695616,"
+        + "4699666432,4650004480,4489718784'.");
     DescriptorBuilder.createWithReadHistoryLine("read-history "
         + "2012-02-11 09:03:39 (-900 s) "
         + "4707695616,4699666432,4650004480,4489718784");
@@ -1102,17 +1139,25 @@ public class ExtraInfoDescriptorImplTest {
         + "4707695616,4699666432,4650004480,4489718784");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirreqWriteHistoryMissingBytesBegin()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid bandwidth-history line "
+        + "'dirreq-write-history 2012-02-11 09:03:39 (900 s) "
+        + ",64996352,60625920,67922944'.");
     DescriptorBuilder.createWithDirreqWriteHistoryLine(
         "dirreq-write-history 2012-02-11 09:03:39 (900 s) "
         + ",64996352,60625920,67922944");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirreqWriteHistoryMissingBytesMiddle()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid bandwidth-history line "
+        + "'dirreq-write-history 2012-02-11 09:03:39 (900 s) 81281024,,"
+        + "60625920,67922944'.");
     DescriptorBuilder.createWithDirreqWriteHistoryLine(
         "dirreq-write-history 2012-02-11 09:03:39 (900 s) "
         + "81281024,,60625920,67922944");
@@ -1126,9 +1171,13 @@ public class ExtraInfoDescriptorImplTest {
         + "67922944 bin_size=1024");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirreqReadHistoryMissingBytesEnd()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid bandwidth-history line "
+        + "'dirreq-read-history 2012-02-11 09:03:39 (900 s) "
+        + "17074176,16235520,16005120,'.");
     DescriptorBuilder.createWithDirreqReadHistoryLine(
         "dirreq-read-history 2012-02-11 09:03:39 (900 s) "
         + "17074176,16235520,16005120,");
@@ -1143,23 +1192,32 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getGeoipDbDigestSha1Hex());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipDbDigestTooShort()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'geoip-db-digest "
+        + "916A3CA8B7DF61473D5AE5B21711F35F301C'.");
     DescriptorBuilder.createWithGeoipDbDigestLine("geoip-db-digest "
         + "916A3CA8B7DF61473D5AE5B21711F35F301C");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipDbDigestIllegalChars()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'geoip-db-digest "
+        + "&%6A3CA8B7DF61473D5AE5B21711F35F301CE9E8'.");
     DescriptorBuilder.createWithGeoipDbDigestLine("geoip-db-digest "
         + "&%6A3CA8B7DF61473D5AE5B21711F35F301CE9E8");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipDbDigestMissing()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'geoip-db-digest' in extra-info "
+        + "descriptor.");
     DescriptorBuilder.createWithGeoipDbDigestLine("geoip-db-digest");
   }
 
@@ -1206,40 +1264,59 @@ public class ExtraInfoDescriptorImplTest {
     assertFalse(ips.containsKey("pl"));
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipStartTimeDateOnly()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'geoip-start-time 2012-02-10' in "
+        + "extra-info descriptor.");
     GeoipStatsBuilder.createWithGeoipStartTimeLine("geoip-start-time "
         + "2012-02-10");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipClientOriginsDash()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'geoip-client-origins de-1152,cn=896,us=712"
+        + ",it=504,ru=352,fr=208,gb=208,ir=200' contains an illegal key in "
+        + "list element 'de-1152'.");
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins de-1152,cn=896,us=712,it=504,ru=352,fr=208,"
         + "gb=208,ir=200");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipClientOriginsZero()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'geoip-client-origins de=zero,cn=896,us=712"
+        + ",it=504,ru=352,fr=208,gb=208,ir=200' contains an illegal value in "
+        + "list element 'de=zero'.");
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins de=zero,cn=896,us=712,it=504,ru=352,fr=208,"
         + "gb=208,ir=200");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipClientOriginsNone()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'geoip-client-origins de=none,cn=896,us=712"
+        + ",it=504,ru=352,fr=208,gb=208,ir=200' contains an illegal value in "
+        + "list element 'de=none'.");
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins de=none,cn=896,us=712,it=504,ru=352,fr=208,"
         + "gb=208,ir=200");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipClientOriginsOther()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'geoip-client-origins de=1152,cn=896,"
+        + "us=712,it=504,ru=352,fr=208,gb=208,other=200' contains an "
+        + "illegal key in list element 'other=200'.");
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins de=1152,cn=896,us=712,it=504,ru=352,fr=208,"
         + "gb=208,other=200");
@@ -1261,33 +1338,49 @@ public class ExtraInfoDescriptorImplTest {
         + "GB=208,IR=200");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipClientOriginsMissingBegin()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'geoip-client-origins ,cn=896,us=712,"
+        + "it=504,ru=352,fr=208,gb=208,ir=200' "
+        + "contains an illegal key in list element ''.");
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins ,cn=896,us=712,it=504,ru=352,fr=208,gb=208,"
         + "ir=200");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipClientOriginsMissingMiddle()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'geoip-client-origins de=1152,,us=712,"
+        + "it=504,ru=352,fr=208,gb=208,ir=200' contains an illegal key in "
+        + "list element ''.");
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins de=1152,,us=712,it=504,ru=352,fr=208,"
         + "gb=208,ir=200");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipClientOriginsMissingEnd()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'geoip-client-origins de=1152,cn=896,"
+        + "us=712,it=504,ru=352,fr=208,gb=208,' contains an illegal key in "
+        + "list element ''.");
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins de=1152,cn=896,us=712,it=504,ru=352,fr=208,"
         + "gb=208,");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testGeoipClientOriginsDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'geoip-client-origins de=1152,de=952,"
+        + "cn=896,us=712,it=504,ru=352,fr=208,gb=208,ir=200' contains "
+        + "duplicate key 'de'.");
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
         "geoip-client-origins de=1152,de=952,cn=896,us=712,it=504,"
         + "ru=352,fr=208,gb=208,ir=200");
@@ -1346,9 +1439,12 @@ public class ExtraInfoDescriptorImplTest {
         + "2012-02-11 00:59:53 (172800 s) XXXXXXXXXXXXXXXXXXXXXXXXXXX");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirreqV3IpsThreeLetterCountry()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'dirreq-v3-ips usa=1544' contains an "
+        + "illegal key in list element 'usa=1544'.");
     DirreqStatsBuilder.createWithDirreqV3IpsLine("dirreq-v3-ips "
         + "usa=1544");
   }
@@ -1366,9 +1462,12 @@ public class ExtraInfoDescriptorImplTest {
     DirreqStatsBuilder.createWithDirreqV2IpsLine("dirreq-v2-ips 00=8");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirreqV3ReqsOneLetterCountry()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'dirreq-v3-reqs u=1744' contains an "
+        + "illegal key in list element 'u=1744'.");
     DirreqStatsBuilder.createWithDirreqV3ReqsLine("dirreq-v3-reqs "
         + "u=1744");
   }
@@ -1380,15 +1479,21 @@ public class ExtraInfoDescriptorImplTest {
     assertNull(eid.getDirreqV3Reqs());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirreqV2ReqsNoNumber()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'dirreq-v2-reqs us=' contains an illegal "
+        + "value in list element 'us='.");
     DirreqStatsBuilder.createWithDirreqV2ReqsLine("dirreq-v2-reqs us=");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirreqV3RespTwoEqualSigns()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'dirreq-v3-resp ok==10848' contains an "
+        + "illegal value in list element 'ok==10848'.");
     DirreqStatsBuilder.createWithDirreqV3RespLine("dirreq-v3-resp "
         + "ok==10848");
   }
@@ -1410,23 +1515,28 @@ public class ExtraInfoDescriptorImplTest {
         + "ok=1084 4801=ko");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testDirreqV2RespNull()
-      throws DescriptorParseException {
+  @Test
+  public void testDirreqV2RespNull() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Line 'dirreq-v2-resp ok=null' contains an illegal value in "
+        + "list element 'ok=null'.");
     DirreqStatsBuilder.createWithDirreqV2RespLine("dirreq-v2-resp "
         + "ok=null");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testDirreqV2ShareComma()
-      throws DescriptorParseException {
+  @Test
+  public void testDirreqV2ShareComma() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'dirreq-v2-share 0,37%'.");
     DirreqStatsBuilder.createWithDirreqV2ShareLine("dirreq-v2-share "
         + "0,37%");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testDirreqV3ShareNoPercent()
-      throws DescriptorParseException {
+  @Test
+  public void testDirreqV3ShareNoPercent() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'dirreq-v3-share 0.37'.");
     DirreqStatsBuilder.createWithDirreqV3ShareLine("dirreq-v3-share "
         + "0.37");
   }
@@ -1438,9 +1548,11 @@ public class ExtraInfoDescriptorImplTest {
         + "0.37% 123456");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testDirreqV3DirectDlSpace()
-      throws DescriptorParseException {
+  @Test
+  public void testDirreqV3DirectDlSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'dirreq-v3-direct-dl complete 36' contains "
+        + "an illegal value in list element 'complete'.");
     DirreqStatsBuilder.createWithDirreqV3DirectDlLine(
         "dirreq-v3-direct-dl complete 36");
   }
@@ -1452,16 +1564,20 @@ public class ExtraInfoDescriptorImplTest {
         "dirreq-v2-direct-dl complete=-8");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testDirreqV3TunneledDlTooLarge()
-      throws DescriptorParseException {
+  @Test
+  public void testDirreqV3TunneledDlTooLarge() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'dirreq-v3-tunneled-dl complete=2147483648'"
+        + " contains an illegal value in list element 'complete=2147483648'.");
     DirreqStatsBuilder.createWithDirreqV3TunneledDlLine(
         "dirreq-v3-tunneled-dl complete=2147483648");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testDirreqV3TunneledDlDouble()
-      throws DescriptorParseException {
+  @Test
+  public void testDirreqV3TunneledDlDouble() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'dirreq-v2-tunneled-dl complete=0.001' "
+        + "contains an illegal value in list element 'complete=0.001'.");
     DirreqStatsBuilder.createWithDirreqV2TunneledDlLine(
         "dirreq-v2-tunneled-dl complete=0.001");
   }
@@ -1485,15 +1601,20 @@ public class ExtraInfoDescriptorImplTest {
     assertFalse(ips.containsKey("no"));
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEntryStatsEndNoDate() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal line 'entry-stats-end 01:59:39 (86400 s)'.");
     EntryStatsBuilder.createWithEntryStatsEndLine("entry-stats-end "
         + "01:59:39 (86400 s)");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testEntryStatsIpsSemicolon()
-      throws DescriptorParseException {
+  @Test
+  public void testEntryStatsIpsSemicolon() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'entry-ips ir=25368;us=15744' contains an "
+        + "illegal value in list element 'ir=25368;us=15744'.");
     EntryStatsBuilder.createWithEntryIpsLine("entry-ips "
         + "ir=25368;us=15744");
   }
@@ -1519,37 +1640,50 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(866, descriptor.getCellCircuitsPerDecile());
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testCellStatsEndNoSeconds()
-      throws DescriptorParseException {
+  @Test
+  public void testCellStatsEndNoSeconds() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal line 'cell-stats-end 2012-02-11 01:59:39 (86400)'.");
     CellStatsBuilder.createWithCellStatsEndLine("cell-stats-end "
         + "2012-02-11 01:59:39 (86400)");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testCellProcessedCellsNineComma()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'cell-processed-cells 1441,11,6,4,2,"
+        + "1,1,1,1,' contains an illegal value in list element ''.");
     CellStatsBuilder.createWithCellProcessedCellsLine(
         "cell-processed-cells 1441,11,6,4,2,1,1,1,1,");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testCellProcessedCellsEleven()
-      throws DescriptorParseException {
+  @Test
+  public void testCellProcessedCellsEleven() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("There must be exact ten values in line "
+        + "'cell-queued-cells 3.29,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,"
+        + "0.00,0.00'.");
     CellStatsBuilder.createWithCellQueuedCellsLine("cell-queued-cells "
         + "3.29,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testCellTimeInQueueDouble()
-      throws DescriptorParseException {
+  @Test
+  public void testCellTimeInQueueDouble() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'cell-time-in-queue 524.0,1.0,1.0,0.0,0.0,"
+        + "25.0,0.0,0.0,0.0,0.0' contains an illegal value in list element "
+        + "'524.0'.");
     CellStatsBuilder.createWithCellTimeInQueueLine("cell-time-in-queue "
         + "524.0,1.0,1.0,0.0,0.0,25.0,0.0,0.0,0.0,0.0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testCellCircuitsPerDecileNegative()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'cell-circuits-per-decile -866'.");
     CellStatsBuilder.createWithCellCircuitsPerDecileLine(
         "cell-circuits-per-decile -866");
   }
@@ -1576,9 +1710,11 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(1744, descriptor.getConnBiDirectBoth());
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testConnBiDirectStatsFive()
-      throws DescriptorParseException {
+  @Test
+  public void testConnBiDirectStatsFive() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'conn-bi-direct 2012-02-11 01:59:39"
+        + " (86400 s) 42173,1591,1310,1744,42' in extra-info descriptor.");
     DescriptorBuilder.createWithConnBiDirectLine("conn-bi-direct "
         + "2012-02-11 01:59:39 (86400 s) 42173,1591,1310,1744,42");
   }
@@ -1624,23 +1760,30 @@ public class ExtraInfoDescriptorImplTest {
     }
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testExitStatsEndNoSeconds()
-      throws DescriptorParseException {
+  @Test
+  public void testExitStatsEndNoSeconds() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line "
+        + "'exit-stats-end 2012-02-11 01:59 (86400 s)'.");
     ExitStatsBuilder.createWithExitStatsEndLine("exit-stats-end "
         + "2012-02-11 01:59 (86400 s)");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExitStatsWrittenNegativePort()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Invalid port in line 'exit-kibibytes-written -25=74647'.");
     ExitStatsBuilder.createWithExitKibibytesWrittenLine(
         "exit-kibibytes-written -25=74647");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testExitStatsWrittenUnknown()
-      throws DescriptorParseException {
+  @Test
+  public void testExitStatsWrittenUnknown() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Invalid port in line 'exit-kibibytes-written unknown=74647'.");
     ExitStatsBuilder.createWithExitKibibytesWrittenLine(
         "exit-kibibytes-written unknown=74647");
   }
@@ -1655,9 +1798,12 @@ public class ExtraInfoDescriptorImplTest {
         "exit-kibibytes-written =74647");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExitStatsReadNegativeBytes()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Invalid value in line 'exit-kibibytes-read 25=-35562'.");
     ExitStatsBuilder.createWithExitKibibytesReadLine(
         "exit-kibibytes-read 25=-35562");
   }
@@ -1705,9 +1851,12 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(1728, trans.get("obfs3").intValue());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBridgeStatsEndIntervalZero()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Interval length must be positive in line "
+        + "'bridge-stats-end 2012-02-11 01:59:39 (0 s)'.");
     BridgeStatsBuilder.createWithBridgeStatsEndLine("bridge-stats-end "
         + "2012-02-11 01:59:39 (0 s)");
   }
@@ -1719,15 +1868,21 @@ public class ExtraInfoDescriptorImplTest {
         + "2012-02-11 01:59:39 (86400 s) 99999999999999999999999999999999");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBridgeIpsDouble()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'bridge-ips ir=24.5' contains an illegal "
+        + "value in list element 'ir=24.5'.");
     BridgeStatsBuilder.createWithBridgeIpsLine("bridge-ips ir=24.5");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBridgeIpsNonAsciiKeyword()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized character in keyword "
+        + "'�bridge-ips' in line '�bridge-ips'.");
     DescriptorBuilder.createWithNonAsciiLineBytes(new byte[] {
         0x14, (byte) 0xfe, 0x18,                  // non-ascii chars
         0x62, 0x72, 0x69, 0x64, 0x67, 0x65, 0x2d, // "bridge-"
@@ -1740,9 +1895,12 @@ public class ExtraInfoDescriptorImplTest {
     BridgeStatsBuilder.createWithBridgeIpsLine("bridge-ips ir=24 5");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBridgeIpVersionsDouble()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'bridge-ip-versions v4=24.5' "
+        + "contains an illegal value in list element 'v4=24.5'.");
     BridgeStatsBuilder.createWithBridgeIpVersionsLine(
         "bridge-ip-versions v4=24.5");
   }
@@ -1754,9 +1912,12 @@ public class ExtraInfoDescriptorImplTest {
         "bridge-ip-versions v4=24 5");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBridgeIpTransportsDouble()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'bridge-ip-transports obfs2=24.5' contains "
+        + "an illegal value in list element 'obfs2=24.5'.");
     BridgeStatsBuilder.createWithBridgeIpTransportsLine(
         "bridge-ip-transports obfs2=24.5");
   }
@@ -1837,8 +1998,11 @@ public class ExtraInfoDescriptorImplTest {
             0L, 0L, 0L, 0L, 0L, 42L});
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPaddingCountsNoTime() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'padding-counts 2017-05-10"
+        + " (86400 s) bin-size=10000 write-drop=10000'.");
     DescriptorBuilder.createWithPaddingCountsLine("padding-counts 2017-05-10 "
         + "(86400 s) bin-size=10000 write-drop=10000");
   }
@@ -1954,16 +2118,24 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getHidservRendRelayedCellsParameters().isEmpty());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testHidservDirOnionsSeenCommaSeparatedParams()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'hidserv-dir-onions-seen -3 delta_f=8,"
+        + "epsilon=0.30,bin_size=8' contains an illegal value in list element "
+        + "'delta_f=8,epsilon=0.30,bin_size=8'.");
     HidservStatsBuilder.createWithHidservDirOnionsSeenLine(
         "hidserv-dir-onions-seen -3 delta_f=8,epsilon=0.30,bin_size=8");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testHidservDirOnionsSeenNoDoubleParams()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'hidserv-dir-onions-seen -3 delta_f=A "
+        + "epsilon=B bin_size=C' contains an illegal value in list element "
+        + "'delta_f=A'.");
     HidservStatsBuilder.createWithHidservDirOnionsSeenLine(
         "hidserv-dir-onions-seen -3 delta_f=A epsilon=B bin_size=C");
   }
@@ -1975,9 +2147,12 @@ public class ExtraInfoDescriptorImplTest {
         "hidserv-dir-onions-seen -3 delta_f=8 epsilon=0.30 bin_size=8 pi=3");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testRouterSignatureNotLastLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'published' is contained 2 times, "
+        + "but must be contained exactly once.");
     DescriptorBuilder.createWithRouterSignatureLines("router-signature\n"
         + "-----BEGIN SIGNATURE-----\n"
         + "o4j+kH8UQfjBwepUnr99v0ebN8RpzHJ/lqYsTojXHy9kMr1RNI9IDeSzA7PSqT"
@@ -1986,9 +2161,11 @@ public class ExtraInfoDescriptorImplTest {
         + "-----END SIGNATURE-----\npublished 2012-02-11 09:08:36");
   }
 
-  @Test(expected = DescriptorParseException.class)
-  public void testUnrecognizedLineFail()
-      throws DescriptorParseException {
+  @Test
+  public void testUnrecognizedLineFail() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized line 'unrecognized-line 1' in "
+        + "extra-info descriptor.");
     String unrecognizedLine = "unrecognized-line 1";
     DescriptorBuilder.createWithUnrecognizedLine(unrecognizedLine, true);
   }
@@ -2036,9 +2213,12 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getRouterSignatureEd25519());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519IdentityMasterKeyMismatch()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Mismatch between identity-ed25519 and master-key-ed25519.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         "master-key-ed25519 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         ROUTER_SIG_ED25519_LINE);
@@ -2051,17 +2231,23 @@ public class ExtraInfoDescriptorImplTest {
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519IdentityDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'identity-ed25519' is contained 2 times,"
+        + " but must be contained at most once.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES + "\n"
         + IDENTITY_ED25519_LINES, MASTER_KEY_ED25519_LINE,
         ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519IdentityEmptyCrypto()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Invalid length of identity-ed25519 (in bytes): 0");
     DescriptorBuilder.createWithEd25519Lines("identity-ed25519\n"
         + "-----BEGIN ED25519 CERT-----\n-----END ED25519 CERT-----",
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
@@ -2078,9 +2264,12 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getMasterKeyEd25519());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519MasterKeyDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'master-key-ed25519' is contained 2 "
+        + "times, but must be contained at most once.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE + "\n" + MASTER_KEY_ED25519_LINE,
         ROUTER_SIG_ED25519_LINE);
@@ -2093,17 +2282,23 @@ public class ExtraInfoDescriptorImplTest {
         MASTER_KEY_ED25519_LINE, null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519RouterSigDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'router-sig-ed25519' is contained "
+        + "2 times, but must be contained at most once.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE + "\n"
         + ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519FollowedbyUnrecognizedLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line 'unrecognized-line 1' in extra-info descriptor.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE
         + "\nunrecognized-line 1");

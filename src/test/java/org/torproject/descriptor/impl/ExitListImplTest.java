@@ -9,12 +9,17 @@ import static org.junit.Assert.assertTrue;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExitListEntry;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ExitListImplTest {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   @Test()
   public void testAnnotatedInput() throws Exception {
@@ -74,14 +79,18 @@ public class ExitListImplTest {
     assertTrue("Map: " + map, map.containsKey("81.7.17.173"));
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testInsufficientInput0() throws Exception {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Missing 'ExitAddress' line in exit list entry.");
     new ExitListImpl((tordnselAnnotation + insufficientInput[0])
         .getBytes("US-ASCII"), fileName, false);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testInsufficientInput1() throws Exception {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Missing 'Published' line in exit list entry.");
     new ExitListImpl((tordnselAnnotation + insufficientInput[1])
         .getBytes("US-ASCII"), fileName, false);
   }

@@ -7,9 +7,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.torproject.descriptor.DescriptorParseException;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class RelayNetworkStatusImplTest {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   private static final String validAnnotation = "@type network-status-2 1.0\n";
 
@@ -36,8 +41,10 @@ public class RelayNetworkStatusImplTest {
   private static final String validStatus =
       validAnnotation + validHeader + validFooter;
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testParseBrokenHeader() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized line 'xyx' in v2 network status.");
     String invalidHeader = "network-status-version 2\nxyx\nabc";
     byte[] statusBytes = (validAnnotation + invalidHeader + validFooter)
         .getBytes();

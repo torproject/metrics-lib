@@ -14,7 +14,9 @@ import org.torproject.descriptor.BridgeServerDescriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ServerDescriptor;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,6 +28,9 @@ import java.util.TreeSet;
 
 /* Test parsing of relay server descriptors. */
 public class ServerDescriptorImplTest {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   /* Helper class to build a descriptor based on default data and
    * modifications requested by test methods. */
@@ -500,8 +505,11 @@ public class ServerDescriptorImplTest {
         descriptor.getDigestSha256Base64());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testRouterLineMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'router' is contained 0 times, but "
+        + "must be contained exactly once.");
     DescriptorBuilder.createWithRouterLine(null);
   }
 
@@ -517,27 +525,39 @@ public class ServerDescriptorImplTest {
     assertEquals(0, (int) descriptor.getDirPort());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testRouterLinePrecedingHibernatingLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'router' must be contained in "
+        + "the first line.");
     DescriptorBuilder.createWithRouterLine("hibernating 1\nrouter "
         + "saberrider2008 94.134.192.243 9001 0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNicknameMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'router  94.134.192.243 9001 0 0' "
+        + "in server descriptor.");
     DescriptorBuilder.createWithRouterLine("router  94.134.192.243 9001 "
         + "0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNicknameInvalidChar() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal nickname in line "
+        + "'router $aberrider2008 94.134.192.243 9001 0 0'.");
     DescriptorBuilder.createWithRouterLine("router $aberrider2008 "
         + "94.134.192.243 9001 0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNicknameTooLong() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal nickname in line 'router "
+        + "saberrider2008ReallyLongNickname 94.134.192.243 9001 0 0'.");
     DescriptorBuilder.createWithRouterLine("router "
         + "saberrider2008ReallyLongNickname 94.134.192.243 9001 0 0");
   }
@@ -551,50 +571,74 @@ public class ServerDescriptorImplTest {
     assertEquals("94.134.192.243", descriptor.getAddress());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testAddress24() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'94.134.192/24' in line 'router saberrider2008 "
+        + "94.134.192/24 9001 0 0' is not a valid IPv4 address.");
     DescriptorBuilder.createWithRouterLine("router saberrider2008 "
         + "94.134.192/24 9001 0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testAddress294() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'294.134.192.243' in line 'router "
+        + "saberrider2008 294.134.192.243 9001 0 0' is not a valid "
+        + "IPv4 address.");
     DescriptorBuilder.createWithRouterLine("router saberrider2008 "
         + "294.134.192.243 9001 0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testAddressMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal line 'router saberrider2008  9001 0 0' in server descriptor.");
     DescriptorBuilder.createWithRouterLine("router saberrider2008  9001 "
         + "0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testOrPort99001() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'99001' in line 'router saberrider2008 "
+        + "94.134.192.243 99001 0 0' is not a valid port number.");
     DescriptorBuilder.createWithRouterLine("router saberrider2008 "
         + "94.134.192.243 99001 0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testOrPortMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'router saberrider2008 "
+        + "94.134.192.243  0 0' in server descriptor.");
     DescriptorBuilder.createWithRouterLine("router saberrider2008 "
         + "94.134.192.243  0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testOrPortOne() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'one' in line 'router saberrider2008 "
+        + "94.134.192.243 one 0 0' is not a valid port number.");
     DescriptorBuilder.createWithRouterLine("router saberrider2008 "
         + "94.134.192.243 one 0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testOrPortNewline() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal keyword in line ' 0 0'.");
     DescriptorBuilder.createWithRouterLine("router saberrider2008 "
         + "94.134.192.243 0\n 0 0");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testDirPortMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'router saberrider2008 "
+        + "94.134.192.243 9001 0 ' in server descriptor.");
     DescriptorBuilder.createWithRouterLine("router saberrider2008 "
         + "94.134.192.243 9001 0 ");
   }
@@ -649,15 +693,20 @@ public class ServerDescriptorImplTest {
         descriptor.getCircuitProtocolVersions());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testProtocolsAb() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown
+        .expectMessage("Illegal line 'opt protocols Link A B Circuit 1'.");
     DescriptorBuilder.createWithProtocolsLine("opt protocols Link A B "
         + "Circuit 1");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testProtocolsNoCircuitVersions()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'opt protocols Link 1 2'.");
     DescriptorBuilder.createWithProtocolsLine("opt protocols Link 1 2");
   }
 
@@ -671,13 +720,18 @@ public class ServerDescriptorImplTest {
         descriptor.getProtocols().get("Purple"));
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testProtoInvalid() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid line 'proto Invalid=1+2+3'.");
     DescriptorBuilder.createWithProtoLine("proto Invalid=1+2+3");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPublishedMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'published' is contained 0 times, "
+        + "but must be contained exactly once.");
     DescriptorBuilder.createWithPublishedLine(null);
   }
 
@@ -688,26 +742,38 @@ public class ServerDescriptorImplTest {
     assertEquals(1325390599000L, descriptor.getPublishedMillis());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPublished2039() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal timestamp format in line 'published 2039-01-01 04:03:19'.");
     DescriptorBuilder.createWithPublishedLine("published 2039-01-01 "
         + "04:03:19");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPublished1912() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line "
+        + "'published 1912-01-01 04:03:19'.");
     DescriptorBuilder.createWithPublishedLine("published 1912-01-01 "
         + "04:03:19");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPublishedFeb31() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line "
+        + "'published 2012-02-31 04:03:19'.");
     DescriptorBuilder.createWithPublishedLine("published 2012-02-31 "
         + "04:03:19");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testPublishedNoTime() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Line 'published 2012-01-01' does not contain "
+        + "a timestamp at the expected position.");
     DescriptorBuilder.createWithPublishedLine("published 2012-01-01");
   }
 
@@ -727,26 +793,38 @@ public class ServerDescriptorImplTest {
         descriptor.getFingerprint());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintG() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'opt fingerprint "
+        + "G873 3048 FC8E C910 2466 AD8F 3098 622B F1BF 71FD'.");
     DescriptorBuilder.createWithFingerprintLine("opt fingerprint G873 "
         + "3048 FC8E C910 2466 AD8F 3098 622B F1BF 71FD");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintTooShort() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'opt fingerprint D873 3048 FC8E "
+        + "C910 2466 AD8F 3098 622B F1BF'.");
     DescriptorBuilder.createWithFingerprintLine("opt fingerprint D873 "
         + "3048 FC8E C910 2466 AD8F 3098 622B F1BF");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintTooLong() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'opt fingerprint D873 3048 "
+        + "FC8E C910 2466 AD8F 3098 622B F1BF 71FD D873'.");
     DescriptorBuilder.createWithFingerprintLine("opt fingerprint D873 "
         + "3048 FC8E C910 2466 AD8F 3098 622B F1BF 71FD D873");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFingerprintNoSpaces() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'opt fingerprint "
+        + "D8733048FC8EC9102466AD8F3098622BF1BF71FD'.");
     DescriptorBuilder.createWithFingerprintLine("opt fingerprint "
         + "D8733048FC8EC9102466AD8F3098622BF1BF71FD");
   }
@@ -765,8 +843,10 @@ public class ServerDescriptorImplTest {
     assertEquals(48, descriptor.getUptime().longValue());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUptimeFourtyEight() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal value in line 'uptime fourty-eight'.");
     DescriptorBuilder.createWithUptimeLine("uptime fourty-eight");
   }
 
@@ -775,18 +855,24 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithUptimeLine("uptime -1");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUptimeSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Wrong number of values in line 'uptime '.");
     DescriptorBuilder.createWithUptimeLine("uptime ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUptimeNoSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Wrong number of values in line 'uptime'.");
     DescriptorBuilder.createWithUptimeLine("uptime");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUptimeFourEight() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Wrong number of values in line 'uptime 4 8'.");
     DescriptorBuilder.createWithUptimeLine("uptime 4 8");
   }
 
@@ -799,13 +885,19 @@ public class ServerDescriptorImplTest {
     assertEquals(53470, (int) descriptor.getBandwidthObserved());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBandwidthMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'bandwidth' is contained 0 times, "
+        + "but must be contained exactly once.");
     DescriptorBuilder.createWithBandwidthLine(null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBandwidthOneValue() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown
+        .expectMessage("Wrong number of values in line 'bandwidth 51200'.");
     DescriptorBuilder.createWithBandwidthLine("bandwidth 51200");
   }
 
@@ -821,15 +913,20 @@ public class ServerDescriptorImplTest {
     assertEquals(-1, (int) descriptor.getBandwidthObserved());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBandwidthFourValues() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Wrong number of values in line "
+        + "'bandwidth 51200 51200 53470 53470'.");
     DescriptorBuilder.createWithBandwidthLine("bandwidth 51200 51200 "
         + "53470 53470");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testBandwidthMinusOneTwoThree()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal values in line 'bandwidth -1 -2 -3'.");
     DescriptorBuilder.createWithBandwidthLine("bandwidth -1 -2 -3");
   }
 
@@ -842,23 +939,31 @@ public class ServerDescriptorImplTest {
         descriptor.getExtraInfoDigestSha1Hex());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExtraInfoDigestNoSpace()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'opt extra-info-digest'.");
     DescriptorBuilder.createWithExtraInfoDigestLine("opt "
         + "extra-info-digest");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExtraInfoDigestTooShort()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'opt "
+        + "extra-info-digest 1469D1550738A25B1E7B47CDDBCD7B2899F5'.");
     DescriptorBuilder.createWithExtraInfoDigestLine("opt "
         + "extra-info-digest 1469D1550738A25B1E7B47CDDBCD7B2899F5");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExtraInfoDigestTooLong()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal hex string in line 'opt "
+        + "extra-info-digest 1469D1550738A25B1E7B47CDDBCD7B2899F51B741469'.");
     DescriptorBuilder.createWithExtraInfoDigestLine("opt "
         + "extra-info-digest "
         + "1469D1550738A25B1E7B47CDDBCD7B2899F51B741469");
@@ -947,8 +1052,11 @@ public class ServerDescriptorImplTest {
     assertEquals("Random Person", descriptor.getContact());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testContactDuplicate() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'contact' is contained 2 times, "
+        + "but must be contained at most once.");
     DescriptorBuilder.createWithContactLine("contact Random "
         + "Person\ncontact Random Person");
   }
@@ -992,8 +1100,11 @@ public class ServerDescriptorImplTest {
         descriptor.getExitPolicyLines());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExitPolicyNoPort() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'*' in line 'reject *' must contain address "
+        + "and port.");
     DescriptorBuilder.createWithExitPolicyLines("reject *");
   }
 
@@ -1006,25 +1117,37 @@ public class ServerDescriptorImplTest {
         "reject *:*"}), descriptor.getExitPolicyLines());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExitPolicyReject321() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'123.123.123.321' in line 'reject "
+        + "123.123.123.321:80' is not a valid IPv4 address.");
     DescriptorBuilder.createWithExitPolicyLines("reject "
         + "123.123.123.321:80");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExitPolicyRejectPort66666()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("'66666' in line 'reject *:66666' "
+        + "is not a valid port number.");
     DescriptorBuilder.createWithExitPolicyLines("reject *:66666");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExitPolicyProjectAll() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line 'project *:*' in server descriptor.");
     DescriptorBuilder.createWithExitPolicyLines("project *:*");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testExitPolicyMissing() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Either keyword 'accept' or 'reject' must be "
+        + "contained at least once.");
     DescriptorBuilder.createWithExitPolicyLines(null);
   }
 
@@ -1048,9 +1171,12 @@ public class ServerDescriptorImplTest {
         + "-----END SIGNATURE----");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testRouterSignatureNotLastLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'contact' is contained 2 times, "
+        + "but must be contained at most once.");
     DescriptorBuilder.createWithRouterSignatureLines("router-signature\n"
         + "-----BEGIN SIGNATURE-----\n"
         + "o4j+kH8UQfjBwepUnr99v0ebN8RpzHJ/lqYsTojXHy9kMr1RNI9IDeSzA7PSqT"
@@ -1080,13 +1206,17 @@ public class ServerDescriptorImplTest {
     assertTrue(descriptor.isHibernating());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testHibernatingYep() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'hibernating yep'.");
     DescriptorBuilder.createWithHibernatingLine("hibernating yep");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testHibernatingNoSpace() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'hibernating'.");
     DescriptorBuilder.createWithHibernatingLine("hibernating");
   }
 
@@ -1116,20 +1246,29 @@ public class ServerDescriptorImplTest {
         descriptor.getFamilyEntries());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFamilyDuplicate() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'family' is contained 2 times, "
+        + "but must be contained at most once.");
     DescriptorBuilder.createWithFamilyLine("family "
         + "saberrider2008\nfamily saberrider2008");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFamilyNicknamePrefix() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Illegal hex string in line 'family $saberrider2008'.");
     DescriptorBuilder.createWithFamilyLine("family $saberrider2008");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testFamilyFingerprintNoPrefix()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal nickname in line 'family "
+        + "D8733048FC8EC9102466AD8F3098622BF1BF71FD'.");
     DescriptorBuilder.createWithFamilyLine("family "
         + "D8733048FC8EC9102466AD8F3098622BF1BF71FD");
   }
@@ -1185,43 +1324,64 @@ public class ServerDescriptorImplTest {
     assertNotNull(descriptor.getWriteHistory());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWriteHistory3012() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line "
+        + "'write-history 3012-01-01 03:51:44 (900 s) "
+        + "4345856,261120,7591936,1748992'.");
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
         + "3012-01-01 03:51:44 (900 s) 4345856,261120,7591936,1748992");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWriteHistoryNoSeconds()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal timestamp format in line "
+        + "'write-history 2012-01-01 03:51 (900 s) 4345856,261120,"
+        + "7591936,1748992'.");
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
         + "2012-01-01 03:51 (900 s) 4345856,261120,7591936,1748992");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWriteHistoryNoParathenses()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid bandwidth-history line 'write-history "
+        + "2012-01-01 03:51:44 900 s 4345856,261120,7591936,1748992'.");
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
         + "2012-01-01 03:51:44 900 s 4345856,261120,7591936,1748992");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWriteHistoryNoSpaceSeconds()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid bandwidth-history line "
+        + "'write-history 2012-01-01 03:51:44 (900s) "
+        + "4345856,261120,7591936,1748992'.");
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
         + "2012-01-01 03:51:44 (900s) 4345856,261120,7591936,1748992");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWriteHistoryTrailingComma()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid bandwidth-history line 'write-history "
+        + "2012-01-01 03:51:44 (900 s) 4345856,261120,7591936,'.");
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
         + "2012-01-01 03:51:44 (900 s) 4345856,261120,7591936,");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWriteHistoryOneTwoThree()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid bandwidth-history line 'write-history "
+        + "2012-01-01 03:51:44 (900 s) one,two,three'.");
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
         + "2012-01-01 03:51:44 (900 s) one,two,three");
   }
@@ -1250,8 +1410,11 @@ public class ServerDescriptorImplTest {
         .isEmpty());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testWriteHistoryNoS() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Invalid bandwidth-history line "
+        + "'write-history 2012-01-01 03:51:44 (900 '.");
     DescriptorBuilder.createWithWriteHistoryLine(
         "write-history 2012-01-01 03:51:44 (900 ");
   }
@@ -1324,13 +1487,17 @@ public class ServerDescriptorImplTest {
     assertFalse(descriptor.getUsesEnhancedDnsLogic());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEventdnsTrue() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'eventdns true'.");
     DescriptorBuilder.createWithEventdnsLine("eventdns true");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEventdnsNo() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'eventdns no'.");
     DescriptorBuilder.createWithEventdnsLine("eventdns no");
   }
 
@@ -1349,8 +1516,10 @@ public class ServerDescriptorImplTest {
     assertTrue(descriptor.getCachesExtraInfo());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testCachesExtraInfoTrue() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'caches-extra-info true'.");
     DescriptorBuilder.createWithCachesExtraInfoLine("caches-extra-info "
         + "true");
   }
@@ -1371,16 +1540,22 @@ public class ServerDescriptorImplTest {
     assertTrue(descriptor.getAllowSingleHopExits());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testAllowSingleHopExitsTrue()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'allow-single-hop-exits true'.");
     DescriptorBuilder.createWithAllowSingleHopExitsLine(
         "allow-single-hop-exits true");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testAllowSingleHopExitsNonAsciiKeyword()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized character in keyword "
+        + "'�allow-single-hop-exits' in line "
+        + "'�allow-single-hop-exits'.");
     DescriptorBuilder.createWithNonAsciiLineBytes(new byte[] {
         0x14, (byte) 0xfe, 0x18,                  // non-ascii chars
         0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x2d,       // "allow-"
@@ -1398,32 +1573,43 @@ public class ServerDescriptorImplTest {
     assertEquals("80,1194,1220,1293", descriptor.getIpv6PortList());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testIpv6PolicyLineNoPolicy()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'ipv6-policy 80'.");
     DescriptorBuilder.createWithIpv6PolicyLine("ipv6-policy 80");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testIpv6PolicyLineNoPorts()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'ipv6-policy accept'.");
     DescriptorBuilder.createWithIpv6PolicyLine("ipv6-policy accept");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testIpv6PolicyLineNoPolicyNoPorts()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'ipv6-policy '.");
     DescriptorBuilder.createWithIpv6PolicyLine("ipv6-policy ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testIpv6PolicyLineProject()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'ipv6-policy project 80'.");
     DescriptorBuilder.createWithIpv6PolicyLine("ipv6-policy project 80");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTwoIpv6PolicyLines() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'ipv6-policy' is contained 2 times, "
+        + "but must be contained at most once.");
     DescriptorBuilder.createWithIpv6PolicyLine(
         "ipv6-policy accept 80,1194,1220,1293\n"
         + "ipv6-policy accept 80,1194,1220,1293");
@@ -1448,22 +1634,30 @@ public class ServerDescriptorImplTest {
         descriptor.getNtorOnionKey());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNtorOnionKeyLineNoKey()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'ntor-onion-key '.");
     DescriptorBuilder.createWithNtorOnionKeyLine("ntor-onion-key ");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNtorOnionKeyLineTwoKeys()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'ntor-onion-key Y/XgaHcPIJVa"
+        + "4D55kir9QLH8rEYAaLXuv3c3sm8jYhY Y/XgaHcPIJVa4D55kir9QLH8rEYAa"
+        + "LXuv3c3sm8jYhY'.");
     DescriptorBuilder.createWithNtorOnionKeyLine("ntor-onion-key "
         + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY "
         + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTwoNtorOnionKeyLines() throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Blank lines are not allowed.");
     DescriptorBuilder.createWithNtorOnionKeyLine("ntor-onion-key "
         + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY\nntor-onion-key "
         + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY\n");
@@ -1485,31 +1679,42 @@ public class ServerDescriptorImplTest {
     assertFalse(descriptor.getTunnelledDirServer());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTunnelledDirServerTypo()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized line 'tunneled-dir-server' "
+        + "in server descriptor.");
     DescriptorBuilder.createWithTunnelledDirServerLine(
         "tunneled-dir-server");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTunnelledDirServerTwice()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'tunnelled-dir-server' is contained "
+        + "2 times, but must be contained at most once.");
     DescriptorBuilder.createWithTunnelledDirServerLine(
         "tunnelled-dir-server\ntunnelled-dir-server");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testTunnelledDirServerArgs()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'tunnelled-dir-server 1'.");
     DescriptorBuilder.createWithTunnelledDirServerLine(
         "tunnelled-dir-server 1");
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testUnrecognizedLineFail()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage(
+        "Unrecognized line 'unrecognized-line 1' in server descriptor.");
     DescriptorBuilder.createWithUnrecognizedLine(unrecognizedLine, true);
   }
 
@@ -1598,9 +1803,12 @@ public class ServerDescriptorImplTest {
         descriptor.getRouterSignatureEd25519());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519IdentityMasterKeyMismatch()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Mismatch between identity-ed25519 and "
+        + "master-key-ed25519.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         "master-key-ed25519 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         ROUTER_SIG_ED25519_LINE);
@@ -1613,17 +1821,23 @@ public class ServerDescriptorImplTest {
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519IdentityDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'identity-ed25519' is contained 2 "
+        + "times, but must be contained at most once.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES + "\n"
         + IDENTITY_ED25519_LINES, MASTER_KEY_ED25519_LINE,
         ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519IdentityEmptyCrypto()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown
+        .expectMessage("Invalid length of identity-ed25519 (in bytes): 0");
     DescriptorBuilder.createWithEd25519Lines("identity-ed25519\n"
         + "-----BEGIN ED25519 CERT-----\n-----END ED25519 CERT-----",
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
@@ -1640,9 +1854,12 @@ public class ServerDescriptorImplTest {
         descriptor.getMasterKeyEd25519());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519MasterKeyDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'master-key-ed25519' is contained 2 "
+        + "times, but must be contained at most once.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE + "\n" + MASTER_KEY_ED25519_LINE,
         ROUTER_SIG_ED25519_LINE);
@@ -1655,17 +1872,23 @@ public class ServerDescriptorImplTest {
         MASTER_KEY_ED25519_LINE, null);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519RouterSigDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'router-sig-ed25519' is contained 2 "
+        + "times, but must be contained at most once.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE + "\n"
         + ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testEd25519FollowedbyUnrecognizedLine()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Unrecognized line 'unrecognized-line 1' "
+        + "in server descriptor.");
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE
         + "\nunrecognized-line 1");
@@ -1697,9 +1920,12 @@ public class ServerDescriptorImplTest {
         descriptor.getOnionKeyCrosscert());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testOnionKeyCrosscertDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'onion-key-crosscert' is contained 2 "
+        + "times, but must be contained at most once.");
     DescriptorBuilder.createWithOnionKeyCrosscertLines(
         ONION_KEY_CROSSCERT_LINES + "\n" + ONION_KEY_CROSSCERT_LINES);
   }
@@ -1716,9 +1942,12 @@ public class ServerDescriptorImplTest {
     assertEquals(1, descriptor.getNtorOnionKeyCrosscertSign());
   }
 
-  @Test(expected = DescriptorParseException.class)
+  @Test
   public void testNtorOnionKeyCrosscertDuplicate()
       throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'ntor-onion-key-crosscert' is "
+        + "contained 2 times, but must be contained at most once.");
     DescriptorBuilder.createWithOnionKeyCrosscertLines(
         NTOR_ONION_KEY_CROSSCERT_LINES + "\n"
         + NTOR_ONION_KEY_CROSSCERT_LINES);
