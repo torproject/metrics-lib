@@ -24,8 +24,7 @@ public class KeyValueMap<T> extends TreeMap<String, T> {
       throw new DescriptorParseException("Line '" + line + "' contains "
           + "duplicate key '" + key + "'.");
     }
-    if (null == key || key.isEmpty()
-        || (keyLength > 0 && key.length() != keyLength)) {
+    if (key.isEmpty() || (keyLength > 0 && key.length() != keyLength)) {
       throw new DescriptorParseException("Line '" + line + "' contains an "
           + "illegal key in list element '" + listElement + "'.");
     }
@@ -43,10 +42,11 @@ public class KeyValueMap<T> extends TreeMap<String, T> {
     if (startIndex >= partsNoOpt.length) {
       return this;
     }
-    String[] keysAndValues = " ".equals(separatorPattern) ? partsNoOpt
+    boolean usingSpacePattern = " ".equals(separatorPattern);
+    String[] keysAndValues = usingSpacePattern ? partsNoOpt
         : partsNoOpt[startIndex].split(separatorPattern, -1);
-    for (int i = " ".equals(separatorPattern) ? startIndex : 0;
-        i < keysAndValues.length; i++) {
+    for (int i = usingSpacePattern ? startIndex : 0; i < keysAndValues.length;
+        i++) {
       String listElement = keysAndValues[i];
       String[] keyAndValue = listElement.split("=");
       String key = keyAndValue[0];

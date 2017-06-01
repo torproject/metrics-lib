@@ -23,8 +23,7 @@ import javax.xml.bind.DatatypeConverter;
 
 public class ParseHelper {
 
-  private static Pattern keywordPattern =
-      Pattern.compile("^[A-Za-z0-9-]+$");
+  private static Pattern keywordPattern = Pattern.compile("^[A-Za-z0-9-]+$");
 
   protected static String parseKeyword(String line, String keyword)
       throws DescriptorParseException {
@@ -35,8 +34,7 @@ public class ParseHelper {
     return keyword;
   }
 
-  private static Pattern ipv4Pattern =
-      Pattern.compile("^[0-9\\.]{7,15}$");
+  private static Pattern ipv4Pattern = Pattern.compile("^[0-9\\.]{7,15}$");
 
   protected static String parseIpv4Address(String line, String address)
       throws DescriptorParseException {
