@@ -6,6 +6,7 @@ package org.torproject.descriptor.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.torproject.descriptor.BridgeExtraInfoDescriptor;
@@ -1364,6 +1365,13 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV3ReqsLine("dirreq-v3-reqs "
         + "u=1744");
+  }
+
+  @Test()
+  public void testDirreqV3ReqsNull() throws DescriptorParseException {
+    ExtraInfoDescriptor eid =
+        DirreqStatsBuilder.createWithDirreqV3ReqsLine(null);
+    assertNull(eid.getDirreqV3Reqs());
   }
 
   @Test(expected = DescriptorParseException.class)

@@ -318,6 +318,9 @@ public class ParseHelper {
 
   protected static SortedMap<String, Integer>
       convertCommaSeparatedKeyIntegerValueList(String validatedString) {
+    if (null == validatedString) {
+      return null;
+    }
     KeyValueMap<Integer> result = new KeyValueMap<>(Integer.class);
     if (!validatedString.isEmpty()) {
       try {
