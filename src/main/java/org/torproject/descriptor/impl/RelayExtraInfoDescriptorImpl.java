@@ -13,6 +13,10 @@ public class RelayExtraInfoDescriptorImpl
       int[] offsetAndLimit, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(descriptorBytes, offsetAndLimit, failUnrecognizedDescriptorLines);
+    this.calculateDigestSha1Hex(Key.EXTRA_INFO.keyword + SP,
+        NL + Key.ROUTER_SIGNATURE.keyword + NL);
+    this.calculateDigestSha256Base64(Key.EXTRA_INFO.keyword + SP,
+        NL + "-----END SIGNATURE-----" + NL);
   }
 }
 

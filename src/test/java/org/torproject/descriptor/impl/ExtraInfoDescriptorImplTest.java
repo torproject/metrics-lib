@@ -2166,5 +2166,27 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals("TvrqpjI7OmCtwGwair/NHUxg5ROVVQYz6/EDyXsDHR4",
         descriptor.getDigestSha256Base64());
   }
+
+  @Test()
+  public void testExtraInfoDigestsNoRouterDigestLines()
+      throws DescriptorParseException {
+    byte[] descriptorBytes = ("extra-info idideditheconfig "
+        + "DC28749EC9E26E61DE492E46CD830379E9931B09\n"
+        + "master-key-ed25519 "
+        + "38FzmOIE6Mm85Ytx0MhFM6X9EuxWRUgb6HjyMGuO2AU\n"
+        + "published 2015-12-03 13:23:19\n"
+        + "write-history 2015-12-03 09:59:32 (14400 s) 53913600,52992000,"
+        + "53222400,53222400,53452800,53222400\n"
+        + "read-history 2015-12-03 09:59:32 (14400 s) 61056000,60364800,"
+        + "60364800,60134400,60595200,60364800\n"
+        + "geoip-db-digest 5BF366AD4A0572D82A1A0F6628AF8EF7725E3AB9\n"
+        + "geoip6-db-digest 212DE17D5A368DCAFA19B95F168BFFA101145A93\n")
+        .getBytes();
+    BridgeExtraInfoDescriptor descriptor =
+        new BridgeExtraInfoDescriptorImpl(descriptorBytes,
+            new int[] { 0, descriptorBytes.length }, true);
+    assertNull(descriptor.getDigestSha1Hex());
+    assertNull(descriptor.getDigestSha256Base64());
+  }
 }
 

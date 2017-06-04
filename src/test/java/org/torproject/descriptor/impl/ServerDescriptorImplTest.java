@@ -10,6 +10,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.torproject.descriptor.BandwidthHistory;
+import org.torproject.descriptor.BridgeServerDescriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ServerDescriptor;
 
@@ -493,6 +494,10 @@ public class ServerDescriptorImplTest {
     assertFalse(descriptor.getCachesExtraInfo());
     assertFalse(descriptor.getAllowSingleHopExits());
     assertTrue(descriptor.getUnrecognizedLines().isEmpty());
+    assertEquals("a9635dd801ad98dac43aff49baa2dbbaf050222d",
+        descriptor.getDigestSha1Hex());
+    assertEquals("kvdJKQ6R9i8x1nDqJZ34JFWsu6TquLqQy54nheSWrOY",
+        descriptor.getDigestSha256Base64());
   }
 
   @Test(expected = DescriptorParseException.class)
@@ -1717,6 +1722,32 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithOnionKeyCrosscertLines(
         NTOR_ONION_KEY_CROSSCERT_LINES + "\n"
         + NTOR_ONION_KEY_CROSSCERT_LINES);
+  }
+
+  @Test()
+  public void testBridgeDescriptorDigestsRouterDigestLines()
+      throws DescriptorParseException {
+    DescriptorBuilder db = new DescriptorBuilder();
+    String digestSha1Hex = "A9635DD801AD98DAC43AFF49BAA2DBBAF050222D";
+    String digestSha256Base64 = "kvdJKQ6R9i8x1nDqJZ34JFWsu6TquLqQy54nheSWrOY";
+    db.routerSignatureLines = "router-digest-sha256 " + digestSha256Base64
+        + "\nrouter-digest " + digestSha1Hex;
+    byte[] descriptorBytes = db.buildDescriptorBytes();
+    BridgeServerDescriptor descriptor = new BridgeServerDescriptorImpl(
+        descriptorBytes, new int[] { 0, descriptorBytes.length }, true);
+    assertEquals(digestSha1Hex, descriptor.getDigestSha1Hex());
+    assertEquals(digestSha256Base64, descriptor.getDigestSha256Base64());
+  }
+
+  @Test()
+  public void testBridgeDescriptorDigestsNoRouterDigestLines()
+      throws DescriptorParseException {
+    DescriptorBuilder db = new DescriptorBuilder();
+    byte[] descriptorBytes = db.buildDescriptorBytes();
+    BridgeServerDescriptor descriptor = new BridgeServerDescriptorImpl(
+        descriptorBytes, new int[] { 0, descriptorBytes.length }, true);
+    assertNull(descriptor.getDigestSha1Hex());
+    assertNull(descriptor.getDigestSha256Base64());
   }
 }
 

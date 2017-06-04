@@ -39,10 +39,6 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     super(descriptorBytes, offsetAndLimit, failUnrecognizedDescriptorLines,
         false);
     this.parseDescriptorBytes();
-    this.calculateDigestSha1Hex(Key.EXTRA_INFO.keyword + SP,
-        NL + Key.ROUTER_SIGNATURE.keyword + NL);
-    this.calculateDigestSha256Base64(Key.EXTRA_INFO.keyword + SP,
-        NL + "-----END SIGNATURE-----" + NL);
     this.checkExactlyOnceKeys(exactlyOnceKeys);
     Set<Key> dirreqStatsKeys = EnumSet.of(
         Key.DIRREQ_STATS_END, Key.DIRREQ_V2_IPS, Key.DIRREQ_V3_IPS,

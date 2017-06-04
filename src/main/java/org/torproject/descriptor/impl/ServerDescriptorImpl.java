@@ -40,10 +40,6 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     super(descriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
         false);
     this.parseDescriptorBytes();
-    this.calculateDigestSha1Hex(Key.ROUTER.keyword + SP,
-        NL + Key.ROUTER_SIGNATURE.keyword + NL);
-    this.calculateDigestSha256Base64(Key.ROUTER.keyword + SP,
-        NL + "-----END SIGNATURE-----" + NL);
     this.checkExactlyOnceKeys(exactlyOnce);
     this.checkAtMostOnceKeys(atMostOnce);
     this.checkFirstKey(Key.ROUTER);
