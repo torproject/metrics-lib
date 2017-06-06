@@ -1,4 +1,4 @@
-# Changes in version 1.8.0 - ??
+# Changes in version 1.8.0 - 2017-06-07
 
  * Medium changes
    - Store raw descriptor contents as offset and length into a
