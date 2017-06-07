@@ -100,7 +100,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       byte[] statusBytes = this.buildStatusBytes();
       return new BridgeNetworkStatusImpl(statusBytes,
-          new int[] { 0, statusBytes.length }, this.fileName,
+          new int[] { 0, statusBytes.length }, null, this.fileName,
           failUnrecognizedDescriptorLines);
     }
 

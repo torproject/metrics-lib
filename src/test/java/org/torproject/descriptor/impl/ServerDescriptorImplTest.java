@@ -456,7 +456,7 @@ public class ServerDescriptorImplTest {
         throws DescriptorParseException {
       byte[] descriptorBytes = this.buildDescriptorBytes();
       return new RelayServerDescriptorImpl(descriptorBytes,
-          new int[] { 0, descriptorBytes.length },
+          new int[] { 0, descriptorBytes.length }, null,
           failUnrecognizedDescriptorLines);
     }
   }
@@ -1963,7 +1963,7 @@ public class ServerDescriptorImplTest {
         + "\nrouter-digest " + digestSha1Hex;
     byte[] descriptorBytes = db.buildDescriptorBytes();
     BridgeServerDescriptor descriptor = new BridgeServerDescriptorImpl(
-        descriptorBytes, new int[] { 0, descriptorBytes.length }, true);
+        descriptorBytes, new int[] { 0, descriptorBytes.length }, null, true);
     assertEquals(digestSha1Hex, descriptor.getDigestSha1Hex());
     assertEquals(digestSha256Base64, descriptor.getDigestSha256Base64());
   }
@@ -1974,7 +1974,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder db = new DescriptorBuilder();
     byte[] descriptorBytes = db.buildDescriptorBytes();
     BridgeServerDescriptor descriptor = new BridgeServerDescriptorImpl(
-        descriptorBytes, new int[] { 0, descriptorBytes.length }, true);
+        descriptorBytes, new int[] { 0, descriptorBytes.length }, null, true);
     assertNull(descriptor.getDigestSha1Hex());
     assertNull(descriptor.getDigestSha256Base64());
   }

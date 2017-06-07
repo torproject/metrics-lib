@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 
 public class DescriptorParserImplTest {
@@ -46,15 +47,17 @@ public class DescriptorParserImplTest {
     Constructor<? extends DescriptorImpl> constructor;
     try {
       constructor = TestServerDescriptor.class
-        .getDeclaredConstructor(byte[].class, int[].class, boolean.class);
+          .getDeclaredConstructor(byte[].class, int[].class, File.class,
+          boolean.class);
     } catch (NoSuchMethodException e) {
       throw new RuntimeException(e);
     }
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("'176x.158.53.63' in line 'router UbuntuCore169 "
         + "176x.158.53.63 44583 0 0' is not a valid IPv4 address.");
-    DescriptorParserImpl.parseDescriptor(DEFECT.getBytes(),
-        new int[]{0, DEFECT.getBytes().length}, constructor, false);
+    DescriptorParserImpl dpi = new DescriptorParserImpl();
+    dpi.parseDescriptor(DEFECT.getBytes(),
+        new int[]{0, DEFECT.getBytes().length}, null, constructor, false);
   }
 
   private static final String DEFECT =

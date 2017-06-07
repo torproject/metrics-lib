@@ -135,6 +135,17 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.maxDescriptorFilesInQueue = max;
   }
 
+  private int maxDescriptorsInQueue = 100;
+
+  @Override
+  public void setMaxDescriptorsInQueue(int maxDescriptorsInQueue) {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Reconfiguration is not permitted "
+          + "after starting to read.");
+    }
+    this.maxDescriptorsInQueue = maxDescriptorsInQueue;
+  }
+
   private DescriptorReaderRunnable reader;
 
   @Override
@@ -160,6 +171,25 @@ public class DescriptorReaderImpl implements DescriptorReader {
   }
 
   @Override
+  public Iterable<Descriptor> readDescriptors(File... descriptorFiles) {
+    if (this.hasStartedReading) {
+      throw new IllegalStateException("Initiating reading is only "
+          + "permitted once.");
+    }
+    this.hasStartedReading = true;
+    BlockingIteratorImpl<Descriptor> descriptorQueue =
+        new BlockingIteratorImpl<>(this.maxDescriptorsInQueue);
+    this.reader = new DescriptorReaderRunnable(
+        descriptorFiles, descriptorQueue, this.autoSaveHistoryFile,
+        this.manualSaveHistoryFile, this.excludedFiles,
+        this.failUnrecognizedDescriptorLines);
+    Thread readerThread = new Thread(this.reader);
+    readerThread.setDaemon(true);
+    readerThread.start();
+    return descriptorQueue;
+  }
+
+  @Override
   public void saveHistoryFile(File historyFile) {
     if (!this.reader.hasFinishedReading) {
       throw new IllegalStateException("Saving history is only permitted after "
@@ -170,11 +200,15 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
   private static class DescriptorReaderRunnable implements Runnable {
 
+    private File[] descriptorFiles;
+
     private List<File> directories;
 
     private List<File> tarballs;
 
-    private BlockingIteratorImpl<DescriptorFile> descriptorQueue;
+    private BlockingIteratorImpl<Descriptor> descriptorQueue;
+
+    private BlockingIteratorImpl<DescriptorFile> descriptorFileQueue;
 
     private File autoSaveHistoryFile;
 
@@ -186,24 +220,45 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private SortedMap<String, Long> parsedFilesAfter = new TreeMap<>();
 
+    private boolean failUnrecognizedDescriptorLines;
+
     private DescriptorParser descriptorParser;
 
     private boolean hasFinishedReading = false;
 
     private DescriptorReaderRunnable(List<File> directories,
         List<File> tarballs,
-        BlockingIteratorImpl<DescriptorFile> descriptorQueue,
+        BlockingIteratorImpl<DescriptorFile> descriptorFileQueue,
         File autoSaveHistoryFile, File manualSaveHistoryFile,
         SortedMap<String, Long> excludedFiles,
         boolean failUnrecognizedDescriptorLines) {
       this.directories = directories;
       this.tarballs = tarballs;
+      this.descriptorFileQueue = descriptorFileQueue;
+      this.autoSaveHistoryFile = autoSaveHistoryFile;
+      this.manualSaveHistoryFile = manualSaveHistoryFile;
+      if (excludedFiles != null) {
+        this.excludedFilesBefore = excludedFiles;
+      }
+      this.failUnrecognizedDescriptorLines = failUnrecognizedDescriptorLines;
+      this.descriptorParser = new DescriptorParserImpl();
+      this.descriptorParser.setFailUnrecognizedDescriptorLines(
+          failUnrecognizedDescriptorLines);
+    }
+
+    private DescriptorReaderRunnable(File[] descriptorFiles,
+        BlockingIteratorImpl<Descriptor> descriptorQueue,
+        File autoSaveHistoryFile, File manualSaveHistoryFile,
+        SortedMap<String, Long> excludedFiles,
+        boolean failUnrecognizedDescriptorLines) {
+      this.descriptorFiles = descriptorFiles;
       this.descriptorQueue = descriptorQueue;
       this.autoSaveHistoryFile = autoSaveHistoryFile;
       this.manualSaveHistoryFile = manualSaveHistoryFile;
       if (excludedFiles != null) {
         this.excludedFilesBefore = excludedFiles;
       }
+      this.failUnrecognizedDescriptorLines = failUnrecognizedDescriptorLines;
       this.descriptorParser = new DescriptorParserImpl();
       this.descriptorParser.setFailUnrecognizedDescriptorLines(
           failUnrecognizedDescriptorLines);
@@ -213,6 +268,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
       try {
         this.readOldHistory(this.autoSaveHistoryFile);
         this.readOldHistory(this.manualSaveHistoryFile);
+        this.readDescriptorFiles();
         this.readDescriptors();
         this.readTarballs();
         this.hasFinishedReading = true;
@@ -220,7 +276,12 @@ public class DescriptorReaderImpl implements DescriptorReader {
         log.error("Bug: uncaught exception or error while "
             + "reading descriptors: " + t.getMessage(), t);
       } finally {
-        this.descriptorQueue.setOutOfDescriptors();
+        if (null != this.descriptorFileQueue) {
+          this.descriptorFileQueue.setOutOfDescriptors();
+        }
+        if (null != this.descriptorQueue) {
+          this.descriptorQueue.setOutOfDescriptors();
+        }
       }
       if (this.hasFinishedReading) {
         this.writeNewHistory(this.autoSaveHistoryFile);
@@ -275,7 +336,97 @@ public class DescriptorReaderImpl implements DescriptorReader {
       }
     }
 
+    private void readDescriptorFiles() {
+      if (null == this.descriptorFiles) {
+        return;
+      }
+      Stack<File> files = new Stack<>();
+      for (File descriptorFile : this.descriptorFiles) {
+        if (!descriptorFile.exists()) {
+          continue;
+        }
+        files.add(descriptorFile);
+        while (!files.isEmpty()) {
+          File file = files.pop();
+          try {
+            String absolutePath = file.getAbsolutePath();
+            long lastModifiedMillis = file.lastModified();
+            if (this.excludedFilesBefore.containsKey(absolutePath)
+                && this.excludedFilesBefore.get(absolutePath)
+                == lastModifiedMillis) {
+              this.excludedFilesAfter.put(absolutePath, lastModifiedMillis);
+              continue;
+            }
+            if (file.isDirectory()) {
+              files.addAll(Arrays.asList(file.listFiles()));
+              continue;
+            } else if (file.getName().endsWith(".tar")
+                || file.getName().endsWith(".tar.bz2")
+                || file.getName().endsWith(".tar.xz")) {
+              this.readTarball(file);
+            } else {
+              this.readDescriptorFile(file);
+            }
+            this.parsedFilesAfter.put(absolutePath, lastModifiedMillis);
+          } catch (IOException e) {
+            log.warn("Unable to read descriptor file {}.", file, e);
+          }
+        }
+      }
+    }
+
+    private void readTarball(File file) throws IOException {
+      FileInputStream in = new FileInputStream(file);
+      if (in.available() <= 0) {
+        return;
+      }
+      TarArchiveInputStream tais;
+      if (file.getName().endsWith(".tar.bz2")) {
+        tais = new TarArchiveInputStream(new BZip2CompressorInputStream(in));
+      } else if (file.getName().endsWith(".tar.xz")) {
+        tais = new TarArchiveInputStream(new XZCompressorInputStream(in));
+      } else if (file.getName().endsWith(".tar")) {
+        tais = new TarArchiveInputStream(in);
+      } else {
+        return;
+      }
+      BufferedInputStream bis = new BufferedInputStream(tais);
+      TarArchiveEntry tae;
+      while ((tae = tais.getNextTarEntry()) != null) {
+        if (tae.isDirectory()) {
+          continue;
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int len;
+        byte[] data = new byte[1024];
+        while ((len = bis.read(data, 0, 1024)) >= 0) {
+          baos.write(data, 0, len);
+        }
+        byte[] rawDescriptorBytes = baos.toByteArray();
+        if (rawDescriptorBytes.length < 1) {
+          continue;
+        }
+        String fileName = tae.getName().substring(
+            tae.getName().lastIndexOf("/") + 1);
+        for (Descriptor descriptor : this.descriptorParser.parseDescriptors(
+            rawDescriptorBytes, file, fileName)) {
+          this.descriptorQueue.add(descriptor);
+        }
+      }
+    }
+
+    private void readDescriptorFile(File file) throws IOException {
+      byte[] rawDescriptorBytes = Files.readAllBytes(file.toPath());
+      for (Descriptor descriptor : this.descriptorParser.parseDescriptors(
+          rawDescriptorBytes, file, file.getName())) {
+        this.descriptorQueue.add(descriptor);
+      }
+    }
+
     private void readDescriptors() {
+      if (null == this.directories) {
+        return;
+      }
       for (File directory : this.directories) {
         if (!directory.exists() || !directory.isDirectory()) {
           continue;
@@ -315,13 +466,16 @@ public class DescriptorReaderImpl implements DescriptorReader {
               descriptorFile.setException(e);
               abortReading = true;
             }
-            this.descriptorQueue.add(descriptorFile);
+            this.descriptorFileQueue.add(descriptorFile);
           }
         }
       }
     }
 
     private void readTarballs() {
+      if (null == this.tarballs) {
+        return;
+      }
       List<File> files = new ArrayList<>(this.tarballs);
       boolean abortReading = false;
       while (!abortReading && !files.isEmpty()) {
@@ -385,7 +539,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
               } catch (DescriptorParseException e) {
                 descriptorFile.setException(e);
               }
-              this.descriptorQueue.add(descriptorFile);
+              this.descriptorFileQueue.add(descriptorFile);
             }
           }
         } catch (IOException e) {

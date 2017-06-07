@@ -6,6 +6,7 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.BridgePoolAssignment;
 import org.torproject.descriptor.DescriptorParseException;
 
+import java.io.File;
 import java.util.EnumSet;
 import java.util.Scanner;
 import java.util.SortedMap;
@@ -15,10 +16,10 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
     implements BridgePoolAssignment {
 
   protected BridgePoolAssignmentImpl(byte[] rawDescriptorBytes,
-      int[] offsetAndlength, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndlength, failUnrecognizedDescriptorLines,
-        false);
+      int[] offsetAndlength, File descriptorFile,
+      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+    super(rawDescriptorBytes, offsetAndlength, descriptorFile,
+        failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.checkExactlyOnceKeys(EnumSet.of(Key.BRIDGE_POOL_ASSIGNMENT));
     this.checkFirstKey(Key.BRIDGE_POOL_ASSIGNMENT);

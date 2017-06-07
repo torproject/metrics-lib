@@ -7,6 +7,7 @@ import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExtraInfoDescriptor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,10 +35,10 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
       Key.PADDING_COUNTS);
 
   protected ExtraInfoDescriptorImpl(byte[] descriptorBytes,
-      int[] offsetAndLimit, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(descriptorBytes, offsetAndLimit, failUnrecognizedDescriptorLines,
-        false);
+      int[] offsetAndLimit, File descriptorFile,
+      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+    super(descriptorBytes, offsetAndLimit, descriptorFile,
+        failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.checkExactlyOnceKeys(exactlyOnceKeys);
     Set<Key> dirreqStatsKeys = EnumSet.of(

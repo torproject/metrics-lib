@@ -7,6 +7,7 @@ import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -39,6 +40,17 @@ public abstract class DescriptorImpl implements Descriptor {
    * may contain more than just one descriptor.
    */
   protected int length;
+
+  /**
+   * Optional reference to the descriptor file, if this descriptor was read from
+   * a descriptor file.
+   */
+  private File descriptorFile;
+
+  @Override
+  public File getDescriptorFile() {
+    return this.descriptorFile;
+  }
 
   /**
    * Returns a <emph>copy</emph> of the full raw descriptor bytes.
@@ -178,8 +190,7 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   protected DescriptorImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
-      boolean failUnrecognizedDescriptorLines, boolean blankLinesAllowed)
-      throws DescriptorParseException {
+      File descriptorFile, boolean failUnrecognizedDescriptorLines) {
     int offset = offsetAndLength[0];
     int length = offsetAndLength[1];
     if (offset < 0 || offset + length > rawDescriptorBytes.length
@@ -191,8 +202,16 @@ public abstract class DescriptorImpl implements Descriptor {
     this.rawDescriptorBytes = rawDescriptorBytes;
     this.offset = offset;
     this.length = length;
+    this.descriptorFile = descriptorFile;
     this.failUnrecognizedDescriptorLines =
         failUnrecognizedDescriptorLines;
+  }
+
+  protected DescriptorImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
+      File descriptorFile, boolean failUnrecognizedDescriptorLines,
+      boolean blankLinesAllowed) throws DescriptorParseException {
+    this(rawDescriptorBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines);
     this.cutOffAnnotations();
     this.countKeys(rawDescriptorBytes, blankLinesAllowed);
   }

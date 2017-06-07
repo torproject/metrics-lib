@@ -1,5 +1,18 @@
 # Changes in version 1.9.0 - 2017-06-??
 
+ * Major changes
+   - Simplify DescriptorReader by returning Descriptor instances
+     rather than DescriptorFile instances containing Descriptors,
+     deprecate DescriptorFile, and add a File reference to Descriptor.
+   - Introduce a new UnparseableDescriptor to be returned by
+     DescriptorParser and DescriptorReader if a descriptor cannot be
+     parsed, as opposed to throwing a DescriptorParseException or
+     skipping the entire descriptor file, respectively.
+
+ * Medium changes
+   - Let DescriptorParser return an Iterable instead of a List, which
+     prepares parsing large descriptor files descriptor by descriptor.
+
  * Minor changes
    - Fix a bug where NetworkStatusEntry's getMicrodescriptorDigests()
      and getMicrodescriptorDigestsSha256Base64() return hex strings

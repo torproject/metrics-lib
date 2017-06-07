@@ -557,7 +557,8 @@ public class RelayNetworkStatusVoteImplTest {
         throws DescriptorParseException {
       byte[] voteBytes = this.buildVoteBytes();
       return new RelayNetworkStatusVoteImpl(voteBytes,
-          new int[] { 0, voteBytes.length }, failUnrecognizedDescriptorLines);
+          new int[] { 0, voteBytes.length }, null,
+          failUnrecognizedDescriptorLines);
     }
 
     private void appendHeader(StringBuilder sb) {

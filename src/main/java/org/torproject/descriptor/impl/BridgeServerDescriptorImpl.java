@@ -6,13 +6,16 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.BridgeServerDescriptor;
 import org.torproject.descriptor.DescriptorParseException;
 
+import java.io.File;
+
 public class BridgeServerDescriptorImpl extends ServerDescriptorImpl
     implements BridgeServerDescriptor {
 
   protected BridgeServerDescriptorImpl(byte[] rawDescriptorBytes,
-      int[] offsetAndLength, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines);
+      int[] offsetAndLength, File descriptorFile,
+      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines);
   }
 }
 

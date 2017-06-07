@@ -7,6 +7,7 @@ import org.torproject.descriptor.BandwidthHistory;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ServerDescriptor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -35,10 +36,10 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
       Key.ROUTER, Key.BANDWIDTH, Key.PUBLISHED);
 
   protected ServerDescriptorImpl(byte[] descriptorBytes, int[] offsetAndLength,
-      boolean failUnrecognizedDescriptorLines)
+      File descriptorFile, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
-        false);
+    super(descriptorBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.checkExactlyOnceKeys(exactlyOnce);
     this.checkAtMostOnceKeys(atMostOnce);

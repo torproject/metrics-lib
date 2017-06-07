@@ -6,6 +6,7 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.RelayNetworkStatus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -19,10 +20,10 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     implements RelayNetworkStatus {
 
   protected RelayNetworkStatusImpl(byte[] statusBytes, int[] offsetAndLength,
-      boolean failUnrecognizedDescriptorLines)
+      File descriptorFile, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(statusBytes, offsetAndLength, failUnrecognizedDescriptorLines, false,
-        true);
+    super(statusBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines, false, true);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.NETWORK_STATUS_VERSION, Key.DIR_SOURCE, Key.FINGERPRINT,
         Key.CONTACT, Key.DIR_SIGNING_KEY, Key.PUBLISHED);

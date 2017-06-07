@@ -360,7 +360,7 @@ public class ConsensusBuilder {
       throws DescriptorParseException {
     byte[] consensusBytes = this.buildConsensusBytes();
     return new RelayNetworkStatusConsensusImpl(consensusBytes,
-        new int[] { 0, consensusBytes.length },
+        new int[] { 0, consensusBytes.length }, null,
         failUnrecognizedDescriptorLines);
   }
 

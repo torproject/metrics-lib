@@ -3,6 +3,7 @@
 
 package org.torproject.descriptor;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -48,4 +49,22 @@ public interface DescriptorParser {
    */
   public List<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
       String fileName) throws DescriptorParseException;
+
+  /**
+   * Parse descriptors in the given byte array and return the parsed/unparseable
+   * descriptors.
+   *
+   * @param rawDescriptorBytes Raw descriptor bytes containing one or more
+   *     descriptors
+   * @param descriptorFile Optional descriptor file reference included in
+   *     parsed/unparseable descriptors
+   * @param fileName Descriptor file name used for parsing the descriptor
+   *     publication time of some descriptor types
+   *
+   * @return Parsed/unparseable descriptors
+   *
+   * @since 1.9.0
+   */
+  public Iterable<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
+      File descriptorFile, String fileName);
 }

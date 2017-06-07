@@ -7,6 +7,7 @@ import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExitList;
 import org.torproject.descriptor.ExitListEntry;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,11 +19,11 @@ import java.util.TimeZone;
 
 public class ExitListImpl extends DescriptorImpl implements ExitList {
 
-  protected ExitListImpl(byte[] rawDescriptorBytes, String fileName,
-      boolean failUnrecognizedDescriptorLines)
+  protected ExitListImpl(byte[] rawDescriptorBytes, File descriptorfile,
+      String fileName, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(rawDescriptorBytes, new int[] { 0, rawDescriptorBytes.length },
-        failUnrecognizedDescriptorLines, false);
+        descriptorfile, failUnrecognizedDescriptorLines, false);
     this.splitAndParseExitListEntries();
     this.setPublishedMillisFromFileName(fileName);
   }

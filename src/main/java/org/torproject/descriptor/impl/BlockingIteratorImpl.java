@@ -11,7 +11,7 @@ import java.util.Queue;
 /* Provide an iterator for a queue of objects and block when there are
  * currently no objects in the queue.  Allow the producer to signal that
  * there won't be further objects and unblock any waiting consumers. */
-public class BlockingIteratorImpl<T> implements Iterator<T> {
+public class BlockingIteratorImpl<T> implements Iterator<T>, Iterable<T> {
 
   /* Queue containing produced elemnts waiting for consumers. */
   private Queue<T> queue = new LinkedList<>();
@@ -24,8 +24,10 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
   }
 
   /* Create instance with maximum queue size. */
-  protected BlockingIteratorImpl(int maxQueueSize) {
-    this.maxQueueSize = maxQueueSize;
+  protected BlockingIteratorImpl(Integer maxQueueSize) {
+    if (null != maxQueueSize) {
+      this.maxQueueSize = maxQueueSize;
+    }
   }
 
   /* Add an object to the queue if there's still room. */
@@ -98,6 +100,11 @@ public class BlockingIteratorImpl<T> implements Iterator<T> {
   @Override
   public void remove() {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Iterator<T> iterator() {
+    return this;
   }
 }
 

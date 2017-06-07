@@ -1599,7 +1599,7 @@ public class RelayNetworkStatusConsensusImplTest {
     byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[20] = (byte) 200;
     new RelayNetworkStatusConsensusImpl(consensusBytes,
-        new int[] { 0, consensusBytes.length }, true);
+        new int[] { 0, consensusBytes.length }, null, true);
   }
 
   @Test
@@ -1613,7 +1613,7 @@ public class RelayNetworkStatusConsensusImplTest {
     byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[0] = (byte) 200;
     new RelayNetworkStatusConsensusImpl(consensusBytes,
-        new int[] { 0, consensusBytes.length }, true);
+        new int[] { 0, consensusBytes.length }, null, true);
   }
 
   @Test

@@ -7,6 +7,7 @@ import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.TorperfResult;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,8 +21,8 @@ public class TorperfResultImpl extends DescriptorImpl
     implements TorperfResult {
 
   protected static List<Descriptor> parseTorperfResults(
-      byte[] rawDescriptorBytes, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
+      byte[] rawDescriptorBytes, File descriptorFile,
+      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
     if (rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
@@ -47,7 +48,7 @@ public class TorperfResultImpl extends DescriptorImpl
       } else {
         /* XXX21932 */
         parsedDescriptors.add(new TorperfResultImpl(
-            (typeAnnotation + line).getBytes(),
+            (typeAnnotation + line).getBytes(), descriptorFile,
             failUnrecognizedDescriptorLines));
         typeAnnotation = "";
       }
@@ -55,11 +56,11 @@ public class TorperfResultImpl extends DescriptorImpl
     return parsedDescriptors;
   }
 
-  protected TorperfResultImpl(byte[] rawDescriptorBytes,
+  protected TorperfResultImpl(byte[] rawDescriptorBytes, File descriptorFile,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
     super(rawDescriptorBytes, new int[] { 0, rawDescriptorBytes.length },
-        failUnrecognizedDescriptorLines, false);
+        descriptorFile, failUnrecognizedDescriptorLines, false);
     this.parseTorperfResultLine();
   }
 

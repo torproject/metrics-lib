@@ -6,6 +6,7 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.RelayNetworkStatusConsensus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -22,10 +23,10 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     implements RelayNetworkStatusConsensus {
 
   protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes,
-      int[] offsetAndLimit, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(consensusBytes, offsetAndLimit, failUnrecognizedDescriptorLines, true,
-        false);
+      int[] offsetAndLimit, File descriptorFile,
+      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+    super(consensusBytes, offsetAndLimit, descriptorFile,
+        failUnrecognizedDescriptorLines, true, false);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.VOTE_STATUS, Key.CONSENSUS_METHOD, Key.VALID_AFTER, Key.FRESH_UNTIL,
         Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS);

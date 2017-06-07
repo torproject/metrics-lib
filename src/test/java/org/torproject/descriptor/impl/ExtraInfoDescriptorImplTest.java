@@ -336,7 +336,7 @@ public class ExtraInfoDescriptorImplTest {
         throws DescriptorParseException {
       byte[] descriptorBytes = this.buildDescriptorBytes();
       return new RelayExtraInfoDescriptorImpl(descriptorBytes,
-          new int[] { 0, descriptorBytes.length},
+          new int[] { 0, descriptorBytes.length}, null,
           failUnrecognizedDescriptorLines);
     }
   }
@@ -2332,7 +2332,7 @@ public class ExtraInfoDescriptorImplTest {
         + "").getBytes();
     RelayExtraInfoDescriptor descriptor =
         new RelayExtraInfoDescriptorImpl(descriptorBytes,
-            new int[] { 0, descriptorBytes.length }, true);
+            new int[] { 0, descriptorBytes.length }, null, true);
     assertEquals("Pt1BtzfRwhYqGCDo8jjchS8nJP3ovrDyHGn+dqPbMgw",
         descriptor.getDigestSha256Base64());
   }
@@ -2357,7 +2357,7 @@ public class ExtraInfoDescriptorImplTest {
         .getBytes();
     BridgeExtraInfoDescriptor descriptor =
         new BridgeExtraInfoDescriptorImpl(descriptorBytes,
-            new int[] { 0, descriptorBytes.length }, true);
+            new int[] { 0, descriptorBytes.length }, null, true);
     assertEquals("TvrqpjI7OmCtwGwair/NHUxg5ROVVQYz6/EDyXsDHR4",
         descriptor.getDigestSha256Base64());
   }
@@ -2379,7 +2379,7 @@ public class ExtraInfoDescriptorImplTest {
         .getBytes();
     BridgeExtraInfoDescriptor descriptor =
         new BridgeExtraInfoDescriptorImpl(descriptorBytes,
-            new int[] { 0, descriptorBytes.length }, true);
+            new int[] { 0, descriptorBytes.length }, null, true);
     assertNull(descriptor.getDigestSha1Hex());
     assertNull(descriptor.getDigestSha256Base64());
   }

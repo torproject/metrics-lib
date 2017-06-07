@@ -8,6 +8,7 @@ import org.torproject.descriptor.RelayDirectory;
 import org.torproject.descriptor.RouterStatusEntry;
 import org.torproject.descriptor.ServerDescriptor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -18,10 +19,10 @@ public class RelayDirectoryImpl extends DescriptorImpl
     implements RelayDirectory {
 
   protected RelayDirectoryImpl(byte[] directoryBytes, int[] offsetAndLength,
-      boolean failUnrecognizedDescriptorLines)
+      File descriptorFile, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(directoryBytes, offsetAndLength, failUnrecognizedDescriptorLines,
-        true);
+    super(directoryBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines, true);
     this.splitAndParseParts();
     this.calculateDigestSha1Hex(Key.SIGNED_DIRECTORY.keyword + NL,
         NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
@@ -194,7 +195,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
     try {
       ServerDescriptorImpl serverDescriptor =
           new RelayServerDescriptorImpl(this.rawDescriptorBytes,
-          new int[] { offset, length }, this.failUnrecognizedDescriptorLines);
+          new int[] { offset, length }, this.getDescriptorFile(),
+          this.failUnrecognizedDescriptorLines);
       this.serverDescriptors.add(serverDescriptor);
     } catch (DescriptorParseException e) {
       this.serverDescriptorParseExceptions.add(e);

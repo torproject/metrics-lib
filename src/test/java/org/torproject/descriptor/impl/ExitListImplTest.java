@@ -24,7 +24,7 @@ public class ExitListImplTest {
   @Test
   public void testAnnotatedInput() throws Exception {
     ExitListImpl result = new ExitListImpl((tordnselAnnotation + input)
-        .getBytes("US-ASCII"), fileName, false);
+        .getBytes("US-ASCII"), null, fileName, false);
     assertEquals("Expected one annotation.", 1,
         result.getAnnotations().size());
     assertEquals(tordnselAnnotation.substring(0, 18),
@@ -42,7 +42,7 @@ public class ExitListImplTest {
   public void testMultipleOldExitAddresses() throws Exception {
     ExitListImpl result = new ExitListImpl(
         (tordnselAnnotation + multiExitAddressInput)
-        .getBytes("US-ASCII"), fileName, false);
+        .getBytes("US-ASCII"), null, fileName, false);
     assertTrue("Unrecognized lines: " + result.getUnrecognizedLines(),
         result.getUnrecognizedLines().isEmpty());
     assertEquals("Found: " + result.getExitListEntries(),
@@ -68,7 +68,7 @@ public class ExitListImplTest {
   public void testMultipleExitAddresses() throws Exception {
     ExitListImpl result = new ExitListImpl(
         (tordnselAnnotation + multiExitAddressInput)
-        .getBytes("US-ASCII"), fileName, false);
+        .getBytes("US-ASCII"), null, fileName, false);
     assertTrue("Unrecognized lines: " + result.getUnrecognizedLines(),
         result.getUnrecognizedLines().isEmpty());
     Map<String, Long> map = result.getEntries()
@@ -84,7 +84,7 @@ public class ExitListImplTest {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("Missing 'ExitAddress' line in exit list entry.");
     new ExitListImpl((tordnselAnnotation + insufficientInput[0])
-        .getBytes("US-ASCII"), fileName, false);
+        .getBytes("US-ASCII"), null, fileName, false);
   }
 
   @Test
@@ -92,7 +92,7 @@ public class ExitListImplTest {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("Missing 'Published' line in exit list entry.");
     new ExitListImpl((tordnselAnnotation + insufficientInput[1])
-        .getBytes("US-ASCII"), fileName, false);
+        .getBytes("US-ASCII"), null, fileName, false);
   }
 
   private static final String tordnselAnnotation = "@type tordnsel 1.0\n";

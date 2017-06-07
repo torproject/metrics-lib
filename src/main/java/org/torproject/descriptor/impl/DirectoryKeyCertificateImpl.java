@@ -6,6 +6,7 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DirectoryKeyCertificate;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Scanner;
@@ -15,10 +16,10 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     implements DirectoryKeyCertificate {
 
   protected DirectoryKeyCertificateImpl(byte[] rawDescriptorBytes,
-      int[] offsetAndLength, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
-        false);
+      int[] offsetAndLength, File descriptorFile,
+      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigestSha1Hex(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP,
         NL + Key.DIR_KEY_CERTIFICATION.keyword + NL);

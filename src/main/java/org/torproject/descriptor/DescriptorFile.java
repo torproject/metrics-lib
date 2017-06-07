@@ -15,6 +15,13 @@ import java.util.List;
  * This container also stores potentially useful meta-data about the
  * descriptor file.</p>
  *
+ * @deprecated Irrelevant after introducing
+ *     {@link DescriptorReader#readDescriptors(File...)}, which returns
+ *     {@link Descriptor}s rather than {@link DescriptorFile}s, and including
+ *     the descriptor file reference in {@link Descriptor#getDescriptorFile()}
+ *     and the first thrown {@link DescriptorParseException} in
+ *     {@link UnparseableDescriptor#getDescriptorParseException()}.
+ *
  * @since 1.0.0
  */
 public interface DescriptorFile {

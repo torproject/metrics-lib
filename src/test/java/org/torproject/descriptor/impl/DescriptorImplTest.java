@@ -131,7 +131,6 @@ public class DescriptorImplTest {
     digest = des.getDigestSha256Base64();
     assertEquals("1bEECw9nT5KRzPG8dAzEFJgSI4OBQfyWn+wjREb8oa8", digest);
   }
-
 }
 
 

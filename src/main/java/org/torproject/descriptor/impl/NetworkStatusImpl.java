@@ -8,6 +8,7 @@ import org.torproject.descriptor.DirSourceEntry;
 import org.torproject.descriptor.DirectorySignature;
 import org.torproject.descriptor.NetworkStatusEntry;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
@@ -19,11 +20,11 @@ import java.util.TreeMap;
 public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   protected NetworkStatusImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
-      boolean failUnrecognizedDescriptorLines,
+      File descriptorFile, boolean failUnrecognizedDescriptorLines,
       boolean containsDirSourceEntries, boolean blankLinesAllowed)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
-        blankLinesAllowed);
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines, blankLinesAllowed);
     this.splitAndParseParts(containsDirSourceEntries);
   }
 

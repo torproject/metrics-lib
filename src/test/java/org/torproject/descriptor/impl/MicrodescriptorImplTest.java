@@ -66,7 +66,7 @@ public class MicrodescriptorImplTest {
         throws DescriptorParseException {
       byte[] descriptorBytes = this.buildDescriptorBytes();
       return new MicrodescriptorImpl(descriptorBytes,
-          new int[] { 0, descriptorBytes.length },
+          new int[] { 0, descriptorBytes.length }, null,
           failUnrecognizedDescriptorLines);
     }
   }

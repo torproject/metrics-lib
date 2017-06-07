@@ -3,12 +3,16 @@
 
 package org.torproject.descriptor.impl;
 
+import java.io.File;
+
 public class TestServerDescriptor extends ServerDescriptorImpl {
 
   protected TestServerDescriptor(byte[] rawDescriptorBytes,
-      int[] offsetAndLength, boolean failUnrecognizedDescriptorLines)
+      int[] offsetAndLength, File descriptorFile,
+      boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines);
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines);
   }
 
 }

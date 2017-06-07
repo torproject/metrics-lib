@@ -7,6 +7,7 @@ import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DirectorySignature;
 import org.torproject.descriptor.RelayNetworkStatusVote;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -24,10 +25,10 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     implements RelayNetworkStatusVote {
 
   protected RelayNetworkStatusVoteImpl(byte[] voteBytes, int[] offsetAndLength,
-      boolean failUnrecognizedDescriptorLines)
+      File descriptorFile, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(voteBytes, offsetAndLength, failUnrecognizedDescriptorLines, false,
-        false);
+    super(voteBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines, false, false);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.VOTE_STATUS, Key.PUBLISHED, Key.VALID_AFTER, Key.FRESH_UNTIL,
         Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS, Key.DIR_SOURCE,

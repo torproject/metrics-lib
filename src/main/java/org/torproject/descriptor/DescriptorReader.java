@@ -23,18 +23,13 @@ import java.util.SortedMap;
  * DescriptorReader descriptorReader =
  *     DescriptorSourceFactory.createDescriptorReader();
  * // Read descriptors from local directory called in/.
- * descriptorReader.addDirectory(new File("in"));
- * Iterator<DescriptorFile> descriptorFiles =
- *     descriptorReader.readDescriptors();
- * while (descriptorFiles.hasNext()) {
- *   DescriptorFile descriptorFile = descriptorFiles.next();
- *   for (Descriptor descriptor : descriptorFile.getDescriptors()) {
- *     if ((descriptor instanceof RelayNetworkStatusConsensus)) {
- *       // Only process network status consensuses, ignore the rest.
- *       RelayNetworkStatusConsensus consensus =
- *           (RelayNetworkStatusConsensus) descriptor;
- *       processConsensus(consensus);
- *     }
+ * for (Descriptor descriptor :
+ *     descriptorReader.readDescriptors(new File("in")) {
+ *   // Only process network status consensuses, ignore the rest.
+ *   if ((descriptor instanceof RelayNetworkStatusConsensus)) {
+ *     RelayNetworkStatusConsensus consensus =
+ *         (RelayNetworkStatusConsensus) descriptor;
+ *     processConsensus(consensus);
  *   }
  * }}</pre>
  *
@@ -46,6 +41,9 @@ public interface DescriptorReader {
    * Add a local directory to read descriptors from, which may contain
    * descriptor files or tarballs containing descriptor files.
    *
+   * @deprecated Replaced with a parameter in {@link #readDescriptors(File...)},
+   *     which ignores any directories added via this deprecated method.
+   *
    * @since 1.0.0
    */
   public void addDirectory(File directory);
@@ -53,6 +51,9 @@ public interface DescriptorReader {
   /**
    * Add a tarball to read descriptors from, which may be uncompressed,
    * bz2-compressed, or xz-compressed.
+   *
+   * @deprecated Replaced with a parameter in {@link #readDescriptors(File...)},
+   *     which ignores any tarballs added via this deprecated method.
    *
    * @since 1.0.0
    */
@@ -157,9 +158,21 @@ public interface DescriptorReader {
    * <p>The default is 100, but if descriptor files contain hundreds or
    * even thousands of descriptors, that default may be too high.</p>
    *
+   * @deprecated Replaced with {@link #setMaxDescriptorsInQueue(int)}.
+   *
    * @since 1.0.0
    */
   public void setMaxDescriptorFilesInQueue(int max);
+
+  /**
+   * Don't keep more than this number of descriptors in the queue (default:
+   * 100).
+   *
+   * @param maxDescriptorsInQueue Maximum number of descriptors in the queue.
+   *
+   * @since 1.9.0
+   */
+  public void setMaxDescriptorsInQueue(int maxDescriptorsInQueue);
 
   /**
    * Read the previously configured descriptors and make them available
@@ -169,8 +182,27 @@ public interface DescriptorReader {
    * more shortly after, it blocks the caller.  This method can only be
    * run once.</p>
    *
+   * @deprecated Replaced with {@link #readDescriptors(File...)}.
+   *
    * @since 1.0.0
    */
   public Iterator<DescriptorFile> readDescriptors();
+
+  /**
+   * Read descriptors from the given descriptor file(s) and return the parsed
+   * descriptors.
+   *
+   * <p>Whenever the reader runs out of descriptors and expects to provide
+   * more shortly after, it blocks the caller.  This method can only be
+   * run once.</p>
+   *
+   * @param descriptorFiles One or more directories, tarballs, or files
+   *     containing descriptors.
+   *
+   * @return Parsed descriptors.
+   *
+   * @since 1.9.0
+   */
+  public Iterable<Descriptor> readDescriptors(File... descriptorFiles);
 }
 

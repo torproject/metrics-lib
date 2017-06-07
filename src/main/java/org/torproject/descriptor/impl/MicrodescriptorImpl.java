@@ -6,6 +6,7 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.Microdescriptor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -18,10 +19,10 @@ public class MicrodescriptorImpl extends DescriptorImpl
     implements Microdescriptor {
 
   protected MicrodescriptorImpl(byte[] descriptorBytes, int[] offsetAndLength,
-      boolean failUnrecognizedDescriptorLines)
+      File descriptorFile, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(descriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
-        false);
+    super(descriptorBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines, false);
     this.parseDescriptorBytes();
     this.calculateDigestSha256Base64(Key.ONION_KEY.keyword + NL);
     this.checkExactlyOnceKeys(EnumSet.of(Key.ONION_KEY));

@@ -6,6 +6,7 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.BridgeNetworkStatus;
 import org.torproject.descriptor.DescriptorParseException;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     implements BridgeNetworkStatus {
 
   protected BridgeNetworkStatusImpl(byte[] rawDescriptorBytes,
-      int[] offsetAndLength, String fileName,
+      int[] offsetAndLength, File descriptorFile, String fileName,
       boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, failUnrecognizedDescriptorLines,
-        false, false);
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
+        failUnrecognizedDescriptorLines, false, false);
     this.setPublishedMillisFromFileName(fileName);
   }
 
