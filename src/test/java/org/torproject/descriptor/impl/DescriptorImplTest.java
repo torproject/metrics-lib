@@ -132,16 +132,6 @@ public class DescriptorImplTest {
     assertEquals("1bEECw9nT5KRzPG8dAzEFJgSI4OBQfyWn+wjREb8oa8", digest);
   }
 
-  class TestDescriptor extends DescriptorImpl {
-
-    protected TestDescriptor(byte[] rawDescriptorBytes, int[] offsetAndLength,
-        boolean failUnrecognizedDescriptorLines, boolean blankLinesAllowed)
-        throws DescriptorParseException {
-      super(rawDescriptorBytes, offsetAndLength,
-          failUnrecognizedDescriptorLines, blankLinesAllowed);
-    }
-  }
-
 }
 
 
