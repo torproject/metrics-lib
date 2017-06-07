@@ -150,7 +150,7 @@ public class DescriptorParserImpl implements DescriptorParser {
       int startDescriptor;
       if (startAnnotations == ascii.indexOf(key.keyword + SP,
           startAnnotations) || startAnnotations == ascii.indexOf(
-          key.keyword + SP)) {
+          key.keyword + NL)) {
         startDescriptor = startAnnotations;
       } else {
         startDescriptor = ascii.indexOf(NL + key.keyword + SP,
