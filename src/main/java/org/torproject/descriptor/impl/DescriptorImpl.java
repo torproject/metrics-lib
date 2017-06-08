@@ -364,19 +364,23 @@ public abstract class DescriptorImpl implements Descriptor {
         end = ascii.indexOf(endToken) + endToken.length();
       }
       if (start >= 0 && end >= 0 && end > start) {
-        try {
-          MessageDigest md = MessageDigest.getInstance("SHA-1");
-          md.update(this.rawDescriptorBytes, this.offset + start, end - start);
-          this.digestSha1Hex = DatatypeConverter.printHexBinary(md.digest())
-              .toLowerCase();
-        } catch (NoSuchAlgorithmException e) {
-          /* Handle below. */
-        }
+        this.digestSha1Hex = DatatypeConverter.printHexBinary(
+            messageDigest("SHA-1", start, end)).toLowerCase();
       }
     }
     if (null == this.digestSha1Hex) {
       throw new DescriptorParseException("Could not calculate descriptor "
           + "digest.");
+    }
+  }
+
+  private byte[] messageDigest(String alg, int start, int end) {
+    try {
+      MessageDigest md = MessageDigest.getInstance(alg);
+      md.update(this.rawDescriptorBytes, this.offset + start, end - start);
+      return md.digest();
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -403,14 +407,8 @@ public abstract class DescriptorImpl implements Descriptor {
         end = ascii.indexOf(endToken) + endToken.length();
       }
       if (start >= 0 && end >= 0 && end > start) {
-        try {
-          MessageDigest md = MessageDigest.getInstance("SHA-256");
-          md.update(this.rawDescriptorBytes, this.offset + start, end - start);
-          this.digestSha256Base64 = DatatypeConverter.printBase64Binary(
-              md.digest()).replaceAll("=", "");
-        } catch (NoSuchAlgorithmException e) {
-          /* Handle below. */
-        }
+        this.digestSha256Base64 = DatatypeConverter.printBase64Binary(
+            messageDigest("SHA-256", start, end)).replaceAll("=", "");
       }
     }
     if (null == this.digestSha256Base64) {
