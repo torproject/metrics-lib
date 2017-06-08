@@ -1,4 +1,8 @@
-# Changes in version 1.9.0 - 2017-06-??
+# Changes in version 1.8.1 - 2017-06-08
+
+ * Medium changes
+   - Fix a regression in parsing microdescriptors and version 1
+     directories introduced in 1.8.0.
 
 
 # Changes in version 1.8.0 - 2017-06-07
