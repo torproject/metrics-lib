@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TorperfResultImplTest {
 
-  @Test()
+  @Test
   public void testAnnotatedInput() throws Exception {
     TorperfResultImpl result = (TorperfResultImpl)
         (TorperfResultImpl.parseTorperfResults((torperfAnnotation + input)
@@ -32,7 +32,7 @@ public class TorperfResultImplTest {
     }
   }
 
-  @Test()
+  @Test
   public void testPartiallyAnnotatedInput() throws Exception {
     byte[] asciiBytes = (torperfAnnotation
         + input + input + input).getBytes("US-ASCII");
@@ -47,7 +47,7 @@ public class TorperfResultImplTest {
         ((TorperfResultImpl)(result.get(2))).getAnnotations().size());
   }
 
-  @Test()
+  @Test
   public void testAllAnnotatedInput() throws Exception {
     byte[] asciiBytes = (torperfAnnotation + input
         + torperfAnnotation + input
@@ -87,7 +87,7 @@ public class TorperfResultImplTest {
       + "SOCKET=1441065601.86 SOURCE=moria START=1441065601.86 "
       + "TIMEOUT=1500 USED_AT=1441065603.40 USED_BY=2475 WRITEBYTES=75\n";
 
-  @Test()
+  @Test
   public void testDatapercNonNumeric() throws Exception {
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
         ("DATAPERMILLE=2.0 " + input).getBytes(), false);
@@ -121,7 +121,7 @@ public class TorperfResultImplTest {
       + "START=1493397365.14 TIMEOUT=1500 USED_AT=1493397368.14 "
       + "USED_BY=17429 WRITEBYTES=54";
 
-  @Test()
+  @Test
   public void testEndpointsHostnamesSourceAddress()
       throws DescriptorParseException {
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(

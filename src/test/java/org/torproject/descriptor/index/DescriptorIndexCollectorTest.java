@@ -32,7 +32,7 @@ public class DescriptorIndexCollectorTest {
   @Rule
   public TemporaryFolder tmpf = new TemporaryFolder();
 
-  @Test()
+  @Test
   public void testNormalCollecting() throws Exception {
     // create local file structure
     File localFolder = tmpf.newFolder();
@@ -135,7 +135,7 @@ public class DescriptorIndexCollectorTest {
     return indexFile;
   }
 
-  @Test()
+  @Test
   public void testNormalCollectingWithDeletion() throws Exception {
     File localFolder = tmpf.newFolder();
     makeStructure(localFolder, "1");
@@ -176,7 +176,7 @@ public class DescriptorIndexCollectorTest {
         "a/b/x1", "a/b/y1", "a/b/c/w1", "a/b/c/z1", "a/b/c/u1");
   }
 
-  @Test()
+  @Test
   public void testSlashesInCollectionWithDeletion() throws Exception {
     File localFolder = tmpf.newFolder();
     makeStructure(localFolder, "1");
@@ -218,7 +218,7 @@ public class DescriptorIndexCollectorTest {
         "a/b/x1", "a/b/y1", "a/b/c/w1", "a/b/c/z1", "a/b/c/u1");
   }
 
-  @Test()
+  @Test
   public void testNormalStatLocalDirectory() throws IOException {
     // create local file structure
     File dir = tmpf.newFolder();
@@ -243,7 +243,7 @@ public class DescriptorIndexCollectorTest {
     assertEquals("found " + res, 1, res.size());
   }
 
-  @Test()
+  @Test
   public void testWrongInputStatLocalDirectory() throws IOException {
     File dir = makeDirs(tmpf.newFolder().toString(), "a", "b");
     SortedMap<String, Long> res = DescriptorIndexCollector
@@ -254,7 +254,7 @@ public class DescriptorIndexCollectorTest {
     assertTrue("found " + res, res.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testMinimalArgs() throws IOException {
     File fakeDir = tmpf.newFolder("fantasy-dir");
     new DescriptorIndexCollector()
@@ -281,7 +281,7 @@ public class DescriptorIndexCollectorTest {
         null, new String[]{}, 100L, null, false);
   }
 
-  @Test()
+  @Test
   public void testExistingDir() throws IOException {
     File dir = tmpf.newFolder();
     dir.setWritable(false);

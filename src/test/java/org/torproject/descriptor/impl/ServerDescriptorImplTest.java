@@ -461,7 +461,7 @@ public class ServerDescriptorImplTest {
     }
   }
 
-  @Test()
+  @Test
   public void testSampleDescriptor() throws DescriptorParseException {
     DescriptorBuilder db = new DescriptorBuilder();
     ServerDescriptor descriptor = db.buildDescriptor(true);
@@ -513,7 +513,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithRouterLine(null);
   }
 
-  @Test()
+  @Test
   public void testRouterOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithRouterLine("opt router saberrider2008 "
@@ -562,7 +562,7 @@ public class ServerDescriptorImplTest {
         + "saberrider2008ReallyLongNickname 94.134.192.243 9001 0 0");
   }
 
-  @Test()
+  @Test
   public void testNicknameTwoSpaces() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithRouterLine("router saberrider2008  "
@@ -643,14 +643,14 @@ public class ServerDescriptorImplTest {
         + "94.134.192.243 9001 0 ");
   }
 
-  @Test()
+  @Test
   public void testPlatformMissing() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithPlatformLine(null);
     assertNull(descriptor.getPlatform());
   }
 
-  @Test()
+  @Test
   public void testPlatformOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithPlatformLine("opt platform Tor 0.2.2.35 "
@@ -659,21 +659,21 @@ public class ServerDescriptorImplTest {
         descriptor.getPlatform());
   }
 
-  @Test()
+  @Test
   public void testPlatformNoSpace() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithPlatformLine("platform");
     assertEquals("", descriptor.getPlatform());
   }
 
-  @Test()
+  @Test
   public void testPlatformSpace() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithPlatformLine("platform ");
     assertEquals("", descriptor.getPlatform());
   }
 
-  @Test()
+  @Test
   public void testProtocolsOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithProtocolsLine("opt protocols Link 1 2 Circuit 1");
@@ -683,7 +683,7 @@ public class ServerDescriptorImplTest {
         descriptor.getCircuitProtocolVersions());
   }
 
-  @Test()
+  @Test
   public void testProtocolsNoOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithProtocolsLine("protocols Link 1 2 Circuit 1");
@@ -710,7 +710,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithProtocolsLine("opt protocols Link 1 2");
   }
 
-  @Test()
+  @Test
   public void testProtoGreenPurple() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithProtoLine("proto Green=23 Purple=42");
@@ -735,7 +735,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithPublishedLine(null);
   }
 
-  @Test()
+  @Test
   public void testPublishedOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithPublishedLine("opt published 2012-01-01 04:03:19");
@@ -777,14 +777,14 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithPublishedLine("published 2012-01-01");
   }
 
-  @Test()
+  @Test
   public void testPublishedMillis() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithPublishedLine("opt published 2012-01-01 04:03:19.123");
     assertEquals(1325390599000L, descriptor.getPublishedMillis());
   }
 
-  @Test()
+  @Test
   public void testFingerprintNoOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFingerprintLine("fingerprint D873 3048 FC8E C910 2466 "
@@ -829,14 +829,14 @@ public class ServerDescriptorImplTest {
         + "D8733048FC8EC9102466AD8F3098622BF1BF71FD");
   }
 
-  @Test()
+  @Test
   public void testUptimeMissing() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithUptimeLine(null);
     assertNull(descriptor.getUptime());
   }
 
-  @Test()
+  @Test
   public void testUptimeOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithUptimeLine("opt uptime 48");
@@ -850,7 +850,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithUptimeLine("uptime fourty-eight");
   }
 
-  @Test()
+  @Test
   public void testUptimeMinusOne() throws DescriptorParseException {
     DescriptorBuilder.createWithUptimeLine("uptime -1");
   }
@@ -876,7 +876,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithUptimeLine("uptime 4 8");
   }
 
-  @Test()
+  @Test
   public void testBandwidthOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithBandwidthLine("opt bandwidth 51200 51200 53470");
@@ -901,7 +901,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithBandwidthLine("bandwidth 51200");
   }
 
-  @Test()
+  @Test
   public void testBandwidthTwoValues() throws DescriptorParseException {
     /* This is allowed, because Tor versions 0.0.8 and older only wrote
      * bandwidth lines with rate and burst values, but no observed
@@ -930,7 +930,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithBandwidthLine("bandwidth -1 -2 -3");
   }
 
-  @Test()
+  @Test
   public void testExtraInfoDigestNoOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExtraInfoDigestLine("extra-info-digest "
@@ -969,7 +969,7 @@ public class ServerDescriptorImplTest {
         + "1469D1550738A25B1E7B47CDDBCD7B2899F51B741469");
   }
 
-  @Test()
+  @Test
   public void testExtraInfoDigestMissing()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -977,7 +977,7 @@ public class ServerDescriptorImplTest {
     assertNull(descriptor.getExtraInfoDigestSha1Hex());
   }
 
-  @Test()
+  @Test
   public void testExtraInfoDigestAdditionalDigest()
       throws DescriptorParseException {
     String extraInfoDigest = "0879DB7B765218D7B3AE7557669D20307BB21CAA";
@@ -990,7 +990,7 @@ public class ServerDescriptorImplTest {
     assertEquals(extraInfoDigest, descriptor.getExtraInfoDigestSha1Hex());
   }
 
-  @Test()
+  @Test
   public void testOnionKeyOpt() throws DescriptorParseException {
     DescriptorBuilder.createWithOnionKeyLines("opt onion-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"
@@ -1001,7 +1001,7 @@ public class ServerDescriptorImplTest {
         + "-----END RSA PUBLIC KEY-----");
   }
 
-  @Test()
+  @Test
   public void testSigningKeyOpt() throws DescriptorParseException {
     DescriptorBuilder.createWithSigningKeyLines("opt signing-key\n"
         + "-----BEGIN RSA PUBLIC KEY-----\n"
@@ -1012,7 +1012,7 @@ public class ServerDescriptorImplTest {
         + "-----END RSA PUBLIC KEY-----");
   }
 
-  @Test()
+  @Test
   public void testHiddenServiceDirMissing()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1020,7 +1020,7 @@ public class ServerDescriptorImplTest {
     assertNull(descriptor.getHiddenServiceDirVersions());
   }
 
-  @Test()
+  @Test
   public void testHiddenServiceDirNoOpt()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1029,7 +1029,7 @@ public class ServerDescriptorImplTest {
         descriptor.getHiddenServiceDirVersions());
   }
 
-  @Test()
+  @Test
   public void testHiddenServiceDirVersions2And3()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1038,14 +1038,14 @@ public class ServerDescriptorImplTest {
         descriptor.getHiddenServiceDirVersions());
   }
 
-  @Test()
+  @Test
   public void testContactMissing() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithContactLine(null);
     assertNull(descriptor.getContact());
   }
 
-  @Test()
+  @Test
   public void testContactOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithContactLine("opt contact Random Person");
@@ -1061,14 +1061,14 @@ public class ServerDescriptorImplTest {
         + "Person\ncontact Random Person");
   }
 
-  @Test()
+  @Test
   public void testContactNoSpace() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithContactLine("contact");
     assertEquals("", descriptor.getContact());
   }
 
-  @Test()
+  @Test
   public void testContactCarriageReturn()
       throws DescriptorParseException {
     String contactString = "Random "
@@ -1083,7 +1083,7 @@ public class ServerDescriptorImplTest {
     assertEquals(contactString, descriptor.getContact());
   }
 
-  @Test()
+  @Test
   public void testExitPolicyRejectAllAcceptAll()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1092,7 +1092,7 @@ public class ServerDescriptorImplTest {
         descriptor.getExitPolicyLines());
   }
 
-  @Test()
+  @Test
   public void testExitPolicyOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExitPolicyLines("opt reject *:*");
@@ -1108,7 +1108,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithExitPolicyLines("reject *");
   }
 
-  @Test()
+  @Test
   public void testExitPolicyAccept80RejectAll()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1151,7 +1151,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithExitPolicyLines(null);
   }
 
-  @Test()
+  @Test
   public void testExitPolicyMaskTypes() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExitPolicyLines("reject 192.168.0.0/16:*\n"
@@ -1185,21 +1185,21 @@ public class ServerDescriptorImplTest {
         + "-----END SIGNATURE-----\ncontact me");
   }
 
-  @Test()
+  @Test
   public void testHibernatingOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithHibernatingLine("opt hibernating 1");
     assertTrue(descriptor.isHibernating());
   }
 
-  @Test()
+  @Test
   public void testHibernatingFalse() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithHibernatingLine("hibernating 0");
     assertFalse(descriptor.isHibernating());
   }
 
-  @Test()
+  @Test
   public void testHibernatingTrue() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithHibernatingLine("hibernating 1");
@@ -1220,7 +1220,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithHibernatingLine("hibernating");
   }
 
-  @Test()
+  @Test
   public void testFamilyOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFamilyLine("opt family saberrider2008");
@@ -1228,7 +1228,7 @@ public class ServerDescriptorImplTest {
         descriptor.getFamilyEntries());
   }
 
-  @Test()
+  @Test
   public void testFamilyFingerprint() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFamilyLine("family "
@@ -1238,7 +1238,7 @@ public class ServerDescriptorImplTest {
         descriptor.getFamilyEntries());
   }
 
-  @Test()
+  @Test
   public void testFamilyNickname() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFamilyLine("family saberrider2008");
@@ -1273,7 +1273,7 @@ public class ServerDescriptorImplTest {
         + "D8733048FC8EC9102466AD8F3098622BF1BF71FD");
   }
 
-  @Test()
+  @Test
   public void testFamilyFingerprintNicknameNamed()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1284,7 +1284,7 @@ public class ServerDescriptorImplTest {
         descriptor.getFamilyEntries());
   }
 
-  @Test()
+  @Test
   public void testFamilyFingerprintNicknameUnnamed()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1295,7 +1295,7 @@ public class ServerDescriptorImplTest {
         descriptor.getFamilyEntries());
   }
 
-  @Test()
+  @Test
   public void testWriteHistory() throws DescriptorParseException {
     String writeHistoryLine = "write-history 2012-01-01 03:51:44 (900 s) "
         + "4345856,261120,7591936,1748992";
@@ -1316,7 +1316,7 @@ public class ServerDescriptorImplTest {
     assertTrue(bandwidthValues.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testWriteHistoryOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithWriteHistoryLine("opt write-history 2012-01-01 "
@@ -1386,7 +1386,7 @@ public class ServerDescriptorImplTest {
         + "2012-01-01 03:51:44 (900 s) one,two,three");
   }
 
-  @Test()
+  @Test
   public void testWriteHistoryNoValuesSpace()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1398,7 +1398,7 @@ public class ServerDescriptorImplTest {
         .isEmpty());
   }
 
-  @Test()
+  @Test
   public void testWriteHistoryNoValuesNoSpace()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1419,14 +1419,14 @@ public class ServerDescriptorImplTest {
         "write-history 2012-01-01 03:51:44 (900 ");
   }
 
-  @Test()
+  @Test
   public void testWriteHistoryExtraArg()
       throws DescriptorParseException {
     DescriptorBuilder.createWithWriteHistoryLine("write-history "
         + "2012-01-01 03:51:44 (900 s) 4345856 bin_size=1024");
   }
 
-  @Test()
+  @Test
   public void testWriteHistory1800Seconds()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1436,7 +1436,7 @@ public class ServerDescriptorImplTest {
         .getIntervalLength());
   }
 
-  @Test()
+  @Test
   public void testReadHistory() throws DescriptorParseException {
     String readHistoryLine = "read-history 2012-01-01 03:51:44 (900 s) "
         + "4268032,139264,7797760,1415168";
@@ -1457,7 +1457,7 @@ public class ServerDescriptorImplTest {
     assertTrue(bandwidthValues.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testReadHistoryTwoSpaces() throws DescriptorParseException {
     /* There are some server descriptors from older Tor versions that
      * contain "opt read-history  " lines. */
@@ -1466,21 +1466,21 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithReadHistoryLine(readHistoryLine);
   }
 
-  @Test()
+  @Test
   public void testEventdnsOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithEventdnsLine("opt eventdns 1");
     assertTrue(descriptor.getUsesEnhancedDnsLogic());
   }
 
-  @Test()
+  @Test
   public void testEventdns1() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithEventdnsLine("eventdns 1");
     assertTrue(descriptor.getUsesEnhancedDnsLogic());
   }
 
-  @Test()
+  @Test
   public void testEventdns0() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithEventdnsLine("eventdns 0");
@@ -1501,14 +1501,14 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithEventdnsLine("eventdns no");
   }
 
-  @Test()
+  @Test
   public void testCachesExtraInfoOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithCachesExtraInfoLine("opt caches-extra-info");
     assertTrue(descriptor.getCachesExtraInfo());
   }
 
-  @Test()
+  @Test
   public void testCachesExtraInfoNoSpace()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1524,7 +1524,7 @@ public class ServerDescriptorImplTest {
         + "true");
   }
 
-  @Test()
+  @Test
   public void testAllowSingleHopExitsOpt()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1532,7 +1532,7 @@ public class ServerDescriptorImplTest {
     assertTrue(descriptor.getAllowSingleHopExits());
   }
 
-  @Test()
+  @Test
   public void testAllowSingleHopExitsNoSpace()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1565,7 +1565,7 @@ public class ServerDescriptorImplTest {
         false);
   }
 
-  @Test()
+  @Test
   public void testIpv6PolicyLine() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithIpv6PolicyLine("ipv6-policy accept 80,1194,1220,1293");
@@ -1615,7 +1615,7 @@ public class ServerDescriptorImplTest {
         + "ipv6-policy accept 80,1194,1220,1293");
   }
 
-  @Test()
+  @Test
   public void testNtorOnionKeyLine() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithNtorOnionKeyLine("ntor-onion-key "
@@ -1624,7 +1624,7 @@ public class ServerDescriptorImplTest {
         descriptor.getNtorOnionKey());
   }
 
-  @Test()
+  @Test
   public void testNtorOnionKeyLineNoPadding()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1663,7 +1663,7 @@ public class ServerDescriptorImplTest {
         + "Y/XgaHcPIJVa4D55kir9QLH8rEYAaLXuv3c3sm8jYhY\n");
   }
 
-  @Test()
+  @Test
   public void testTunnelledDirServerTrue()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1671,7 +1671,7 @@ public class ServerDescriptorImplTest {
     assertTrue(descriptor.getTunnelledDirServer());
   }
 
-  @Test()
+  @Test
   public void testTunnelledDirServerFalse()
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
@@ -1718,7 +1718,7 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithUnrecognizedLine(unrecognizedLine, true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1729,7 +1729,7 @@ public class ServerDescriptorImplTest {
     assertEquals(unrecognizedLines, descriptor.getUnrecognizedLines());
   }
 
-  @Test()
+  @Test
   public void testSomeOtherKey() throws DescriptorParseException {
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add("some-other-key");
@@ -1750,7 +1750,7 @@ public class ServerDescriptorImplTest {
     assertEquals(unrecognizedLines, descriptor.getUnrecognizedLines());
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedCryptoBlockNoKeyword()
       throws DescriptorParseException {
     List<String> unrecognizedLines = new ArrayList<>();
@@ -1787,7 +1787,7 @@ public class ServerDescriptorImplTest {
       "router-sig-ed25519 y7WF9T2GFwkSDPZEhB55HgquIFOl5uXUFMYJPq3CXXUTKeJ"
       + "kSrtaZUB5s34fWdHQNtl84mH4dVaFMunHnwgYAw";
 
-  @Test()
+  @Test
   public void testEd25519() throws DescriptorParseException {
     ServerDescriptor descriptor =
         DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
@@ -1814,7 +1814,7 @@ public class ServerDescriptorImplTest {
         ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test()
+  @Test
   public void testEd25519IdentityMissing()
       throws DescriptorParseException {
     DescriptorBuilder.createWithEd25519Lines(null,
@@ -1843,7 +1843,7 @@ public class ServerDescriptorImplTest {
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test()
+  @Test
   public void testEd25519MasterKeyMissing()
       throws DescriptorParseException {
     ServerDescriptor descriptor =
@@ -1865,7 +1865,7 @@ public class ServerDescriptorImplTest {
         ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test()
+  @Test
   public void testEd25519RouterSigMissing()
       throws DescriptorParseException {
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
@@ -1910,7 +1910,7 @@ public class ServerDescriptorImplTest {
       + "Ka\nErPtMuiEqAc=\n"
       + "-----END ED25519 CERT-----";
 
-  @Test()
+  @Test
   public void testOnionKeyCrosscert() throws DescriptorParseException {
     ServerDescriptor descriptor =
         DescriptorBuilder.createWithOnionKeyCrosscertLines(
@@ -1930,7 +1930,7 @@ public class ServerDescriptorImplTest {
         ONION_KEY_CROSSCERT_LINES + "\n" + ONION_KEY_CROSSCERT_LINES);
   }
 
-  @Test()
+  @Test
   public void testNtorOnionKeyCrosscert()
       throws DescriptorParseException {
     ServerDescriptor descriptor =
@@ -1953,7 +1953,7 @@ public class ServerDescriptorImplTest {
         + NTOR_ONION_KEY_CROSSCERT_LINES);
   }
 
-  @Test()
+  @Test
   public void testBridgeDescriptorDigestsRouterDigestLines()
       throws DescriptorParseException {
     DescriptorBuilder db = new DescriptorBuilder();
@@ -1968,7 +1968,7 @@ public class ServerDescriptorImplTest {
     assertEquals(digestSha256Base64, descriptor.getDigestSha256Base64());
   }
 
-  @Test()
+  @Test
   public void testBridgeDescriptorDigestsNoRouterDigestLines()
       throws DescriptorParseException {
     DescriptorBuilder db = new DescriptorBuilder();

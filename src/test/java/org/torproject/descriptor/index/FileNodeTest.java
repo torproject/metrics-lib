@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class FileNodeTest {
 
-  @Test()
+  @Test
   public void testCompare() {
     FileNode fn1 = new FileNode("a1", 1L, "2016-01-01 01:01");
     FileNode fn2 = new FileNode("a2", 1L, "2016-01-01 02:02");

@@ -33,7 +33,7 @@ public class DescriptorSourceFactoryTest {
   private static final String[] defaults = new String[] { COLLECTOR_DEFAULT,
       DOWNLOADER_DEFAULT, PARSER_DEFAULT, READER_DEFAULT };
 
-  @Test()
+  @Test
   public void testDefaults() {
     setProperties(defaults);
     DescriptorCollector dc =
@@ -61,7 +61,7 @@ public class DescriptorSourceFactoryTest {
     DescriptorSourceFactory.createDescriptorCollector();
   }
 
-  @Test()
+  @Test
   public void testUnknownPropertyException() {
     setProperties(defaults);
     try {
@@ -81,7 +81,7 @@ public class DescriptorSourceFactoryTest {
     }
   }
 
-  @Test()
+  @Test
   public void testProperties() {
     setProperties(new String[] {
         "org.torproject.descriptor.DummyCollectorImplementation",

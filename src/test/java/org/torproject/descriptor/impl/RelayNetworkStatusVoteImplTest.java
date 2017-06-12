@@ -700,7 +700,7 @@ public class RelayNetworkStatusVoteImplTest {
     }
   }
 
-  @Test()
+  @Test
   public void testSampleVote() throws DescriptorParseException {
     VoteBuilder vb = new VoteBuilder();
     RelayNetworkStatusVote vote = vb.buildVote(true);
@@ -777,7 +777,7 @@ public class RelayNetworkStatusVoteImplTest {
         "network-status-version 3\n ");
   }
 
-  @Test()
+  @Test
   public void testNetworkStatusVersionPrefixLineAtChar()
       throws DescriptorParseException {
     VoteBuilder.createWithNetworkStatusVersionLine(
@@ -883,7 +883,7 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithVoteStatusLine("vote-status ");
   }
 
-  @Test()
+  @Test
   public void testVoteStatusVoteOneSpace()
       throws DescriptorParseException {
     VoteBuilder.createWithVoteStatusLine("vote-status vote ");
@@ -907,7 +907,7 @@ public class RelayNetworkStatusVoteImplTest {
         "vote-status TheMagicVoteStatus");
   }
 
-  @Test()
+  @Test
   public void testConsensusMethodNoLine()
       throws DescriptorParseException {
     RelayNetworkStatusVote vote =
@@ -1121,7 +1121,7 @@ public class RelayNetworkStatusVoteImplTest {
         "recommended-client-protocols Cons=2-1");
   }
 
-  @Test()
+  @Test
   public void testRecommendedRelayProtocols0()
       throws DescriptorParseException {
     RelayNetworkStatusVote vote =
@@ -1151,14 +1151,14 @@ public class RelayNetworkStatusVoteImplTest {
         "recommended-client-protocols Cons=-1");
   }
 
-  @Test()
+  @Test
   public void testPackageNone() throws DescriptorParseException {
     RelayNetworkStatusVote vote =
         VoteBuilder.createWithPackageLines(null);
     assertNull(vote.getPackageLines());
   }
 
-  @Test()
+  @Test
   public void testPackageOne() throws DescriptorParseException {
     String packageLine = "package shouldbesecond 0 http digest=digest";
     RelayNetworkStatusVote vote =
@@ -1167,7 +1167,7 @@ public class RelayNetworkStatusVoteImplTest {
         vote.getPackageLines().get(0));
   }
 
-  @Test()
+  @Test
   public void testPackageTwo() throws DescriptorParseException {
     List<String> packageLines = Arrays.asList(
         "package shouldbesecond 0 http digest=digest",
@@ -1212,7 +1212,7 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithKnownFlagsLine("known-flags ");
   }
 
-  @Test()
+  @Test
   public void testFlagThresholdsLine() throws DescriptorParseException {
     VoteBuilder vb = new VoteBuilder();
     RelayNetworkStatusVote vote = vb.buildVote(true);
@@ -1226,7 +1226,7 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals(1, vote.getEnoughMtbfInfo());
   }
 
-  @Test()
+  @Test
   public void testFlagThresholdsNoLine() throws DescriptorParseException {
     RelayNetworkStatusVote vote =
         VoteBuilder.createWithFlagThresholdsLine(null);
@@ -1240,7 +1240,7 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals(-1, vote.getEnoughMtbfInfo());
   }
 
-  @Test()
+  @Test
   public void testFlagThresholdsAllZeroes()
       throws DescriptorParseException {
     RelayNetworkStatusVote vote =
@@ -1320,7 +1320,7 @@ public class RelayNetworkStatusVoteImplTest {
         + "208.83.223.34 443 80");
   }
 
-  @Test()
+  @Test
   public void testFingerprintLowerCase() throws DescriptorParseException {
     VoteBuilder.createWithDirSourceLine("dir-source urras "
         + "80550987e1d626e3eba5e5e75a458de0626d088c 208.83.223.34 "
@@ -1371,7 +1371,7 @@ public class RelayNetworkStatusVoteImplTest {
         + " 208.83.223.34 208.83.223.34 443 80");
   }
 
-  @Test()
+  @Test
   public void testHostname256()
       throws DescriptorParseException {
     /* This test doesn't fail, because we're not parsing the hostname. */
@@ -1442,7 +1442,7 @@ public class RelayNetworkStatusVoteImplTest {
         + "208.83.223.34 four-four-three 80");
   }
 
-  @Test()
+  @Test
   public void testDirPort0() throws DescriptorParseException {
     /* This test doesn't fail, because we're accepting DirPort 0, even
      * though it doesn't make sense from Tor's view. */
@@ -1461,7 +1461,7 @@ public class RelayNetworkStatusVoteImplTest {
         + "208.83.223.34 443 ");
   }
 
-  @Test()
+  @Test
   public void testDirPortOrPortIdentical()
       throws DescriptorParseException {
     /* This test doesn't fail, even though identical OR and Dir port don't
@@ -1493,7 +1493,7 @@ public class RelayNetworkStatusVoteImplTest {
         + "208.83.223.34 443 80");
   }
 
-  @Test()
+  @Test
   public void testContactLineMissing()
       throws DescriptorParseException {
     VoteBuilder.createWithContactLine(null);
@@ -1530,7 +1530,7 @@ public class RelayNetworkStatusVoteImplTest {
         "shared-rand-participate 1");
   }
 
-  @Test()
+  @Test
   public void testSharedRandCommitLinesEmpty() throws DescriptorParseException {
     RelayNetworkStatusVote vote =
         VoteBuilder.createWithSharedRandCommitLines(null);
@@ -1559,7 +1559,7 @@ public class RelayNetworkStatusVoteImplTest {
             + "D88plxd8YeLfCIVAR9gjiFlWB1WqpC53kWr350o1pzw=");
   }
 
-  @Test()
+  @Test
   public void testLegacyDirKeyLine() throws DescriptorParseException {
     RelayNetworkStatusVote vote = VoteBuilder.createWithLegacyDirKeyLine(
         "legacy-dir-key 81349FC1F2DBA2C2C11B45CB9706637D480AB913");
@@ -1710,7 +1710,7 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithDirSigningKeyLines(null);
   }
 
-  @Test()
+  @Test
   public void testDirKeyCrosscertLinesMissing()
       throws DescriptorParseException {
     VoteBuilder.createWithDirKeyCrosscertLines(null);
@@ -1725,7 +1725,7 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithDirKeyCertificationLines(null);
   }
 
-  @Test()
+  @Test
   public void testDirectoryFooterLineMissing()
       throws DescriptorParseException {
     VoteBuilder.createWithDirectoryFooterLine(null);
@@ -1740,7 +1740,7 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithDirectorySignatureLines(null);
   }
 
-  @Test()
+  @Test
   public void testDirectorySignaturesLinesTwoAlgorithms()
       throws DescriptorParseException {
     String identitySha256 = "32519E5CB7254AB5A94CC9925EC7676E53D5D52EEAB7"
@@ -1785,7 +1785,7 @@ public class RelayNetworkStatusVoteImplTest {
         vote.getDigestSha1Hex());
   }
 
-  @Test()
+  @Test
   public void testDirectorySignaturesLinesTwoAlgorithmsSameDigests()
       throws DescriptorParseException {
     String signaturesLines = "directory-signature 00 00\n"
@@ -1807,7 +1807,7 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithUnrecognizedHeaderLine(unrecognizedLine, true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedHeaderLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1829,7 +1829,7 @@ public class RelayNetworkStatusVoteImplTest {
         true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedDirSourceLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1850,7 +1850,7 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithUnrecognizedFooterLine(unrecognizedLine, true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedFooterLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1861,7 +1861,7 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
   }
 
-  @Test()
+  @Test
   public void testIdEd25519MasterKey()
       throws DescriptorParseException {
     String masterKey25519 = "8RH34kO07Pp+XYwzdoATVyCibIvmbslUjRkAm7J4IA8";
@@ -1877,7 +1877,7 @@ public class RelayNetworkStatusVoteImplTest {
         vote.getStatusEntry(fingerprint).getMasterKeyEd25519());
   }
 
-  @Test()
+  @Test
   public void testIdEd25519None()
       throws DescriptorParseException {
     List<String> statusEntries = new ArrayList<>();

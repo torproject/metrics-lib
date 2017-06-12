@@ -18,7 +18,7 @@ public class DescriptorCollectorImplTest {
   private static final String REMOTE_DIRECTORY_CONSENSUSES =
       "/recent/relay-descriptors/consensuses/";
 
-  @Test()
+  @Test
   public void testOneFile() {
     String remoteFilename = "2015-05-24-12-00-00-consensus";
     String directoryListing = "<tr><td valign=\"top\">"
@@ -38,7 +38,7 @@ public class DescriptorCollectorImplTest {
         remoteFiles.get(remoteFiles.firstKey()));
   }
 
-  @Test()
+  @Test
   public void testSameFileTwoTimestampsLastWins() {
     String remoteFilename = "2015-05-24-12-00-00-consensus";
     String firstTimestamp = "2015-05-24 12:04";
@@ -61,7 +61,7 @@ public class DescriptorCollectorImplTest {
         remoteFiles.get(remoteFiles.firstKey()));
   }
 
-  @Test()
+  @Test
   public void testSubDirectoryOnly() {
     String directoryListing = "<tr><td valign=\"top\">"
         + "<img src=\"/icons/folder.gif\" alt=\"[DIR]\"></td><td>"
@@ -75,7 +75,7 @@ public class DescriptorCollectorImplTest {
     assertTrue(remoteFiles.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testParentDirectoryOnly() {
     String directoryListing = "<tr><td valign=\"top\">"
         + "<img src=\"/icons/back.gif\" alt=\"[DIR]\"></td><td>"
@@ -89,7 +89,7 @@ public class DescriptorCollectorImplTest {
     assertTrue(remoteFiles.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testUnexpectedDateFormat() {
     String directoryListing = "<tr><td valign=\"top\">"
         + "<img src=\"/icons/unknown.gif\" alt=\"[   ]\"></td><td>"
@@ -104,7 +104,7 @@ public class DescriptorCollectorImplTest {
     assertTrue(remoteFiles.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testInvalidDate() {
     String directoryListing = "<tr><td valign=\"top\">"
         + "<img src=\"/icons/unknown.gif\" alt=\"[   ]\"></td><td>"

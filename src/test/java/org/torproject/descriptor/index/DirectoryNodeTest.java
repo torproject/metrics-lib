@@ -13,7 +13,7 @@ import java.util.TreeSet;
 
 public class DirectoryNodeTest {
 
-  @Test()
+  @Test
   public void testCompare() {
     DirectoryNode dn1 = new DirectoryNode("a1", null, null);
     DirectoryNode dn2 = new DirectoryNode("a2", null,
@@ -25,7 +25,7 @@ public class DirectoryNodeTest {
     assertEquals(1, dn2.compareTo(dn3));
   }
 
-  @Test()
+  @Test
   public void testFind() {
     FileNode fnx = new FileNode("x", 0L, "2000-01-01 01:01");
     SortedSet<FileNode> fm = new TreeSet<>();

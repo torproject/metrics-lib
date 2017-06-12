@@ -951,7 +951,7 @@ public class ExtraInfoDescriptorImplTest {
     }
   }
 
-  @Test()
+  @Test
   public void testSampleDescriptor() throws DescriptorParseException {
     DescriptorBuilder db = new DescriptorBuilder();
     ExtraInfoDescriptor descriptor = db.buildDescriptor(true);
@@ -978,7 +978,7 @@ public class ExtraInfoDescriptorImplTest {
     DescriptorBuilder.createWithExtraInfoLine(null);
   }
 
-  @Test()
+  @Test
   public void testExtraInfoOpt() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
         .createWithExtraInfoLine("opt extra-info chaoscomputerclub5 "
@@ -988,7 +988,7 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getFingerprint());
   }
 
-  @Test()
+  @Test
   public void testExtraInfoNicknameTwoSpaces()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
@@ -1077,14 +1077,14 @@ public class ExtraInfoDescriptorImplTest {
     DescriptorBuilder.createWithPublishedLine(null);
   }
 
-  @Test()
+  @Test
   public void testPublishedOpt() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
         .createWithPublishedLine("opt published 2012-02-11 09:08:36");
     assertEquals(1328951316000L, descriptor.getPublishedMillis());
   }
 
-  @Test()
+  @Test
   public void testPublishedMillis() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
         .createWithPublishedLine("opt published 2012-02-11 09:08:36.123");
@@ -1103,7 +1103,7 @@ public class ExtraInfoDescriptorImplTest {
         + "-4713350144,-4723824640,-4710717440,-4572675072");
   }
 
-  @Test()
+  @Test
   public void testReadHistoryTabInterval()
       throws DescriptorParseException {
     DescriptorBuilder.createWithReadHistoryLine("read-history "
@@ -1111,7 +1111,7 @@ public class ExtraInfoDescriptorImplTest {
         + "4707695616,4699666432,4650004480,4489718784");
   }
 
-  @Test()
+  @Test
   public void testReadHistoryTabIntervalBytes()
       throws DescriptorParseException {
     DescriptorBuilder.createWithReadHistoryLine("read-history "
@@ -1131,7 +1131,7 @@ public class ExtraInfoDescriptorImplTest {
         + "4707695616,4699666432,4650004480,4489718784");
   }
 
-  @Test()
+  @Test
   public void testReadHistoryNonStandardInterval()
       throws DescriptorParseException {
     DescriptorBuilder.createWithReadHistoryLine("read-history "
@@ -1163,7 +1163,7 @@ public class ExtraInfoDescriptorImplTest {
         + "81281024,,60625920,67922944");
   }
 
-  @Test()
+  @Test
   public void testDirreqWriteHistoryExtraArg() throws DescriptorParseException {
     DescriptorBuilder.createWithDirreqWriteHistoryLine(
         "dirreq-write-history "
@@ -1183,7 +1183,7 @@ public class ExtraInfoDescriptorImplTest {
         + "17074176,16235520,16005120,");
   }
 
-  @Test()
+  @Test
   public void testGeoipDbDigestValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
         .createWithGeoipDbDigestLine("geoip-db-digest "
@@ -1221,7 +1221,7 @@ public class ExtraInfoDescriptorImplTest {
     DescriptorBuilder.createWithGeoipDbDigestLine("geoip-db-digest");
   }
 
-  @Test()
+  @Test
   public void testGeoipDbDigestExtraArg() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
         .createWithGeoip6DbDigestLine("geoip-db-digest "
@@ -1232,7 +1232,7 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getGeoipDbDigest());
   }
 
-  @Test()
+  @Test
   public void testGeoip6DbDigestValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
         .createWithGeoip6DbDigestLine("geoip6-db-digest "
@@ -1241,7 +1241,7 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getGeoip6DbDigestSha1Hex());
   }
 
-  @Test()
+  @Test
   public void testGeoip6DbDigestExtraArg() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
         .createWithGeoip6DbDigestLine("geoip6-db-digest "
@@ -1252,7 +1252,7 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getGeoip6DbDigest());
   }
 
-  @Test()
+  @Test
   public void testGeoipStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = GeoipStatsBuilder
         .createWithDefaultLines();
@@ -1322,7 +1322,7 @@ public class ExtraInfoDescriptorImplTest {
         + "gb=208,other=200");
   }
 
-  @Test()
+  @Test
   public void testGeoipClientOriginsQuestionMarks()
       throws DescriptorParseException {
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
@@ -1330,7 +1330,7 @@ public class ExtraInfoDescriptorImplTest {
         + "gb=208,??=200");
   }
 
-  @Test()
+  @Test
   public void testGeoipClientOriginsCapital()
       throws DescriptorParseException {
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
@@ -1386,7 +1386,7 @@ public class ExtraInfoDescriptorImplTest {
         + "ru=352,fr=208,gb=208,ir=200");
   }
 
-  @Test()
+  @Test
   public void testGeoipClientOriginsExtraArg()
       throws DescriptorParseException {
     GeoipStatsBuilder.createWithGeoipClientOriginsLine(
@@ -1394,7 +1394,7 @@ public class ExtraInfoDescriptorImplTest {
         + "gb=208 ir=200");
   }
 
-  @Test()
+  @Test
   public void testDirreqStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DirreqStatsBuilder
         .createWithDefaultLines();
@@ -1425,14 +1425,14 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(0, dl.get("complete").intValue());
   }
 
-  @Test()
+  @Test
   public void testDirreqStatsIntervalTwoDays()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqStatsEndLine("dirreq-stats-end "
         + "2012-02-11 00:59:53 (172800 s)");
   }
 
-  @Test()
+  @Test
   public void testDirreqStatsExtraArg()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqStatsEndLine("dirreq-stats-end "
@@ -1449,14 +1449,14 @@ public class ExtraInfoDescriptorImplTest {
         + "usa=1544");
   }
 
-  @Test()
+  @Test
   public void testDirreqV3IpsExtraArg()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV3IpsLine("dirreq-v3-ips "
         + "ab=12,cd=34 ef=56");
   }
 
-  @Test()
+  @Test
   public void testDirreqV2IpsDigitCountry()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV2IpsLine("dirreq-v2-ips 00=8");
@@ -1472,7 +1472,7 @@ public class ExtraInfoDescriptorImplTest {
         + "u=1744");
   }
 
-  @Test()
+  @Test
   public void testDirreqV3ReqsNull() throws DescriptorParseException {
     ExtraInfoDescriptor eid =
         DirreqStatsBuilder.createWithDirreqV3ReqsLine(null);
@@ -1498,7 +1498,7 @@ public class ExtraInfoDescriptorImplTest {
         + "ok==10848");
   }
 
-  @Test()
+  @Test
   public void testDirreqV3RespEmptyString()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
@@ -1508,7 +1508,7 @@ public class ExtraInfoDescriptorImplTest {
     DirreqStatsBuilder.createWithDirreqV3RespLine("dirreq-v3-resp =10848");
   }
 
-  @Test()
+  @Test
   public void testDirreqV3RespExtraArg()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV3RespLine("dirreq-v3-resp "
@@ -1541,7 +1541,7 @@ public class ExtraInfoDescriptorImplTest {
         + "0.37");
   }
 
-  @Test()
+  @Test
   public void testDirreqV3ShareExtraArg()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV3ShareLine("dirreq-v3-share "
@@ -1557,7 +1557,7 @@ public class ExtraInfoDescriptorImplTest {
         "dirreq-v3-direct-dl complete 36");
   }
 
-  @Test()
+  @Test
   public void testDirreqV2DirectDlNegative()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV2DirectDlLine(
@@ -1582,14 +1582,14 @@ public class ExtraInfoDescriptorImplTest {
         "dirreq-v2-tunneled-dl complete=0.001");
   }
 
-  @Test()
+  @Test
   public void testDirreqV3TunneledDlExtraArg()
       throws DescriptorParseException {
     DirreqStatsBuilder.createWithDirreqV2TunneledDlLine(
         "dirreq-v2-tunneled-dl complete=-8 incomplete=1/-8");
   }
 
-  @Test()
+  @Test
   public void testEntryStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = EntryStatsBuilder
         .createWithDefaultLines();
@@ -1619,7 +1619,7 @@ public class ExtraInfoDescriptorImplTest {
         + "ir=25368;us=15744");
   }
 
-  @Test()
+  @Test
   public void testCellStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = CellStatsBuilder
         .createWithDefaultLines();
@@ -1688,14 +1688,14 @@ public class ExtraInfoDescriptorImplTest {
         "cell-circuits-per-decile -866");
   }
 
-  @Test()
+  @Test
   public void testCellCircuitsPerDecileExtraArg()
       throws DescriptorParseException {
     CellStatsBuilder.createWithCellCircuitsPerDecileLine(
         "cell-circuits-per-decile 866 866 866 866 866");
   }
 
-  @Test()
+  @Test
   public void testConnBiDirectValid()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
@@ -1719,14 +1719,14 @@ public class ExtraInfoDescriptorImplTest {
         + "2012-02-11 01:59:39 (86400 s) 42173,1591,1310,1744,42");
   }
 
-  @Test()
+  @Test
   public void testConnBiDirectStatsExtraArg()
       throws DescriptorParseException {
     DescriptorBuilder.createWithConnBiDirectLine("conn-bi-direct "
         + "2012-02-11 01:59:39 (86400 s) 42173,1591,1310,1744 +1");
   }
 
-  @Test()
+  @Test
   public void testExitStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = ExitStatsBuilder
         .createWithDefaultLines();
@@ -1788,7 +1788,7 @@ public class ExtraInfoDescriptorImplTest {
         "exit-kibibytes-written unknown=74647");
   }
 
-  @Test()
+  @Test
   public void testExitStatsWrittenEmptyString()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
@@ -1808,27 +1808,27 @@ public class ExtraInfoDescriptorImplTest {
         "exit-kibibytes-read 25=-35562");
   }
 
-  @Test()
+  @Test
   public void testExitStatsReadTooLarge()
       throws DescriptorParseException {
     ExitStatsBuilder.createWithExitKibibytesReadLine(
         "exit-kibibytes-read other=2282907805");
   }
 
-  @Test()
+  @Test
   public void testExitStatsStreamsTooLarge()
       throws DescriptorParseException {
     ExitStatsBuilder.createWithExitStreamsOpenedLine(
         "exit-streams-opened 25=2147483648");
   }
 
-  @Test()
+  @Test
   public void testExitStatsStreamsExtraArg() throws DescriptorParseException {
     ExitStatsBuilder.createWithExitStreamsOpenedLine(
         "exit-streams-opened 25=21474 3648");
   }
 
-  @Test()
+  @Test
   public void testBridgeStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = BridgeStatsBuilder
         .createWithDefaultLines();
@@ -1861,7 +1861,7 @@ public class ExtraInfoDescriptorImplTest {
         + "2012-02-11 01:59:39 (0 s)");
   }
 
-  @Test()
+  @Test
   public void testBridgeStatsEndExtraArg()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeStatsEndLine("bridge-stats-end "
@@ -1889,7 +1889,7 @@ public class ExtraInfoDescriptorImplTest {
         0x69, 0x70, 0x73 }, false);               // "ips" (no newline)
   }
 
-  @Test()
+  @Test
   public void testBridgeIpsExtraArg()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpsLine("bridge-ips ir=24 5");
@@ -1905,7 +1905,7 @@ public class ExtraInfoDescriptorImplTest {
         "bridge-ip-versions v4=24.5");
   }
 
-  @Test()
+  @Test
   public void testBridgeIpVersionsExtraArg()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpVersionsLine(
@@ -1922,21 +1922,21 @@ public class ExtraInfoDescriptorImplTest {
         "bridge-ip-transports obfs2=24.5");
   }
 
-  @Test()
+  @Test
   public void testBridgeIpTransportsUnderscore()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpTransportsLine(
         "bridge-ip-transports meek=32,obfs3_websocket=8,websocket=64");
   }
 
-  @Test()
+  @Test
   public void testBridgeIpTransportsExtraArg()
       throws DescriptorParseException {
     BridgeStatsBuilder.createWithBridgeIpTransportsLine(
         "bridge-ip-transports obfs2=24 5");
   }
 
-  @Test()
+  @Test
   public void testPaddingCountsValid()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
@@ -1953,7 +1953,7 @@ public class ExtraInfoDescriptorImplTest {
             0L, 0L, 0L, 0L, 0L});
   }
 
-  @Test()
+  @Test
   public void testPaddingOtherCountsValid()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
@@ -1981,7 +1981,7 @@ public class ExtraInfoDescriptorImplTest {
     }
   }
 
-  @Test()
+  @Test
   public void testPaddingCountsValidFutureProof()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = DescriptorBuilder
@@ -2007,7 +2007,7 @@ public class ExtraInfoDescriptorImplTest {
         + "(86400 s) bin-size=10000 write-drop=10000");
   }
 
-  @Test()
+  @Test
   public void testPaddingCountsNoInterval() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(Matchers
@@ -2018,7 +2018,7 @@ public class ExtraInfoDescriptorImplTest {
         + "01:48:43 bin-size=10000 write-drop=10000");
   }
 
-  @Test()
+  @Test
   public void testPaddingCountsNoKey() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(Matchers
@@ -2028,7 +2028,7 @@ public class ExtraInfoDescriptorImplTest {
         + "01:48:43 (86400 s) write-total=9 write-drop=10000 =7 x=8");
   }
 
-  @Test()
+  @Test
   public void testPaddingCountsNoValue() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(Matchers
@@ -2038,7 +2038,7 @@ public class ExtraInfoDescriptorImplTest {
         + "01:48:43 (86400 s) write-total=7 write-drop= bin-size=10000 ");
   }
 
-  @Test()
+  @Test
   public void testPaddingCountsKeyRepeated() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(Matchers
@@ -2048,7 +2048,7 @@ public class ExtraInfoDescriptorImplTest {
         + "01:48:43 (86400 s) a=1 b=2 a=3 b=4");
   }
 
-  @Test()
+  @Test
   public void testPaddingCountsCommaSeparatedList()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
@@ -2059,7 +2059,7 @@ public class ExtraInfoDescriptorImplTest {
         + "01:48:43 (86400 s) bin-size=10000,write-drop=10000");
   }
 
-  @Test()
+  @Test
   public void testPaddingCountsNoList() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(Matchers
@@ -2069,7 +2069,7 @@ public class ExtraInfoDescriptorImplTest {
         + "(86400 s)");
   }
 
-  @Test()
+  @Test
   public void testHidservStatsValid() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor = HidservStatsBuilder
         .createWithDefaultLines();
@@ -2097,7 +2097,7 @@ public class ExtraInfoDescriptorImplTest {
     assertTrue(params.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testHidservStatsEndLineMissing()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor =
@@ -2106,7 +2106,7 @@ public class ExtraInfoDescriptorImplTest {
     assertEquals(-1L, descriptor.getHidservStatsIntervalLength());
   }
 
-  @Test()
+  @Test
   public void testHidservRendRelayedCellsNoParams()
         throws DescriptorParseException {
     ExtraInfoDescriptor descriptor =
@@ -2140,7 +2140,7 @@ public class ExtraInfoDescriptorImplTest {
         "hidserv-dir-onions-seen -3 delta_f=A epsilon=B bin_size=C");
   }
 
-  @Test()
+  @Test
   public void testHidservDirOnionsSeenExtraArg()
       throws DescriptorParseException {
     HidservStatsBuilder.createWithHidservDirOnionsSeenLine(
@@ -2170,7 +2170,7 @@ public class ExtraInfoDescriptorImplTest {
     DescriptorBuilder.createWithUnrecognizedLine(unrecognizedLine, true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -2197,7 +2197,7 @@ public class ExtraInfoDescriptorImplTest {
       "router-sig-ed25519 y7WF9T2GFwkSDPZEhB55HgquIFOl5uXUFMYJPq3CXXUTKeJ"
       + "kSrtaZUB5s34fWdHQNtl84mH4dVaFMunHnwgYAw";
 
-  @Test()
+  @Test
   public void testEd25519() throws DescriptorParseException {
     ExtraInfoDescriptor descriptor =
         DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
@@ -2224,7 +2224,7 @@ public class ExtraInfoDescriptorImplTest {
         ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test()
+  @Test
   public void testEd25519IdentityMissing()
       throws DescriptorParseException {
     DescriptorBuilder.createWithEd25519Lines(null,
@@ -2253,7 +2253,7 @@ public class ExtraInfoDescriptorImplTest {
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test()
+  @Test
   public void testEd25519MasterKeyMissing()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor =
@@ -2275,7 +2275,7 @@ public class ExtraInfoDescriptorImplTest {
         ROUTER_SIG_ED25519_LINE);
   }
 
-  @Test()
+  @Test
   public void testEd25519RouterSigMissing()
       throws DescriptorParseException {
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
@@ -2304,7 +2304,7 @@ public class ExtraInfoDescriptorImplTest {
         + "\nunrecognized-line 1");
   }
 
-  @Test()
+  @Test
   public void testExtraInfoDigestSha256Relay()
       throws DescriptorParseException {
     byte[] descriptorBytes = ("extra-info Unnamed "
@@ -2337,7 +2337,7 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getDigestSha256Base64());
   }
 
-  @Test()
+  @Test
   public void testExtraInfoDigestSha256Bridge()
       throws DescriptorParseException {
     byte[] descriptorBytes = ("extra-info idideditheconfig "
@@ -2362,7 +2362,7 @@ public class ExtraInfoDescriptorImplTest {
         descriptor.getDigestSha256Base64());
   }
 
-  @Test()
+  @Test
   public void testExtraInfoDigestsNoRouterDigestLines()
       throws DescriptorParseException {
     byte[] descriptorBytes = ("extra-info idideditheconfig "

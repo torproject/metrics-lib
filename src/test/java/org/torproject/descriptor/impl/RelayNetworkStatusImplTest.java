@@ -52,7 +52,7 @@ public class RelayNetworkStatusImplTest {
         true);
   }
 
-  @Test()
+  @Test
   public void testValidHeader() throws DescriptorParseException {
     byte[] statusBytes = validStatus.getBytes();
     RelayNetworkStatusImpl rnsi = new RelayNetworkStatusImpl(statusBytes,

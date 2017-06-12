@@ -352,7 +352,7 @@ public class RelayNetworkStatusConsensusImplTest {
     }
   }
 
-  @Test()
+  @Test
   public void testSampleConsensus() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
@@ -424,7 +424,7 @@ public class RelayNetworkStatusConsensusImplTest {
         "network-status-version 3\n ");
   }
 
-  @Test()
+  @Test
   public void testNetworkStatusVersionPrefixLineAtChar()
       throws DescriptorParseException {
     ConsensusBuilder.createWithNetworkStatusVersionLine(
@@ -532,7 +532,7 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder.createWithVoteStatusLine("vote-status ");
   }
 
-  @Test()
+  @Test
   public void testVoteStatusConsensusOneSpace()
       throws DescriptorParseException {
     ConsensusBuilder.createWithVoteStatusLine("vote-status consensus ");
@@ -736,7 +736,7 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder.createWithVotingDelayLine("voting-delay one two");
   }
 
-  @Test()
+  @Test
   public void testClientServerVersionsNoLine()
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -747,7 +747,7 @@ public class RelayNetworkStatusConsensusImplTest {
     assertNull(consensus.getRecommendedServerVersions());
   }
 
-  @Test()
+  @Test
   public void testServerVersionsNoLine() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         ConsensusBuilder.createWithServerVersionsLine(null);
@@ -755,7 +755,7 @@ public class RelayNetworkStatusConsensusImplTest {
     assertNull(consensus.getRecommendedServerVersions());
   }
 
-  @Test()
+  @Test
   public void testClientVersionsNoLine() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         ConsensusBuilder.createWithClientVersionsLine(null);
@@ -763,7 +763,7 @@ public class RelayNetworkStatusConsensusImplTest {
     assertNotNull(consensus.getRecommendedServerVersions());
   }
 
-  @Test()
+  @Test
   public void testClientVersionsNoSpace()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
@@ -772,7 +772,7 @@ public class RelayNetworkStatusConsensusImplTest {
     assertTrue(consensus.getRecommendedClientVersions().isEmpty());
   }
 
-  @Test()
+  @Test
   public void testClientVersionsOneSpace()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
@@ -798,7 +798,7 @@ public class RelayNetworkStatusConsensusImplTest {
         "client-versions ,0.2.2.34");
   }
 
-  @Test()
+  @Test
   public void testRecommendedClientProtocols123()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
@@ -808,7 +808,7 @@ public class RelayNetworkStatusConsensusImplTest {
         consensus.getRecommendedClientProtocols().get("Cons"));
   }
 
-  @Test()
+  @Test
   public void testRecommendedRelayProtocols134()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
@@ -818,7 +818,7 @@ public class RelayNetworkStatusConsensusImplTest {
         consensus.getRecommendedRelayProtocols().get("Cons"));
   }
 
-  @Test()
+  @Test
   public void testRequiredClientProtocols1425()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
@@ -829,7 +829,7 @@ public class RelayNetworkStatusConsensusImplTest {
         consensus.getRequiredClientProtocols().get("Cons"));
   }
 
-  @Test()
+  @Test
   public void testRequiredRelayProtocols1111()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
@@ -849,14 +849,14 @@ public class RelayNetworkStatusConsensusImplTest {
         "required-relay-protocols Cons=1\nrequired-relay-protocols Cons=1");
   }
 
-  @Test()
+  @Test
   public void testPackageNone() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         ConsensusBuilder.createWithPackageLines(null);
     assertNull(consensus.getPackageLines());
   }
 
-  @Test()
+  @Test
   public void testPackageOne() throws DescriptorParseException {
     String packageLine = "package shouldbesecond 0 http digest=digest";
     RelayNetworkStatusConsensus consensus =
@@ -865,7 +865,7 @@ public class RelayNetworkStatusConsensusImplTest {
         consensus.getPackageLines().get(0));
   }
 
-  @Test()
+  @Test
   public void testPackageTwo() throws DescriptorParseException {
     List<String> packageLines = Arrays.asList(
         "package shouldbesecond 0 http digest=digest",
@@ -910,14 +910,14 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder.createWithKnownFlagsLine("known-flags ");
   }
 
-  @Test()
+  @Test
   public void testParamsNoLine() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         ConsensusBuilder.createWithParamsLine(null);
     assertNull(consensus.getConsensusParams());
   }
 
-  @Test()
+  @Test
   public void testParamsNoSpace() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         ConsensusBuilder.createWithParamsLine("params");
@@ -925,7 +925,7 @@ public class RelayNetworkStatusConsensusImplTest {
     assertTrue(consensus.getConsensusParams().isEmpty());
   }
 
-  @Test()
+  @Test
   public void testParamsOneSpace() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         ConsensusBuilder.createWithParamsLine("params ");
@@ -933,7 +933,7 @@ public class RelayNetworkStatusConsensusImplTest {
     assertTrue(consensus.getConsensusParams().isEmpty());
   }
 
-  @Test()
+  @Test
   public void testParamsThreeSpaces() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         ConsensusBuilder.createWithParamsLine("params   ");
@@ -958,7 +958,7 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder.createWithParamsLine("params min=-2147483649");
   }
 
-  @Test()
+  @Test
   public void testParamsLargestNegative()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
@@ -968,7 +968,7 @@ public class RelayNetworkStatusConsensusImplTest {
         (int) consensus.getConsensusParams().get("min"));
   }
 
-  @Test()
+  @Test
   public void testParamsLargestPositive()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
@@ -1008,7 +1008,7 @@ public class RelayNetworkStatusConsensusImplTest {
             + "D88plxd8YeLfCIVAR9gjiFlWB1WqpC53kWr350o1pzw= -1.0");
   }
 
-  @Test()
+  @Test
   public void testDirSourceLegacyNickname()
       throws DescriptorParseException {
     DirSourceBuilder dsb = new DirSourceBuilder();
@@ -1121,7 +1121,7 @@ public class RelayNetworkStatusConsensusImplTest {
     DirSourceBuilder.createWithOrPort("onions");
   }
 
-  @Test()
+  @Test
   public void testDirSourceContactNoLine()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
@@ -1130,7 +1130,7 @@ public class RelayNetworkStatusConsensusImplTest {
         "ED03BB616EB2F60BEC80151114BB25CEF515B226").getContactLine());
   }
 
-  @Test()
+  @Test
   public void testDirSourceContactLineNoSpace()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
@@ -1139,7 +1139,7 @@ public class RelayNetworkStatusConsensusImplTest {
         "ED03BB616EB2F60BEC80151114BB25CEF515B226").getContactLine());
   }
 
-  @Test()
+  @Test
   public void testDirSourceContactLineOneSpace()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
@@ -1338,7 +1338,7 @@ public class RelayNetworkStatusConsensusImplTest {
     StatusEntryBuilder.createWithDirPort("zero");
   }
 
-  @Test()
+  @Test
   public void testSLineNoSpace() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         StatusEntryBuilder.createWithSLine("s");
@@ -1346,7 +1346,7 @@ public class RelayNetworkStatusConsensusImplTest {
         "00343A8024F70E214728F0C5AF7ACE0C1508F073").getFlags().isEmpty());
   }
 
-  @Test()
+  @Test
   public void testSLineOneSpace() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         StatusEntryBuilder.createWithSLine("s ");
@@ -1390,7 +1390,7 @@ public class RelayNetworkStatusConsensusImplTest {
     StatusEntryBuilder.createWithWLine("w ");
   }
 
-  @Test()
+  @Test
   public void testWLineWarpSeven() throws DescriptorParseException {
     StatusEntryBuilder.createWithWLine("w Warp=7");
   }
@@ -1406,7 +1406,7 @@ public class RelayNetworkStatusConsensusImplTest {
     cb.buildConsensus(true);
   }
 
-  @Test()
+  @Test
   public void testWLineUnmeasured() throws DescriptorParseException {
     StatusEntryBuilder sb = new StatusEntryBuilder();
     sb.wLine = "w Bandwidth=42424242 Unmeasured=1";
@@ -1420,7 +1420,7 @@ public class RelayNetworkStatusConsensusImplTest {
     }
   }
 
-  @Test()
+  @Test
   public void testWLineNotUnmeasured() throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
         StatusEntryBuilder.createWithWLine("w Bandwidth=20");
@@ -1468,7 +1468,7 @@ public class RelayNetworkStatusConsensusImplTest {
     cb.buildConsensus(true);
   }
 
-  @Test()
+  @Test
   public void testNoStatusEntries() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.clear();
@@ -1490,7 +1490,7 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder.createWithDirectoryFooterLine(null);
   }
 
-  @Test()
+  @Test
   public void testDirectoryFooterMissing()
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -1502,13 +1502,13 @@ public class RelayNetworkStatusConsensusImplTest {
     assertNull(consensus.getBandwidthWeights());
   }
 
-  @Test()
+  @Test
   public void testDirectoryFooterLineSpace()
       throws DescriptorParseException {
     ConsensusBuilder.createWithDirectoryFooterLine("directory-footer ");
   }
 
-  @Test()
+  @Test
   public void testBandwidthWeightsNoLine()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus =
@@ -1516,7 +1516,7 @@ public class RelayNetworkStatusConsensusImplTest {
     assertNull(consensus.getBandwidthWeights());
   }
 
-  @Test()
+  @Test
   public void testBandwidthWeightsLineNoSpace()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
@@ -1524,7 +1524,7 @@ public class RelayNetworkStatusConsensusImplTest {
     assertNotNull(consensus.getBandwidthWeights());
   }
 
-  @Test()
+  @Test
   public void testBandwidthWeightsLineOneSpace()
       throws DescriptorParseException {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
@@ -1551,7 +1551,7 @@ public class RelayNetworkStatusConsensusImplTest {
     DirectorySignatureBuilder.createWithIdentity("ED03BB616EB2F60");
   }
 
-  @Test()
+  @Test
   public void testDirectorySignatureIdentityTooLong()
       throws DescriptorParseException {
     /* This hex string has an unusual length of 58 hex characters, but
@@ -1562,7 +1562,7 @@ public class RelayNetworkStatusConsensusImplTest {
         "ED03BB616EB2F60BEC80151114BB25CEF515B226ED03BB616EB2F60BEC");
   }
 
-  @Test()
+  @Test
   public void testDirectorySignatureSigningKeyTooShort()
       throws DescriptorParseException {
     /* See above, we accept this hex string even though it's unusually
@@ -1581,7 +1581,7 @@ public class RelayNetworkStatusConsensusImplTest {
     DirectorySignatureBuilder.createWithSigningKey("845");
   }
 
-  @Test()
+  @Test
   public void testDirectorySignatureSigningKeyTooLong()
       throws DescriptorParseException {
     /* See above, we accept this hex string even though it's unusually
@@ -1627,7 +1627,7 @@ public class RelayNetworkStatusConsensusImplTest {
         true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedHeaderLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1649,7 +1649,7 @@ public class RelayNetworkStatusConsensusImplTest {
         true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedDirSourceLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1671,7 +1671,7 @@ public class RelayNetworkStatusConsensusImplTest {
         unrecognizedLine, true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedStatusEntryLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1693,7 +1693,7 @@ public class RelayNetworkStatusConsensusImplTest {
         true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedDirectoryFooterLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1715,7 +1715,7 @@ public class RelayNetworkStatusConsensusImplTest {
         unrecognizedLine, true);
   }
 
-  @Test()
+  @Test
   public void testUnrecognizedDirectorySignatureLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";

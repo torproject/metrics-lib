@@ -24,7 +24,7 @@ public class IndexNodeTest {
   @Rule
   public TemporaryFolder tmpf = new TemporaryFolder();
 
-  @Test()
+  @Test
   public void testSimpleIndexRead() throws Exception {
     URL indexUrl = getClass().getClassLoader().getResource("index1.json");
     IndexNode index = IndexNode.fetchIndex(indexUrl.toString());
@@ -33,7 +33,7 @@ public class IndexNodeTest {
 
   /* toString is only used for debugging. Simply ensure that paths,
    * file names, and urls are readable. */
-  @Test()
+  @Test
   public void testToString() throws Exception {
     URL indexUrl = getClass().getClassLoader().getResource("index1.json");
     IndexNode index = IndexNode.fetchIndex(indexUrl.toString());
@@ -57,7 +57,7 @@ public class IndexNodeTest {
         index.directories.first().directories.first().files.last().path);
   }
 
-  @Test()
+  @Test
   public void testCompressedIndexRead() throws Exception {
     for (String fileName : new String[] {"index1.json.xz", "index1.json.bz2",
         "index1.json.gz"}) {
@@ -67,7 +67,7 @@ public class IndexNodeTest {
     }
   }
 
-  @Test()
+  @Test
   public void testIndexWrite() throws Exception {
     for (String fileName : new String[] {
         "test.json", "test.json.bz2", "test.json.gz", "test.json.xz"}) {
@@ -86,7 +86,7 @@ public class IndexNodeTest {
     assertEquals("Comparing to " + oldPath, oldJson, newJson);
   }
 
-  @Test()
+  @Test
   public void testRetrieveFiles() throws Exception {
     URL indexUrl = getClass().getClassLoader().getResource("index2.json");
     IndexNode index = IndexNode.fetchIndex(indexUrl.toString());
@@ -120,7 +120,7 @@ public class IndexNodeTest {
     IndexNode.fetchIndex(indexUrl.openStream());
   }
 
-  @Test()
+  @Test
   public void testRetrieveEmpty() throws Exception {
     URL indexUrl = getClass().getClassLoader().getResource("index1.json");
     IndexNode index = IndexNode.fetchIndex(indexUrl.toString());

@@ -21,7 +21,7 @@ public class ExitListImplTest {
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
-  @Test()
+  @Test
   public void testAnnotatedInput() throws Exception {
     ExitListImpl result = new ExitListImpl((tordnselAnnotation + input)
         .getBytes("US-ASCII"), fileName, false);
@@ -38,7 +38,7 @@ public class ExitListImplTest {
         result.getEntries().size());
   }
 
-  @Test()
+  @Test
   public void testMultipleOldExitAddresses() throws Exception {
     ExitListImpl result = new ExitListImpl(
         (tordnselAnnotation + multiExitAddressInput)
@@ -64,7 +64,7 @@ public class ExitListImplTest {
     assertTrue("Map: " + testMap, testMap.isEmpty());
   }
 
-  @Test()
+  @Test
   public void testMultipleExitAddresses() throws Exception {
     ExitListImpl result = new ExitListImpl(
         (tordnselAnnotation + multiExitAddressInput)

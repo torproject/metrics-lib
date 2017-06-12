@@ -126,7 +126,7 @@ public class BridgeNetworkStatusTest {
     }
   }
 
-  @Test()
+  @Test
   public void testSampleStatus() throws DescriptorParseException {
     StatusBuilder sb = new StatusBuilder();
     BridgeNetworkStatus status = sb.buildStatus(true);
@@ -145,14 +145,14 @@ public class BridgeNetworkStatusTest {
     assertTrue(status.getUnrecognizedLines().isEmpty());
   }
 
-  @Test()
+  @Test
   public void testPublishedNoLine() throws DescriptorParseException {
     BridgeNetworkStatus status =
         StatusBuilder.createWithPublishedLine(null);
     assertEquals(1448127576000L, status.getPublishedMillis());
   }
 
-  @Test()
+  @Test
   public void testFlagThresholdsNoLine() throws DescriptorParseException {
     BridgeNetworkStatus status =
         StatusBuilder.createWithFlagThresholdsLine(null);

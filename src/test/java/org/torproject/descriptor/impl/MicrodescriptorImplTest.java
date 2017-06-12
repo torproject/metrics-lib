@@ -71,7 +71,7 @@ public class MicrodescriptorImplTest {
     }
   }
 
-  @Test()
+  @Test
   public void testDefaults() throws DescriptorParseException {
     Microdescriptor micro = DescriptorBuilder.createWithDefaultLines();
     assertEquals("ER1AC4KqT//o3pJDrqlmej5G2qW1EQYEr/IrMQHNc6I",
