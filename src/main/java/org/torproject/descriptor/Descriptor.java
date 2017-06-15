@@ -17,9 +17,24 @@ public interface Descriptor {
   /**
    * Return the raw descriptor bytes.
    *
+   * <p>This method creates a new copy of raw descriptor bytes from a
+   * potentially larger byte array containing multiple descriptors.
+   * Applications that only want to learn about raw descriptor length in bytes
+   * should instead use {@link #getRawDescriptorLength()}.</p>
+   *
    * @since 1.0.0
    */
   public byte[] getRawDescriptorBytes();
+
+  /**
+   * Return the raw descriptor length in bytes.
+   *
+   * <p>Returns the exact same result as {@code getRawDescriptorBytes().length},
+   * but much more efficiently.</p>
+   *
+   * @since 1.9.0
+   */
+  public int getRawDescriptorLength();
 
   /**
    * Return the (possibly empty) list of annotations in the format

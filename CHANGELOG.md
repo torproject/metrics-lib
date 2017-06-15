@@ -12,6 +12,9 @@
  * Medium changes
    - Let DescriptorParser return an Iterable instead of a List, which
      prepares parsing large descriptor files descriptor by descriptor.
+   - Add new method to retrieve the raw descriptor length, rather than
+     forcing applications to request (a copy of) raw descriptor bytes
+     only to determine the raw descriptor length.
 
  * Minor changes
    - Fix a bug where NetworkStatusEntry's getMicrodescriptorDigests()

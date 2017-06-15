@@ -41,6 +41,11 @@ public abstract class DescriptorImpl implements Descriptor {
    */
   protected int length;
 
+  @Override
+  public int getRawDescriptorLength() {
+    return this.length;
+  }
+
   /**
    * Optional reference to the descriptor file, if this descriptor was read from
    * a descriptor file.
