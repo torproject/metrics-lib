@@ -188,7 +188,7 @@ public class DescriptorParserImpl implements DescriptorParser {
     return parsedDescriptors;
   }
 
-  private static Descriptor parseDescriptor(byte[] rawDescriptorBytes,
+  static Descriptor parseDescriptor(byte[] rawDescriptorBytes,
       int[] offsetAndLength, Constructor<? extends DescriptorImpl> constructor,
       boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
