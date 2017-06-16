@@ -1,4 +1,9 @@
-# Changes in version 1.9.0 - 2017-06-??
+# Changes in version 1.8.2 - 2017-06-16
+
+ * Medium changes
+   - Fix a regression where any DescriptorParseException thrown while
+     parsing a descriptor is encapsulated and rethrown as
+     RuntimeException.
 
 
 # Changes in version 1.8.1 - 2017-06-08

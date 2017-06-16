@@ -195,9 +195,15 @@ public class DescriptorParserImpl implements DescriptorParser {
     try {
       return constructor.newInstance(rawDescriptorBytes,
           offsetAndLength, failUnrecognizedDescriptorLines);
-    } catch (InstantiationException | IllegalAccessException
-        | InvocationTargetException e) {
-      throw new RuntimeException();
+    } catch (InvocationTargetException e) {
+      if (null != e.getCause()
+          && e.getCause() instanceof DescriptorParseException) {
+        throw (DescriptorParseException) e.getCause();
+      } else {
+        throw new RuntimeException(e);
+      }
+    } catch (InstantiationException | IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
   }
 
