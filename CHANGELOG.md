@@ -1,3 +1,11 @@
+# Changes in version 1.9.0 - 2017-06-??
+
+ * Minor changes
+   - Fix a bug where NetworkStatusEntry's getMicrodescriptorDigests()
+     and getMicrodescriptorDigestsSha256Base64() return hex strings
+     rather than base64 strings.
+
+
 # Changes in version 1.8.2 - 2017-06-16
 
  * Medium changes

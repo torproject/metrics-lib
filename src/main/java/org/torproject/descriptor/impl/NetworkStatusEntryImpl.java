@@ -141,11 +141,11 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
           + "fewer space-separated elements than expected.");
     }
     this.nickname = ParseHelper.parseNickname(line, parts[1]);
-    this.fingerprint = ParseHelper.parseTwentyByteBase64String(line,
+    this.fingerprint = ParseHelper.convertTwentyByteBase64StringToHex(line,
         parts[2]);
     int descriptorOffset = 0;
     if (!this.microdescConsensus) {
-      this.descriptor = ParseHelper.parseTwentyByteBase64String(line,
+      this.descriptor = ParseHelper.convertTwentyByteBase64StringToHex(line,
           parts[3]);
       descriptorOffset = 1;
     }
@@ -266,13 +266,13 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
       this.microdescriptorDigests = new HashSet<>();
     }
     if (parts.length == 2) {
-      this.microdescriptorDigests.add(
-          ParseHelper.parseThirtyTwoByteBase64String(line, parts[1]));
+      ParseHelper.parseThirtyTwoByteBase64String(line, parts[1]);
+      this.microdescriptorDigests.add(parts[1]);
     } else if (parts.length == 3 && parts[2].length() > 7) {
       /* 7 == "sha256=".length() */
-      this.microdescriptorDigests.add(
-          ParseHelper.parseThirtyTwoByteBase64String(line,
-          parts[2].substring(7)));
+      ParseHelper.parseThirtyTwoByteBase64String(line,
+          parts[2].substring(7));
+      this.microdescriptorDigests.add(parts[2].substring(7));
     }
   }
 

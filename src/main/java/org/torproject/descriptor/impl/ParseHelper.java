@@ -281,7 +281,12 @@ public class ParseHelper {
   private static Pattern twentyByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{27}$");
 
-  protected static String parseTwentyByteBase64String(String line,
+  protected static void parseTwentyByteBase64String(String line,
+      String base64String) throws DescriptorParseException {
+    convertTwentyByteBase64StringToHex(line, base64String);
+  }
+
+  protected static String convertTwentyByteBase64StringToHex(String line,
       String base64String) throws DescriptorParseException {
     if (!twentyByteBase64Pattern.matcher(base64String).matches()) {
       throw new DescriptorParseException("'" + base64String
@@ -296,7 +301,12 @@ public class ParseHelper {
   private static Pattern thirtyTwoByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{43}$");
 
-  protected static String parseThirtyTwoByteBase64String(String line,
+  protected static void parseThirtyTwoByteBase64String(String line,
+      String base64String) throws DescriptorParseException {
+    convertThirtyTwoByteBase64StringToHex(line, base64String);
+  }
+
+  private static String convertThirtyTwoByteBase64StringToHex(String line,
       String base64String) throws DescriptorParseException {
     if (!thirtyTwoByteBase64Pattern.matcher(base64String).matches()) {
       throw new DescriptorParseException("'" + base64String

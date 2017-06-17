@@ -89,9 +89,9 @@ public interface NetworkStatusEntry {
   public int getDirPort();
 
   /**
-   * Return the (possibly empty) set of microdescriptor digests if the
-   * containing network status is a vote or microdesc consensus, or null
-   * otherwise.
+   * Return the (possibly empty) set of microdescriptor digests, encoded as 43
+   * base64 characters without padding characters, if the containing network
+   * status is a vote or microdesc consensus, or null otherwise.
    *
    * @deprecated Renamed to {@link #getMicrodescriptorDigestsSha256Base64()}.
    *
@@ -100,9 +100,9 @@ public interface NetworkStatusEntry {
   public Set<String> getMicrodescriptorDigests();
 
   /**
-   * Return the (possibly empty) set of microdescriptor digests if the
-   * containing network status is a vote or microdesc consensus, or null
-   * otherwise.
+   * Return the (possibly empty) set of microdescriptor digests, encoded as 43
+   * base64 characters without padding characters, if the containing network
+   * status is a vote or microdesc consensus, or null otherwise.
    *
    * @since 1.7.0
    */
