@@ -21,6 +21,15 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.DatatypeConverter;
 
+/**
+ * Parse helper for descriptor contents.
+ *
+ * <p>Naming convention: methods starting with {@code parse} return valid and
+ * sometimes changed data items (e.g. string to port int), methods starting with
+ * {@code verify} only check data items without returning them, and methods
+ * starting with {@code convert} return checked and explicitly changed data
+ * items (e.g. base64 to hex encoding).</p>
+ */
 public class ParseHelper {
 
   private static Pattern keywordPattern = Pattern.compile("^[A-Za-z0-9-]+$");
@@ -281,7 +290,7 @@ public class ParseHelper {
   private static Pattern twentyByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{27}$");
 
-  protected static void parseTwentyByteBase64String(String line,
+  protected static void verifyTwentyByteBase64String(String line,
       String base64String) throws DescriptorParseException {
     convertTwentyByteBase64StringToHex(line, base64String);
   }
@@ -301,7 +310,7 @@ public class ParseHelper {
   private static Pattern thirtyTwoByteBase64Pattern =
       Pattern.compile("^[0-9a-zA-Z+/]{43}$");
 
-  protected static void parseThirtyTwoByteBase64String(String line,
+  protected static void verifyThirtyTwoByteBase64String(String line,
       String base64String) throws DescriptorParseException {
     convertThirtyTwoByteBase64StringToHex(line, base64String);
   }

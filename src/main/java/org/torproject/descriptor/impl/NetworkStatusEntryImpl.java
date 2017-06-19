@@ -266,11 +266,11 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
       this.microdescriptorDigests = new HashSet<>();
     }
     if (parts.length == 2) {
-      ParseHelper.parseThirtyTwoByteBase64String(line, parts[1]);
+      ParseHelper.verifyThirtyTwoByteBase64String(line, parts[1]);
       this.microdescriptorDigests.add(parts[1]);
     } else if (parts.length == 3 && parts[2].length() > 7) {
       /* 7 == "sha256=".length() */
-      ParseHelper.parseThirtyTwoByteBase64String(line,
+      ParseHelper.verifyThirtyTwoByteBase64String(line,
           parts[2].substring(7));
       this.microdescriptorDigests.add(parts[2].substring(7));
     }
@@ -283,7 +283,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     } else if ("none".equals(parts[2])) {
       this.masterKeyEd25519 = "none";
     } else {
-      ParseHelper.parseThirtyTwoByteBase64String(line, parts[2]);
+      ParseHelper.verifyThirtyTwoByteBase64String(line, parts[2]);
       this.masterKeyEd25519 = parts[2];
     }
   }

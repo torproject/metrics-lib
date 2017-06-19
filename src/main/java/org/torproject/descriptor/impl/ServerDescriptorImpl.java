@@ -467,7 +467,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.extraInfoDigest = ParseHelper.parseTwentyByteHexString(line,
         partsNoOpt[1]);
     if (partsNoOpt.length >= 3) {
-      ParseHelper.parseThirtyTwoByteBase64String(line, partsNoOpt[2]);
+      ParseHelper.verifyThirtyTwoByteBase64String(line, partsNoOpt[2]);
       this.extraInfoDigestSha256 = partsNoOpt[2];
     }
   }
@@ -671,7 +671,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    ParseHelper.parseThirtyTwoByteBase64String(line, partsNoOpt[1]);
+    ParseHelper.verifyThirtyTwoByteBase64String(line, partsNoOpt[1]);
     this.setDigestSha256Base64(partsNoOpt[1]);
   }
 

@@ -828,7 +828,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
-    ParseHelper.parseThirtyTwoByteBase64String(line, partsNoOpt[1]);
+    ParseHelper.verifyThirtyTwoByteBase64String(line, partsNoOpt[1]);
     this.setDigestSha256Base64(partsNoOpt[1]);
   }
 

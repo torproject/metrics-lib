@@ -198,11 +198,11 @@ public class MicrodescriptorImpl extends DescriptorImpl
     } else {
       switch (parts[1]) {
         case "ed25519":
-          ParseHelper.parseThirtyTwoByteBase64String(line, parts[2]);
+          ParseHelper.verifyThirtyTwoByteBase64String(line, parts[2]);
           this.ed25519Identity = parts[2];
           break;
         case "rsa1024":
-          ParseHelper.parseTwentyByteBase64String(line, parts[2]);
+          ParseHelper.verifyTwentyByteBase64String(line, parts[2]);
           this.rsa1024Identity = parts[2];
           break;
         default:
