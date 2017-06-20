@@ -1,4 +1,4 @@
-# Changes in version 1.9.0 - 2017-06-??
+# Changes in version 1.9.0 - 2017-06-21
 
  * Major changes
    - Simplify DescriptorReader by returning Descriptor instances
