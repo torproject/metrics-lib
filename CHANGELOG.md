@@ -1,5 +1,9 @@
 # Changes in version 2.0.0 - 2017-06-??
 
+ * Major changes
+   - Always use UTF-8 as charset rather than using the platform's
+     default charset.
+
  * Minor changes
    - Replace custom ImplementationNotAccessibleException thrown by
      DescriptorSourceFactory with generic RuntimeException.

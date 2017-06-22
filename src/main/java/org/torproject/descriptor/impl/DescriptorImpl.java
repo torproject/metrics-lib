@@ -8,6 +8,7 @@ import org.torproject.descriptor.DescriptorParseException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -96,8 +97,8 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   /**
-   * Returns a new {@link Scanner} for parsing the full raw descriptor starting
-   * using the platform's default charset.
+   * Returns a new {@link Scanner} for parsing the full raw descriptor using
+   * UTF-8 as charset.
    *
    * @return Scanner for the full raw descriptor bytes.
    */
@@ -107,17 +108,16 @@ public abstract class DescriptorImpl implements Descriptor {
 
   /**
    * Returns a new {@link Scanner} for parsing the raw descriptor starting at
-   * byte <code>offset</code> containing <code>length</code> bytes using the
-   * platform's default charset.
+   * byte <code>offset</code> containing <code>length</code> bytes using UTF-8
+   * as charset.
    *
    * @param offset The index of the first byte to parse.
    * @param length The number of bytes to parse.
    * @return Scanner for the given raw descriptor bytes.
    */
   protected Scanner newScanner(int offset, int length) {
-    /* XXX21932 */
-    return new Scanner(new ByteArrayInputStream(this.rawDescriptorBytes, offset,
-        length));
+    return new Scanner(new InputStreamReader(new ByteArrayInputStream(
+        this.rawDescriptorBytes, offset, length), StandardCharsets.UTF_8));
   }
 
   /**

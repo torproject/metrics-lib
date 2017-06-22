@@ -8,6 +8,7 @@ import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.TorperfResult;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,8 +28,8 @@ public class TorperfResultImpl extends DescriptorImpl
       throw new DescriptorParseException("Descriptor is empty.");
     }
     List<Descriptor> parsedDescriptors = new ArrayList<>();
-    /* XXX21932 */
-    String descriptorString = new String(rawDescriptorBytes);
+    String descriptorString = new String(rawDescriptorBytes,
+        StandardCharsets.UTF_8);
     Scanner scanner = new Scanner(descriptorString).useDelimiter("\r?\n");
     String typeAnnotation = "";
     while (scanner.hasNext()) {
@@ -48,8 +49,8 @@ public class TorperfResultImpl extends DescriptorImpl
       } else {
         /* XXX21932 */
         parsedDescriptors.add(new TorperfResultImpl(
-            (typeAnnotation + line).getBytes(), descriptorFile,
-            failUnrecognizedDescriptorLines));
+            (typeAnnotation + line).getBytes(StandardCharsets.UTF_8),
+            descriptorFile, failUnrecognizedDescriptorLines));
         typeAnnotation = "";
       }
     }
