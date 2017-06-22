@@ -54,7 +54,7 @@ public class DescriptorSourceFactoryTest {
     }
   }
 
-  @Test(expected = ImplementationNotAccessibleException.class)
+  @Test(expected = RuntimeException.class)
   public void testException() {
     System.setProperty(COLLECTOR_PROPERTY ,
         "no.implementation.available.X");
@@ -70,7 +70,7 @@ public class DescriptorSourceFactoryTest {
       retrieve.setAccessible(true);
       retrieve.invoke(null, "unknown.property");
     } catch (InvocationTargetException ite) {
-      if (ite.getCause() instanceof ImplementationNotAccessibleException) {
+      if (ite.getCause() instanceof RuntimeException) {
         return;
       } else {
         fail("Cause was " + ite.getCause()

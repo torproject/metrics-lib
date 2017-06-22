@@ -176,15 +176,15 @@ public final class DescriptorSourceFactory {
           clazzName = System.getProperty(type, COLLECTOR_DEFAULT);
           break;
         default:
-          throw new ImplementationNotAccessibleException("Cannot "
-              + "retrieve class for type " + type + ".");
+          throw new RuntimeException("Cannot retrieve class for type " + type
+              + ".");
       }
       object = ClassLoader.getSystemClassLoader().loadClass(clazzName)
           .newInstance();
       log.info("Serving implementation {} for {}.", clazzName, type);
     } catch (ClassNotFoundException | InstantiationException
              | IllegalAccessException ex) {
-      throw new ImplementationNotAccessibleException("Cannot load class "
+      throw new RuntimeException("Cannot load class "
           + clazzName + "for type " + type, ex);
     }
     return object;

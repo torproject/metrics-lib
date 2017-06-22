@@ -1,3 +1,10 @@
+# Changes in version 2.0.0 - 2017-06-??
+
+ * Minor changes
+   - Replace custom ImplementationNotAccessibleException thrown by
+     DescriptorSourceFactory with generic RuntimeException.
+
+
 # Changes in version 1.9.0 - 2017-06-21
 
  * Major changes
