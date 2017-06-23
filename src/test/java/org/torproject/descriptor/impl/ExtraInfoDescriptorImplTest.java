@@ -2160,15 +2160,6 @@ public class ExtraInfoDescriptorImplTest {
   }
 
   @Test
-  public void testUnrecognizedLineFail() throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line 'unrecognized-line 1' in "
-        + "extra-info descriptor.");
-    String unrecognizedLine = "unrecognized-line 1";
-    DescriptorBuilder.createWithUnrecognizedLine(unrecognizedLine);
-  }
-
-  @Test
   public void testUnrecognizedLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -2289,17 +2280,6 @@ public class ExtraInfoDescriptorImplTest {
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE + "\n"
         + ROUTER_SIG_ED25519_LINE);
-  }
-
-  @Test
-  public void testEd25519FollowedbyUnrecognizedLine()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'unrecognized-line 1' in extra-info descriptor.");
-    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
-        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE
-        + "\nunrecognized-line 1");
   }
 
   @Test

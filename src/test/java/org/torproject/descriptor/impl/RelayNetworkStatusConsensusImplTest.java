@@ -436,18 +436,10 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(
-        "Unrecognized line 'directory-footer' in consensus.");
+        "Keyword 'directory-footer' is contained 2 times, but must be "
+        + "contained at most once.");
     ConsensusBuilder.createWithNetworkStatusVersionLine(
         "directory-footer\nnetwork-status-version 3");
-  }
-
-  @Test
-  public void testNetworkStatusVersionPrefixLinePoundChar()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line '#consensus' in consensus.");
-    ConsensusBuilder.createWithNetworkStatusVersionLine(
-        "#consensus\nnetwork-status-version 3");
   }
 
   @Test
@@ -1478,19 +1470,6 @@ public class RelayNetworkStatusConsensusImplTest {
   }
 
   @Test
-  public void testDirectoryFooterNoLine()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line 'bandwidth-weights Wbd=285 "
-        + "Wbe=0 Wbg=0 Wbm=10000 Wdb=10000 Web=10000 Wed=1021 Wee=10000 "
-        + "Weg=1021 Wem=10000 Wgb=10000 Wgd=8694 Wgg=10000 Wgm=10000 Wmb=10000 "
-        + "Wmd=285 Wme=0 Wmg=0 Wmm=10000' in status entry.");
-    /* This breaks, because a bandwidth-weights line without a preceding
-     * directory-footer line is not allowed. */
-    ConsensusBuilder.createWithDirectoryFooterLine(null);
-  }
-
-  @Test
   public void testDirectoryFooterMissing()
       throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
@@ -1593,8 +1572,8 @@ public class RelayNetworkStatusConsensusImplTest {
   @Test
   public void testNonAsciiByte20() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line 'network-status-versi�n 3' in "
-        + "consensus.");
+    this.thrown.expectMessage("Keyword 'network-status-version' must be "
+        + "contained in the first line.");
     ConsensusBuilder cb = new ConsensusBuilder();
     byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[20] = (byte) 200;
@@ -1606,45 +1585,14 @@ public class RelayNetworkStatusConsensusImplTest {
   public void testNonAsciiByteMinusOne()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line '�network-status-version 3' in consensus.");
+    this.thrown.expectMessage("Keyword 'network-status-version' "
+        + "must be contained in the first line.");
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.networkStatusVersionLine = "Xnetwork-status-version 3";
     byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[0] = (byte) 200;
     new RelayNetworkStatusConsensusImpl(consensusBytes,
         new int[] { 0, consensusBytes.length }, null);
-  }
-
-  @Test
-  public void testUnrecognizedHeaderLineFail()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'unrecognized-line 1' in consensus.");
-    String unrecognizedLine = "unrecognized-line 1";
-    ConsensusBuilder.createWithUnrecognizedHeaderLine(unrecognizedLine);
-  }
-
-  @Test
-  public void testUnrecognizedHeaderLineIgnore()
-      throws DescriptorParseException {
-    String unrecognizedLine = "unrecognized-line 1";
-    RelayNetworkStatusConsensus consensus = ConsensusBuilder
-        .createWithUnrecognizedHeaderLine(unrecognizedLine);
-    List<String> unrecognizedLines = new ArrayList<>();
-    unrecognizedLines.add(unrecognizedLine);
-    assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
-  }
-
-  @Test
-  public void testUnrecognizedDirSourceLineFail()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'unrecognized-line 1' in dir-source entry.");
-    String unrecognizedLine = "unrecognized-line 1";
-    ConsensusBuilder.createWithUnrecognizedDirSourceLine(unrecognizedLine);
   }
 
   @Test
@@ -1659,17 +1607,6 @@ public class RelayNetworkStatusConsensusImplTest {
   }
 
   @Test
-  public void testUnrecognizedStatusEntryLineFail()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line 'unrecognized-line 1' in "
-        + "status entry.");
-    String unrecognizedLine = "unrecognized-line 1";
-    ConsensusBuilder.createWithUnrecognizedStatusEntryLine(
-        unrecognizedLine);
-  }
-
-  @Test
   public void testUnrecognizedStatusEntryLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1681,16 +1618,6 @@ public class RelayNetworkStatusConsensusImplTest {
   }
 
   @Test
-  public void testUnrecognizedDirectoryFooterLineFail()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'unrecognized-line 1' in consensus.");
-    String unrecognizedLine = "unrecognized-line 1";
-    ConsensusBuilder.createWithUnrecognizedFooterLine(unrecognizedLine);
-  }
-
-  @Test
   public void testUnrecognizedDirectoryFooterLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1699,17 +1626,6 @@ public class RelayNetworkStatusConsensusImplTest {
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
-  }
-
-  @Test
-  public void testUnrecognizedDirectorySignatureLineFail()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'unrecognized-line 1' in dir-source entry.");
-    String unrecognizedLine = "unrecognized-line 1";
-    ConsensusBuilder.createWithUnrecognizedDirectorySignatureLine(
-        unrecognizedLine);
   }
 
   @Test

@@ -44,7 +44,8 @@ public class RelayNetworkStatusImplTest {
   @Test
   public void testParseBrokenHeader() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line 'xyx' in v2 network status.");
+    this.thrown.expectMessage(
+        "Unrecognized crypto block in v2 network status.");
     String invalidHeader = "network-status-version 2\nxyx\nabc";
     byte[] statusBytes = (validAnnotation + invalidHeader + validFooter)
         .getBytes();

@@ -791,7 +791,8 @@ public class RelayNetworkStatusVoteImplTest {
   public void testNetworkStatusVersionPrefixLine()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line 'directory-footer' in vote.");
+    this.thrown.expectMessage("Keyword 'directory-footer' is contained 2 "
+        + "times, but must be contained at most once.");
     VoteBuilder.createWithNetworkStatusVersionLine(
         "directory-footer\nnetwork-status-version 3");
   }
@@ -800,7 +801,8 @@ public class RelayNetworkStatusVoteImplTest {
   public void testNetworkStatusVersionPrefixLinePoundChar()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line '#vote' in vote.");
+    this.thrown.expectMessage("Keyword 'network-status-version' "
+        + "must be contained in the first line.");
     VoteBuilder.createWithNetworkStatusVersionLine(
         "#vote\nnetwork-status-version 3");
   }
@@ -962,16 +964,6 @@ public class RelayNetworkStatusVoteImplTest {
         + "9999999999999999999'.");
     VoteBuilder.createWithConsensusMethodsLine("consensus-methods "
         + "999999999999999999999999999999999999999999999999999999999999");
-  }
-
-  @Test
-  public void testConsensusMethodTwoLines()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'consensus-method 1' in vote.");
-    VoteBuilder.createWithConsensusMethodsLine(
-        "consensus-method 1\nconsensus-method 1");
   }
 
   @Test
@@ -1802,16 +1794,6 @@ public class RelayNetworkStatusVoteImplTest {
   }
 
   @Test
-  public void testUnrecognizedHeaderLineFail()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'unrecognized-line 1' in vote.");
-    String unrecognizedLine = "unrecognized-line 1";
-    VoteBuilder.createWithUnrecognizedHeaderLine(unrecognizedLine, true);
-  }
-
-  @Test
   public void testUnrecognizedHeaderLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1823,17 +1805,6 @@ public class RelayNetworkStatusVoteImplTest {
   }
 
   @Test
-  public void testUnrecognizedDirSourceLineFail()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'unrecognized-line 1' in vote.");
-    String unrecognizedLine = "unrecognized-line 1";
-    VoteBuilder.createWithUnrecognizedDirSourceLine(unrecognizedLine,
-        true);
-  }
-
-  @Test
   public void testUnrecognizedDirSourceLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1842,16 +1813,6 @@ public class RelayNetworkStatusVoteImplTest {
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
-  }
-
-  @Test
-  public void testUnrecognizedFooterLineFail()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown
-      .expectMessage("Unrecognized line 'unrecognized-line 1' in vote.");
-    String unrecognizedLine = "unrecognized-line 1";
-    VoteBuilder.createWithUnrecognizedFooterLine(unrecognizedLine, true);
   }
 
   @Test

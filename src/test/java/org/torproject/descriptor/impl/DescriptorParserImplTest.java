@@ -19,8 +19,9 @@ public class DescriptorParserImplTest {
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
-  private TestDescriptor makeTestDesc(byte[] bytes) throws Exception {
-    return new TestDescriptor(bytes, new int[]{0, bytes.length}, false);
+  private TestDescriptor makeTestDesc(byte[] bytes)
+      throws Exception {
+    return new TestDescriptor(bytes, new int[]{0, bytes.length});
   }
 
   private static final String MICRO =
@@ -47,8 +48,7 @@ public class DescriptorParserImplTest {
     Constructor<? extends DescriptorImpl> constructor;
     try {
       constructor = TestServerDescriptor.class
-          .getDeclaredConstructor(byte[].class, int[].class, File.class,
-          boolean.class);
+          .getDeclaredConstructor(byte[].class, int[].class, File.class);
     } catch (NoSuchMethodException e) {
       throw new RuntimeException(e);
     }

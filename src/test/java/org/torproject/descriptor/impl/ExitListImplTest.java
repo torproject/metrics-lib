@@ -7,13 +7,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.ExitList;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class ExitListImplTest {
@@ -32,36 +30,8 @@ public class ExitListImplTest {
     assertEquals(1441065722000L, result.getDownloadedMillis());
     assertTrue("Unrecognized lines: " + result.getUnrecognizedLines(),
         result.getUnrecognizedLines().isEmpty());
-    assertEquals("Found: " + result.getEntries(), 7,
-        result.getEntries().size());
     assertEquals("Found: " + result.getEntries(), 5,
         result.getEntries().size());
-  }
-
-  @Test
-  public void testMultipleOldExitAddresses() throws Exception {
-    ExitListImpl result = new ExitListImpl(
-        (tordnselAnnotation + multiExitAddressInput)
-        .getBytes("US-ASCII"), null, fileName);
-    assertTrue("Unrecognized lines: " + result.getUnrecognizedLines(),
-        result.getUnrecognizedLines().isEmpty());
-    assertEquals("Found: " + result.getEntries(),
-        3, result.getEntries().size());
-    Map<String, Long> testMap = new HashMap();
-    testMap.put("81.7.17.171", 1441044592000L);
-    testMap.put("81.7.17.172", 1441044652000L);
-    testMap.put("81.7.17.173", 1441044712000L);
-    for (ExitList.Entry ele : result.getEntries()) {
-      Map<String, Long> map = ele.getExitAddresses();
-      assertEquals("Found: " + map, 1, map.size());
-      Map.Entry<String, Long> ea = map.entrySet().iterator().next();
-      assertTrue("Map: " + testMap,
-          testMap.keySet().contains(ea.getKey()));
-      assertTrue("Map: " + testMap + " exitaddress: " + ea,
-          testMap.values().contains(ea.getValue()));
-      testMap.remove(ea.getKey());
-    }
-    assertTrue("Map: " + testMap, testMap.isEmpty());
   }
 
   @Test

@@ -1136,7 +1136,7 @@ public class ServerDescriptorImplTest {
   public void testExitPolicyProjectAll() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage(
-        "Unrecognized line 'project *:*' in server descriptor.");
+        "Either keyword 'accept' or 'reject' must be contained at least once.");
     DescriptorBuilder.createWithExitPolicyLines("project *:*");
   }
 
@@ -1677,16 +1677,6 @@ public class ServerDescriptorImplTest {
   }
 
   @Test
-  public void testTunnelledDirServerTypo()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line 'tunneled-dir-server' "
-        + "in server descriptor.");
-    DescriptorBuilder.createWithTunnelledDirServerLine(
-        "tunneled-dir-server");
-  }
-
-  @Test
   public void testTunnelledDirServerTwice()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
@@ -1703,16 +1693,6 @@ public class ServerDescriptorImplTest {
     this.thrown.expectMessage("Illegal line 'tunnelled-dir-server 1'.");
     DescriptorBuilder.createWithTunnelledDirServerLine(
         "tunnelled-dir-server 1");
-  }
-
-  @Test
-  public void testUnrecognizedLineFail()
-      throws DescriptorParseException {
-    String unrecognizedLine = "unrecognized-line 1";
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage(
-        "Unrecognized line 'unrecognized-line 1' in server descriptor.");
-    DescriptorBuilder.createWithUnrecognizedLine(unrecognizedLine);
   }
 
   @Test
@@ -1878,17 +1858,6 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE + "\n"
         + ROUTER_SIG_ED25519_LINE);
-  }
-
-  @Test
-  public void testEd25519FollowedbyUnrecognizedLine()
-      throws DescriptorParseException {
-    this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized line 'unrecognized-line 1' "
-        + "in server descriptor.");
-    DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
-        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE
-        + "\nunrecognized-line 1");
   }
 
   private static final String ONION_KEY_CROSSCERT_LINES =

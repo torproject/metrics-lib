@@ -3,10 +3,10 @@
 
 package org.torproject.descriptor.impl;
 
-import org.torproject.descriptor.DescriptorParseException;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import org.torproject.descriptor.DescriptorParseException;
 
 import org.junit.Rule;
 import org.junit.Test;

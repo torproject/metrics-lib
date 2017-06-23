@@ -4,7 +4,6 @@
 package org.torproject.descriptor.benchmark;
 
 import org.torproject.descriptor.Descriptor;
-import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DescriptorReader;
 import org.torproject.descriptor.DescriptorSourceFactory;
 import org.torproject.descriptor.ExtraInfoDescriptor;
@@ -136,9 +135,9 @@ public class MeasurePerformance {
         continue;
       }
       ExtraInfoDescriptor extraInfoDescriptor =
-        (ExtraInfoDescriptor) descriptor;
+          (ExtraInfoDescriptor) descriptor;
       SortedMap<String, Integer> dirreqV3Reqs =
-        extraInfoDescriptor.getDirreqV3Reqs();
+          extraInfoDescriptor.getDirreqV3Reqs();
       if (dirreqV3Reqs != null) {
         countries.addAll(dirreqV3Reqs.keySet());
       }
@@ -174,9 +173,8 @@ public class MeasurePerformance {
         continue;
       }
       RelayNetworkStatusConsensus consensus =
-        (RelayNetworkStatusConsensus) descriptor;
-      for (NetworkStatusEntry entry :
-             consensus.getStatusEntries().values()) {
+          (RelayNetworkStatusConsensus) descriptor;
+      for (NetworkStatusEntry entry : consensus.getStatusEntries().values()) {
         if (entry.getFlags().contains("Exit")) {
           totalRelaysWithExitFlag++;
         }
@@ -217,8 +215,7 @@ public class MeasurePerformance {
         continue;
       }
       countedMicrodescriptors++;
-      Microdescriptor microdescriptor =
-        (Microdescriptor) descriptor;
+      Microdescriptor microdescriptor = (Microdescriptor) descriptor;
       String defaultPolicy = microdescriptor.getDefaultPolicy();
       if (defaultPolicy == null) {
         continue;
