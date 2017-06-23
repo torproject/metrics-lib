@@ -31,8 +31,6 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     return this.parent.getRawDescriptorBytes(this.offset, this.length);
   }
 
-  private boolean failUnrecognizedDescriptorLines;
-
   private List<String> unrecognizedLines;
 
   protected List<String> getAndClearUnrecognizedLines() {
@@ -41,14 +39,11 @@ public class DirSourceEntryImpl implements DirSourceEntry {
     return lines;
   }
 
-  protected DirSourceEntryImpl(DescriptorImpl parent, int offset, int length,
-      boolean failUnrecognizedDescriptorLines)
+  protected DirSourceEntryImpl(DescriptorImpl parent, int offset, int length)
       throws DescriptorParseException {
     this.parent = parent;
     this.offset = offset;
     this.length = length;
-    this.failUnrecognizedDescriptorLines =
-        failUnrecognizedDescriptorLines;
     this.parseDirSourceEntryBytes();
     this.checkAndClearKeys();
   }
@@ -117,15 +112,10 @@ public class DirSourceEntryImpl implements DirSourceEntry {
           break;
         default:
           if (!skipCrypto) {
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized line '"
-                  + line + "' in dir-source entry.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.add(line);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.add(line);
           }
       }
     }
@@ -235,11 +225,6 @@ public class DirSourceEntryImpl implements DirSourceEntry {
   }
 
   private String voteDigest;
-
-  @Override
-  public String getVoteDigest() {
-    return this.getVoteDigestSha1Hex();
-  }
 
   @Override
   public String getVoteDigestSha1Hex() {

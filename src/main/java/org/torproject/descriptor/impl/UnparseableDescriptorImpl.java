@@ -14,10 +14,8 @@ public class UnparseableDescriptorImpl extends DescriptorImpl
 
   protected UnparseableDescriptorImpl(byte[] rawDescriptorBytes,
       int[] offsetAndLength, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines,
       DescriptorParseException descriptorParseException) {
-    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines);
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile);
     this.descriptorParseException = descriptorParseException;
   }
 

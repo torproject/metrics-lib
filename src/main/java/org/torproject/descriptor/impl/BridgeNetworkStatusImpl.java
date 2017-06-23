@@ -20,10 +20,10 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     implements BridgeNetworkStatus {
 
   protected BridgeNetworkStatusImpl(byte[] rawDescriptorBytes,
-      int[] offsetAndLength, File descriptorFile, String fileName,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+      int[] offsetAndLength, File descriptorFile, String fileName)
+      throws DescriptorParseException {
     super(rawDescriptorBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines, false, false);
+        false, false);
     this.setPublishedMillisFromFileName(fileName);
   }
 
@@ -86,14 +86,8 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
           this.parseFlagThresholdsLine(line, parts);
           break;
         default:
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in bridge network status.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
-            }
-            this.unrecognizedLines.add(line);
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
           }
       }
     }

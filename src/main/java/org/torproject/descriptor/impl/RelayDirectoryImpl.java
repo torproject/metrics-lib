@@ -19,10 +19,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
     implements RelayDirectory {
 
   protected RelayDirectoryImpl(byte[] directoryBytes, int[] offsetAndLength,
-      File descriptorFile, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(directoryBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines, true);
+      File descriptorFile) throws DescriptorParseException {
+    super(directoryBytes, offsetAndLength, descriptorFile, true);
     this.splitAndParseParts();
     this.calculateDigestSha1Hex(Key.SIGNED_DIRECTORY.keyword + NL,
         NL + Key.DIRECTORY_SIGNATURE.keyword + SP);
@@ -144,15 +142,10 @@ public class RelayDirectoryImpl extends DescriptorImpl
           if (crypto != null) {
             crypto.append(line).append(NL);
           } else {
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized line '"
-                  + line + "' in v1 directory.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.add(line);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.add(line);
           }
       }
     }
@@ -195,8 +188,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
     try {
       ServerDescriptorImpl serverDescriptor =
           new RelayServerDescriptorImpl(this.rawDescriptorBytes,
-          new int[] { offset, length }, this.getDescriptorFile(),
-          this.failUnrecognizedDescriptorLines);
+          new int[] { offset, length }, this.getDescriptorFile());
       this.serverDescriptors.add(serverDescriptor);
     } catch (DescriptorParseException e) {
       this.serverDescriptorParseExceptions.add(e);
@@ -238,9 +230,6 @@ public class RelayDirectoryImpl extends DescriptorImpl
         default:
           if (crypto != null) {
             crypto.append(line).append(NL);
-          } else if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in v2 network status.");
           } else {
             if (this.unrecognizedLines == null) {
               this.unrecognizedLines = new ArrayList<>();
@@ -449,9 +438,5 @@ public class RelayDirectoryImpl extends DescriptorImpl
     return this.nickname;
   }
 
-  @Override
-  public String getDirectoryDigest() {
-    return this.getDigestSha1Hex();
-  }
 }
 

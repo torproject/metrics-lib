@@ -24,23 +24,6 @@ import java.util.List;
 public interface DescriptorParser {
 
   /**
-   * Fail descriptor parsing when encountering an unrecognized line.
-   *
-   * <p>This option is not set by default, because the Tor specifications
-   * allow for new lines to be added that shall be ignored by older Tor
-   * versions.  But some applications may want to handle unrecognized
-   * descriptor lines explicitly.</p>
-   *
-   * @deprecated Removed in an attempt to simplify the interface.  Applications
-   *     that must fail descriptors with unrecognized lines can instead check
-   *     whether {@link Descriptor#getUnrecognizedLines()} returns any lines.
-   *
-   * @since 1.0.0
-   */
-  public void setFailUnrecognizedDescriptorLines(
-      boolean failUnrecognizedDescriptorLines);
-
-  /**
    * Parse descriptors in the given byte array, possibly parsing the
    * publication time from the file name, depending on the descriptor
    * type.

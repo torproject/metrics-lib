@@ -51,32 +51,9 @@ public interface ServerDescriptor extends Descriptor {
    * characters, that is used to reference this descriptor from a network
    * status descriptor.
    *
-   * @deprecated Renamed to {@link #getDigestSha1Hex()}.
-   *
-   * @since 1.0.0
-   */
-  public String getServerDescriptorDigest();
-
-  /**
-   * Return the SHA-1 descriptor digest, encoded as 40 lower-case (relay
-   * descriptors) or upper-case (bridge descriptors) hexadecimal
-   * characters, that is used to reference this descriptor from a network
-   * status descriptor.
-   *
    * @since 1.7.0
    */
   public String getDigestSha1Hex();
-
-  /**
-   * Return the SHA-256 descriptor digest, encoded as 43 base64
-   * characters without padding characters, that may be used to reference
-   * this server descriptor from a network status descriptor.
-   *
-   * @deprecated Renamed to {@link #getDigestSha256Base64()}.
-   *
-   * @since 1.1.0
-   */
-  public String getServerDescriptorDigestSha256();
 
   /**
    * Return the SHA-256 descriptor digest, encoded as 43 base64
@@ -113,7 +90,7 @@ public interface ServerDescriptor extends Descriptor {
 
   /**
    * Return the TCP port where this server accepts SOCKS connections,
-   * which is deprecated and should always be 0.
+   * which is deprecated in the Tor Protocol and should always be 0.
    *
    * @since 1.0.0
    */
@@ -322,32 +299,9 @@ public interface ServerDescriptor extends Descriptor {
    * encoded as 40 upper-case hexadecimal characters, or null if the
    * server did not upload a corresponding extra-info descriptor.
    *
-   * @deprecated Renamed to {@link #getExtraInfoDigestSha1Hex()}.
-   *
-   * @since 1.0.0
-   */
-  public String getExtraInfoDigest();
-
-  /**
-   * Return the SHA-1 digest of the server's extra-info descriptor,
-   * encoded as 40 upper-case hexadecimal characters, or null if the
-   * server did not upload a corresponding extra-info descriptor.
-   *
    * @since 1.7.0
    */
   public String getExtraInfoDigestSha1Hex();
-
-  /**
-   * Return the SHA-256 digest of the server's extra-info descriptor,
-   * encoded as 43 base64 characters without padding characters, or null
-   * if the server either did not upload a corresponding extra-info
-   * descriptor or did not refer to it using a SHA-256 digest.
-   *
-   * @deprecated Renamed to {@link #getExtraInfoDigestSha256Base64()}.
-   *
-   * @since 1.1.0
-   */
-  public String getExtraInfoDigestSha256();
 
   /**
    * Return the SHA-256 digest of the server's extra-info descriptor,

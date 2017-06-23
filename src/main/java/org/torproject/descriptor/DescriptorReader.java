@@ -4,7 +4,6 @@
 package org.torproject.descriptor;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.SortedMap;
 
 /**
@@ -36,46 +35,6 @@ import java.util.SortedMap;
  * @since 1.0.0
  */
 public interface DescriptorReader {
-
-  /**
-   * Add a local directory to read descriptors from, which may contain
-   * descriptor files or tarballs containing descriptor files.
-   *
-   * @deprecated Replaced with a parameter in {@link #readDescriptors(File...)},
-   *     which ignores any directories added via this deprecated method.
-   *
-   * @since 1.0.0
-   */
-  public void addDirectory(File directory);
-
-  /**
-   * Add a tarball to read descriptors from, which may be uncompressed,
-   * bz2-compressed, or xz-compressed.
-   *
-   * @deprecated Replaced with a parameter in {@link #readDescriptors(File...)},
-   *     which ignores any tarballs added via this deprecated method.
-   *
-   * @since 1.0.0
-   */
-  public void addTarball(File tarball);
-
-  /**
-   * Exclude files that are listed in the given history file and that
-   * haven't changed since they have last been read.
-   *
-   * <p>Add a new line for each descriptor that is read in this execution
-   * and remove lines for files that don't exist anymore.</p>
-   *
-   * <p>Lines in the history file contain the last modified time in
-   * milliseconds since the epoch and the absolute path of a file.</p>
-   *
-   * @deprecated Replaced by {@link #setHistoryFile(File)} and
-   *     {@link #saveHistoryFile(File)} which let the application explicitly
-   *     tell us when it's done processing read descriptors.
-   *
-   * @since 1.0.0
-   */
-  public void setExcludeFiles(File historyFile);
 
   /**
    * Set a history file to load before reading descriptors and exclude
@@ -136,35 +95,6 @@ public interface DescriptorReader {
   public SortedMap<String, Long> getParsedFiles();
 
   /**
-   * Fail descriptor parsing when encountering an unrecognized line.
-   *
-   * <p>This option is not set by default, because the Tor specifications
-   * allow for new lines to be added that shall be ignored by older Tor
-   * versions.  But some applications may want to handle unrecognized
-   * descriptor lines explicitly.</p>
-   *
-   * @deprecated Removed in an attempt to simplify the interface.  Applications
-   *     that must fail descriptors with unrecognized lines can instead check
-   *     whether {@link Descriptor#getUnrecognizedLines()} returns any lines.
-   *
-   * @since 1.0.0
-   */
-  public void setFailUnrecognizedDescriptorLines();
-
-  /**
-   * Don't keep more than this number of parsed descriptor files in the
-   * queue.
-   *
-   * <p>The default is 100, but if descriptor files contain hundreds or
-   * even thousands of descriptors, that default may be too high.</p>
-   *
-   * @deprecated Replaced with {@link #setMaxDescriptorsInQueue(int)}.
-   *
-   * @since 1.0.0
-   */
-  public void setMaxDescriptorFilesInQueue(int max);
-
-  /**
    * Don't keep more than this number of descriptors in the queue (default:
    * 100).
    *
@@ -173,20 +103,6 @@ public interface DescriptorReader {
    * @since 1.9.0
    */
   public void setMaxDescriptorsInQueue(int maxDescriptorsInQueue);
-
-  /**
-   * Read the previously configured descriptors and make them available
-   * via the returned blocking iterator.
-   *
-   * <p>Whenever the reader runs out of descriptors and expects to provide
-   * more shortly after, it blocks the caller.  This method can only be
-   * run once.</p>
-   *
-   * @deprecated Replaced with {@link #readDescriptors(File...)}.
-   *
-   * @since 1.0.0
-   */
-  public Iterator<DescriptorFile> readDescriptors();
 
   /**
    * Read descriptors from the given descriptor file(s) and return the parsed

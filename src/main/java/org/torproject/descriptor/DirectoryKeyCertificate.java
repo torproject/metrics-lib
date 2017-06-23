@@ -102,16 +102,6 @@ public interface DirectoryKeyCertificate extends Descriptor {
    * Return the SHA-1 certificate digest, encoded as 40 lower-case
    * hexadecimal characters.
    *
-   * @deprecated Renamed to {@link #getDigestSha1Hex()}.
-   *
-   * @since 1.0.0
-   */
-  public String getCertificateDigest();
-
-  /**
-   * Return the SHA-1 certificate digest, encoded as 40 lower-case
-   * hexadecimal characters.
-   *
    * @since 1.7.0
    */
   public String getDigestSha1Hex();

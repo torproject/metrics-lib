@@ -37,17 +37,6 @@ public interface DirectorySignature {
    * in the version 3 directory protocol, encoded as 40 upper-case
    * hexadecimal characters.
    *
-   * @deprecated Renamed to {@link #getSigningKeyDigestSha1Hex()}.
-   *
-   * @since 1.0.0
-   */
-  public String getSigningKeyDigest();
-
-  /**
-   * Return the SHA-1 digest of the authority's medium-term signing key
-   * in the version 3 directory protocol, encoded as 40 upper-case
-   * hexadecimal characters.
-   *
    * @since 1.7.0
    */
   public String getSigningKeyDigestSha1Hex();

@@ -19,10 +19,9 @@ public class MicrodescriptorImpl extends DescriptorImpl
     implements Microdescriptor {
 
   protected MicrodescriptorImpl(byte[] descriptorBytes, int[] offsetAndLength,
-      File descriptorFile, boolean failUnrecognizedDescriptorLines)
+      File descriptorFile)
       throws DescriptorParseException {
-    super(descriptorBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines, false);
+    super(descriptorBytes, offsetAndLength, descriptorFile, false);
     this.parseDescriptorBytes();
     this.calculateDigestSha256Base64(Key.ONION_KEY.keyword + NL);
     this.checkExactlyOnceKeys(EnumSet.of(Key.ONION_KEY));
@@ -89,15 +88,10 @@ public class MicrodescriptorImpl extends DescriptorImpl
             crypto.append(line).append(NL);
           } else {
             ParseHelper.parseKeyword(line, parts[0]);
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized line '"
-                  + line + "' in microdescriptor.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.add(line);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.add(line);
           }
       }
     }
@@ -211,11 +205,6 @@ public class MicrodescriptorImpl extends DescriptorImpl
               + "'.");
       }
     }
-  }
-
-  @Override
-  public String getMicrodescriptorDigest() {
-    return this.getDigestSha256Base64();
   }
 
   private String onionKey;

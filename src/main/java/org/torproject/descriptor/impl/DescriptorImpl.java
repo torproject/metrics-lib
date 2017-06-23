@@ -184,8 +184,6 @@ public abstract class DescriptorImpl implements Descriptor {
     return splitParts;
   }
 
-  protected boolean failUnrecognizedDescriptorLines = false;
-
   protected List<String> unrecognizedLines;
 
   @Override
@@ -195,7 +193,7 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   protected DescriptorImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
-      File descriptorFile, boolean failUnrecognizedDescriptorLines) {
+      File descriptorFile) {
     int offset = offsetAndLength[0];
     int length = offsetAndLength[1];
     if (offset < 0 || offset + length > rawDescriptorBytes.length
@@ -208,15 +206,12 @@ public abstract class DescriptorImpl implements Descriptor {
     this.offset = offset;
     this.length = length;
     this.descriptorFile = descriptorFile;
-    this.failUnrecognizedDescriptorLines =
-        failUnrecognizedDescriptorLines;
   }
 
   protected DescriptorImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
-      File descriptorFile, boolean failUnrecognizedDescriptorLines,
-      boolean blankLinesAllowed) throws DescriptorParseException {
-    this(rawDescriptorBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines);
+      File descriptorFile, boolean blankLinesAllowed)
+      throws DescriptorParseException {
+    this(rawDescriptorBytes, offsetAndLength, descriptorFile);
     this.cutOffAnnotations();
     this.countKeys(rawDescriptorBytes, blankLinesAllowed);
   }

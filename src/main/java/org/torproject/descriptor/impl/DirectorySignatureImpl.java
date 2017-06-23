@@ -21,8 +21,6 @@ public class DirectorySignatureImpl implements DirectorySignature {
 
   private int length;
 
-  private boolean failUnrecognizedDescriptorLines;
-
   private List<String> unrecognizedLines;
 
   protected List<String> getAndClearUnrecognizedLines() {
@@ -32,13 +30,10 @@ public class DirectorySignatureImpl implements DirectorySignature {
   }
 
   protected DirectorySignatureImpl(DescriptorImpl parent, int offset,
-      int length, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
+      int length) throws DescriptorParseException {
     this.parent = parent;
     this.offset = offset;
     this.length = length;
-    this.failUnrecognizedDescriptorLines =
-        failUnrecognizedDescriptorLines;
     this.parseDirectorySignatureBytes();
   }
 
@@ -84,15 +79,10 @@ public class DirectorySignatureImpl implements DirectorySignature {
           if (crypto != null) {
             crypto.append(line).append(NL);
           } else {
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized line '"
-                  + line + "' in dir-source entry.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.add(line);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.add(line);
           }
       }
     }
@@ -115,11 +105,6 @@ public class DirectorySignatureImpl implements DirectorySignature {
   }
 
   private String signingKeyDigest;
-
-  @Override
-  public String getSigningKeyDigest() {
-    return this.getSigningKeyDigestSha1Hex();
-  }
 
   @Override
   public String getSigningKeyDigestSha1Hex() {

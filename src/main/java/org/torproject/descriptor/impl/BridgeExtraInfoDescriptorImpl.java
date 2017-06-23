@@ -12,10 +12,9 @@ public class BridgeExtraInfoDescriptorImpl
     extends ExtraInfoDescriptorImpl implements BridgeExtraInfoDescriptor {
 
   protected BridgeExtraInfoDescriptorImpl(byte[] descriptorBytes,
-      int[] offsetAndLimit, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
-    super(descriptorBytes, offsetAndLimit, descriptorFile,
-        failUnrecognizedDescriptorLines);
+      int[] offsetAndLimit, File descriptorFile)
+      throws DescriptorParseException {
+    super(descriptorBytes, offsetAndLimit, descriptorFile);
   }
 }
 

@@ -74,17 +74,6 @@ public interface ExitList extends Descriptor {
   /**
    * Return the unordered set of exit scan results.
    *
-   * @since 1.0.0
-   * @deprecated The {@link ExitListEntry} type has been deprecated and
-   *     superseded by {@link ExitList.Entry} which is returned by
-   *     {@link #getEntries()}.
-   */
-  @Deprecated
-  public Set<ExitListEntry> getExitListEntries();
-
-  /**
-   * Return the unordered set of exit scan results.
-   *
    * @since 1.1.0
    */
   public Set<ExitList.Entry> getEntries();

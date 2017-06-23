@@ -9,9 +9,7 @@ package org.torproject.descriptor;
  *
  * @since 1.0.0
  */
-@SuppressWarnings("deprecation")
-public class DescriptorParseException
-    extends org.torproject.descriptor.impl.DescriptorParseException {
+public class DescriptorParseException extends Exception {
 
   private static final long serialVersionUID = 100L;
 

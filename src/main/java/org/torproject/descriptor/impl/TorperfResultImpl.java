@@ -22,8 +22,8 @@ public class TorperfResultImpl extends DescriptorImpl
     implements TorperfResult {
 
   protected static List<Descriptor> parseTorperfResults(
-      byte[] rawDescriptorBytes, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+      byte[] rawDescriptorBytes, File descriptorFile)
+      throws DescriptorParseException {
     if (rawDescriptorBytes.length == 0) {
       throw new DescriptorParseException("Descriptor is empty.");
     }
@@ -50,18 +50,17 @@ public class TorperfResultImpl extends DescriptorImpl
         /* XXX21932 */
         parsedDescriptors.add(new TorperfResultImpl(
             (typeAnnotation + line).getBytes(StandardCharsets.UTF_8),
-            descriptorFile, failUnrecognizedDescriptorLines));
+            descriptorFile));
         typeAnnotation = "";
       }
     }
     return parsedDescriptors;
   }
 
-  protected TorperfResultImpl(byte[] rawDescriptorBytes, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines)
+  protected TorperfResultImpl(byte[] rawDescriptorBytes, File descriptorFile)
       throws DescriptorParseException {
     super(rawDescriptorBytes, new int[] { 0, rawDescriptorBytes.length },
-        descriptorFile, failUnrecognizedDescriptorLines, false);
+        descriptorFile, false);
     this.parseTorperfResultLine();
   }
 
@@ -173,9 +172,6 @@ public class TorperfResultImpl extends DescriptorImpl
         default:
           if (key.startsWith("DATAPERC")) {
             this.parseDataPercentile(value, keyValue, line);
-          } else if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized key '" + key
-                + "' in line '" + line + "'.");
           } else {
             if (this.unrecognizedKeys == null) {
               this.unrecognizedKeys = new TreeMap<>();

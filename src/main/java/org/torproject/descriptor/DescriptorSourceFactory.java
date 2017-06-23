@@ -11,10 +11,9 @@ import org.slf4j.LoggerFactory;
  *
  * <p>Descriptor sources are the only producers of classes implementing
  * the {@link Descriptor} superinterface.  There exist descriptor sources
- * for obtaining remote descriptor data ({@link DescriptorDownloader} and
- * {@link DescriptorCollector}) and descriptor sources for processing
- * local descriptor data ({@link DescriptorReader} and
- * {@link DescriptorParser}).</p>
+ * for obtaining remote descriptor data ({@link DescriptorCollector}) and
+ * descriptor sources for processing local descriptor data
+ * ({@link DescriptorReader} and {@link DescriptorParser}).</p>
  *
  * <p>By default, this factory returns implementations from the library's
  * own impl package.  This may be overridden by setting Java properties,
@@ -23,7 +22,6 @@ import org.slf4j.LoggerFactory;
  * <p>These properties can be used for setting the implementation:</p>
  * <ul>
  *   <li>{@code descriptor.collector}</li>
- *   <li>{@code descriptor.downloader}</li>
  *   <li>{@code descriptor.parser}</li>
  *   <li>{@code descriptor.reader}</li>
  * </ul>
@@ -44,15 +42,6 @@ public final class DescriptorSourceFactory {
 
   private static Logger log = LoggerFactory.getLogger(
       DescriptorSourceFactory.class);
-
-  /**
-   * Default implementation of the {@link DescriptorDownloader}
-   * descriptor source.
-   *
-   * @since 1.0.0
-   */
-  public static final String DOWNLOADER_DEFAULT =
-      "org.torproject.descriptor.impl.DescriptorDownloaderImpl";
 
   /**
    * Default implementation of the {@link DescriptorParser} descriptor
@@ -101,16 +90,6 @@ public final class DescriptorSourceFactory {
 
   /**
    * Property name for overriding the implementation of the
-   * {@link DescriptorDownloader} descriptor source, which is by default
-   * set to the class in {@link #DOWNLOADER_DEFAULT}.
-   *
-   * @since 1.0.0
-   */
-  public static final String DOWNLOADER_PROPERTY =
-      "descriptor.downloader";
-
-  /**
-   * Property name for overriding the implementation of the
    * {@link DescriptorCollector} descriptor source, which is by default
    * set to the class in {@link #COLLECTOR_DEFAULT}.
    *
@@ -139,16 +118,6 @@ public final class DescriptorSourceFactory {
   }
 
   /**
-   * Create a new {@link DescriptorDownloader} by instantiating the class
-   * in {@link #DOWNLOADER_PROPERTY}.
-   *
-   * @since 1.0.0
-   */
-  public static final DescriptorDownloader createDescriptorDownloader() {
-    return (DescriptorDownloader) retrieve(DOWNLOADER_PROPERTY);
-  }
-
-  /**
    * Create a new {@link DescriptorCollector} by instantiating the class
    * in {@link #COLLECTOR_PROPERTY}.
    *
@@ -165,9 +134,6 @@ public final class DescriptorSourceFactory {
       switch (type) {
         case PARSER_PROPERTY:
           clazzName = System.getProperty(type, PARSER_DEFAULT);
-          break;
-        case DOWNLOADER_PROPERTY:
-          clazzName = System.getProperty(type, DOWNLOADER_DEFAULT);
           break;
         case READER_PROPERTY:
           clazzName = System.getProperty(type, READER_DEFAULT);

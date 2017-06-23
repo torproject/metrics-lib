@@ -35,10 +35,9 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
       Key.PADDING_COUNTS);
 
   protected ExtraInfoDescriptorImpl(byte[] descriptorBytes,
-      int[] offsetAndLimit, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
-    super(descriptorBytes, offsetAndLimit, descriptorFile,
-        failUnrecognizedDescriptorLines, false);
+      int[] offsetAndLimit, File descriptorFile)
+      throws DescriptorParseException {
+    super(descriptorBytes, offsetAndLimit, descriptorFile, false);
     this.parseDescriptorBytes();
     this.checkExactlyOnceKeys(exactlyOnceKeys);
     Set<Key> dirreqStatsKeys = EnumSet.of(
@@ -260,16 +259,10 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
               this.parseIdentityEd25519CryptoBlock(cryptoString);
               break;
             default:
-              if (this.failUnrecognizedDescriptorLines) {
-                throw new DescriptorParseException("Unrecognized crypto "
-                    + "block '" + cryptoString + "' in extra-info "
-                    + "descriptor.");
-              } else {
-                if (this.unrecognizedLines == null) {
-                  this.unrecognizedLines = new ArrayList<>();
-                }
-                this.unrecognizedLines.addAll(cryptoLines);
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
               }
+              this.unrecognizedLines.addAll(cryptoLines);
           }
           cryptoLines = null;
           nextCrypto = Key.EMPTY;
@@ -279,15 +272,10 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
             cryptoLines.add(line);
           } else {
             ParseHelper.parseKeyword(line, partsNoOpt[0]);
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized line '"
-                  + line + "' in extra-info descriptor.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.add(line);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.add(line);
           }
       }
     }
@@ -833,16 +821,6 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.setDigestSha256Base64(partsNoOpt[1]);
   }
 
-  @Override
-  public String getExtraInfoDigest() {
-    return this.getDigestSha1Hex();
-  }
-
-  @Override
-  public String getExtraInfoDigestSha256() {
-    return this.getDigestSha256Base64();
-  }
-
   private String nickname;
 
   @Override
@@ -881,21 +859,11 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private String geoipDbDigest;
 
   @Override
-  public String getGeoipDbDigest() {
-    return this.getGeoipDbDigestSha1Hex();
-  }
-
-  @Override
   public String getGeoipDbDigestSha1Hex() {
     return this.geoipDbDigest;
   }
 
   private String geoip6DbDigest;
-
-  @Override
-  public String getGeoip6DbDigest() {
-    return this.getGeoip6DbDigestSha1Hex();
-  }
 
   @Override
   public String getGeoip6DbDigestSha1Hex() {

@@ -12,10 +12,9 @@ public class BridgeServerDescriptorImpl extends ServerDescriptorImpl
     implements BridgeServerDescriptor {
 
   protected BridgeServerDescriptorImpl(byte[] rawDescriptorBytes,
-      int[] offsetAndLength, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines);
+      int[] offsetAndLength, File descriptorFile)
+      throws DescriptorParseException {
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile);
   }
 }
 

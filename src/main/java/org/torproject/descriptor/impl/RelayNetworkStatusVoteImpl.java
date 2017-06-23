@@ -4,7 +4,6 @@
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.DirectorySignature;
 import org.torproject.descriptor.RelayNetworkStatusVote;
 
 import java.io.File;
@@ -25,10 +24,9 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     implements RelayNetworkStatusVote {
 
   protected RelayNetworkStatusVoteImpl(byte[] voteBytes, int[] offsetAndLength,
-      File descriptorFile, boolean failUnrecognizedDescriptorLines)
+      File descriptorFile)
       throws DescriptorParseException {
-    super(voteBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines, false, false);
+    super(voteBytes, offsetAndLength, descriptorFile, false, false);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.VOTE_STATUS, Key.PUBLISHED, Key.VALID_AFTER, Key.FRESH_UNTIL,
         Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS, Key.DIR_SOURCE,
@@ -213,15 +211,10 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           if (crypto != null) {
             crypto.append(line).append(NL);
           } else {
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized line '"
-                  + line + "' in vote.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.add(line);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.add(line);
           }
       }
     }
@@ -588,15 +581,10 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     while (scanner.hasNext()) {
       String line = scanner.next();
       if (!line.equals(Key.DIRECTORY_FOOTER.keyword)) {
-        if (this.failUnrecognizedDescriptorLines) {
-          throw new DescriptorParseException("Unrecognized line '"
-              + line + "' in vote.");
-        } else {
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
-          }
-          this.unrecognizedLines.add(line);
+        if (this.unrecognizedLines == null) {
+          this.unrecognizedLines = new ArrayList<>();
         }
+        this.unrecognizedLines.add(line);
       }
     }
   }
@@ -746,21 +734,6 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   @Override
   public String getDirKeyCertification() {
     return this.dirKeyCertification;
-  }
-
-  @Override
-  public String getSigningKeyDigest() {
-    String signingKeyDigest = null;
-    if (this.signatures != null && !this.signatures.isEmpty()) {
-      for (DirectorySignature signature : this.signatures) {
-        if (DirectorySignatureImpl.DEFAULT_ALGORITHM.equals(
-            signature.getAlgorithm())) {
-          signingKeyDigest = signature.getSigningKeyDigestSha1Hex();
-          break;
-        }
-      }
-    }
-    return signingKeyDigest;
   }
 
   private int networkStatusVersion;

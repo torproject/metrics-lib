@@ -97,17 +97,6 @@ public interface RelayDirectory extends Descriptor {
    * hexadecimal characters, that the directory authority used to sign the
    * directory.
    *
-   * @deprecated Renamed to {@link #getDigestSha1Hex()}.
-   *
-   * @since 1.0.0
-   */
-  public String getDirectoryDigest();
-
-  /**
-   * Return the SHA-1 directory digest, encoded as 40 lower-case
-   * hexadecimal characters, that the directory authority used to sign the
-   * directory.
-   *
    * @since 1.7.0
    */
   public String getDigestSha1Hex();

@@ -12,10 +12,9 @@ public class RelayExtraInfoDescriptorImpl
     extends ExtraInfoDescriptorImpl implements RelayExtraInfoDescriptor {
 
   protected RelayExtraInfoDescriptorImpl(byte[] descriptorBytes,
-      int[] offsetAndLimit, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
-    super(descriptorBytes, offsetAndLimit, descriptorFile,
-        failUnrecognizedDescriptorLines);
+      int[] offsetAndLimit, File descriptorFile)
+      throws DescriptorParseException {
+    super(descriptorBytes, offsetAndLimit, descriptorFile);
     this.calculateDigestSha1Hex(Key.EXTRA_INFO.keyword + SP,
         NL + Key.ROUTER_SIGNATURE.keyword + NL);
     this.calculateDigestSha256Base64(Key.EXTRA_INFO.keyword + SP,

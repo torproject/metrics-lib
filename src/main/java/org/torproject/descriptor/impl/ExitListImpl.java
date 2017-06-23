@@ -5,7 +5,6 @@ package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExitList;
-import org.torproject.descriptor.ExitListEntry;
 
 import java.io.File;
 import java.text.ParseException;
@@ -20,10 +19,9 @@ import java.util.TimeZone;
 public class ExitListImpl extends DescriptorImpl implements ExitList {
 
   protected ExitListImpl(byte[] rawDescriptorBytes, File descriptorfile,
-      String fileName, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
+      String fileName) throws DescriptorParseException {
     super(rawDescriptorBytes, new int[] { 0, rawDescriptorBytes.length },
-        descriptorfile, failUnrecognizedDescriptorLines, false);
+        descriptorfile, false);
     this.splitAndParseExitListEntries();
     this.setPublishedMillisFromFileName(fileName);
   }
@@ -88,14 +86,8 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
           sb.append(line).append(ExitList.EOL);
           break;
         default:
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in exit list.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
-            }
-            this.unrecognizedLines.add(line);
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
           }
       }
     }
@@ -106,9 +98,8 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
   protected void parseExitListEntry(String exitListEntryString)
       throws DescriptorParseException {
     ExitListEntryImpl exitListEntry = new ExitListEntryImpl(
-        exitListEntryString, this.failUnrecognizedDescriptorLines);
+        exitListEntryString);
     this.exitListEntries.add(exitListEntry);
-    this.oldExitListEntries.addAll(exitListEntry.oldEntries());
     List<String> unrecognizedExitListEntryLines = exitListEntry
         .getAndClearUnrecognizedLines();
     if (unrecognizedExitListEntryLines != null) {
@@ -126,13 +117,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
     return this.downloadedMillis;
   }
 
-  private Set<ExitListEntry> oldExitListEntries = new HashSet<>();
-
-  @Deprecated
-  @Override
-  public Set<ExitListEntry> getExitListEntries() {
-    return new HashSet<>(this.oldExitListEntries);
-  }
+  private Set<ExitList.Entry> oldExitListEntries = new HashSet<>();
 
   private Set<ExitList.Entry> exitListEntries = new HashSet<>();
 

@@ -22,8 +22,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
   protected RelayNetworkStatusImpl(byte[] statusBytes, int[] offsetAndLength,
       File descriptorFile, boolean failUnrecognizedDescriptorLines)
       throws DescriptorParseException {
-    super(statusBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines, false, true);
+    super(statusBytes, offsetAndLength, descriptorFile, false, true);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.NETWORK_STATUS_VERSION, Key.DIR_SOURCE, Key.FINGERPRINT,
         Key.CONTACT, Key.DIR_SIGNING_KEY, Key.PUBLISHED);
@@ -97,9 +96,6 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         default:
           if (crypto != null) {
             crypto.append(line).append(NL);
-          } else if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in v2 network status.");
           } else {
             if (this.unrecognizedLines == null) {
               this.unrecognizedLines = new ArrayList<>();
@@ -149,9 +145,6 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         default:
           if (crypto != null) {
             crypto.append(line).append(NL);
-          } else if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in v2 network status.");
           } else {
             if (this.unrecognizedLines == null) {
               this.unrecognizedLines = new ArrayList<>();
@@ -245,11 +238,6 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.nickname = ParseHelper.parseNickname(line, parts[1]);
-  }
-
-  @Override
-  public String getStatusDigest() {
-    return this.getDigestSha1Hex();
   }
 
   private int networkStatusVersion;

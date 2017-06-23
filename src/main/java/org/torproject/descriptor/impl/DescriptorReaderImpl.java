@@ -4,7 +4,6 @@
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.Descriptor;
-import org.torproject.descriptor.DescriptorFile;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DescriptorParser;
 import org.torproject.descriptor.DescriptorReader;
@@ -27,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -42,38 +40,11 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
   private List<File> directories = new ArrayList<>();
 
-  @Override
-  public void addDirectory(File directory) {
-    if (this.hasStartedReading) {
-      throw new IllegalStateException("Reconfiguration is not permitted "
-          + "after starting to read.");
-    }
-    this.directories.add(directory);
-  }
-
   private List<File> tarballs = new ArrayList<>();
-
-  @Override
-  public void addTarball(File tarball) {
-    if (this.hasStartedReading) {
-      throw new IllegalStateException("Reconfiguration is not permitted "
-          + "after starting to read.");
-    }
-    this.tarballs.add(tarball);
-  }
 
   private File autoSaveHistoryFile;
 
   private File manualSaveHistoryFile;
-
-  @Override
-  public void setExcludeFiles(File historyFile) {
-    if (this.hasStartedReading) {
-      throw new IllegalStateException("Reconfiguration is not permitted "
-          + "after starting to read.");
-    }
-    this.autoSaveHistoryFile = historyFile;
-  }
 
   @Override
   public void setHistoryFile(File historyFile) {
@@ -113,27 +84,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
     return new TreeMap<>(this.reader.parsedFilesAfter);
   }
 
-  private boolean failUnrecognizedDescriptorLines = false;
-
-  @Override
-  public void setFailUnrecognizedDescriptorLines() {
-    if (this.hasStartedReading) {
-      throw new IllegalStateException("Reconfiguration is not permitted "
-          + "after starting to read.");
-    }
-    this.failUnrecognizedDescriptorLines = true;
-  }
-
   private Integer maxDescriptorFilesInQueue = null;
-
-  @Override
-  public void setMaxDescriptorFilesInQueue(int max) {
-    if (this.hasStartedReading) {
-      throw new IllegalStateException("Reconfiguration is not permitted "
-          + "after starting to read.");
-    }
-    this.maxDescriptorFilesInQueue = max;
-  }
 
   private int maxDescriptorsInQueue = 100;
 
@@ -149,28 +100,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
   private DescriptorReaderRunnable reader;
 
   @Override
-  public Iterator<DescriptorFile> readDescriptors() {
-    if (this.hasStartedReading) {
-      throw new IllegalStateException("Initiating reading is only "
-          + "permitted once.");
-    }
-    this.hasStartedReading = true;
-    BlockingIteratorImpl<DescriptorFile> descriptorQueue =
-        this.maxDescriptorFilesInQueue == null
-        ? new BlockingIteratorImpl<DescriptorFile>()
-        : new BlockingIteratorImpl<DescriptorFile>(
-        this.maxDescriptorFilesInQueue);
-    this.reader = new DescriptorReaderRunnable(this.directories,
-        this.tarballs, descriptorQueue, this.autoSaveHistoryFile,
-        this.manualSaveHistoryFile, this.excludedFiles,
-        this.failUnrecognizedDescriptorLines);
-    Thread readerThread = new Thread(this.reader);
-    readerThread.setDaemon(true);
-    readerThread.start();
-    return descriptorQueue;
-  }
-
-  @Override
   public Iterable<Descriptor> readDescriptors(File... descriptorFiles) {
     if (this.hasStartedReading) {
       throw new IllegalStateException("Initiating reading is only "
@@ -181,8 +110,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
         new BlockingIteratorImpl<>(this.maxDescriptorsInQueue);
     this.reader = new DescriptorReaderRunnable(
         descriptorFiles, descriptorQueue, this.autoSaveHistoryFile,
-        this.manualSaveHistoryFile, this.excludedFiles,
-        this.failUnrecognizedDescriptorLines);
+        this.manualSaveHistoryFile, this.excludedFiles);
     Thread readerThread = new Thread(this.reader);
     readerThread.setDaemon(true);
     readerThread.start();
@@ -208,8 +136,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private BlockingIteratorImpl<Descriptor> descriptorQueue;
 
-    private BlockingIteratorImpl<DescriptorFile> descriptorFileQueue;
-
     private File autoSaveHistoryFile;
 
     private File manualSaveHistoryFile;
@@ -226,31 +152,10 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private boolean hasFinishedReading = false;
 
-    private DescriptorReaderRunnable(List<File> directories,
-        List<File> tarballs,
-        BlockingIteratorImpl<DescriptorFile> descriptorFileQueue,
-        File autoSaveHistoryFile, File manualSaveHistoryFile,
-        SortedMap<String, Long> excludedFiles,
-        boolean failUnrecognizedDescriptorLines) {
-      this.directories = directories;
-      this.tarballs = tarballs;
-      this.descriptorFileQueue = descriptorFileQueue;
-      this.autoSaveHistoryFile = autoSaveHistoryFile;
-      this.manualSaveHistoryFile = manualSaveHistoryFile;
-      if (excludedFiles != null) {
-        this.excludedFilesBefore = excludedFiles;
-      }
-      this.failUnrecognizedDescriptorLines = failUnrecognizedDescriptorLines;
-      this.descriptorParser = new DescriptorParserImpl();
-      this.descriptorParser.setFailUnrecognizedDescriptorLines(
-          failUnrecognizedDescriptorLines);
-    }
-
     private DescriptorReaderRunnable(File[] descriptorFiles,
         BlockingIteratorImpl<Descriptor> descriptorQueue,
         File autoSaveHistoryFile, File manualSaveHistoryFile,
-        SortedMap<String, Long> excludedFiles,
-        boolean failUnrecognizedDescriptorLines) {
+        SortedMap<String, Long> excludedFiles) {
       this.descriptorFiles = descriptorFiles;
       this.descriptorQueue = descriptorQueue;
       this.autoSaveHistoryFile = autoSaveHistoryFile;
@@ -260,8 +165,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
       }
       this.failUnrecognizedDescriptorLines = failUnrecognizedDescriptorLines;
       this.descriptorParser = new DescriptorParserImpl();
-      this.descriptorParser.setFailUnrecognizedDescriptorLines(
-          failUnrecognizedDescriptorLines);
     }
 
     public void run() {
@@ -276,9 +179,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
         log.error("Bug: uncaught exception or error while "
             + "reading descriptors: " + t.getMessage(), t);
       } finally {
-        if (null != this.descriptorFileQueue) {
-          this.descriptorFileQueue.setOutOfDescriptors();
-        }
         if (null != this.descriptorQueue) {
           this.descriptorQueue.setOutOfDescriptors();
         }
@@ -453,20 +353,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
               continue;
             }
             this.parsedFilesAfter.put(absolutePath, lastModifiedMillis);
-            DescriptorFileImpl descriptorFile = new DescriptorFileImpl();
-            try {
-              descriptorFile.setDirectory(directory);
-              descriptorFile.setFile(file);
-              descriptorFile.setFileName(file.getAbsolutePath());
-              descriptorFile.setLastModified(lastModifiedMillis);
-              descriptorFile.setDescriptors(this.readFile(file));
-            } catch (DescriptorParseException e) {
-              descriptorFile.setException(e);
-            } catch (IOException e) {
-              descriptorFile.setException(e);
-              abortReading = true;
-            }
-            this.descriptorFileQueue.add(descriptorFile);
           }
         }
       }
@@ -513,33 +399,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
               if (tae.isDirectory()) {
                 continue;
               }
-              DescriptorFileImpl descriptorFile =
-                  new DescriptorFileImpl();
-              descriptorFile.setTarball(tarball);
-              descriptorFile.setFileName(tae.getName());
-              descriptorFile.setLastModified(tae.getLastModifiedDate()
-                  .getTime());
-              ByteArrayOutputStream baos = new ByteArrayOutputStream();
-              int len;
-              byte[] data = new byte[1024];
-              while ((len = bis.read(data, 0, 1024)) >= 0) {
-                baos.write(data, 0, len);
-              }
-              byte[] rawDescriptorBytes = baos.toByteArray();
-              if (rawDescriptorBytes.length < 1) {
-                continue;
-              }
-              try {
-                String fileName = tae.getName().substring(
-                    tae.getName().lastIndexOf("/") + 1);
-                List<Descriptor> parsedDescriptors =
-                    this.descriptorParser.parseDescriptors(
-                    rawDescriptorBytes, fileName);
-                descriptorFile.setDescriptors(parsedDescriptors);
-              } catch (DescriptorParseException e) {
-                descriptorFile.setException(e);
-              }
-              this.descriptorFileQueue.add(descriptorFile);
             }
           }
         } catch (IOException e) {

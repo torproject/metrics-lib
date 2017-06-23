@@ -18,8 +18,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
   protected DirectoryKeyCertificateImpl(byte[] rawDescriptorBytes,
       int[] offsetAndLength, File descriptorFile,
       boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines, false);
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile, false);
     this.parseDescriptorBytes();
     this.calculateDigestSha1Hex(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP,
         NL + Key.DIR_KEY_CERTIFICATION.keyword + NL);
@@ -107,15 +106,10 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
           if (crypto != null) {
             crypto.append(line).append(NL);
           } else {
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized line '"
-                  + line + "' in directory key certificate.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.add(line);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.add(line);
           }
       }
     }
@@ -261,9 +255,5 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     return this.dirKeyCertification;
   }
 
-  @Override
-  public String getCertificateDigest() {
-    return this.getDigestSha1Hex();
-  }
 }
 

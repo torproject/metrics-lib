@@ -40,8 +40,6 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private boolean microdescConsensus;
 
-  private boolean failUnrecognizedDescriptorLines;
-
   private List<String> unrecognizedLines;
 
   protected List<String> getAndClearUnrecognizedLines() {
@@ -51,14 +49,12 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   protected NetworkStatusEntryImpl(DescriptorImpl parent, int offset,
-      int length, boolean microdescConsensus,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+      int length, boolean microdescConsensus)
+      throws DescriptorParseException {
     this.parent = parent;
     this.offset = offset;
     this.length = length;
     this.microdescConsensus = microdescConsensus;
-    this.failUnrecognizedDescriptorLines =
-        failUnrecognizedDescriptorLines;
     this.parseStatusEntryBytes();
     this.clearAtMostOnceKeys();
   }
@@ -120,15 +116,10 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
           this.parseIdLine(line, parts);
           break;
         default:
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in status entry.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
-            }
-            this.unrecognizedLines.add(line);
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
           }
+          this.unrecognizedLines.add(line);
       }
     }
   }
@@ -342,11 +333,6 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
   }
 
   private Set<String> microdescriptorDigests;
-
-  @Override
-  public Set<String> getMicrodescriptorDigests() {
-    return this.getMicrodescriptorDigestsSha256Base64();
-  }
 
   @Override
   public Set<String> getMicrodescriptorDigestsSha256Base64() {

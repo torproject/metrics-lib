@@ -5,7 +5,6 @@ package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ExitList;
-import org.torproject.descriptor.ExitListEntry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,11 +14,9 @@ import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
+public class ExitListEntryImpl implements ExitList.Entry {
 
   private String exitListEntryString;
-
-  private boolean failUnrecognizedDescriptorLines;
 
   private List<String> unrecognizedLines;
 
@@ -29,37 +26,9 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
     return lines;
   }
 
-  @Deprecated
-  private ExitListEntryImpl(String fingerprint, long publishedMillis,
-      long lastStatusMillis, String exitAddress, long scanMillis) {
-    this.fingerprint = fingerprint;
-    this.publishedMillis = publishedMillis;
-    this.lastStatusMillis = lastStatusMillis;
-    this.exitAddresses.put(exitAddress, scanMillis);
-  }
-
-  @Deprecated
-  List<ExitListEntry> oldEntries() {
-    List<ExitListEntry> result = new ArrayList<>();
-    if (this.exitAddresses.size() > 1) {
-      for (Map.Entry<String, Long> entry
-          : this.exitAddresses.entrySet()) {
-        result.add(new ExitListEntryImpl(this.fingerprint,
-            this.publishedMillis, this.lastStatusMillis, entry.getKey(),
-            entry.getValue()));
-      }
-    } else {
-      result.add(this);
-    }
-    return result;
-  }
-
-  protected ExitListEntryImpl(String exitListEntryString,
-      boolean failUnrecognizedDescriptorLines)
+  protected ExitListEntryImpl(String exitListEntryString)
       throws DescriptorParseException {
     this.exitListEntryString = exitListEntryString;
-    this.failUnrecognizedDescriptorLines =
-        failUnrecognizedDescriptorLines;
     this.initializeKeywords();
     this.parseExitListEntry();
     this.checkAndClearKeywords();
@@ -114,15 +83,10 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
           this.parseExitAddressLine(line, parts);
           break;
         default:
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in exit list entry.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
-            }
-            this.unrecognizedLines.add(line);
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
           }
+          this.unrecognizedLines.add(line);
       }
     }
   }
@@ -192,34 +156,11 @@ public class ExitListEntryImpl implements ExitListEntry, ExitList.Entry {
     return this.lastStatusMillis;
   }
 
-  private String exitAddress;
-
-  @Override
-  public String getExitAddress() {
-    if (null == exitAddress) {
-      Map.Entry<String, Long> randomEntry =
-          this.exitAddresses.entrySet().iterator().next();
-      this.exitAddress = randomEntry.getKey();
-      this.scanMillis = randomEntry.getValue();
-    }
-    return this.exitAddress;
-  }
-
   private Map<String, Long> exitAddresses = new HashMap<>();
 
   @Override
   public Map<String, Long> getExitAddresses() {
     return new HashMap<>(this.exitAddresses);
-  }
-
-  private long scanMillis;
-
-  @Override
-  public long getScanMillis() {
-    if (null == exitAddress) {
-      getExitAddress();
-    }
-    return scanMillis;
   }
 }
 

@@ -20,11 +20,10 @@ import java.util.TreeMap;
 public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   protected NetworkStatusImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
-      File descriptorFile, boolean failUnrecognizedDescriptorLines,
-      boolean containsDirSourceEntries, boolean blankLinesAllowed)
-      throws DescriptorParseException {
+      File descriptorFile, boolean containsDirSourceEntries,
+      boolean blankLinesAllowed) throws DescriptorParseException {
     super(rawDescriptorBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines, blankLinesAllowed);
+        blankLinesAllowed);
     this.splitAndParseParts(containsDirSourceEntries);
   }
 
@@ -102,7 +101,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   protected void parseDirSource(int offset, int length)
       throws DescriptorParseException {
     DirSourceEntryImpl dirSourceEntry = new DirSourceEntryImpl(
-        this, offset, length, this.failUnrecognizedDescriptorLines);
+        this, offset, length);
     this.dirSourceEntries.put(dirSourceEntry.getIdentity(),
         dirSourceEntry);
     List<String> unrecognizedDirSourceLines = dirSourceEntry
@@ -141,7 +140,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   protected void parseStatusEntry(int offset, int length)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
-        this, offset, length, false, this.failUnrecognizedDescriptorLines);
+        this, offset, length, false);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
     List<String> unrecognizedStatusEntryLines = statusEntry
         .getAndClearUnrecognizedLines();
@@ -162,7 +161,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
       this.signatures = new ArrayList<>();
     }
     DirectorySignatureImpl signature = new DirectorySignatureImpl(
-        this, offset, length, failUnrecognizedDescriptorLines);
+        this, offset, length);
     this.signatures.add(signature);
     List<String> unrecognizedStatusEntryLines = signature
         .getAndClearUnrecognizedLines();

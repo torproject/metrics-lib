@@ -36,10 +36,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
       Key.ROUTER, Key.BANDWIDTH, Key.PUBLISHED);
 
   protected ServerDescriptorImpl(byte[] descriptorBytes, int[] offsetAndLength,
-      File descriptorFile, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
-    super(descriptorBytes, offsetAndLength, descriptorFile,
-        failUnrecognizedDescriptorLines, false);
+      File descriptorFile) throws DescriptorParseException {
+    super(descriptorBytes, offsetAndLength, descriptorFile, false);
     this.parseDescriptorBytes();
     this.checkExactlyOnceKeys(exactlyOnce);
     this.checkAtMostOnceKeys(atMostOnce);
@@ -210,15 +208,10 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
               this.ntorOnionKeyCrosscert = cryptoString;
               break;
             default:
-              if (this.failUnrecognizedDescriptorLines) {
-                throw new DescriptorParseException("Unrecognized crypto "
-                    + "block '" + cryptoString + "' in server descriptor.");
-              } else {
-                if (this.unrecognizedLines == null) {
-                  this.unrecognizedLines = new ArrayList<>();
-                }
-                this.unrecognizedLines.addAll(cryptoLines);
+              if (this.unrecognizedLines == null) {
+                this.unrecognizedLines = new ArrayList<>();
               }
+              this.unrecognizedLines.addAll(cryptoLines);
           }
           cryptoLines = null;
           nextCrypto = Key.EMPTY;
@@ -229,15 +222,10 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
             cryptoLines.add(line);
           } else {
             ParseHelper.parseKeyword(line, partsNoOpt[0]);
-            if (this.failUnrecognizedDescriptorLines) {
-              throw new DescriptorParseException("Unrecognized line '"
-                  + line + "' in server descriptor.");
-            } else {
-              if (this.unrecognizedLines == null) {
-                this.unrecognizedLines = new ArrayList<>();
-              }
-              this.unrecognizedLines.add(line);
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
             }
+            this.unrecognizedLines.add(line);
           }
       }
     }
@@ -676,16 +664,6 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.setDigestSha256Base64(partsNoOpt[1]);
   }
 
-  @Override
-  public String getServerDescriptorDigest() {
-    return this.getDigestSha1Hex();
-  }
-
-  @Override
-  public String getServerDescriptorDigestSha256() {
-    return this.getDigestSha256Base64();
-  }
-
   private String nickname;
 
   @Override
@@ -865,21 +843,11 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   private String extraInfoDigest;
 
   @Override
-  public String getExtraInfoDigest() {
-    return this.getExtraInfoDigestSha1Hex();
-  }
-
-  @Override
   public String getExtraInfoDigestSha1Hex() {
     return this.extraInfoDigest;
   }
 
   private String extraInfoDigestSha256;
-
-  @Override
-  public String getExtraInfoDigestSha256() {
-    return this.getExtraInfoDigestSha256Base64();
-  }
 
   @Override
   public String getExtraInfoDigestSha256Base64() {

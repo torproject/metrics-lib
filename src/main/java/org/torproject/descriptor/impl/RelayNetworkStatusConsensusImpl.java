@@ -23,10 +23,9 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     implements RelayNetworkStatusConsensus {
 
   protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes,
-      int[] offsetAndLimit, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
-    super(consensusBytes, offsetAndLimit, descriptorFile,
-        failUnrecognizedDescriptorLines, true, false);
+      int[] offsetAndLimit, File descriptorFile)
+      throws DescriptorParseException {
+    super(consensusBytes, offsetAndLimit, descriptorFile, true, false);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.VOTE_STATUS, Key.CONSENSUS_METHOD, Key.VALID_AFTER, Key.FRESH_UNTIL,
         Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS);
@@ -107,14 +106,8 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
           this.parseSharedRandCurrentValueLine(line, parts);
           break;
         default:
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in consensus.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
-            }
-            this.unrecognizedLines.add(line);
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
           }
       }
     }
@@ -125,8 +118,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   protected void parseStatusEntry(int offset, int length)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(this,
-        offset, length, this.microdescConsensus,
-        this.failUnrecognizedDescriptorLines);
+        offset, length, this.microdescConsensus);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
     List<String> unrecognizedStatusEntryLines = statusEntry
         .getAndClearUnrecognizedLines();
@@ -152,15 +144,10 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
           this.parseBandwidthWeightsLine(line, parts);
           break;
         default:
-          if (this.failUnrecognizedDescriptorLines) {
-            throw new DescriptorParseException("Unrecognized line '"
-                + line + "' in consensus.");
-          } else {
-            if (this.unrecognizedLines == null) {
-              this.unrecognizedLines = new ArrayList<>();
-            }
-            this.unrecognizedLines.add(line);
+          if (this.unrecognizedLines == null) {
+            this.unrecognizedLines = new ArrayList<>();
           }
+          this.unrecognizedLines.add(line);
       }
     }
   }
@@ -343,11 +330,6 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
       throws DescriptorParseException {
     this.bandwidthWeights = ParseHelper.parseKeyValueIntegerPairs(line,
         parts, 1);
-  }
-
-  @Override
-  public String getConsensusDigest() {
-    return this.getDigestSha1Hex();
   }
 
   private int networkStatusVersion;

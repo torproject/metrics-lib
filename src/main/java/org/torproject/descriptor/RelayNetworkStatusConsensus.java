@@ -252,19 +252,6 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
   public NetworkStatusEntry getStatusEntry(String fingerprint);
 
   /**
-   * Return directory signatures of this consensus, with map keys being
-   * SHA-1 digests of the authorities' identity keys in the version 3
-   * directory protocol, encoded as 40 upper-case hexadecimal characters.
-   *
-   * @deprecated Replaced by {@link #getSignatures()} which permits an
-   *     arbitrary number of signatures made by an authority using the
-   *     same identity key digest and different algorithms.
-   *
-   * @since 1.0.0
-   */
-  public SortedMap<String, DirectorySignature> getDirectorySignatures();
-
-  /**
    * Return the list of signatures contained in this consensus.
    *
    * @since 1.3.0
@@ -280,17 +267,6 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    * @since 1.0.0
    */
   public SortedMap<String, Integer> getBandwidthWeights();
-
-  /**
-   * Return the SHA-1 digest of this consensus, encoded as 40 lower-case
-   * hexadecimal characters that directory authorities use to sign the
-   * consensus.
-   *
-   * @deprecated Renamed to {@link #getDigestSha1Hex()}.
-   *
-   * @since 1.0.0
-   */
-  public String getConsensusDigest();
 
   /**
    * Return the SHA-1 digest of this consensus, encoded as 40 lower-case

@@ -89,16 +89,6 @@ public interface DirSourceEntry {
    * Return the SHA-1 vote digest, encoded as 40 lower-case hexadecimal
    * characters.
    *
-   * @deprecated Renamed to {@link #getVoteDigestSha1Hex()}.
-   *
-   * @since 1.0.0
-   */
-  public String getVoteDigest();
-
-  /**
-   * Return the SHA-1 vote digest, encoded as 40 lower-case hexadecimal
-   * characters.
-   *
    * @since 1.7.0
    */
   public String getVoteDigestSha1Hex();
