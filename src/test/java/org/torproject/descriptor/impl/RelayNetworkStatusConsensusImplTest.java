@@ -43,7 +43,7 @@ public class RelayNetworkStatusConsensusImplTest {
         throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.dirSources.add(dirSourceString);
-      return cb.buildConsensus(true);
+      return cb.buildConsensus();
     }
 
     private String nickname = "gabelmoo";
@@ -156,7 +156,7 @@ public class RelayNetworkStatusConsensusImplTest {
         throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.statusEntries.add(statusEntryString);
-      return cb.buildConsensus(true);
+      return cb.buildConsensus();
     }
 
     private String nickname = "right2privassy3";
@@ -314,7 +314,7 @@ public class RelayNetworkStatusConsensusImplTest {
         throws DescriptorParseException {
       ConsensusBuilder cb = new ConsensusBuilder();
       cb.addDirectorySignature(directorySignatureString);
-      return cb.buildConsensus(true);
+      return cb.buildConsensus();
     }
 
     private String identity = "ED03BB616EB2F60BEC80151114BB25CEF515B226";
@@ -355,7 +355,7 @@ public class RelayNetworkStatusConsensusImplTest {
   @Test
   public void testSampleConsensus() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
-    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus();
     assertEquals(3, consensus.getNetworkStatusVersion());
     assertEquals(11, consensus.getConsensusMethod());
     assertEquals(1322643600000L, consensus.getValidAfterMillis());
@@ -742,7 +742,7 @@ public class RelayNetworkStatusConsensusImplTest {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.clientVersionsLine = null;
     cb.serverVersionsLine = null;
-    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus();
     assertNull(consensus.getRecommendedClientVersions());
     assertNull(consensus.getRecommendedServerVersions());
   }
@@ -1362,7 +1362,7 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.sLine = sb.sLine + "\n" + sb.sLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    cb.buildConsensus(true);
+    cb.buildConsensus();
   }
 
   @Test
@@ -1373,7 +1373,7 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.prLine = sb.prLine + "\n" + sb.prLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    cb.buildConsensus(true);
+    cb.buildConsensus();
   }
 
   @Test
@@ -1403,7 +1403,7 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.wLine = sb.wLine + "\n" + sb.wLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    cb.buildConsensus(true);
+    cb.buildConsensus();
   }
 
   @Test
@@ -1412,7 +1412,7 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.wLine = "w Bandwidth=42424242 Unmeasured=1";
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus();
     for (NetworkStatusEntry s : consensus.getStatusEntries().values()) {
       if (s.getBandwidth() == 42424242L) {
         assertTrue(s.getUnmeasured());
@@ -1465,14 +1465,14 @@ public class RelayNetworkStatusConsensusImplTest {
     sb.pLine = sb.pLine + "\n" + sb.pLine;
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.add(sb.buildStatusEntry());
-    cb.buildConsensus(true);
+    cb.buildConsensus();
   }
 
   @Test
   public void testNoStatusEntries() throws DescriptorParseException {
     ConsensusBuilder cb = new ConsensusBuilder();
     cb.statusEntries.clear();
-    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus();
     assertFalse(consensus.containsStatusEntry(
         "00795A6E8D91C270FC23B30F388A495553E01894"));
   }
@@ -1498,7 +1498,7 @@ public class RelayNetworkStatusConsensusImplTest {
     cb.setBandwidthWeightsLine(null);
     /* This does not break, because directory footers were optional before
      * consensus method 9. */
-    RelayNetworkStatusConsensus consensus = cb.buildConsensus(true);
+    RelayNetworkStatusConsensus consensus = cb.buildConsensus();
     assertNull(consensus.getBandwidthWeights());
   }
 
@@ -1599,7 +1599,7 @@ public class RelayNetworkStatusConsensusImplTest {
     byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[20] = (byte) 200;
     new RelayNetworkStatusConsensusImpl(consensusBytes,
-        new int[] { 0, consensusBytes.length }, null, true);
+        new int[] { 0, consensusBytes.length }, null);
   }
 
   @Test
@@ -1613,7 +1613,7 @@ public class RelayNetworkStatusConsensusImplTest {
     byte[] consensusBytes = cb.buildConsensusBytes();
     consensusBytes[0] = (byte) 200;
     new RelayNetworkStatusConsensusImpl(consensusBytes,
-        new int[] { 0, consensusBytes.length }, null, true);
+        new int[] { 0, consensusBytes.length }, null);
   }
 
   @Test
@@ -1623,8 +1623,7 @@ public class RelayNetworkStatusConsensusImplTest {
     this.thrown.expectMessage(
         "Unrecognized line 'unrecognized-line 1' in consensus.");
     String unrecognizedLine = "unrecognized-line 1";
-    ConsensusBuilder.createWithUnrecognizedHeaderLine(unrecognizedLine,
-        true);
+    ConsensusBuilder.createWithUnrecognizedHeaderLine(unrecognizedLine);
   }
 
   @Test
@@ -1632,7 +1631,7 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
-        .createWithUnrecognizedHeaderLine(unrecognizedLine, false);
+        .createWithUnrecognizedHeaderLine(unrecognizedLine);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
@@ -1645,8 +1644,7 @@ public class RelayNetworkStatusConsensusImplTest {
     this.thrown.expectMessage(
         "Unrecognized line 'unrecognized-line 1' in dir-source entry.");
     String unrecognizedLine = "unrecognized-line 1";
-    ConsensusBuilder.createWithUnrecognizedDirSourceLine(unrecognizedLine,
-        true);
+    ConsensusBuilder.createWithUnrecognizedDirSourceLine(unrecognizedLine);
   }
 
   @Test
@@ -1654,7 +1652,7 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
-        .createWithUnrecognizedDirSourceLine(unrecognizedLine, false);
+        .createWithUnrecognizedDirSourceLine(unrecognizedLine);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
@@ -1668,7 +1666,7 @@ public class RelayNetworkStatusConsensusImplTest {
         + "status entry.");
     String unrecognizedLine = "unrecognized-line 1";
     ConsensusBuilder.createWithUnrecognizedStatusEntryLine(
-        unrecognizedLine, true);
+        unrecognizedLine);
   }
 
   @Test
@@ -1676,7 +1674,7 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
-        .createWithUnrecognizedStatusEntryLine(unrecognizedLine, false);
+        .createWithUnrecognizedStatusEntryLine(unrecognizedLine);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
@@ -1689,8 +1687,7 @@ public class RelayNetworkStatusConsensusImplTest {
     this.thrown.expectMessage(
         "Unrecognized line 'unrecognized-line 1' in consensus.");
     String unrecognizedLine = "unrecognized-line 1";
-    ConsensusBuilder.createWithUnrecognizedFooterLine(unrecognizedLine,
-        true);
+    ConsensusBuilder.createWithUnrecognizedFooterLine(unrecognizedLine);
   }
 
   @Test
@@ -1698,7 +1695,7 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
-        .createWithUnrecognizedFooterLine(unrecognizedLine, false);
+        .createWithUnrecognizedFooterLine(unrecognizedLine);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());
@@ -1712,7 +1709,7 @@ public class RelayNetworkStatusConsensusImplTest {
         "Unrecognized line 'unrecognized-line 1' in dir-source entry.");
     String unrecognizedLine = "unrecognized-line 1";
     ConsensusBuilder.createWithUnrecognizedDirectorySignatureLine(
-        unrecognizedLine, true);
+        unrecognizedLine);
   }
 
   @Test
@@ -1720,8 +1717,7 @@ public class RelayNetworkStatusConsensusImplTest {
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
-        .createWithUnrecognizedDirectorySignatureLine(unrecognizedLine,
-        false);
+        .createWithUnrecognizedDirectorySignatureLine(unrecognizedLine);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, consensus.getUnrecognizedLines());

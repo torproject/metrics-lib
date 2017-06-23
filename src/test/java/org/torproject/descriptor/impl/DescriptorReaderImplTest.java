@@ -5,7 +5,7 @@ package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
 
-import org.torproject.descriptor.DescriptorFile;
+import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorReader;
 
 import org.junit.Before;
@@ -63,13 +63,13 @@ public class DescriptorReaderImplTest {
         parseHistoryContents.getBytes(StandardCharsets.UTF_8));
   }
 
-  private int readAllDescriptors() {
-    Iterator<DescriptorFile> descriptorFiles =
-        this.descriptorReader.readDescriptors();
+  private int readAllDescriptors(File dir) {
+    Iterator<Descriptor> descriptors = this.descriptorReader
+        .readDescriptors(dir).iterator();
     int count = 0;
-    while (descriptorFiles.hasNext()) {
+    while (descriptors.hasNext()) {
       count++;
-      descriptorFiles.next();
+      descriptors.next();
     }
     return count;
   }
@@ -88,14 +88,13 @@ public class DescriptorReaderImplTest {
 
   @Test
   public void testDescriptors() throws IOException {
-    this.descriptorReader.addDirectory(this.inputDirectory);
-    this.readAllDescriptors();
+    this.readAllDescriptors(this.inputDirectory);
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(0, 2, 1);
   }
 
   @Test
   public void testNoDescriptors() throws IOException {
-    this.readAllDescriptors();
+    this.readAllDescriptors(null);
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(0, 0, 1);
   }
 
@@ -103,19 +102,15 @@ public class DescriptorReaderImplTest {
   @SuppressWarnings("deprecation")
   public void testSetExcludeFilesDescriptors() throws InterruptedException,
       IOException {
-    this.descriptorReader.setExcludeFiles(this.historyFile);
-    this.descriptorReader.addDirectory(this.inputDirectory);
-    this.readAllDescriptors();
+    this.readAllDescriptors(this.inputDirectory);
     Thread.sleep(100L); /* It may take a moment to write the history file. */
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(1, 1, 2);
   }
 
   @Test
-  @SuppressWarnings("deprecation")
   public void testSetExcludeFilesNoDescriptors() throws InterruptedException,
       IOException {
-    this.descriptorReader.setExcludeFiles(this.historyFile);
-    this.readAllDescriptors();
+    this.readAllDescriptors(this.inputDirectory);
     Thread.sleep(100L); /* It may take a moment to write the history file. */
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(0, 0, 0);
   }
@@ -123,8 +118,7 @@ public class DescriptorReaderImplTest {
   @Test
   public void testSetHistoryFileDescriptors() throws IOException {
     this.descriptorReader.setHistoryFile(this.historyFile);
-    this.descriptorReader.addDirectory(this.inputDirectory);
-    this.readAllDescriptors();
+    this.readAllDescriptors(this.inputDirectory);
     descriptorReader.saveHistoryFile(this.historyFile);
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(1, 1, 2);
   }
@@ -132,7 +126,7 @@ public class DescriptorReaderImplTest {
   @Test
   public void testSetHistoryFileNoDescriptors() throws IOException {
     this.descriptorReader.setHistoryFile(this.historyFile);
-    this.readAllDescriptors();
+    this.readAllDescriptors(this.inputDirectory);
     this.descriptorReader.saveHistoryFile(this.historyFile);
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(0, 0, 0);
   }
@@ -140,15 +134,14 @@ public class DescriptorReaderImplTest {
   @Test
   public void testSetExcludedFilesDescriptors() throws IOException {
     this.descriptorReader.setExcludedFiles(this.historyMap);
-    this.descriptorReader.addDirectory(this.inputDirectory);
-    this.readAllDescriptors();
+    this.readAllDescriptors(this.inputDirectory);
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(1, 1, 1);
   }
 
   @Test
   public void testSetExcludedFilesNoDescriptors() throws IOException {
     this.descriptorReader.setExcludedFiles(this.historyMap);
-    this.readAllDescriptors();
+    this.readAllDescriptors(this.inputDirectory);
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(0, 0, 1);
   }
 
@@ -157,8 +150,7 @@ public class DescriptorReaderImplTest {
     File corruptHistoryFile = this.temporaryFolder.newFile("corruptHistory");
     Files.write(corruptHistoryFile.toPath(),"1293145200000  \n   ".getBytes());
     this.descriptorReader.setHistoryFile(corruptHistoryFile);
-    this.descriptorReader.addDirectory(this.inputDirectory);
-    int count = this.readAllDescriptors();
+    int count = this.readAllDescriptors(this.inputDirectory);
     assertEquals("Two files should have been parsed.", 2, count);
     descriptorReader.saveHistoryFile(this.historyFile);
     this.assertExcludedFilesParsedFilesAndHistoryFileLines(0, 2, 2);

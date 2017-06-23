@@ -20,7 +20,7 @@ public class DescriptorParserImplTest {
   public ExpectedException thrown = ExpectedException.none();
 
   private TestDescriptor makeTestDesc(byte[] bytes) throws Exception {
-    return new TestDescriptor(bytes, new int[]{0, bytes.length}, false, false);
+    return new TestDescriptor(bytes, new int[]{0, bytes.length}, false);
   }
 
   private static final String MICRO =
@@ -57,7 +57,7 @@ public class DescriptorParserImplTest {
         + "176x.158.53.63 44583 0 0' is not a valid IPv4 address.");
     DescriptorParserImpl dpi = new DescriptorParserImpl();
     dpi.parseDescriptor(DEFECT.getBytes(),
-        new int[]{0, DEFECT.getBytes().length}, null, constructor, false);
+        new int[]{0, DEFECT.getBytes().length}, null, constructor);
   }
 
   private static final String DEFECT =

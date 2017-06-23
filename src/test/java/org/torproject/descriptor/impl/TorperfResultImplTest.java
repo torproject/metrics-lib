@@ -20,7 +20,7 @@ public class TorperfResultImplTest {
   public void testAnnotatedInput() throws Exception {
     TorperfResultImpl result = (TorperfResultImpl)
         (TorperfResultImpl.parseTorperfResults((torperfAnnotation + input)
-        .getBytes("US-ASCII"), null, false).get(0));
+        .getBytes("US-ASCII"), null).get(0));
     assertEquals("Expected one annotation.", 1,
         result.getAnnotations().size());
     assertEquals(torperfAnnotation.substring(0, 17),
@@ -37,7 +37,7 @@ public class TorperfResultImplTest {
     byte[] asciiBytes = (torperfAnnotation
         + input + input + input).getBytes("US-ASCII");
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
-        asciiBytes, null, false);
+        asciiBytes, null);
     assertEquals("Expected one annotation.", 1,
         ((TorperfResultImpl)(result.get(0))).getAnnotations().size());
     assertEquals(3, result.size());
@@ -53,7 +53,7 @@ public class TorperfResultImplTest {
         + torperfAnnotation + input
         + torperfAnnotation + input).getBytes("US-ASCII");
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
-        asciiBytes, null, false);
+        asciiBytes, null);
     assertEquals("Expected one annotation.", 1,
         ((TorperfResultImpl)(result.get(0))).getAnnotations().size());
     assertEquals(3, result.size());
@@ -90,7 +90,7 @@ public class TorperfResultImplTest {
   @Test
   public void testDatapercNonNumeric() throws Exception {
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
-        ("DATAPERMILLE=2.0 " + input).getBytes(), null, false);
+        ("DATAPERMILLE=2.0 " + input).getBytes(), null);
     assertEquals(1, result.size());
     TorperfResultImpl torperfResult = (TorperfResultImpl) result.get(0);
     assertEquals(1, torperfResult.getUnrecognizedKeys().size());
@@ -125,7 +125,7 @@ public class TorperfResultImplTest {
   public void testEndpointsHostnamesSourceAddress()
       throws DescriptorParseException {
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
-        input2.getBytes(), null, true);
+        input2.getBytes(), null);
     assertEquals(1, result.size());
     TorperfResultImpl torperfResult = (TorperfResultImpl) result.get(0);
     assertNull(torperfResult.getUnrecognizedKeys());

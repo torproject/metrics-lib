@@ -3,6 +3,8 @@
 
 package org.torproject.descriptor.impl;
 
+import org.torproject.descriptor.DescriptorParseException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -49,7 +51,7 @@ public class DescriptorImplTest {
   }
 
   private TestDescriptor makeTestDesc(byte[] bytes) throws Exception {
-    return new TestDescriptor(bytes, new int[]{0, bytes.length}, false, false);
+    return new TestDescriptor(bytes, new int[]{0, bytes.length}, false);
   }
 
   @Test

@@ -8,10 +8,9 @@ import org.torproject.descriptor.DescriptorParseException;
 public class TestDescriptor extends DescriptorImpl {
 
   protected TestDescriptor(byte[] rawDescriptorBytes, int[] offsetAndLength,
-      boolean failUnrecognizedDescriptorLines, boolean blankLinesAllowed)
+      boolean blankLinesAllowed)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, null,
-        failUnrecognizedDescriptorLines, blankLinesAllowed);
+    super(rawDescriptorBytes, offsetAndLength, null, blankLinesAllowed);
   }
 }
 

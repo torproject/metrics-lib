@@ -4,7 +4,7 @@
 package org.torproject.descriptor.benchmark;
 
 import org.torproject.descriptor.Descriptor;
-import org.torproject.descriptor.DescriptorFile;
+import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DescriptorReader;
 import org.torproject.descriptor.DescriptorSourceFactory;
 import org.torproject.descriptor.ExtraInfoDescriptor;
@@ -94,23 +94,19 @@ public class MeasurePerformance {
     long countedServerDescriptors = 0;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
-    descriptorReader.addTarball(tarballFileOrDirectory);
-    descriptorReader.addDirectory(tarballFileOrDirectory);
-    Iterator<DescriptorFile> descriptorFiles =
-        descriptorReader.readDescriptors();
-    while (descriptorFiles.hasNext()) {
-      DescriptorFile descriptorFile = descriptorFiles.next();
-      for (Descriptor descriptor : descriptorFile.getDescriptors()) {
-        if (!(descriptor instanceof ServerDescriptor)) {
-          continue;
-        }
-        ServerDescriptor serverDescriptor = (ServerDescriptor) descriptor;
-        sumAdvertisedBandwidth += (long) Math.min(Math.min(
-            serverDescriptor.getBandwidthRate(),
-            serverDescriptor.getBandwidthBurst()),
-            serverDescriptor.getBandwidthObserved());
-        countedServerDescriptors++;
+    Iterator<Descriptor> descriptors =
+        descriptorReader.readDescriptors(tarballFileOrDirectory).iterator();
+    while (descriptors.hasNext()) {
+      Descriptor descriptor = descriptors.next();
+      if (!(descriptor instanceof ServerDescriptor)) {
+        continue;
       }
+      ServerDescriptor serverDescriptor = (ServerDescriptor) descriptor;
+      sumAdvertisedBandwidth += (long) Math.min(Math.min(
+          serverDescriptor.getBandwidthRate(),
+          serverDescriptor.getBandwidthBurst()),
+          serverDescriptor.getBandwidthObserved());
+      countedServerDescriptors++;
     }
     long endedMillis = System.currentTimeMillis();
     System.out.println("Ending measureAverageAdvertisedBandwidth");
@@ -132,24 +128,21 @@ public class MeasurePerformance {
     long countedExtraInfoDescriptors = 0;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
-    descriptorReader.addTarball(tarballFile);
-    Iterator<DescriptorFile> descriptorFiles =
-        descriptorReader.readDescriptors();
-    while (descriptorFiles.hasNext()) {
-      DescriptorFile descriptorFile = descriptorFiles.next();
-      for (Descriptor descriptor : descriptorFile.getDescriptors()) {
-        if (!(descriptor instanceof ExtraInfoDescriptor)) {
-          continue;
-        }
-        ExtraInfoDescriptor extraInfoDescriptor =
-            (ExtraInfoDescriptor) descriptor;
-        SortedMap<String, Integer> dirreqV3Reqs =
-            extraInfoDescriptor.getDirreqV3Reqs();
-        if (dirreqV3Reqs != null) {
-          countries.addAll(dirreqV3Reqs.keySet());
-        }
-        countedExtraInfoDescriptors++;
+    Iterator<Descriptor> descriptors =
+        descriptorReader.readDescriptors(tarballFile).iterator();
+    while (descriptors.hasNext()) {
+      Descriptor descriptor = descriptors.next();
+      if (!(descriptor instanceof ExtraInfoDescriptor)) {
+        continue;
       }
+      ExtraInfoDescriptor extraInfoDescriptor =
+        (ExtraInfoDescriptor) descriptor;
+      SortedMap<String, Integer> dirreqV3Reqs =
+        extraInfoDescriptor.getDirreqV3Reqs();
+      if (dirreqV3Reqs != null) {
+        countries.addAll(dirreqV3Reqs.keySet());
+      }
+      countedExtraInfoDescriptors++;
     }
     long endedMillis = System.currentTimeMillis();
     System.out.println("Ending measureCountriesV3Requests");
@@ -173,27 +166,23 @@ public class MeasurePerformance {
     long countedConsensuses = 0L;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
-    descriptorReader.addTarball(tarballFileOrDirectory);
-    descriptorReader.addDirectory(tarballFileOrDirectory);
-    Iterator<DescriptorFile> descriptorFiles =
-        descriptorReader.readDescriptors();
-    while (descriptorFiles.hasNext()) {
-      DescriptorFile descriptorFile = descriptorFiles.next();
-      for (Descriptor descriptor : descriptorFile.getDescriptors()) {
-        if (!(descriptor instanceof RelayNetworkStatusConsensus)) {
-          continue;
-        }
-        RelayNetworkStatusConsensus consensus =
-            (RelayNetworkStatusConsensus) descriptor;
-        for (NetworkStatusEntry entry :
-            consensus.getStatusEntries().values()) {
-          if (entry.getFlags().contains("Exit")) {
-            totalRelaysWithExitFlag++;
-          }
-          totalRelays++;
-        }
-        countedConsensuses++;
+    Iterator<Descriptor> descriptors =
+        descriptorReader.readDescriptors(tarballFileOrDirectory).iterator();
+    while (descriptors.hasNext()) {
+      Descriptor descriptor = descriptors.next();
+      if (!(descriptor instanceof RelayNetworkStatusConsensus)) {
+        continue;
       }
+      RelayNetworkStatusConsensus consensus =
+        (RelayNetworkStatusConsensus) descriptor;
+      for (NetworkStatusEntry entry :
+             consensus.getStatusEntries().values()) {
+        if (entry.getFlags().contains("Exit")) {
+          totalRelaysWithExitFlag++;
+        }
+        totalRelays++;
+      }
+      countedConsensuses++;
     }
     long endedMillis = System.currentTimeMillis();
     System.out.println("Ending measureAverageRelaysExit");
@@ -220,45 +209,42 @@ public class MeasurePerformance {
     long countedMicrodescriptors = 0L;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
-    descriptorReader.addTarball(tarballFile);
-    Iterator<DescriptorFile> descriptorFiles =
-        descriptorReader.readDescriptors();
-    while (descriptorFiles.hasNext()) {
-      DescriptorFile descriptorFile = descriptorFiles.next();
-      for (Descriptor descriptor : descriptorFile.getDescriptors()) {
-        if (!(descriptor instanceof Microdescriptor)) {
-          continue;
-        }
-        countedMicrodescriptors++;
-        Microdescriptor microdescriptor =
-            (Microdescriptor) descriptor;
-        String defaultPolicy = microdescriptor.getDefaultPolicy();
-        if (defaultPolicy == null) {
-          continue;
-        }
-        boolean accept = "accept".equals(
-            microdescriptor.getDefaultPolicy());
-        for (String ports : microdescriptor.getPortList().split(",")) {
-          if (ports.contains("-")) {
-            String[] parts = ports.split("-");
-            int from = Integer.parseInt(parts[0]);
-            int to = Integer.parseInt(parts[1]);
-            if (from <= 80 && to >= 80) {
-              if (accept) {
-                totalRelaysWithExitFlag++;
-              }
-            } else if (to > 80) {
-              if (!accept) {
-                totalRelaysWithExitFlag++;
-              }
-              break;
-            }
-          } else if ("80".equals(ports)) {
+    Iterator<Descriptor> descriptors =
+        descriptorReader.readDescriptors(tarballFile).iterator();
+    while (descriptors.hasNext()) {
+      Descriptor descriptor = descriptors.next();
+      if (!(descriptor instanceof Microdescriptor)) {
+        continue;
+      }
+      countedMicrodescriptors++;
+      Microdescriptor microdescriptor =
+        (Microdescriptor) descriptor;
+      String defaultPolicy = microdescriptor.getDefaultPolicy();
+      if (defaultPolicy == null) {
+        continue;
+      }
+      boolean accept = "accept".equals(
+                                       microdescriptor.getDefaultPolicy());
+      for (String ports : microdescriptor.getPortList().split(",")) {
+        if (ports.contains("-")) {
+          String[] parts = ports.split("-");
+          int from = Integer.parseInt(parts[0]);
+          int to = Integer.parseInt(parts[1]);
+          if (from <= 80 && to >= 80) {
             if (accept) {
+              totalRelaysWithExitFlag++;
+            }
+          } else if (to > 80) {
+            if (!accept) {
               totalRelaysWithExitFlag++;
             }
             break;
           }
+        } else if ("80".equals(ports)) {
+          if (accept) {
+            totalRelaysWithExitFlag++;
+          }
+          break;
         }
       }
     }

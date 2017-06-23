@@ -32,7 +32,7 @@ public class MicrodescriptorImplTest {
     private static Microdescriptor createWithDefaultLines()
         throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
-      return db.buildDescriptor(true);
+      return db.buildDescriptor();
     }
 
     private String ntorOnionKeyLine =
@@ -44,7 +44,7 @@ public class MicrodescriptorImplTest {
         throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.idLine = line;
-      return db.buildDescriptor(true);
+      return db.buildDescriptor();
     }
 
     private byte[] buildDescriptorBytes() {
@@ -61,13 +61,11 @@ public class MicrodescriptorImplTest {
       return sb.toString().getBytes();
     }
 
-    private Microdescriptor buildDescriptor(
-        boolean failUnrecognizedDescriptorLines)
+    private Microdescriptor buildDescriptor()
         throws DescriptorParseException {
       byte[] descriptorBytes = this.buildDescriptorBytes();
       return new MicrodescriptorImpl(descriptorBytes,
-          new int[] { 0, descriptorBytes.length }, null,
-          failUnrecognizedDescriptorLines);
+          new int[] { 0, descriptorBytes.length }, null);
     }
   }
 

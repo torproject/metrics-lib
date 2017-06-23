@@ -8,14 +8,11 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.torproject.descriptor.DescriptorSourceFactory.COLLECTOR_DEFAULT;
 import static org.torproject.descriptor.DescriptorSourceFactory.COLLECTOR_PROPERTY;
-import static org.torproject.descriptor.DescriptorSourceFactory.DOWNLOADER_DEFAULT;
-import static org.torproject.descriptor.DescriptorSourceFactory.DOWNLOADER_PROPERTY;
 import static org.torproject.descriptor.DescriptorSourceFactory.PARSER_DEFAULT;
 import static org.torproject.descriptor.DescriptorSourceFactory.PARSER_PROPERTY;
 import static org.torproject.descriptor.DescriptorSourceFactory.READER_DEFAULT;
 import static org.torproject.descriptor.DescriptorSourceFactory.READER_PROPERTY;
 
-import org.torproject.descriptor.impl.DescriptorDownloaderImpl;
 import org.torproject.descriptor.impl.DescriptorParserImpl;
 import org.torproject.descriptor.impl.DescriptorReaderImpl;
 import org.torproject.descriptor.index.DescriptorIndexCollector;
@@ -28,10 +25,10 @@ import java.lang.reflect.Method;
 public class DescriptorSourceFactoryTest {
 
   private static final String[] properties = new String[] { COLLECTOR_PROPERTY,
-      DOWNLOADER_PROPERTY, PARSER_PROPERTY, READER_PROPERTY };
+      PARSER_PROPERTY, READER_PROPERTY };
 
   private static final String[] defaults = new String[] { COLLECTOR_DEFAULT,
-      DOWNLOADER_DEFAULT, PARSER_DEFAULT, READER_DEFAULT };
+      PARSER_DEFAULT, READER_DEFAULT };
 
   @Test
   public void testDefaults() {
@@ -39,9 +36,6 @@ public class DescriptorSourceFactoryTest {
     DescriptorCollector dc =
         DescriptorSourceFactory.createDescriptorCollector();
     assertTrue(dc instanceof DescriptorIndexCollector);
-    DescriptorDownloader dd =
-        DescriptorSourceFactory.createDescriptorDownloader();
-    assertTrue(dd instanceof DescriptorDownloaderImpl);
     DescriptorParser dp = DescriptorSourceFactory.createDescriptorParser();
     assertTrue(dp instanceof DescriptorParserImpl);
     DescriptorReader dr = DescriptorSourceFactory.createDescriptorReader();
@@ -85,17 +79,12 @@ public class DescriptorSourceFactoryTest {
   public void testProperties() {
     setProperties(new String[] {
         "org.torproject.descriptor.DummyCollectorImplementation",
-        "org.torproject.descriptor.DummyDownloaderImplementation",
         "org.torproject.descriptor.DummyParserImplementation",
         "org.torproject.descriptor.DummyReaderImplementation" });
     DescriptorCollector dc =
         DescriptorSourceFactory.createDescriptorCollector();
     assertTrue(dc instanceof DummyCollectorImplementation);
     assertEquals(1, DummyCollectorImplementation.count);
-    DescriptorDownloader dd =
-        DescriptorSourceFactory.createDescriptorDownloader();
-    assertTrue(dd instanceof DummyDownloaderImplementation);
-    assertEquals(1, DummyDownloaderImplementation.count);
     DescriptorParser dp = DescriptorSourceFactory.createDescriptorParser();
     assertTrue(dp instanceof DummyParserImplementation);
     assertEquals(1, DummyParserImplementation.count);

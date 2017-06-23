@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.torproject.descriptor.DescriptorParseException;
-import org.torproject.descriptor.ExitListEntry;
+import org.torproject.descriptor.ExitList;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class ExitListImplTest {
   @Test
   public void testAnnotatedInput() throws Exception {
     ExitListImpl result = new ExitListImpl((tordnselAnnotation + input)
-        .getBytes("US-ASCII"), null, fileName, false);
+        .getBytes("US-ASCII"), null, fileName);
     assertEquals("Expected one annotation.", 1,
         result.getAnnotations().size());
     assertEquals(tordnselAnnotation.substring(0, 18),
@@ -32,8 +32,8 @@ public class ExitListImplTest {
     assertEquals(1441065722000L, result.getDownloadedMillis());
     assertTrue("Unrecognized lines: " + result.getUnrecognizedLines(),
         result.getUnrecognizedLines().isEmpty());
-    assertEquals("Found: " + result.getExitListEntries(), 7,
-        result.getExitListEntries().size());
+    assertEquals("Found: " + result.getEntries(), 7,
+        result.getEntries().size());
     assertEquals("Found: " + result.getEntries(), 5,
         result.getEntries().size());
   }
@@ -42,16 +42,16 @@ public class ExitListImplTest {
   public void testMultipleOldExitAddresses() throws Exception {
     ExitListImpl result = new ExitListImpl(
         (tordnselAnnotation + multiExitAddressInput)
-        .getBytes("US-ASCII"), null, fileName, false);
+        .getBytes("US-ASCII"), null, fileName);
     assertTrue("Unrecognized lines: " + result.getUnrecognizedLines(),
         result.getUnrecognizedLines().isEmpty());
-    assertEquals("Found: " + result.getExitListEntries(),
-        3, result.getExitListEntries().size());
+    assertEquals("Found: " + result.getEntries(),
+        3, result.getEntries().size());
     Map<String, Long> testMap = new HashMap();
     testMap.put("81.7.17.171", 1441044592000L);
     testMap.put("81.7.17.172", 1441044652000L);
     testMap.put("81.7.17.173", 1441044712000L);
-    for (ExitListEntry ele : result.getExitListEntries()) {
+    for (ExitList.Entry ele : result.getEntries()) {
       Map<String, Long> map = ele.getExitAddresses();
       assertEquals("Found: " + map, 1, map.size());
       Map.Entry<String, Long> ea = map.entrySet().iterator().next();
@@ -68,7 +68,7 @@ public class ExitListImplTest {
   public void testMultipleExitAddresses() throws Exception {
     ExitListImpl result = new ExitListImpl(
         (tordnselAnnotation + multiExitAddressInput)
-        .getBytes("US-ASCII"), null, fileName, false);
+        .getBytes("US-ASCII"), null, fileName);
     assertTrue("Unrecognized lines: " + result.getUnrecognizedLines(),
         result.getUnrecognizedLines().isEmpty());
     Map<String, Long> map = result.getEntries()
@@ -84,7 +84,7 @@ public class ExitListImplTest {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("Missing 'ExitAddress' line in exit list entry.");
     new ExitListImpl((tordnselAnnotation + insufficientInput[0])
-        .getBytes("US-ASCII"), null, fileName, false);
+        .getBytes("US-ASCII"), null, fileName);
   }
 
   @Test
@@ -92,7 +92,7 @@ public class ExitListImplTest {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("Missing 'Published' line in exit list entry.");
     new ExitListImpl((tordnselAnnotation + insufficientInput[1])
-        .getBytes("US-ASCII"), null, fileName, false);
+        .getBytes("US-ASCII"), null, fileName);
   }
 
   private static final String tordnselAnnotation = "@type tordnsel 1.0\n";

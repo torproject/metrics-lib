@@ -30,7 +30,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.fileName = fileName;
-      return sb.buildStatus(true);
+      return sb.buildStatus();
     }
 
     private String publishedLine = "published 2015-11-21 17:39:36";
@@ -40,7 +40,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.publishedLine = line;
-      return sb.buildStatus(true);
+      return sb.buildStatus();
     }
 
     private String flagThresholdsLine = "flag-thresholds "
@@ -54,7 +54,7 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.flagThresholdsLine = line;
-      return sb.buildStatus(true);
+      return sb.buildStatus();
     }
 
     private List<String> statusEntries = new ArrayList<>();
@@ -62,23 +62,21 @@ public class BridgeNetworkStatusTest {
     private String unrecognizedHeaderLine = null;
 
     protected static BridgeNetworkStatus
-        createWithUnrecognizedHeaderLine(String line,
-        boolean failUnrecognizedDescriptorLines)
+        createWithUnrecognizedHeaderLine(String line)
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.unrecognizedHeaderLine = line;
-      return sb.buildStatus(failUnrecognizedDescriptorLines);
+      return sb.buildStatus();
     }
 
     private String unrecognizedStatusEntryLine = null;
 
     protected static BridgeNetworkStatus
-        createWithUnrecognizedStatusEntryLine(String line,
-        boolean failUnrecognizedDescriptorLines)
+        createWithUnrecognizedStatusEntryLine(String line)
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.unrecognizedStatusEntryLine = line;
-      return sb.buildStatus(failUnrecognizedDescriptorLines);
+      return sb.buildStatus();
     }
 
     private StatusBuilder() {
@@ -95,13 +93,10 @@ public class BridgeNetworkStatusTest {
       return sb.toString().getBytes();
     }
 
-    private BridgeNetworkStatus buildStatus(
-        boolean failUnrecognizedDescriptorLines)
-        throws DescriptorParseException {
+    private BridgeNetworkStatus buildStatus() throws DescriptorParseException {
       byte[] statusBytes = this.buildStatusBytes();
       return new BridgeNetworkStatusImpl(statusBytes,
-          new int[] { 0, statusBytes.length }, null, this.fileName,
-          failUnrecognizedDescriptorLines);
+          new int[] { 0, statusBytes.length }, null, this.fileName);
     }
 
     private void appendHeader(StringBuilder sb) {
@@ -129,7 +124,7 @@ public class BridgeNetworkStatusTest {
   @Test
   public void testSampleStatus() throws DescriptorParseException {
     StatusBuilder sb = new StatusBuilder();
-    BridgeNetworkStatus status = sb.buildStatus(true);
+    BridgeNetworkStatus status = sb.buildStatus();
     assertEquals(1448127576000L, status.getPublishedMillis());
     assertEquals(3105080L, status.getStableUptime());
     assertEquals(2450615L, status.getStableMtbf());
