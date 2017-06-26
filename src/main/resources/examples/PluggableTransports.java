@@ -16,23 +16,18 @@ public class PluggableTransports {
     SortedMap<String, Integer> countedTransports = new TreeMap<>();
 
     DescriptorReader descriptorReader = DescriptorSourceFactory.createDescriptorReader();
-    descriptorReader.addDirectory(new File("descriptors/recent/bridge-descriptors/extra-infos"));
-    Iterator<DescriptorFile> descriptorFiles = descriptorReader.readDescriptors();
-    while (descriptorFiles.hasNext()) {
-      DescriptorFile descriptorFile = descriptorFiles.next();
-      for (Descriptor descriptor : descriptorFile.getDescriptors()) {
-        if (!(descriptor instanceof BridgeExtraInfoDescriptor)) {
-          continue;
-        }
-        BridgeExtraInfoDescriptor extraInfo = (BridgeExtraInfoDescriptor) descriptor;
-        String fingerprint = extraInfo.getFingerprint();
-        if (observedFingerprints.add(fingerprint)) {
-          for (String transport : extraInfo.getTransports()) {
-            if (countedTransports.containsKey(transport)) {
-              countedTransports.put(transport, 1 + countedTransports.get(transport));
-            } else {
-              countedTransports.put(transport, 1);
-            }
+    for (Descriptor descriptor : descriptorReader.readDescriptors(new File("descriptors/recent/bridge-descriptors/extra-infos"))) {
+      if (!(descriptor instanceof BridgeExtraInfoDescriptor)) {
+        continue;
+      }
+      BridgeExtraInfoDescriptor extraInfo = (BridgeExtraInfoDescriptor) descriptor;
+      String fingerprint = extraInfo.getFingerprint();
+      if (observedFingerprints.add(fingerprint)) {
+        for (String transport : extraInfo.getTransports()) {
+          if (countedTransports.containsKey(transport)) {
+            countedTransports.put(transport, 1 + countedTransports.get(transport));
+          } else {
+            countedTransports.put(transport, 1);
           }
         }
       }

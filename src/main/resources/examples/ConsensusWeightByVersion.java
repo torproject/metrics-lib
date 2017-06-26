@@ -19,35 +19,26 @@ public class ConsensusWeightByVersion {
 
     // Read descriptors from disk.
     DescriptorReader descriptorReader = DescriptorSourceFactory.createDescriptorReader();
-
-    // Add the directory with descriptors to the descriptor reader.
-    descriptorReader.addDirectory(new File("descriptors/recent/relay-descriptors/consensuses"));
-    Iterator<DescriptorFile> descriptorFiles = descriptorReader.readDescriptors();
-    while (descriptorFiles.hasNext()) { // Iterate over all descriptor files found.
-      DescriptorFile descriptorFile = descriptorFiles.next();
-
-      // Now, iterate over the descriptors contained in the file.
-      for (Descriptor descriptor : descriptorFile.getDescriptors()) {
-        if (!(descriptor instanceof RelayNetworkStatusConsensus)) {
-          // We're only interested in consensuses.
+    for (Descriptor descriptor : descriptorReader.readDescriptors(new File("descriptors/recent/relay-descriptors/consensuses"))) {
+      if (!(descriptor instanceof RelayNetworkStatusConsensus)) {
+        // We're only interested in consensuses.
+        continue;
+      }
+      RelayNetworkStatusConsensus consensus = (RelayNetworkStatusConsensus) descriptor;
+      for (NetworkStatusEntry entry : consensus.getStatusEntries().values()) {
+        String version = entry.getVersion();
+        if (!version.startsWith("Tor ") || version.length() < 9) {
+          // We're only interested in a.b.c type versions for this example.
           continue;
         }
-        RelayNetworkStatusConsensus consensus = (RelayNetworkStatusConsensus) descriptor;
-        for (NetworkStatusEntry entry : consensus.getStatusEntries().values()) {
-          String version = entry.getVersion();
-          if (!version.startsWith("Tor ") || version.length() < 9) {
-            // We're only interested in a.b.c type versions for this example.
-            continue;
-          }
-          // Remove the 'Tor ' prefix and anything starting at the patch level.
-          version = version.substring(4, 9);
-          long bandwidth = entry.getBandwidth();
-          totalBandwidth += bandwidth;
-          if (bandwidthByVersion.containsKey(version)) {
-            bandwidthByVersion.put(version, bandwidth + bandwidthByVersion.get(version));
-          } else {
-            bandwidthByVersion.put(version, bandwidth);
-          }
+        // Remove the 'Tor ' prefix and anything starting at the patch level.
+        version = version.substring(4, 9);
+        long bandwidth = entry.getBandwidth();
+        totalBandwidth += bandwidth;
+        if (bandwidthByVersion.containsKey(version)) {
+          bandwidthByVersion.put(version, bandwidth + bandwidthByVersion.get(version));
+        } else {
+          bandwidthByVersion.put(version, bandwidth);
         }
       }
     }

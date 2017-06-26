@@ -97,3 +97,9 @@ The Metrics website has a tutorial for getting started with metrics-lib:
 
 https://metrics.torproject.org/metrics-lib.html
 
+The examples explained in the tutorials are available as source code in
+
+```
+src/main/resources/examples/
+```
+
