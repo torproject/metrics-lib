@@ -89,6 +89,7 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
           if (this.unrecognizedLines == null) {
             this.unrecognizedLines = new ArrayList<>();
           }
+          this.unrecognizedLines.add(line);
       }
     }
   }

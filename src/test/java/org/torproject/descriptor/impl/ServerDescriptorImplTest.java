@@ -315,8 +315,7 @@ public class ServerDescriptorImplTest {
     private byte[] nonAsciiLineBytes = null;
 
     private static ServerDescriptor createWithNonAsciiLineBytes(
-        byte[] lineBytes, boolean failUnrecognizedDescriptorLines)
-            throws DescriptorParseException {
+        byte[] lineBytes) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.nonAsciiLineBytes = lineBytes;
       return db.buildDescriptor();
@@ -1558,8 +1557,7 @@ public class ServerDescriptorImplTest {
         0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x2d,       // "allow-"
         0x73, 0x69, 0x6e, 0x67, 0x6c, 0x65, 0x2d, // "single-"
         0x68, 0x6f, 0x70, 0x2d,                   // "hop-"
-        0x65, 0x78, 0x69, 0x74, 0x73 },           // "exits" (no newline)
-        false);
+        0x65, 0x78, 0x69, 0x74, 0x73 });          // "exits" (no newline)
   }
 
   @Test

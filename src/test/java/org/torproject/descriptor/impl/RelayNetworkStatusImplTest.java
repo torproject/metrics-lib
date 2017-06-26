@@ -50,14 +50,14 @@ public class RelayNetworkStatusImplTest {
     byte[] statusBytes = (validAnnotation + invalidHeader + validFooter)
         .getBytes();
     new RelayNetworkStatusImpl(statusBytes, new int[] { 0, statusBytes.length },
-        null, true);
+        null);
   }
 
   @Test
   public void testValidHeader() throws DescriptorParseException {
     byte[] statusBytes = validStatus.getBytes();
     RelayNetworkStatusImpl rnsi = new RelayNetworkStatusImpl(statusBytes,
-        new int[] { 0, statusBytes.length }, null, true);
+        new int[] { 0, statusBytes.length }, null);
     assertEquals(rnsi.getContactLine(),
         "1024R/8D56913D Alex de Joode <adejoode@sabotage.org>");
   }

@@ -16,8 +16,8 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
     implements BridgePoolAssignment {
 
   protected BridgePoolAssignmentImpl(byte[] rawDescriptorBytes,
-      int[] offsetAndlength, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+      int[] offsetAndlength, File descriptorFile)
+      throws DescriptorParseException {
     super(rawDescriptorBytes, offsetAndlength, descriptorFile, false);
     this.parseDescriptorBytes();
     this.checkExactlyOnceKeys(EnumSet.of(Key.BRIDGE_POOL_ASSIGNMENT));

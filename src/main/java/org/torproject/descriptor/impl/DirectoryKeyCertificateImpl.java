@@ -16,8 +16,8 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     implements DirectoryKeyCertificate {
 
   protected DirectoryKeyCertificateImpl(byte[] rawDescriptorBytes,
-      int[] offsetAndLength, File descriptorFile,
-      boolean failUnrecognizedDescriptorLines) throws DescriptorParseException {
+      int[] offsetAndLength, File descriptorFile)
+      throws DescriptorParseException {
     super(rawDescriptorBytes, offsetAndLength, descriptorFile, false);
     this.parseDescriptorBytes();
     this.calculateDigestSha1Hex(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP,

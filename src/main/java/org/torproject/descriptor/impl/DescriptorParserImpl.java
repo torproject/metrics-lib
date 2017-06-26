@@ -20,18 +20,11 @@ import java.util.List;
 public class DescriptorParserImpl implements DescriptorParser {
 
   @Override
-  public List<Descriptor> parseDescriptors(
-      byte[] rawDescriptorBytes, String fileName)
-      throws DescriptorParseException {
-    return this.parseDescriptors(rawDescriptorBytes, null, fileName, false);
-  }
-
-  @Override
   public Iterable<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
       File descriptorFile, String fileName) {
     try {
-      return this.parseDescriptors(rawDescriptorBytes, descriptorFile, fileName,
-          true);
+      return this.detectTypeAndParseDescriptors(rawDescriptorBytes,
+          descriptorFile, fileName);
     } catch (DescriptorParseException e) {
       /* Looks like we attempted to parse the whole raw descriptor bytes at once
        * below and ran into a parse issue. */
@@ -42,9 +35,9 @@ public class DescriptorParserImpl implements DescriptorParser {
     }
   }
 
-  private List<Descriptor> parseDescriptors(
-      byte[] rawDescriptorBytes, File descriptorFile, String fileName,
-      boolean includeUnparseableDescriptors) throws DescriptorParseException {
+  private List<Descriptor> detectTypeAndParseDescriptors(
+      byte[] rawDescriptorBytes, File descriptorFile, String fileName)
+      throws DescriptorParseException {
     byte[] first100Chars = new byte[Math.min(100,
         rawDescriptorBytes.length)];
     System.arraycopy(rawDescriptorBytes, 0, first100Chars, 0,

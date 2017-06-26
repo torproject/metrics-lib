@@ -5,6 +5,7 @@ package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
 
+import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 
 import org.junit.Rule;
@@ -39,8 +40,12 @@ public class DescriptorParserImplTest {
   public void testAnnotation() throws Exception {
     TestDescriptor des = makeTestDesc(MICRO.getBytes());
     DescriptorParserImpl dpi = new DescriptorParserImpl();
-    assertEquals(1,
-        dpi.parseDescriptors(des.getRawDescriptorBytes(), "dummy.file").size());
+    int parsedDescriptors = 0;
+    for (Descriptor d : dpi.parseDescriptors(des.getRawDescriptorBytes(), null,
+        "dummy.file")) {
+      parsedDescriptors++;
+    }
+    assertEquals(1, parsedDescriptors);
   }
 
   @Test

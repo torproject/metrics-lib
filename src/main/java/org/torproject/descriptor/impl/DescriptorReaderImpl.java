@@ -4,7 +4,6 @@
 package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.Descriptor;
-import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DescriptorParser;
 import org.torproject.descriptor.DescriptorReader;
 
@@ -24,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -37,12 +35,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
   private static Logger log = LoggerFactory.getLogger(
       DescriptorReaderImpl.class);
   private boolean hasStartedReading = false;
-
-  private List<File> directories = new ArrayList<>();
-
-  private List<File> tarballs = new ArrayList<>();
-
-  private File autoSaveHistoryFile;
 
   private File manualSaveHistoryFile;
 
@@ -84,8 +76,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
     return new TreeMap<>(this.reader.parsedFilesAfter);
   }
 
-  private Integer maxDescriptorFilesInQueue = null;
-
   private int maxDescriptorsInQueue = 100;
 
   @Override
@@ -108,8 +98,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
     this.hasStartedReading = true;
     BlockingIteratorImpl<Descriptor> descriptorQueue =
         new BlockingIteratorImpl<>(this.maxDescriptorsInQueue);
-    this.reader = new DescriptorReaderRunnable(
-        descriptorFiles, descriptorQueue, this.autoSaveHistoryFile,
+    this.reader = new DescriptorReaderRunnable(descriptorFiles, descriptorQueue,
         this.manualSaveHistoryFile, this.excludedFiles);
     Thread readerThread = new Thread(this.reader);
     readerThread.setDaemon(true);
@@ -130,10 +119,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private File[] descriptorFiles;
 
-    private List<File> directories;
-
-    private List<File> tarballs;
-
     private BlockingIteratorImpl<Descriptor> descriptorQueue;
 
     private File autoSaveHistoryFile;
@@ -146,16 +131,13 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private SortedMap<String, Long> parsedFilesAfter = new TreeMap<>();
 
-    private boolean failUnrecognizedDescriptorLines;
-
     private DescriptorParser descriptorParser;
 
     private boolean hasFinishedReading = false;
 
     private DescriptorReaderRunnable(File[] descriptorFiles,
         BlockingIteratorImpl<Descriptor> descriptorQueue,
-        File autoSaveHistoryFile, File manualSaveHistoryFile,
-        SortedMap<String, Long> excludedFiles) {
+        File manualSaveHistoryFile, SortedMap<String, Long> excludedFiles) {
       this.descriptorFiles = descriptorFiles;
       this.descriptorQueue = descriptorQueue;
       this.autoSaveHistoryFile = autoSaveHistoryFile;
@@ -163,7 +145,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
       if (excludedFiles != null) {
         this.excludedFilesBefore = excludedFiles;
       }
-      this.failUnrecognizedDescriptorLines = failUnrecognizedDescriptorLines;
       this.descriptorParser = new DescriptorParserImpl();
     }
 
@@ -172,8 +153,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
         this.readOldHistory(this.autoSaveHistoryFile);
         this.readOldHistory(this.manualSaveHistoryFile);
         this.readDescriptorFiles();
-        this.readDescriptors();
-        this.readTarballs();
         this.hasFinishedReading = true;
       } catch (Throwable t) {
         log.error("Bug: uncaught exception or error while "
@@ -321,97 +300,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
           rawDescriptorBytes, file, file.getName())) {
         this.descriptorQueue.add(descriptor);
       }
-    }
-
-    private void readDescriptors() {
-      if (null == this.directories) {
-        return;
-      }
-      for (File directory : this.directories) {
-        if (!directory.exists() || !directory.isDirectory()) {
-          continue;
-        }
-        Stack<File> files = new Stack<>();
-        files.add(directory);
-        boolean abortReading = false;
-        while (!abortReading && !files.isEmpty()) {
-          File file = files.pop();
-          if (file.isDirectory()) {
-            files.addAll(Arrays.asList(file.listFiles()));
-          } else if (file.getName().endsWith(".tar")
-              || file.getName().endsWith(".tar.bz2")
-              || file.getName().endsWith(".tar.xz")) {
-            this.tarballs.add(file);
-          } else {
-            String absolutePath = file.getAbsolutePath();
-            long lastModifiedMillis = file.lastModified();
-            if (this.excludedFilesBefore.containsKey(absolutePath)
-                && this.excludedFilesBefore.get(absolutePath)
-                == lastModifiedMillis) {
-              this.excludedFilesAfter.put(absolutePath,
-                  lastModifiedMillis);
-              continue;
-            }
-            this.parsedFilesAfter.put(absolutePath, lastModifiedMillis);
-          }
-        }
-      }
-    }
-
-    private void readTarballs() {
-      if (null == this.tarballs) {
-        return;
-      }
-      List<File> files = new ArrayList<>(this.tarballs);
-      boolean abortReading = false;
-      while (!abortReading && !files.isEmpty()) {
-        File tarball = files.remove(0);
-        if (!tarball.getName().endsWith(".tar")
-            && !tarball.getName().endsWith(".tar.bz2")
-            && !tarball.getName().endsWith(".tar.xz")) {
-          continue;
-        }
-        String absolutePath = tarball.getAbsolutePath();
-        long lastModifiedMillis = tarball.lastModified();
-        if (this.excludedFilesBefore.containsKey(absolutePath)
-            && this.excludedFilesBefore.get(absolutePath)
-            == lastModifiedMillis) {
-          this.excludedFilesAfter.put(absolutePath, lastModifiedMillis);
-          continue;
-        }
-        this.parsedFilesAfter.put(absolutePath, lastModifiedMillis);
-        try {
-          FileInputStream in = new FileInputStream(tarball);
-          if (in.available() > 0) {
-            TarArchiveInputStream tais = null;
-            if (tarball.getName().endsWith(".tar.bz2")) {
-              tais = new TarArchiveInputStream(
-                  new BZip2CompressorInputStream(in));
-            } else if (tarball.getName().endsWith(".tar.xz")) {
-              tais = new TarArchiveInputStream(
-                  new XZCompressorInputStream(in));
-            } else if (tarball.getName().endsWith(".tar")) {
-              tais = new TarArchiveInputStream(in);
-            }
-            BufferedInputStream bis = new BufferedInputStream(tais);
-            TarArchiveEntry tae = null;
-            while ((tae = tais.getNextTarEntry()) != null) {
-              if (tae.isDirectory()) {
-                continue;
-              }
-            }
-          }
-        } catch (IOException e) {
-          abortReading = true;
-        }
-      }
-    }
-
-    private List<Descriptor> readFile(File file) throws IOException,
-        DescriptorParseException {
-      byte[] rawDescriptorBytes = Files.readAllBytes(file.toPath());
-      return this.descriptorParser.parseDescriptors(rawDescriptorBytes,
-          file.getName());
     }
   }
 }

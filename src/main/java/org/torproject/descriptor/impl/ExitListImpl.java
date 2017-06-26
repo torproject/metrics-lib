@@ -89,6 +89,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
           if (this.unrecognizedLines == null) {
             this.unrecognizedLines = new ArrayList<>();
           }
+          this.unrecognizedLines.add(line);
       }
     }
     /* Parse the last entry. */
@@ -116,8 +117,6 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
   public long getDownloadedMillis() {
     return this.downloadedMillis;
   }
-
-  private Set<ExitList.Entry> oldExitListEntries = new HashSet<>();
 
   private Set<ExitList.Entry> exitListEntries = new HashSet<>();
 

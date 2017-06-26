@@ -20,8 +20,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     implements RelayNetworkStatus {
 
   protected RelayNetworkStatusImpl(byte[] statusBytes, int[] offsetAndLength,
-      File descriptorFile, boolean failUnrecognizedDescriptorLines)
-      throws DescriptorParseException {
+      File descriptorFile) throws DescriptorParseException {
     super(statusBytes, offsetAndLength, descriptorFile, false, true);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.NETWORK_STATUS_VERSION, Key.DIR_SOURCE, Key.FINGERPRINT,

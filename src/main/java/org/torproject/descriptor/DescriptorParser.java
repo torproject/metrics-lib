@@ -24,16 +24,6 @@ import java.util.List;
 public interface DescriptorParser {
 
   /**
-   * Parse descriptors in the given byte array, possibly parsing the
-   * publication time from the file name, depending on the descriptor
-   * type.
-   *
-   * @since 1.0.0
-   */
-  public List<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
-      String fileName) throws DescriptorParseException;
-
-  /**
    * Parse descriptors in the given byte array and return the parsed/unparseable
    * descriptors.
    *

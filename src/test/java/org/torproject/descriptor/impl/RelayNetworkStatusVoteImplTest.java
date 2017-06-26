@@ -470,8 +470,7 @@ public class RelayNetworkStatusVoteImplTest {
     private String unrecognizedHeaderLine = null;
 
     protected static RelayNetworkStatusVote
-        createWithUnrecognizedHeaderLine(String line,
-        boolean failUnrecognizedDescriptorLines)
+        createWithUnrecognizedHeaderLine(String line)
         throws DescriptorParseException {
       VoteBuilder vb = new VoteBuilder();
       vb.unrecognizedHeaderLine = line;
@@ -481,8 +480,7 @@ public class RelayNetworkStatusVoteImplTest {
     private String unrecognizedDirSourceLine = null;
 
     protected static RelayNetworkStatusVote
-        createWithUnrecognizedDirSourceLine(String line,
-        boolean failUnrecognizedDescriptorLines)
+        createWithUnrecognizedDirSourceLine(String line)
         throws DescriptorParseException {
       VoteBuilder vb = new VoteBuilder();
       vb.unrecognizedDirSourceLine = line;
@@ -492,8 +490,7 @@ public class RelayNetworkStatusVoteImplTest {
     private String unrecognizedStatusEntryLine = null;
 
     protected static RelayNetworkStatusVote
-        createWithUnrecognizedStatusEntryLine(String line,
-        boolean failUnrecognizedDescriptorLines)
+        createWithUnrecognizedStatusEntryLine(String line)
         throws DescriptorParseException {
       VoteBuilder vb = new VoteBuilder();
       vb.unrecognizedStatusEntryLine = line;
@@ -503,8 +500,7 @@ public class RelayNetworkStatusVoteImplTest {
     private String unrecognizedFooterLine = null;
 
     protected static RelayNetworkStatusVote
-        createWithUnrecognizedFooterLine(String line,
-        boolean failUnrecognizedDescriptorLines)
+        createWithUnrecognizedFooterLine(String line)
         throws DescriptorParseException {
       VoteBuilder vb = new VoteBuilder();
       vb.unrecognizedFooterLine = line;
@@ -514,8 +510,7 @@ public class RelayNetworkStatusVoteImplTest {
     private String unrecognizedDirectorySignatureLine = null;
 
     protected static RelayNetworkStatusVote
-        createWithUnrecognizedDirectorySignatureLine(String line,
-        boolean failUnrecognizedDescriptorLines)
+        createWithUnrecognizedDirectorySignatureLine(String line)
         throws DescriptorParseException {
       VoteBuilder vb = new VoteBuilder();
       vb.unrecognizedDirectorySignatureLine = line;
@@ -1798,7 +1793,7 @@ public class RelayNetworkStatusVoteImplTest {
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusVote vote = VoteBuilder
-        .createWithUnrecognizedHeaderLine(unrecognizedLine, false);
+        .createWithUnrecognizedHeaderLine(unrecognizedLine);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
@@ -1809,7 +1804,7 @@ public class RelayNetworkStatusVoteImplTest {
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusVote vote = VoteBuilder
-        .createWithUnrecognizedDirSourceLine(unrecognizedLine, false);
+        .createWithUnrecognizedDirSourceLine(unrecognizedLine);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
@@ -1820,7 +1815,7 @@ public class RelayNetworkStatusVoteImplTest {
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
     RelayNetworkStatusVote vote = VoteBuilder
-        .createWithUnrecognizedFooterLine(unrecognizedLine, false);
+        .createWithUnrecognizedFooterLine(unrecognizedLine);
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
