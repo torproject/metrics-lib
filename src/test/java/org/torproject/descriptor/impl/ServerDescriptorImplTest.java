@@ -1675,6 +1675,16 @@ public class ServerDescriptorImplTest {
   }
 
   @Test
+  public void testTunnelledDirServerTypo()
+      throws DescriptorParseException {
+    String tunneledDirServerLine = "tunneled-dir-server";
+    ServerDescriptor descriptor = DescriptorBuilder
+        .createWithTunnelledDirServerLine(tunneledDirServerLine);
+    assertEquals(Arrays.asList(tunneledDirServerLine),
+        descriptor.getUnrecognizedLines());
+  }
+
+  @Test
   public void testTunnelledDirServerTwice()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
@@ -1856,6 +1866,17 @@ public class ServerDescriptorImplTest {
     DescriptorBuilder.createWithEd25519Lines(IDENTITY_ED25519_LINES,
         MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE + "\n"
         + ROUTER_SIG_ED25519_LINE);
+  }
+
+  @Test
+  public void testEd25519FollowedbyUnrecognizedLine()
+      throws DescriptorParseException {
+    String unrecognizedLine = "unrecognized-line 1";
+    ServerDescriptor serverDecriptor = DescriptorBuilder.createWithEd25519Lines(
+        IDENTITY_ED25519_LINES, MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE
+        + "\n" + unrecognizedLine);
+    assertEquals(Arrays.asList(unrecognizedLine),
+        serverDecriptor.getUnrecognizedLines());
   }
 
   private static final String ONION_KEY_CROSSCERT_LINES =

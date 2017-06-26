@@ -4,7 +4,6 @@
 package org.torproject.descriptor;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Descriptor source that parses descriptors from raw descriptor contents.

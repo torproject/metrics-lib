@@ -962,6 +962,16 @@ public class RelayNetworkStatusVoteImplTest {
   }
 
   @Test
+  public void testConsensusMethodTwoLines()
+      throws DescriptorParseException {
+    String consensusMethodLine = "consensus-method 1";
+    RelayNetworkStatusVote vote = VoteBuilder.createWithConsensusMethodsLine(
+        consensusMethodLine + "\n" + consensusMethodLine);
+    assertEquals(Arrays.asList(consensusMethodLine, consensusMethodLine),
+        vote.getUnrecognizedLines());
+  }
+
+  @Test
   public void testPublishedNoLine() throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("Keyword 'published' is contained 0 times, "
@@ -1770,7 +1780,7 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals(signingKeyDigestSha1,
         secondSignature.getSigningKeyDigestSha1Hex());
     assertEquals(signatureSha1 + "\n", secondSignature.getSignature());
-    assertEquals(signingKeyDigestSha1, vote.getSignatures().get(0)
+    assertEquals(signingKeyDigestSha1, vote.getSignatures().get(1)
         .getSigningKeyDigestSha1Hex());
     assertEquals("c0d58c8d3c3695526f6eb5c0d9f8452b2234d303",
         vote.getDigestSha1Hex());
@@ -1789,6 +1799,16 @@ public class RelayNetworkStatusVoteImplTest {
   }
 
   @Test
+  public void testUnrecognizedHeaderLineFail()
+      throws DescriptorParseException {
+    String unrecognizedLine = "unrecognized-line 1";
+    RelayNetworkStatusVote vote = VoteBuilder.createWithUnrecognizedHeaderLine(
+        unrecognizedLine);
+    assertEquals(Arrays.asList(unrecognizedLine),
+        vote.getUnrecognizedLines());
+  }
+
+  @Test
   public void testUnrecognizedHeaderLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1800,6 +1820,16 @@ public class RelayNetworkStatusVoteImplTest {
   }
 
   @Test
+  public void testUnrecognizedDirSourceLineFail()
+      throws DescriptorParseException {
+    String unrecognizedLine = "unrecognized-line 1";
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithUnrecognizedDirSourceLine(unrecognizedLine);
+    assertEquals(Arrays.asList(unrecognizedLine),
+        vote.getUnrecognizedLines());
+  }
+
+  @Test
   public void testUnrecognizedDirSourceLineIgnore()
       throws DescriptorParseException {
     String unrecognizedLine = "unrecognized-line 1";
@@ -1808,6 +1838,16 @@ public class RelayNetworkStatusVoteImplTest {
     List<String> unrecognizedLines = new ArrayList<>();
     unrecognizedLines.add(unrecognizedLine);
     assertEquals(unrecognizedLines, vote.getUnrecognizedLines());
+  }
+
+  @Test
+  public void testUnrecognizedFooterLineFail()
+      throws DescriptorParseException {
+    String unrecognizedLine = "unrecognized-line 1";
+    RelayNetworkStatusVote vote = VoteBuilder.createWithUnrecognizedFooterLine(
+        unrecognizedLine);
+    assertEquals(Arrays.asList(unrecognizedLine),
+        vote.getUnrecognizedLines());
   }
 
   @Test

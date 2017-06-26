@@ -20,8 +20,7 @@ public class DescriptorParserImplTest {
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
-  private TestDescriptor makeTestDesc(byte[] bytes)
-      throws Exception {
+  private TestDescriptor makeTestDesc(byte[] bytes) throws Exception {
     return new TestDescriptor(bytes, new int[]{0, bytes.length});
   }
 
@@ -61,7 +60,7 @@ public class DescriptorParserImplTest {
     this.thrown.expectMessage("'176x.158.53.63' in line 'router UbuntuCore169 "
         + "176x.158.53.63 44583 0 0' is not a valid IPv4 address.");
     DescriptorParserImpl dpi = new DescriptorParserImpl();
-    dpi.parseDescriptor(DEFECT.getBytes(),
+    dpi.parseOneDescriptor(DEFECT.getBytes(),
         new int[]{0, DEFECT.getBytes().length}, null, constructor);
   }
 
