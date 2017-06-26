@@ -2,8 +2,8 @@ classes/
 cobertura.ser
 generated/
 lib/
-descriptor-*.jar
-descriptor-*.tar.gz
+metrics-lib-*.jar
+metrics-lib-*.tar.gz
 .classpath
 .project
 build.properties

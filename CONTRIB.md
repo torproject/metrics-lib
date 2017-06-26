@@ -219,7 +219,7 @@ Sign the produced tarball using GnuPG:
 
 ```
 gpg --detach-sign --armor --local-user 0x4EFD4FDC3F46D41E \
-    descriptor-1.0.0.tar.gz
+    metrics-lib-2.0.0.tar.gz
 ```
 
 Verify the signed tarball, ideally on a different system, as described in
@@ -228,20 +228,20 @@ Verify the signed tarball, ideally on a different system, as described in
 Create a signed Git tag for the new release:
 
 ```
-git tag -s descriptor-1.0.0 -m "DescripTor 1.0.0"
+git tag -s metrics-lib-2.0.0 -m "Tor Metrics Library 2.0.0"
 ```
 
 Push the branch.  Ideally, verify the tag signature by cloning it on
 another system and running the following command:
 
 ```
-git verify-tag descriptor-1.0.0
+git verify-tag metrics-lib-2.0.0
 ```
 
 Upload the tarball and signature file and announce the new version.
 
 Edit `build.xml` again and raise `release.version` to the current release
-plus `-dev`, e.g., `1.0.0-dev`.
+plus `-dev`, e.g., `2.0.0-dev`.
 
 Development
 -----------

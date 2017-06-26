@@ -7,6 +7,7 @@
  * Minor changes
    - Replace custom ImplementationNotAccessibleException thrown by
      DescriptorSourceFactory with generic RuntimeException.
+   - Rename jar files and release tarball to start with "metrics-lib".
 
 
 # Changes in version 1.9.0 - 2017-06-21

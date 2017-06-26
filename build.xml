@@ -4,13 +4,13 @@
        <!ENTITY base SYSTEM "src/build/java/base.xml">
 ]>
 
-<project default="usage" name="descriptor" basedir=".">
+<project default="usage" name="metrics-lib" basedir=".">
 
   <property name="release.version" value="1.9.0-dev" />
   <property name="javadoc-title" value="Tor Metrics Library API Documentation"/>
   <property name="javadoc-excludes" value="**/impl/** **/index/**" />
   <property name="implementation-title" value="Tor Metrics Library" />
-  <property name="name" value="descriptor" />
+  <property name="name" value="metrics-lib" />
   <property name="jarpatternprop" value="empty" />
 
   <patternset id="runtime" >

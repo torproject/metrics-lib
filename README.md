@@ -43,14 +43,17 @@ verification process by example.
 Download the release tarball and the separate signature file:
 
 ```
-wget https://dist.torproject.org/descriptor/1.0.0/descriptor-1.0.0.tar.gz
-wget https://dist.torproject.org/descriptor/1.0.0/descriptor-1.0.0.tar.gz.asc
+wget https://dist.torproject.org/metrics-lib/2.0.0/metrics-lib-2.0.0.tar.gz
+wget https://dist.torproject.org/metrics-lib/2.0.0/metrics-lib-2.0.0.tar.gz.asc
 ```
+
+(Note that earlier tarballs were named descriptor-VERSION.tar.gz and could
+be found in https://dist.torproject.org/descriptor/.)
 
 Attempt to verify the signature on the tarball:
 
 ```
-gpg --verify descriptor-1.0.0.tar.gz.asc
+gpg --verify metrics-lib-2.0.0.tar.gz.asc
 ```
 
 If the signature cannot be verified due to the public key of the signer
@@ -59,7 +62,7 @@ servers and retry:
 
 ```
 gpg --keyserver pgp.mit.edu --recv-key 0x4EFD4FDC3F46D41E
-gpg --verify descriptor-1.0.0.tar.gz.asc
+gpg --verify metrics-lib-2.0.0.tar.gz.asc
 ```
 
 If the signature still cannot be verified, something is wrong!
@@ -85,8 +88,8 @@ Verify the signatures on the contained .jar files using Java's jarsigner
 tool:
 
 ```
-jarsigner -verify descriptor-1.0.0.jar
-jarsigner -verify descriptor-1.0.0-sources.jar
+jarsigner -verify metrics-lib-2.0.0.jar
+jarsigner -verify metrics-lib-2.0.0-sources.jar
 ```
 
 
