@@ -1,8 +1,9 @@
-# Changes in version 2.0.0 - 2017-06-??
+# Changes in version 2.0.0 - 2017-06-28
 
  * Major changes
    - Always use UTF-8 as charset rather than using the platform's
      default charset.
+   - Remove all code that was deprecated in 1.x versions.
 
  * Minor changes
    - Replace custom ImplementationNotAccessibleException thrown by
