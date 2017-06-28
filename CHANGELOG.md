@@ -4,6 +4,9 @@
    - Always use UTF-8 as charset rather than using the platform's
      default charset.
    - Remove all code that was deprecated in 1.x versions.
+   - Remove previously non-deprecated but internally unused
+     parseDescriptors(byte[], String)) method that returned a List and
+     threw DescriptorParseException.
 
  * Minor changes
    - Replace custom ImplementationNotAccessibleException thrown by
