@@ -1879,8 +1879,9 @@ public class ExtraInfoDescriptorImplTest {
   public void testBridgeIpsNonAsciiKeyword()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized character in keyword "
-        + "'�bridge-ips' in line '�bridge-ips'.");
+    this.thrown.expectMessage(Matchers.allOf(
+        Matchers.containsString("Unrecognized character in keyword "),
+        Matchers.containsString("bridge-ips'")));
     DescriptorBuilder.createWithNonAsciiLineBytes(new byte[] {
         0x14, (byte) 0xfe, 0x18,                  // non-ascii chars
         0x62, 0x72, 0x69, 0x64, 0x67, 0x65, 0x2d, // "bridge-"

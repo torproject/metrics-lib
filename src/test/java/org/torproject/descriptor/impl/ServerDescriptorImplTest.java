@@ -14,6 +14,7 @@ import org.torproject.descriptor.BridgeServerDescriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.ServerDescriptor;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -1549,9 +1550,9 @@ public class ServerDescriptorImplTest {
   public void testAllowSingleHopExitsNonAsciiKeyword()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
-    this.thrown.expectMessage("Unrecognized character in keyword "
-        + "'�allow-single-hop-exits' in line "
-        + "'�allow-single-hop-exits'.");
+    this.thrown.expectMessage(Matchers.allOf(
+        Matchers.containsString("Unrecognized character in keyword "),
+        Matchers.containsString("allow-single-hop-exits'")));
     DescriptorBuilder.createWithNonAsciiLineBytes(new byte[] {
         0x14, (byte) 0xfe, 0x18,                  // non-ascii chars
         0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x2d,       // "allow-"
