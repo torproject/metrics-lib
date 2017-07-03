@@ -1,3 +1,11 @@
+# Changes in version 2.?.? - 2017-??-??
+
+ * Major changes
+   - Update dependencies to versions available in Debian stretch:
+     Apache Commons Compress 1.13, Apache Commons Lang 3.5, Google
+     Gson 2.4, JUnit 4.12, Logback 1.1.9, SLF4J 1.7.22, and XZ 1.6.
+
+
 # Changes in version 2.0.0 - 2017-06-28
 
  * Major changes
