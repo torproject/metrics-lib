@@ -49,7 +49,7 @@ public class TorperfResultImpl extends DescriptorImpl
       } else {
         /* XXX21932 */
         parsedDescriptors.add(new TorperfResultImpl(
-            (typeAnnotation + line).getBytes(StandardCharsets.UTF_8),
+            (typeAnnotation + line + "\n").getBytes(StandardCharsets.UTF_8),
             descriptorFile));
         typeAnnotation = "";
       }
