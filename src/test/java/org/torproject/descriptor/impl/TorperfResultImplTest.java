@@ -6,12 +6,14 @@ package org.torproject.descriptor.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class TorperfResultImplTest {
@@ -61,6 +63,19 @@ public class TorperfResultImplTest {
         ((TorperfResultImpl)(result.get(1))).getAnnotations().size());
     assertEquals("Expected one annotation.", 1,
         ((TorperfResultImpl)(result.get(2))).getAnnotations().size());
+  }
+
+  @Test
+  public void testTrailingNewlinesRetained() throws Exception {
+    byte[] asciiBytes = (torperfAnnotation + input
+        + torperfAnnotation + input).getBytes("US-ASCII");
+    List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
+        asciiBytes, null);
+    for (Descriptor descriptor : result) {
+      assertTrue("Expected trailing newline.",
+          new String(descriptor.getRawDescriptorBytes(),
+          StandardCharsets.US_ASCII).endsWith("\n"));
+    }
   }
 
   private static long[] deciles = new long[] {
