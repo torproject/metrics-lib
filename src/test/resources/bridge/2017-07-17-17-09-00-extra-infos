@@ -1,0 +1,130 @@
+@type bridge-extra-info 1.3
+extra-info GreenBelt 2D79397FBBF3B020132F8C14CAB167A4D0D020F8
+master-key-ed25519 JVSrRlvB8UUP1XWS1K7QgI2wAFNm/i3tWuAMucoyK0M
+published 2017-07-17 14:16:22
+write-history 2017-07-17 13:48:29 (14400 s) 105549514752,108332138496,109085942784,87797943296,114002153472,114446906368
+read-history 2017-07-17 13:48:29 (14400 s) 103141830656,106632499200,107311380480,86068060160,111722652672,111907606528
+dirreq-write-history 2017-07-17 13:48:29 (14400 s) 2419212288,1711367168,1792053248,1741422592,2294780928,2548772864
+dirreq-read-history 2017-07-17 13:48:29 (14400 s) 111327232,101064704,67574784,67384320,103692288,114972672
+geoip-db-digest 1317BB3525E85E01FB34A89E04CE549AC23D07BD
+geoip6-db-digest 865048C69BEC02B37268BFBAD66D9729B21CFCF5
+dirreq-stats-end 2017-07-16 18:08:47 (86400 s)
+dirreq-v3-ips ru=1128,us=1128,ua=936,tr=632,de=280,gb=280,ir=192,eg=184,by=176,in=168,jp=128,br=112,fr=112,au=104,ca=104,sa=88,nl=80,es=72,id=64,it=64,mx=64,bd=56,ae=48,cn=48,ph=48,ar=40,at=32,ch=32,dz=32,fi=32,hk=32,my=32,pl=32,se=32,sg=32,za=32,??=24,co=24,hu=24,ie=24,il=24,kr=24,ma=24,pk=24,ro=24,ve=24,be=16,bg=16,cl=16,cz=16,jo=16,kz=16,ng=16,no=16,nz=16,om=16,pe=16,pt=16,qa=16,th=16,tw=16,uz=16,vn=16,af=8,al=8,ao=8,az=8,ba=8,bh=8,bj=8,bo=8,bs=8,cd=8,ci=8,ck=8,cm=8,cr=8,cu=8,cy=8,dk=8,ec=8,ee=8,et=8,fj=8,ga=8,gh=8,gp=8,gr=8,gt=8,hn=8,hr=8,ht=8,iq=8,is=8,ke=8,kg=8,kh=8,kn=8,kw=8,ky=8,lb=8,lk=8,lt=8,lu=8,lv=8,ly=8,md=8,mg=8,mk=8,ml=8,mn=8,mt=8,mv=8,na=8,np=8,pg=8,pr=8,ps=8,py=8,re=8,rs=8,rw=8,sc=8,sd=8,si=8,sk=8,sv=8,sy=8,td=8,tj=8,tm=8,tn=8,tt=8,ug=8,uy=8,ye=8,zw=8
+dirreq-v3-reqs us=2008,ru=1744,ua=1480,tr=896,gb=480,de=448,eg=256,in=256,by=240,ir=240,jp=232,au=176,br=176,ca=168,fr=168,sa=144,mx=128,es=120,nl=120,id=88,ph=88,bd=80,it=80,ae=72,cn=72,ar=64,sg=64,za=64,ch=56,dz=56,my=56,ve=56,fi=48,kr=48,pl=48,se=48,??=40,hk=40,il=40,ma=40,at=32,be=32,bg=32,co=32,hu=32,nz=32,ro=32,th=32,cl=24,cz=24,ie=24,ke=24,kz=24,lu=24,ng=24,om=24,pk=24,rs=24,tw=24,vn=24,al=16,bo=16,ci=16,cr=16,gh=16,hn=16,is=16,jo=16,no=16,np=16,pe=16,pt=16,qa=16,sk=16,tm=16,uy=16,uz=16,ye=16,af=8,ao=8,az=8,ba=8,bh=8,bj=8,bs=8,cd=8,ck=8,cm=8,cu=8,cy=8,dk=8,ec=8,ee=8,et=8,fj=8,ga=8,gp=8,gr=8,gt=8,hr=8,ht=8,iq=8,kg=8,kh=8,kn=8,kw=8,ky=8,lb=8,lk=8,lt=8,lv=8,ly=8,md=8,mg=8,mk=8,ml=8,mn=8,mt=8,mv=8,na=8,pg=8,pr=8,ps=8,py=8,re=8,rw=8,sc=8,sd=8,si=8,sv=8,sy=8,td=8,tj=8,tn=8,tt=8,ug=8,zw=8
+dirreq-v3-resp ok=11456,not-enough-sigs=0,unavailable=0,not-found=0,not-modified=11568,busy=0
+dirreq-v3-direct-dl complete=0,timeout=0,running=0
+dirreq-v3-tunneled-dl complete=8848,timeout=2584,running=20,min=2138,d1=57861,d2=114568,q1=139291,d3=165778,d4=213175,md=253672,d6=294514,d7=343736,q3=373096,d8=409437,d9=559533,max=4798984
+transport obfs4
+bridge-stats-end 2017-07-16 18:08:59 (86400 s)
+bridge-ips ru=6544,ua=5080,us=4792,tr=3632,gb=1488,de=1480,ir=1232,in=1104,by=1024,eg=992,fr=656,jp=560,br=472,ca=464,nl=424,au=416,sa=416,it=400,id=304,es=288,mx=280,ae=272,dz=224,bd=216,cn=200,pl=192,ph=160,se=160,my=152,ro=144,at=136,fi=136,kr=136,ar=128,ch=128,cz=128,sg=128,??=120,za=120,hk=112,pk=112,be=96,co=96,pt=96,kz=88,ve=88,hu=80,ie=80,il=80,ma=80,ye=80,cl=72,ng=72,no=72,th=72,bg=64,dk=64,jo=64,uz=64,gr=56,nz=56,om=56,qa=56,vn=56,tw=48,et=40,ke=40,lu=40,ly=40,pe=40,rs=40,tn=40,az=32,ec=32,gh=32,kw=32,sk=32,al=24,ba=24,bo=24,cr=24,ee=24,is=24,lb=24,lk=24,lt=24,lv=24,md=24,mn=24,np=24,ps=24,sd=24,si=24,tm=24,uy=24,af=16,bh=16,ci=16,do=16,ge=16,iq=16,kg=16,pr=16,re=16,sy=16,tj=16,tz=16,am=8,ao=8,as=8,aw=8,bb=8,bj=8,bm=8,bn=8,bs=8,bw=8,cd=8,cg=8,ck=8,cm=8,cu=8,cy=8,dj=8,er=8,fj=8,ga=8,gf=8,gn=8,gp=8,gt=8,gu=8,gy=8,hn=8,hr=8,ht=8,jm=8,kh=8,kn=8,ky=8,la=8,lr=8,ls=8,me=8,mg=8,mh=8,mk=8,ml=8,mm=8,mo=8,mq=8,mr=8,mt=8,mu=8,mv=8,mz=8,na=8,ne=8,ni=8,pa=8,pf=8,pg=8,py=8,rw=8,sc=8,sn=8,so=8,sr=8,ss=8,sv=8,td=8,tg=8,tt=8,ug=8,vc=8,vi=8,vu=8,zm=8,zw=8
+bridge-ip-versions v4=37808,v6=0
+bridge-ip-transports <OR>=8,obfs4=37808
+router-digest-sha256 NB4cM2alvoNeaOX4cYheUln/8XIDacLKjDGIlhNGZSg
+router-digest 628E6990DC129C3AC99CF592EAF2A028F244AD1F
+@type bridge-extra-info 1.3
+extra-info vvput 2AA50DFC2446BDFB26204C23EDB1ED21736C6450
+published 2017-07-17 14:18:20
+write-history 2017-07-17 13:12:38 (14400 s) 478208,567296,497664,568320,449536,525312
+read-history 2017-07-17 13:12:38 (14400 s) 5647360,6864896,4580352,5794816,5284864,5654528
+dirreq-write-history 2017-07-17 04:46:41 (14400 s) 0,0,0,0,8192,7168
+dirreq-read-history 2017-07-17 04:46:41 (14400 s) 0,0,0,0,0,0
+geoip-db-digest C1EB5237F2FBAF63381D8551157F13D12EFCCA25
+geoip6-db-digest 1F99B6B0EC78E9DB34D61AE7E0FC261D558E8E5D
+dirreq-stats-end 2017-07-17 00:46:45 (86400 s)
+dirreq-v3-ips 
+dirreq-v3-reqs 
+dirreq-v3-resp ok=0,not-enough-sigs=0,unavailable=0,not-found=0,not-modified=0,busy=0
+dirreq-v3-direct-dl complete=0,timeout=0,running=0
+dirreq-v3-tunneled-dl complete=0,timeout=0,running=0
+transport obfs3
+bridge-stats-end 2017-07-17 00:48:31 (86400 s)
+bridge-ips us=8
+bridge-ip-versions v4=8,v6=0
+bridge-ip-transports <OR>=8
+router-digest 99EE538101C1FAD637283271044C619E69F33927
+@type bridge-extra-info 1.3
+extra-info Unnamed 68442E1B246A3DE363E5EFA52FE2EFCD12188E91
+master-key-ed25519 ORrTGU5HLUWpuxsNWqZYgmoUHOMdc34by/CxB/pgZYs
+published 2017-07-17 14:18:38
+write-history 2017-07-17 10:28:11 (14400 s) 316416,3081216,561152,1152000,1223680,431104
+read-history 2017-07-17 10:28:11 (14400 s) 3095552,9388032,5097472,7372800,8696832,4204544
+dirreq-write-history 2017-07-16 14:48:52 (14400 s) 489472,1843200,0,691200,978944,0
+dirreq-read-history 2017-07-16 14:48:52 (14400 s) 0,86016,0,0,100352,0
+geoip-db-digest AFD609025B66305AD9FA8E0B15AF4F2BC82271F1
+geoip6-db-digest A69FD14ACE46EE695F589ACE0EB7B915285B51B4
+router-digest-sha256 T/w7NQSKelIGeBMxHvaqN1yciV014UPlxiqIzh6xW4Q
+router-digest 6C297C0FED6A298BFF7955E6B7AE4062F315A264
+@type bridge-extra-info 1.3
+extra-info surgednonmilitan 67FE03ECF1A963643B4B5545829B02B5D80E4F06
+master-key-ed25519 v60t0gbplH0EH7x6B/LADtPaVsMySHjfMum6KM5f66M
+published 2017-07-17 14:19:31
+write-history 2017-07-17 14:18:10 (14400 s) 5555200,1520640,1858560,2085888,3042304,2745344
+read-history 2017-07-17 14:18:10 (14400 s) 10706944,6148096,6189056,6151168,6643712,6276096
+dirreq-write-history 2017-07-17 12:01:04 (14400 s) 3991552,864256,656384,765952,43008,2001920
+dirreq-read-history 2017-07-17 12:01:04 (14400 s) 381952,104448,6144,27648,4096,136192
+geoip-db-digest B2E5105287668771E34A66F90B34982D419727EF
+geoip6-db-digest 8DA8AC3C8158CBFDF7DB53BBF73338246872371A
+dirreq-stats-end 2017-07-17 00:01:05 (86400 s)
+dirreq-v3-ips de=8,gr=8,kz=8,ru=8,ua=8
+dirreq-v3-reqs de=8,gr=8,kz=8,ru=8,ua=8
+dirreq-v3-resp ok=8,not-enough-sigs=0,unavailable=0,not-found=0,not-modified=32,busy=0
+dirreq-v3-direct-dl complete=0,timeout=0,running=0
+dirreq-v3-tunneled-dl complete=4,timeout=4,running=0
+transport obfs4
+bridge-stats-end 2017-07-17 00:01:13 (86400 s)
+bridge-ips by=8,de=8,gr=8,hk=8,ir=8,kr=8,kz=8,ru=8,ua=8,us=8
+bridge-ip-versions v4=24,v6=0
+bridge-ip-transports <OR>=16,obfs4=8
+router-digest-sha256 FhnLcLbuaWoxgTfWYHAYS30TivXLDXS8KzQS9GgQDF4
+router-digest 361209255A0CC41D4A3D5C8E57CE9B9DC8719E76
+@type bridge-extra-info 1.3
+extra-info Unnamed 2E4E258AA85A98ACFA9B138FCF07BB24F0D614A2
+master-key-ed25519 ExFcpgeUE1pYkJucC+8W5U6vudH385v4etFfBnfS7Ss
+published 2017-07-17 14:19:34
+write-history 2017-07-17 11:35:03 (14400 s) 151798784,115852288,661504,11895808,100169728,210285568
+read-history 2017-07-17 11:35:03 (14400 s) 153724928,117967872,4093952,15422464,102296576,212571136
+dirreq-write-history 2017-07-17 11:35:03 (14400 s) 2617344,3309568,13312,1969152,2119680,3956736
+dirreq-read-history 2017-07-17 11:35:03 (14400 s) 19456,37888,0,17408,50176,58368
+geoip-db-digest B2E5105287668771E34A66F90B34982D419727EF
+geoip6-db-digest 8DA8AC3C8158CBFDF7DB53BBF73338246872371A
+dirreq-stats-end 2017-07-17 07:29:07 (86400 s)
+dirreq-v3-ips ca=8,ir=8,kz=8
+dirreq-v3-reqs ca=8,ir=8,kz=8
+dirreq-v3-resp ok=24,not-enough-sigs=0,unavailable=0,not-found=0,not-modified=0,busy=0
+dirreq-v3-direct-dl complete=0,timeout=0,running=0
+dirreq-v3-tunneled-dl complete=8,timeout=12,running=0
+hidserv-stats-end 2017-07-17 07:29:07 (86400 s)
+hidserv-rend-relayed-cells -419 delta_f=2048 epsilon=0.30 bin_size=1024
+hidserv-dir-onions-seen -21 delta_f=8 epsilon=0.30 bin_size=8
+transport scramblesuit
+transport obfs3
+transport obfs4
+bridge-stats-end 2017-07-17 07:29:17 (86400 s)
+bridge-ips ca=8,cl=8,ir=8,kz=8,ru=8,tr=8
+bridge-ip-versions v4=16,v6=0
+bridge-ip-transports <OR>=8,obfs3=8,obfs4=8,scramblesuit=8
+router-digest-sha256 Uqm0Ajxniq2cEpnpyFtcIXUNsXndstJEcrwgk/UzEms
+router-digest 1AB27BBC91C9C23553E03189C3828FD627551F8D
+@type bridge-extra-info 1.3
+extra-info Dallaslitai 3D4782C05C60D7D0189FDD57B3A37DB4DCD14834
+master-key-ed25519 f7SX8VP4n+oys+1P1HldxOvIVbwxp7z4FYlK+kVFvRw
+published 2017-07-17 15:19:17
+write-history 2017-07-17 14:04:30 (14400 s) 9009152,6066176,15356928,1211392,5023744,12357632
+read-history 2017-07-17 14:04:30 (14400 s) 13033472,10901504,19917824,6920192,8665088,18658304
+dirreq-write-history 2017-07-17 12:00:50 (14400 s) 1353728,624640,648192,5120,0,2026496
+dirreq-read-history 2017-07-17 12:00:50 (14400 s) 18432,0,4096,4096,0,30720
+geoip-db-digest B2E5105287668771E34A66F90B34982D419727EF
+geoip6-db-digest 8DA8AC3C8158CBFDF7DB53BBF73338246872371A
+dirreq-stats-end 2017-07-17 00:00:50 (86400 s)
+dirreq-v3-ips bo=8,gb=8,se=8,us=8
+dirreq-v3-reqs bo=8,gb=8,se=8,us=8
+dirreq-v3-resp ok=8,not-enough-sigs=0,unavailable=0,not-found=0,not-modified=0,busy=0
+dirreq-v3-direct-dl complete=0,timeout=0,running=0
+dirreq-v3-tunneled-dl complete=8,timeout=4,running=0
+transport obfs4
+bridge-stats-end 2017-07-17 00:01:00 (86400 s)
+bridge-ips bo=8,gb=8,se=8,us=8
+bridge-ip-versions v4=8,v6=0
+bridge-ip-transports <OR>=8,obfs4=8
+router-digest-sha256 TWliWLwkFCviVpBZrkmM8Xzs3eKgXgjp6GfLvl+khSs
+router-digest 7E7474F0350F5490ABD5A8189FFFE2D3698ED78A

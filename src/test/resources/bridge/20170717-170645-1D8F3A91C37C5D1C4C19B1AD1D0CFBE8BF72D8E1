@@ -1,0 +1,216 @@
+@type bridge-network-status 1.2
+published 2017-07-17 17:06:45
+flag-thresholds stable-uptime=1530324 stable-mtbf=6168885 fast-speed=55000 guard-wfu=46.159% guard-tk=691200 guard-bw-inc-exits=387000 guard-bw-exc-exits=387000 enough-mtbf=1 ignoring-advertised-bws=0
+fingerprint 1D8F3A91C37C5D1C4C19B1AD1D0CFBE8BF72D8E1
+r Unnamed ABsbA6yZEBiZ81impcs0zNxRyXo CyMVlader0Uyv5Pg4BHbAT74Upw 2017-07-17 15:36:07 10.158.32.104 58520 0
+s Running Stable V2Dir Valid
+w Bandwidth=11
+p reject 1-65535
+r Unnamed ACzV/+Qobny0/Tk7Jodk8cP+ME4 ddllk5vvUxzimbTAiPnN2FgcKes 2017-07-17 16:57:43 10.151.15.156 55425 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=57
+p reject 1-65535
+r Unnamed ADXqKmHijTlfCArKIkRTlJDnCVA T5j0VrDmrH4KSQxY+6pPjyyinJY 2017-07-17 16:29:03 10.228.254.115 60472 0
+s Fast Running Stable V2Dir Valid
+w Bandwidth=67
+p reject 1-65535
+r superpowerMcClel ADcEo9p09hjP3jnnRwWj8U3yj08 WMENhkbcZ+lUSEduo+9YESQQG9g 2017-07-17 14:21:40 10.86.246.29 60854 0
+s Running Stable V2Dir Valid
+w Bandwidth=8
+p reject 1-65535
+r Franciscanmalevo AEYSWTY51Ye6m5b/bNJS5YL/h8A akxy4oFolIcneluh0BsSHP8x5BA 2017-07-17 16:29:33 10.176.122.233 56193 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=60
+p reject 1-65535
+r boomierknuckleba AF9gYMFlwb/2CMtkmv5R8rxAtTU nca6APmy1Cx174sTwifWhctXszM 2017-07-17 15:06:14 10.70.103.61 57318 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=1037
+p reject 1-65535
+r Unnamed AHHm39VxDbRtU/hYO23qmxfpyzI JvQtMwtmMKNacsTD+C7YnJkHOSI 2017-07-17 03:19:26 10.225.194.70 53101 0
+s V2Dir Valid
+w Bandwidth=54
+p reject 1-65535
+r Unnamed +kAojf9FYTuLBnLf0ZkzcXuM40w z7wiPDBrkgnPcA5/OMlCTiT+MOw 2017-07-17 17:03:48 10.251.177.99 59597 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=662
+p reject 1-65535
+r arthropathiesadr +k91NisjMTI0OoVLNNEZeaIdT5c K5qQ7eM7neXT1uUq4h3eUkeYWNI 2017-07-16 22:28:04 10.127.11.187 57316 0
+s Fast Stable V2Dir Valid
+w Bandwidth=137
+p reject 1-65535
+r Unnamed +lcbndJRkwY29dxR5+oE3CyQI60 JDZXpRZ30/31pavh1c4gdDQG/ys 2017-07-17 16:16:06 10.138.151.31 53706 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=183
+p reject 1-65535
+r amphetaminecinep +nuwYTiyHx8+PVQydHxT2Akwcu0 HjQQ27Spm2L3OI8D9LxPbp3G774 2017-07-17 15:06:28 10.182.103.174 52233 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=57
+p reject 1-65535
+r shovelingkopjes +xYy/IiRAE+vnsKxpBWYjbcvmgI S8qeZw2VjTijqejdq6QXvI3gQeQ 2017-07-17 16:33:03 10.115.134.144 52579 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=360
+p reject 1-65535
+r hawkeybushwhacke +yXJIp/C7J9WPgrpPx+SFqBdFq8 9IfYejp114+zagOAagQ0zsaR6uY 2017-07-17 14:48:27 10.101.94.186 64039 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=316
+p reject 1-65535
+r Unnamed +0k7evdgC2LM8zwVL7+tvRdbmDQ 9wQmt6jyLzncRB/2vrbfoRSPN+4 2017-07-17 15:00:08 10.74.190.95 62552 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=56
+p reject 1-65535
+r Air7jyl +2oWb9ZaKSmcrAfX4xhxm/LollQ nezGZw3QbeYIdMwLbz8dp2xO+Ag 2017-07-17 14:55:17 10.31.40.208 51052 0
+s Running Stable V2Dir Valid
+w Bandwidth=9
+p reject 1-65535
+r unrazedcommanded +4waD3LXF0onldT6V1uqvIWFQac ADnBJ/hircq5prcAJBrdyk/4oqQ 2017-07-17 15:42:27 10.63.109.63 52668 0
+s Running Stable V2Dir Valid
+w Bandwidth=8
+p reject 1-65535
+r Unnamed /MmbQ8ixObuLBPiBiyeXvvYlYQ0 53utvuuwHOM2wOR1/Egovplc7Pk 2017-07-17 16:48:45 10.121.209.188 50199 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=416
+p reject 1-65535
+r shriningunproduc /WjeOPRKPyoXpRzd/EDeDrABqvE beA5q600a4aJ01PCWeQAG5ggdjc 2017-07-17 15:27:43 10.210.27.178 58560 0
+s Running Stable V2Dir Valid
+w Bandwidth=9
+p reject 1-65535
+r greegreesfourche /W8yOLAqhwY488MQExY5u+xmEPU DLTHkCAIPo1kzDHNquGZFMUim+U 2017-07-17 15:43:30 10.74.195.222 55523 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=71
+p reject 1-65535
+r submanagersaceta /W+Iy0hxx0Mr9N7W2aFRoo8aDvc 8gwnmbCiqxqL7u7b2eViU05V8lc 2017-07-17 14:20:43 10.17.232.137 59561 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=134
+p reject 1-65535
+r nonintimidatingP /XP/zHfCVO2b2X/vLAefRXXR7lE iyM4qwvyHBT7vBZnr4lO/d+u5Mg 2017-07-17 16:03:16 10.151.207.67 58673 0
+s Running Stable V2Dir Valid
+w Bandwidth=7
+p reject 1-65535
+r Unnamed /XoBUnOwSS8ZLGpRyXQun4OTJ9Q 2vL6z2UpX/LK+vKrNYN9i0rEeIY 2017-07-17 15:59:24 10.56.117.44 58641 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=1663
+p reject 1-65535
+r Unnamed /ZvY1pg+h3dQ2HQuyHUgIDE2TIg +TiYLQtCqwoJlOH8Cs1bvoT1aXE 2017-07-17 14:04:57 10.127.8.248 51042 0
+s Fast Stable V2Dir Valid
+w Bandwidth=58
+p reject 1-65535
+r adobesYamoussouk /a9cTZcWYDQabdsjiFyzpAmG/J8 ccKrVEf6LDZy7f/qNz4tchWmfj4 2017-07-17 15:14:24 10.194.212.136 65257 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=111
+p reject 1-65535
+r Unnamed /biv9385WVxTAEKIbZCOP0djXJU OEJj1J2SjHJO0LQTu/AIhgzVmCE 2017-07-17 16:58:50 10.48.201.112 51351 0
+s Fast Running Stable Valid
+w Bandwidth=222
+p reject 1-65535
+r pinkMolluscoidea /bpyb9z3BMXfphOOudetf1cR4h4 hACt4yPZCUfBSVnBI2uUI1DXv/Y 2017-07-17 16:28:21 10.56.241.237 59735 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=64
+p reject 1-65535
+r nudzhesnurses /cTnObI/aLPJ5Hz7tMlda36shyQ aOUbb2aRzcqy1zKknPj3Hpy0VF8 2017-07-17 14:20:17 10.197.112.218 55802 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=910
+p reject 1-65535
+r ectomeresantinom /eB2bLdExloO9w8d7PhyOKKj5UA UXMLmjmnDiz2WCJRb/GDafv99b4 2017-07-17 14:33:21 10.3.44.12 51292 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=530
+p reject 1-65535
+r cinerarybluejean /eKBhUZipJ8vtsWbcfEcY8Ae3og wtsp18H3KODuI0zm4XfhzxWzQgs 2017-07-17 15:44:26 10.36.19.199 56546 0
+s Running Stable V2Dir Valid
+w Bandwidth=54
+p reject 1-65535
+r jacksnipescompel /ezau9TjX4HpqWxHQ2kUihSRf4I Qitzn/DbpKDvkNy3p094R41Qnqk 2017-07-17 15:44:16 10.125.226.79 50059 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=176
+p reject 1-65535
+r Unnamed /fg2tRqzK++I3UkMioMuhr3naEk I4E5JA3qeapmYZkAeSTQLfs8J1s 2017-07-17 15:02:59 10.239.90.75 53745 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=697
+p reject 1-65535
+r olderMagus /hlOx5caWWCbQEcqX8MqqvsQSGg 2Hjq0iNl0chTzCRYH8EpcHmLy+o 2017-07-17 16:23:07 10.126.229.95 65145 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=67
+p reject 1-65535
+r reemployedsmithe /jflp0xlhdpIMx4QpAmbEcPqg+Q iyc0QdcN9DBReZ9RWFb34YVqszQ 2017-07-17 16:21:58 10.143.233.101 51516 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=1077
+p reject 1-65535
+r outliersFloris /kRzVTV4QZvPKS2HenyVRgXwm6Y 8waSR1DiAy5MBzU/ud1rZiejah4 2017-07-17 16:48:32 10.109.220.71 64531 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=107
+p reject 1-65535
+r obfuscated /kUNmycjdgjmfOsRy5+5SkJILv8 xwf3o4+fqLXS0s47d0pP1KOU5pU 2017-07-17 14:37:19 10.76.104.77 64592 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=59
+p reject 1-65535
+r rasedsupernatant /oOXVDiS7hudD6Y8RzMylO5OMWc h8y4RIgFmW+/dsvNyHC/MMNLS7Q 2017-07-17 16:22:22 10.179.100.48 53248 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=734
+p reject 1-65535
+r suspicionspresci /peWJlz21gipWJe9lSyZpH1/sm8 HV/GG45cU9m+MwuxLKdI83+qaSM 2017-07-17 14:27:52 10.1.39.32 62702 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=60
+p reject 1-65535
+r soggiestgoldbric /psUJ+LLpyUzDUIaaFgIFDVSLA0 XDD9v2ldQjm5dkZw3DCI7ae2xE4 2017-07-17 17:03:37 10.246.254.96 60296 0
+s Running Stable V2Dir Valid
+w Bandwidth=9
+p reject 1-65535
+r orak1 /qbW9Iso8FWoP/1IKaW7bjDrVgE Mb9lzHQPPVsHKImYxdqDSAJri+I 2017-07-17 14:41:53 10.249.185.227 54358 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=469
+p reject 1-65535
+r Unnamed /rrmefX+kZsKmbGVysWH2zn5fxo 9S3pjUOCoKvYzk5oHgyom+T9PNE 2017-07-17 17:02:48 10.103.250.150 61659 0
+s Running Stable V2Dir Valid
+w Bandwidth=7
+p reject 1-65535
+r hatak2 /sOIskZPioSvAst2OxB/cSdQs6k 0HpDHhVviDHJxaBbhUgbyI+KSrA 2017-07-17 15:32:33 10.95.193.128 51290 0
+s Running Stable V2Dir Valid
+w Bandwidth=8
+p reject 1-65535
+r ndnop3 /sj7OA2rqdPIB5C2NORUC/XQnMo IbGg6+HzLnIA50Ixgk/XedHa8IQ 2017-07-17 15:21:46 10.3.187.208 57011 0
+s Fast V2Dir Valid
+w Bandwidth=10000
+p reject 1-65535
+r womanismssmirked /ttQciYFaUjO7GCA+P47qbHeB6g on74OFaEd6/vAG1pMPdacU9T14c 2017-07-17 15:17:40 10.104.184.233 65473 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=117
+p reject 1-65535
+r 0x000806 /ueuYKHQL7S17tZbk4Mf8tZ5kNs 4nUnoLBOx+6fktj5jFes6VF1vDY 2017-07-17 14:25:26 10.212.47.179 57986 0
+s Fast Running Stable Valid
+w Bandwidth=55
+p reject 1-65535
+r gadg3ts01 /uqtdtPuTJyXcG9a3YIxNtrF5R8 OlMKhaTZ5xFbg9wIy7mb/yypg84 2017-07-17 15:06:13 10.130.186.8 52390 0
+s Fast Running Stable V2Dir Valid
+w Bandwidth=153
+p reject 1-65535
+r wwa /vaERk55vVeE4Oo+lsy06fKG1bk PoBspURmH5ykMi/ilKW8odeZPqw 2017-07-16 21:17:55 10.247.250.35 58542 0
+s Stable Valid
+w Bandwidth=0
+p reject 1-65535
+r upheappostbus /xjBUGXhaGwB95VZcfjQAbGJ6T0 Xg7U7Aj9ndp68xbLVht7k3bYoYk 2017-07-17 15:33:52 10.224.164.30 52215 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=486
+p reject 1-65535
+r Unnamed /zBQzMzusm8cXl5WHyANFPFm5EQ BuMdGQ8nhvkuhnhCRVPEqgbZKvs 2017-07-17 16:26:04 10.19.59.68 60568 0
+s Fast Running Stable V2Dir Valid
+w Bandwidth=372
+p reject 1-65535
+r Unnamed /zx8J4i9BJD53FmX0lTa6lnToDY 1B1zuDhpSYQMC70iJGjL1gu/wNI 2017-07-17 15:09:51 10.110.58.246 52647 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=119
+p reject 1-65535
+r scroddledmetagen /2i5q0a3ndcWe305Wfyg6BMIv58 LaVtMm8A/76H16thbegUpnG5mtg 2017-07-17 16:41:38 10.15.158.240 57887 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=983
+p reject 1-65535
+r latinizedwhitefl /76DxKdbp2qR4LI96R9X3KTJxXI uR9E4Q/RvgCjAIOmlNkiwHQcgfk 2017-07-17 14:30:24 10.159.24.142 50975 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=525
+p reject 1-65535
+r theresamay /9YGA70SlPBf0lyficl9TFrJ4ZE +oLsaNaYcQbG5CmZa/3iLqoGwII 2017-07-17 15:26:58 10.104.227.148 53612 0
+s Fast HSDir Running Stable V2Dir Valid
+w Bandwidth=327
+p reject 1-65535
+r LetFreedomRing /9gX+qo28YX0NHT3TERuqNlew48 gvrGkWbaNZnakH1JOg0aF3GxriA 2017-07-17 16:37:23 10.52.212.130 60622 0
+s Fast Running V2Dir Valid
+w Bandwidth=468
+p reject 1-65535
