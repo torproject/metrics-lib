@@ -8,7 +8,7 @@
 
   <property name="release.version" value="2.0.0-dev" />
   <property name="javadoc-title" value="Tor Metrics Library API Documentation"/>
-  <property name="javadoc-excludes" value="**/impl/** **/index/**" />
+  <property name="javadoc-excludes" value="**/impl/** **/index/** **/internal/** **/log/**" />
   <property name="implementation-title" value="Tor Metrics Library" />
   <property name="name" value="metrics-lib" />
   <property name="jarpatternprop" value="empty" />
