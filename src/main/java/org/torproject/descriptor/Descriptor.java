@@ -53,7 +53,7 @@ public interface Descriptor {
    * empty list if there were no unrecognized lines.
    *
    * <p>Some implementations might not support this operation and will throw an
-   * {@code UnsupportedOperationException}, * e.g.,
+   * {@code UnsupportedOperationException}, e.g.,
    * {@link UnparseableDescriptor}.</p>
    *
    * @since 1.0.0
