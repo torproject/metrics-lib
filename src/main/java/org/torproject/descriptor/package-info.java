@@ -20,15 +20,11 @@
  * {@link org.torproject.descriptor.DescriptorSourceFactory} which is the
  * main entry point into using this library.  This factory is used to
  * create the descriptor sources for obtaining remote descriptor data
- * ({@link org.torproject.descriptor.DescriptorDownloader} and
- * {@link org.torproject.descriptor.DescriptorCollector}) and descriptor
+ * ({@link org.torproject.descriptor.DescriptorCollector}) and descriptor
  * sources for processing local descriptor data
  * ({@link org.torproject.descriptor.DescriptorReader} and
  * {@link org.torproject.descriptor.DescriptorParser}).  General-purpose
- * types also include descriptor containers
- * ({@link org.torproject.descriptor.DescriptorRequest} and
- * {@link org.torproject.descriptor.DescriptorFile}) and the
- * superinterface for all provided descriptors
+ * types also include the superinterface for all provided descriptors
  * ({@link org.torproject.descriptor.Descriptor}).</li>
  *
  * <li>The first group of descriptors is published by relays and servers
