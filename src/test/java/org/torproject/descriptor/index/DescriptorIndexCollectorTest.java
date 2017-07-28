@@ -43,7 +43,7 @@ public class DescriptorIndexCollectorTest {
     makeStructure(remoteDirectory, "2");
 
     File indexFile = newIndexFile("testindex.json",
-        remoteDirectory.toURL().toString());
+        remoteDirectory.toURI().toURL().toString());
 
     // verify precondition for test.
     checkContains(true,
@@ -54,7 +54,7 @@ public class DescriptorIndexCollectorTest {
         "a/b/y2","a/b/x2");
 
     DescriptorCollector dc = new DescriptorIndexCollector();
-    dc.collectDescriptors(indexFile.toURL().toString(),
+    dc.collectDescriptors(indexFile.toURI().toURL().toString(),
         new String[]{"a/b", "a"}, 1451606400_000L, localFolder, false);
 
     // verify that files in 'a/b' were fetched
@@ -146,7 +146,7 @@ public class DescriptorIndexCollectorTest {
     makeStructure(remoteDirectory, "2");
 
     File indexFile = newIndexFile("testindexDelete.json",
-        remoteDirectory.toURL().toString());
+        remoteDirectory.toURI().toURL().toString());
 
     // verify precondition for test.
     checkContains(true,
@@ -157,7 +157,7 @@ public class DescriptorIndexCollectorTest {
         "a/b/y2","a/b/x2");
 
     new DescriptorIndexCollector()
-        .collectDescriptors(indexFile.toURL().toString(),
+        .collectDescriptors(indexFile.toURI().toURL().toString(),
             new String[]{"a/b/", "a/b/c"}, 1451606400_000L, localFolder, true);
 
     // verify file addition, including that the non-synced dir is not touched.
@@ -187,7 +187,7 @@ public class DescriptorIndexCollectorTest {
     makeStructure(remoteDirectory, "2");
 
     File indexFile = newIndexFile("testindexDelete.json",
-        remoteDirectory.toURL().toString());
+        remoteDirectory.toURI().toURL().toString());
 
     // verify precondition for test.
     checkContains(true,
@@ -198,7 +198,7 @@ public class DescriptorIndexCollectorTest {
         "a/b/y2","a/b/x2");
 
     new DescriptorIndexCollector()
-        .collectDescriptors(indexFile.toURL().toString(),
+        .collectDescriptors(indexFile.toURI().toURL().toString(),
             new String[]{"/a/b", "/a/b/c/"}, 1451606400_000L,
             localFolder, true);
 
