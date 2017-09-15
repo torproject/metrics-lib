@@ -60,7 +60,7 @@ public class KeyValueMap<T> extends TreeMap<String, T> {
         } catch (IllegalArgumentException | InvocationTargetException e) {
           value = null;
         } catch (NoSuchMethodException e) { // use the String value
-          value = (T)keyAndValue[1];
+          value = (T) keyAndValue[1];
         }
       }
       this.putPair(key, value, line, listElement, keyLength);
