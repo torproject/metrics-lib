@@ -46,6 +46,11 @@ public class IndexNode {
   @SerializedName("index_created")
   public final String created;
 
+  /** The software's build revision JSON as 'build_revision' field. */
+  @Expose
+  @SerializedName("build_revision")
+  public final String revision;
+
   /** Path (i.e. base url) is exposed in JSON. */
   @Expose
   public final String path;
@@ -60,20 +65,29 @@ public class IndexNode {
 
   /* Added to satisfy Gson. */
   private IndexNode() {
-    created = null;
-    path = null;
-    files = null;
-    directories = null;
+    this.created = null;
+    this.revision = null;
+    this.path = null;
+    this.files = null;
+    this.directories = null;
   }
 
-  /** An index node is the top-level node in the JSON structure. */
+  /** For backwards compatibility and testing. */
   public IndexNode(String created, String path,
             SortedSet<FileNode> files,
             SortedSet<DirectoryNode> directories) {
+    this(created, null, path, files, directories);
+  }
+
+  /** An index node is the top-level node in the JSON structure. */
+  public IndexNode(String created, String revision, String path,
+            SortedSet<FileNode> files,
+            SortedSet<DirectoryNode> directories) {
+    this.created = created;
+    this.revision = revision;
     this.path = path;
     this.files = files;
     this.directories = directories;
-    this.created = created;
   }
 
   /**
