@@ -12,6 +12,8 @@ import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -43,6 +45,8 @@ public enum FileType {
   /**
    * Returns <code>valueOf</code> or the default enum {@link #PLAIN}, i.e.,
    * this method doesn't throw any exceptions and allways returns a valid enum.
+   *
+   * @since 2.1.0
    */
   public static FileType findType(String ext) {
     FileType res = null;
@@ -54,16 +58,61 @@ public enum FileType {
     }
   }
 
-  /** Return the appropriate input stream. */
+  /**
+   * Return the appropriate input stream.
+   *
+   * @since 1.4.0
+   */
   public InputStream inputStream(InputStream is) throws Exception {
     return this.inClass.getConstructor(new Class[]{InputStream.class})
         .newInstance(is);
   }
 
-  /** Return the appropriate output stream. */
+  /**
+   * Return the appropriate output stream.
+   *
+   * @since 1.4.0
+   */
   public OutputStream outputStream(OutputStream os) throws Exception {
     return this.outClass.getConstructor(new Class[]{OutputStream.class})
         .newInstance(os);
   }
+
+  /**
+   * Compresses the given bytes in memory and returns the compressed bytes.
+   *
+   * @since 2.2.0
+   */
+  public byte[] compress(byte[] bytes) throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    try (OutputStream os = this.outputStream(baos)) {
+      os.write(bytes);
+      os.flush();
+    }
+    return baos.toByteArray();
+  }
+
+  /**
+   * Decompresses the given bytes in memory and returns the decompressed bytes.
+   *
+   * @since 2.2.0
+   */
+  public byte[] decompress(byte[] bytes) throws Exception {
+    if (0 == bytes.length) {
+      return bytes;
+    }
+    try (InputStream is
+        = this.inputStream(new ByteArrayInputStream(bytes));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+      int readByte = is.read();
+      while (readByte > 0) {
+        baos.write(readByte);
+        readByte = is.read();
+      }
+      baos.flush();
+      return baos.toByteArray();
+    }
+  }
+
 }
 

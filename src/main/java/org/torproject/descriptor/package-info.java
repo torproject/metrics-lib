@@ -65,9 +65,11 @@
  * connected to the Tor network rather than by the Tor software.  This
  * group comprises descriptors by the bridge distribution service BridgeDB
  * ({@link org.torproject.descriptor.BridgePoolAssignment}), the exit list
- * service TorDNSEL ({@link org.torproject.descriptor.ExitList}), and the
+ * service TorDNSEL ({@link org.torproject.descriptor.ExitList}), the
  * performance measurement service Torperf
- * ({@link org.torproject.descriptor.TorperfResult}).</li>
+ * ({@link org.torproject.descriptor.TorperfResult}), and sanitized access logs
+ * of Tor's web servers
+ * ({@link org.torproject.descriptor.WebServerAccessLog}).</li>
  * </ol>
  *
  * @since 1.0.0

@@ -1,4 +1,4 @@
-/* Copyright 2016--2018 The Tor Project
+/* Copyright 2017--2018 The Tor Project
  * See LICENSE for licensing information */
 
 /**
@@ -6,10 +6,9 @@
  * <p>The public interface might change in unexpected ways.</p>
  *
  * <p>Interfaces and essential classes for obtaining and processing
- * CollecTor's index.json file.</p>
+ * log descriptors.</p>
  *
- *
- * @since 1.4.0
+ * @since 2.2.0
  */
-package org.torproject.descriptor.index;
+package org.torproject.descriptor.log;
 

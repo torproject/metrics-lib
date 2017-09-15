@@ -9,6 +9,10 @@ import static org.torproject.descriptor.impl.DescriptorImpl.SP;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DescriptorParser;
+import org.torproject.descriptor.log.LogDescriptorImpl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -19,6 +23,9 @@ import java.util.List;
 
 public class DescriptorParserImpl implements DescriptorParser {
 
+  private static final Logger log
+      = LoggerFactory.getLogger(DescriptorParserImpl.class);
+
   @Override
   public Iterable<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
       File descriptorFile, String fileName) {
@@ -26,8 +33,7 @@ public class DescriptorParserImpl implements DescriptorParser {
       return this.detectTypeAndParseDescriptors(rawDescriptorBytes,
           descriptorFile, fileName);
     } catch (DescriptorParseException e) {
-      /* Looks like we attempted to parse the whole raw descriptor bytes at once
-       * below and ran into a parse issue. */
+      log.debug("Cannot parse descriptor file ’{}’.", descriptorFile, e);
       List<Descriptor> parsedDescriptors = new ArrayList<>();
       parsedDescriptors.add(new UnparseableDescriptorImpl(rawDescriptorBytes,
           new int[] { 0, rawDescriptorBytes.length }, descriptorFile, e));
@@ -124,6 +130,8 @@ public class DescriptorParserImpl implements DescriptorParser {
     } else if (firstLines.startsWith("@type torperf 1.")) {
       return TorperfResultImpl.parseTorperfResults(rawDescriptorBytes,
           descriptorFile);
+    } else if (descriptorFile.getName().contains(LogDescriptorImpl.MARKER)) {
+      return LogDescriptorImpl.parse(rawDescriptorBytes, descriptorFile);
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");

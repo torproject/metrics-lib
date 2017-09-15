@@ -1,3 +1,10 @@
+# Changes in version 2.2.0 - 2018-01-??
+
+ * Major changes
+   - Add new descriptor type WebServerAccessLog to parse web server
+     access logs.
+
+
 # Changes in version 2.1.1 - 2017-10-09
 
  * Minor changes
