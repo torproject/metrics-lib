@@ -12,7 +12,6 @@
   <property name="implementation-title" value="Tor Metrics Library" />
   <property name="name" value="metrics-lib" />
   <property name="jarpatternprop" value="empty" />
-  <property name="source-and-target-java-version" value="1.7" />
 
   <patternset id="runtime" >
       <include name="commons-compress-1.13.jar"/>

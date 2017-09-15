@@ -4,6 +4,7 @@
    - Update dependencies to versions available in Debian stretch:
      Apache Commons Compress 1.13, Apache Commons Lang 3.5, Google
      Gson 2.4, JUnit 4.12, Logback 1.1.9, SLF4J 1.7.22, and XZ 1.6.
+   - Update to Java 8.
 
  * Minor changes
    - Retain trailing newline in Torperf results.
