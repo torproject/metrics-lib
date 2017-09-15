@@ -1,4 +1,4 @@
-# Changes in version 2.?.? - 2017-??-??
+# Changes in version 2.1.0 - 2017-09-15
 
  * Major changes
    - Update dependencies to versions available in Debian stretch:
