@@ -1,6 +1,6 @@
-# Changes in version 2.?.? - 2017-??-??
+# Changes in version 2.1.1 - 2017-10-09
 
- * Medium changes
+ * Minor changes
    - Add new optional "build_revision" field to index.json with the
      Git revision supplied by the calling software.
 
