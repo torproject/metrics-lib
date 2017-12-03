@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,9 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
   private static Logger log = LoggerFactory.getLogger(
       DescriptorReaderImpl.class);
+
+  private static Logger statisticsLog = LoggerFactory.getLogger("statistics");
+
   private boolean hasStartedReading = false;
 
   private File manualSaveHistoryFile;
@@ -125,6 +129,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private File manualSaveHistoryFile;
 
+    private List<File> tarballs = new ArrayList<>();
+
     private SortedMap<String, Long> excludedFilesBefore = new TreeMap<>();
 
     private SortedMap<String, Long> excludedFilesAfter = new TreeMap<>();
@@ -153,6 +159,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
         this.readOldHistory(this.autoSaveHistoryFile);
         this.readOldHistory(this.manualSaveHistoryFile);
         this.readDescriptorFiles();
+        this.readTarballs();
         this.hasFinishedReading = true;
       } catch (Throwable t) {
         log.error("Bug: uncaught exception or error while "
@@ -242,7 +249,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
             } else if (file.getName().endsWith(".tar")
                 || file.getName().endsWith(".tar.bz2")
                 || file.getName().endsWith(".tar.xz")) {
-              this.readTarball(file);
+              tarballs.add(file);
+              continue;
             } else {
               this.readDescriptorFile(file);
             }
@@ -250,6 +258,33 @@ public class DescriptorReaderImpl implements DescriptorReader {
           } catch (IOException e) {
             log.warn("Unable to read descriptor file {}.", file, e);
           }
+        }
+      }
+    }
+
+    private void readTarballs() {
+      if (this.tarballs.isEmpty()) {
+        return;
+      }
+      long total = 0L;
+      for (File tarball : this.tarballs) {
+        total += tarball.length();
+      }
+      long progress = 0L;
+      for (File tarball : this.tarballs) {
+        try {
+          this.readTarball(tarball);
+          this.parsedFilesAfter.put(tarball.getAbsolutePath(),
+              tarball.lastModified());
+        } catch (IOException e) {
+          log.warn("Unable to read tarball {}.", tarball, e);
+        }
+        long previousPercentDone = 100L * progress / total;
+        progress += tarball.length();
+        long percentDone = 100L * progress / total;
+        if (percentDone > previousPercentDone) {
+          statisticsLog.info("Finished reading {}% of tarball bytes.",
+              percentDone);
         }
       }
     }

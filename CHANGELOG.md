@@ -4,6 +4,9 @@
    - Add new descriptor type WebServerAccessLog to parse web server
      access logs.
 
+ * Minor changes
+   - Add log message reporting progress reading tarballs.
+
 
 # Changes in version 2.1.1 - 2017-10-09
 
