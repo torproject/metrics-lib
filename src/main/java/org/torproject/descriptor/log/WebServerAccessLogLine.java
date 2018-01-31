@@ -34,7 +34,6 @@ public class WebServerAccessLogLine {
   private int response;
   private String request;
   private String method;
-  private String dateString;
   private LocalDate date;
   private String protocol;
   private Optional<Integer> size;
@@ -52,13 +51,13 @@ public class WebServerAccessLogLine {
   @Override
   public String toString() {
     return String.format("%s - - [%s:00:00:00 +0000] \"%s %s %s\" %d %s",
-        this.ip, this.dateString, this.method, this.request, this.type,
+        this.ip, this.getDateString(), this.method, this.request, this.type,
         this.response, this.size.isPresent() ? this.size.get() : "-");
   }
 
   /** Returns the string of the date using 'yyyymmdd' format. */
   public String getDateString() {
-    return dateString;
+    return this.date.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
   }
 
   /** Returns a string containing the ip. */
@@ -113,8 +112,6 @@ public class WebServerAccessLogLine {
         res.date = ZonedDateTime.parse(dateTimeString,
             dateTimeFormatter).withZoneSameInstant(ZoneOffset.UTC)
             .toLocalDate();
-        res.dateString = res.date
-            .format(DateTimeFormatter.ofPattern(DATE_PATTERN));
         res.ip = mat.group(1);
         res.request = mat.group(8);
         res.type = mat.group(9);
