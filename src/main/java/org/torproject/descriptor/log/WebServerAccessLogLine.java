@@ -156,5 +156,19 @@ public class WebServerAccessLogLine {
     }
   }
 
+  @Override
+  public boolean equals(Object other) {
+    if (null != other && other instanceof WebServerAccessLogLine) {
+      return this.toLogString()
+          .equals(((WebServerAccessLogLine)other).toLogString());
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.toLogString().hashCode();
+  }
+
 }
 
