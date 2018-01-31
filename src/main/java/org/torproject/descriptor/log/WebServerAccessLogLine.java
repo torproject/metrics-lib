@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,15 +34,23 @@ public class WebServerAccessLogLine {
       + "\"([A-Z]+) ([^\"]+) ([A-Z]+/\\d\\.\\d)\" "
       + "(\\d{3}) (\\d+|-)(.*)");
 
+  private static Map<String, String> ipMap
+      = Collections.synchronizedMap(new HashMap<>());
+  private static Map<LocalDate, LocalDate> dateMap
+      = Collections.synchronizedMap(new HashMap<>());
+  private static Map<String, String> protocolMap
+      = Collections.synchronizedMap(new HashMap<>());
+  private static Map<String, String> requestMap
+      = Collections.synchronizedMap(new HashMap<>());
+
   private String ip;
   private int response;
   private String request;
   private Method method;
   private LocalDate date;
-  private String protocol;
   private int size = -1;
   private boolean valid = false;
-  private String type;
+  private String protocol;
 
   /** Returns a log line string. Possibly empty. */
   public String toLogString() {
@@ -53,10 +64,11 @@ public class WebServerAccessLogLine {
   public String toString() {
     return String.format("%s - - [%s:00:00:00 +0000] \"%s %s %s\" %d %s",
         this.ip, this.getDateString(), this.method.name(), this.request,
-        this.type, this.response, this.size < 0 ? DASH : this.size);
+        this.protocol, this.response, this.size < 0 ? DASH : this.size);
   }
 
-  /** Returns the string of the date using 'yyyymmdd' format. */
+  /** Only used internally during sanitization.
+   * Returns the string of the date using 'dd/MMM/yyyy' format. */
   public String getDateString() {
     return this.date.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
   }
@@ -68,7 +80,7 @@ public class WebServerAccessLogLine {
 
   /** Only used internally during sanitization. */
   public void setIp(String ip) {
-    this.ip = ip;
+    this.ip = fromMap(ip, ipMap);
   }
 
   public Method getMethod() {
@@ -93,7 +105,7 @@ public class WebServerAccessLogLine {
 
   /** Only used internally during sanitization. */
   public void setRequest(String request) {
-    this.request = request;
+    this.request = fromMap(request, requestMap);
   }
 
   public LocalDate getDate() {
@@ -112,14 +124,13 @@ public class WebServerAccessLogLine {
       if (mat.find()) {
         res.response = Integer.valueOf(mat.group(10));
         res.method = Method.valueOf(mat.group(7));
-        res.protocol = mat.group(9);
         String dateTimeString = mat.group(4) + mat.group(5) + mat.group(6);
-        res.date = ZonedDateTime.parse(dateTimeString,
+        res.date = fromMap(ZonedDateTime.parse(dateTimeString,
             dateTimeFormatter).withZoneSameInstant(ZoneOffset.UTC)
-            .toLocalDate();
-        res.ip = mat.group(1);
-        res.request = mat.group(8);
-        res.type = mat.group(9);
+            .toLocalDate(), dateMap);
+        res.ip = fromMap(mat.group(1), ipMap);
+        res.request = fromMap(mat.group(8), requestMap);
+        res.protocol = fromMap(mat.group(9), protocolMap);
         if (DASH.equals(mat.group(11))) {
           res.size = -1;
         } else {
@@ -132,6 +143,17 @@ public class WebServerAccessLogLine {
       return new WebServerAccessLogLine();
     }
     return res;
+  }
+
+  private static <T> T fromMap(T val, Map<T, T> map) {
+    synchronized (map) {
+      T reference = map.get(val);
+      if (null == reference) {
+        map.put(val, val);
+        reference = map.get(val);
+      }
+      return reference;
+    }
   }
 
 }

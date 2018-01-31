@@ -44,6 +44,8 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
 
   private final LocalDate logDate;
 
+  private boolean validate = true;
+
   /**
    * Creates a WebServerAccessLog from the given bytes and filename.
    *
@@ -65,13 +67,20 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
   }
 
   /** For internal use only. */
-  public WebServerAccessLogImpl(Collection<String> lines, String filename)
-      throws DescriptorParseException {
-    this(LogDescriptorImpl.collectionToBytes(lines), new File(filename));
+  public WebServerAccessLogImpl(Collection<String> lines, String filename,
+      boolean validate) throws DescriptorParseException {
+    this(LogDescriptorImpl.collectionToBytes(lines), new File(filename),
+        FileType.XZ, validate);
   }
 
   private WebServerAccessLogImpl(byte[] logBytes, File file,
       FileType defaultCompression) throws DescriptorParseException {
+    this(logBytes, file, defaultCompression, true);
+  }
+
+  private WebServerAccessLogImpl(byte[] logBytes, File file,
+      FileType defaultCompression, boolean validate)
+      throws DescriptorParseException {
     super(logBytes, file, defaultCompression);
     try {
       String fn = file.toPath().getFileName().toString();
@@ -91,7 +100,9 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
       this.logDate = LocalDate.parse(ymd, DateTimeFormatter.BASIC_ISO_DATE);
       this.setValidator((line)
           -> WebServerAccessLogLine.makeLine(line).isValid());
-      this.validate();
+      if (validate) {
+        this.validate();
+      }
     } catch (DescriptorParseException dpe) {
       throw dpe; // escalate
     } catch (Exception pe) {
