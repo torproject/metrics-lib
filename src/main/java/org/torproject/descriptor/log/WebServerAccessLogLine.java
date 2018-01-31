@@ -20,6 +20,7 @@ public class WebServerAccessLogLine {
       .getLogger(WebServerAccessLogLine.class);
 
   private static final String DATE_PATTERN = "dd/MMM/yyyy";
+  private static final String DASH = "-";
 
   private static final DateTimeFormatter dateTimeFormatter
       = DateTimeFormatter.ofPattern(DATE_PATTERN + ":HH:mm:ss xxxx");
@@ -36,7 +37,7 @@ public class WebServerAccessLogLine {
   private String method;
   private LocalDate date;
   private String protocol;
-  private Optional<Integer> size;
+  private int size = -1;
   private boolean valid = false;
   private String type;
 
@@ -52,7 +53,7 @@ public class WebServerAccessLogLine {
   public String toString() {
     return String.format("%s - - [%s:00:00:00 +0000] \"%s %s %s\" %d %s",
         this.ip, this.getDateString(), this.method, this.request, this.type,
-        this.response, this.size.isPresent() ? this.size.get() : "-");
+        this.response, this.size < 0 ? DASH : this.size);
   }
 
   /** Returns the string of the date using 'yyyymmdd' format. */
@@ -80,6 +81,10 @@ public class WebServerAccessLogLine {
 
   public String getRequest() {
     return this.request;
+  }
+
+  public Optional<Integer> getSize() {
+    return this.size < 0 ? Optional.empty() : Optional.of(this.size);
   }
 
   public int getResponse() {
@@ -115,10 +120,10 @@ public class WebServerAccessLogLine {
         res.ip = mat.group(1);
         res.request = mat.group(8);
         res.type = mat.group(9);
-        if ("-".equals(mat.group(11))) {
-          res.size = Optional.empty();
+        if (DASH.equals(mat.group(11))) {
+          res.size = -1;
         } else {
-          res.size = Optional.of(Integer.valueOf(mat.group(11)));
+          res.size = Integer.valueOf(mat.group(11));
         }
         res.valid = true;
       }
