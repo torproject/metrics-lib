@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,11 +38,11 @@ public class WebServerAccessLogLine {
   private static Map<String, String> ipMap
       = Collections.synchronizedMap(new HashMap<>());
   private static Map<LocalDate, LocalDate> dateMap
-      = Collections.synchronizedMap(new HashMap<>());
+      = Collections.synchronizedMap(new HashMap<>(500));
   private static Map<String, String> protocolMap
       = Collections.synchronizedMap(new HashMap<>());
   private static Map<String, String> requestMap
-      = Collections.synchronizedMap(new HashMap<>());
+      = Collections.synchronizedMap(new HashMap<>(50_000));
 
   private String ip;
   private int response;
@@ -147,7 +148,7 @@ public class WebServerAccessLogLine {
 
   private static <T> T fromMap(T val, Map<T, T> map) {
     synchronized (map) {
-      map.putIfAbsent(val, val);
+      map.putIfAbsent(Objects.requireNonNull(val), val);
       return map.get(val);
     }
   }
