@@ -147,12 +147,8 @@ public class WebServerAccessLogLine {
 
   private static <T> T fromMap(T val, Map<T, T> map) {
     synchronized (map) {
-      T reference = map.get(val);
-      if (null == reference) {
-        map.put(val, val);
-        reference = map.get(val);
-      }
-      return reference;
+      map.putIfAbsent(val, val);
+      return map.get(val);
     }
   }
 
