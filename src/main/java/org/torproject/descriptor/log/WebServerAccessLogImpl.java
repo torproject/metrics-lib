@@ -10,12 +10,17 @@ import org.torproject.descriptor.internal.FileType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of web server access log descriptors.
@@ -124,6 +129,21 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
   @Override
   public LocalDate getLogDate() {
     return this.logDate;
+  }
+
+  /** Returns a list of all valid log lines. */
+  @Override
+  public List<WebServerAccessLog.Line> logLines()
+      throws DescriptorParseException {
+    try (BufferedReader br
+        = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
+        this.getRawDescriptorBytes())))) {
+      return br.lines().map(line
+          -> (WebServerAccessLog.Line) WebServerAccessLogLine.makeLine(line))
+        .filter(line -> line.isValid()).collect(Collectors.toList());
+    } catch (Exception ex) {
+      throw new DescriptorParseException("Cannot retrieve log lines.", ex);
+    }
   }
 
 }

@@ -1,8 +1,9 @@
 /* Copyright 2018 The Tor Project
  * See LICENSE for licensing information */
 
-package org.torproject.descriptor.log;
+package org.torproject.descriptor;
 
-public  enum Method {
+/** Enum for web server access log methods. */
+public enum Method {
     GET, HEAD, POST;
 }

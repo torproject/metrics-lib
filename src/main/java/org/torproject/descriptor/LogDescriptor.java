@@ -43,5 +43,17 @@ public interface LogDescriptor extends Descriptor {
   @Override
   public List<String> getUnrecognizedLines();
 
+  /**
+   * Returns a list of all parseable log lines.
+   * <p>Might require a lot of memory depending on log size.</p>
+   */
+  public List<? extends Line> logLines() throws DescriptorParseException;
+
+  public interface Line {
+
+    /** Returns a log line string. */
+    public String toLogString();
+
+  }
 }
 

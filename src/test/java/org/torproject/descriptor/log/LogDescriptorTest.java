@@ -1,4 +1,3 @@
-
 /* Copyright 2017--2018 The Tor Project
  * See LICENSE for licensing information */
 
@@ -51,6 +50,7 @@ public class LogDescriptorTest {
   protected String[] pan;
   protected Class<LogDescriptor> type;
   protected boolean isDecompressionTest;
+  protected int lineCount;
 
   /** All types of data that can be encountered during sync. */
   @Parameters
@@ -60,29 +60,30 @@ public class LogDescriptorTest {
             "metrics.torproject.org_meronense.torproject.org_access.log"
             + "_20170530.gz",
             "metrics.torproject.org", "20170530", "gz"},
-         WebServerAccessLog.class},
+         WebServerAccessLog.class, 24},
         {Boolean.FALSE, 1878, new String[]{"meronense.torproject.org",
             "xy.host.org_meronense.torproject.org_access.log_20170530.log",
             "metrics.torproject.org", "20170530", "xz"},
-         WebServerAccessLog.class},
+         WebServerAccessLog.class, 24},
         {Boolean.TRUE, 70730, new String[]{"archeotrichon.torproject.org",
             "archive.torproject.org_archeotrichon.torproject.org_access.log_"
             + "20151007.xz",
             "archive.torproject.org", "20151007", "xz"},
-         WebServerAccessLog.class},
+         WebServerAccessLog.class, 655},
         {Boolean.TRUE, 0, new String[]{"dummy.host.net",
             "nix.server.org_dummy.host.net_access.log_20111111.bz2",
             "nix.server.org", "20111111", "bz2"},
-         WebServerAccessLog.class}});
+         WebServerAccessLog.class, 0}});
   }
 
   /** This constructor receives the above defined data for each run. */
   public LogDescriptorTest(boolean decompression, int size, String[] pan,
-      Class<LogDescriptor> type) {
+        Class<LogDescriptor> type, int lineCount) {
     this.pan = pan;
     this.size = size;
     this.type = type;
     this.isDecompressionTest = decompression;
+    this.lineCount = lineCount;
   }
 
   /** Prepares the temporary folder and writes files to it for this test. */
@@ -129,6 +130,8 @@ public class LogDescriptorTest {
     InternalLogDescriptor ld = (InternalLogDescriptor) descs.get(0);
     assertEquals("Wrong compression type string. " + dataUsed(),
         pan[4], ld.getCompressionType());
+    List<? extends LogDescriptor.Line> lines = ld.logLines();
+    assertEquals(this.lineCount, lines.size());
   }
 
   private String dataUsed() {

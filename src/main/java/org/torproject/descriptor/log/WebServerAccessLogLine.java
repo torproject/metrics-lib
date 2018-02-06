@@ -3,6 +3,9 @@
 
 package org.torproject.descriptor.log;
 
+import org.torproject.descriptor.Method;
+import org.torproject.descriptor.WebServerAccessLog;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +21,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WebServerAccessLogLine {
+public class WebServerAccessLogLine implements WebServerAccessLog.Line {
 
   private static final Logger log = LoggerFactory
       .getLogger(WebServerAccessLogLine.class);
@@ -54,6 +57,7 @@ public class WebServerAccessLogLine {
   private String protocol;
 
   /** Returns a log line string. Possibly empty. */
+  @Override
   public String toLogString() {
     if (!this.valid) {
       return "";
@@ -74,7 +78,7 @@ public class WebServerAccessLogLine {
     return this.date.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
   }
 
-  /** Returns a string containing the ip. */
+  @Override
   public String getIp() {
     return this.ip;
   }
@@ -84,22 +88,27 @@ public class WebServerAccessLogLine {
     this.ip = fromMap(ip, ipMap);
   }
 
+  @Override
   public Method getMethod() {
     return this.method;
   }
 
+  @Override
   public String getProtocol() {
     return this.protocol;
   }
 
+  @Override
   public String getRequest() {
     return this.request;
   }
 
+  @Override
   public Optional<Integer> getSize() {
     return this.size < 0 ? Optional.empty() : Optional.of(this.size);
   }
 
+  @Override
   public int getResponse() {
     return this.response;
   }
@@ -109,10 +118,12 @@ public class WebServerAccessLogLine {
     this.request = fromMap(request, requestMap);
   }
 
+  @Override
   public LocalDate getDate() {
     return this.date;
   }
 
+  @Override
   public boolean isValid() {
     return this.valid;
   }
