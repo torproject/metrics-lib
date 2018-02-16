@@ -6,6 +6,7 @@ package org.torproject.descriptor.log;
 import static org.junit.Assert.assertEquals;
 
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.internal.FileType;
 
 import org.hamcrest.Matchers;
 
@@ -104,7 +105,8 @@ public class WebServerModuleTest {
     WebServerAccessLogImpl wsal = new WebServerAccessLogImpl(logText.getBytes(),
         new File("vhost_host7_access.log_20170530"));
     assertEquals(wsal.getAnnotations().size(), 0);
-    assertEquals(logText, new String(wsal.getRawDescriptorBytes()));
+    assertEquals(logText,
+        new String(FileType.XZ.decompress(wsal.getRawDescriptorBytes())));
     assertEquals("host7", wsal.getPhysicalHost());
     assertEquals("vhost", wsal.getVirtualHost());
   }

@@ -93,6 +93,24 @@ public enum FileType {
   }
 
   /**
+   * Compresses the given InputStream and returns an OutputStream.
+   *
+   * @since 2.2.0
+   */
+  public OutputStream compress(OutputStream os) throws Exception {
+    return this.outputStream(os);
+  }
+
+  /**
+   * Decompresses the given InputStream and returns an OutputStream.
+   *
+   * @since 2.2.0
+   */
+  public InputStream decompress(InputStream is) throws Exception {
+    return this.inputStream(is);
+  }
+
+  /**
    * Decompresses the given bytes in memory and returns the decompressed bytes.
    *
    * @since 2.2.0

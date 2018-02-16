@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -76,8 +76,7 @@ public abstract class LogDescriptorImpl
       this.fileType = FileType.findType(mat.group(1).toUpperCase());
       if (FileType.PLAIN == this.fileType) {
         this.fileType = defaultCompression;
-      } else {
-        this.logBytes = this.fileType.decompress(this.logBytes);
+        this.logBytes = this.fileType.compress(this.logBytes);
       }
     } catch (Exception ex) {
       throw new DescriptorParseException("Cannot parse file "
@@ -86,10 +85,19 @@ public abstract class LogDescriptorImpl
   }
 
   @Override
+  public InputStream decompressedByteStream() throws DescriptorParseException {
+    try {
+      return this.fileType.decompress(new ByteArrayInputStream(this.logBytes));
+    } catch (Exception ex) {
+      throw new DescriptorParseException("Cannot provide deflated stream of "
+          + this.descriptorFile + ".", ex);
+    }
+  }
+
+  @Override
   public void validate() throws DescriptorParseException {
-    try (BufferedReader br
-         = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
-         this.logBytes)))) {
+    try (BufferedReader br = new BufferedReader(
+        new InputStreamReader(decompressedByteStream()))) {
       this.unrecognizedLines.addAll(br.lines().parallel().filter((line)
           -> null != line && !line.isEmpty() && !validator.validate(line))
           .limit(unrecognizedLinesLimit).collect(Collectors.toList()));
@@ -112,11 +120,6 @@ public abstract class LogDescriptorImpl
       throw new DescriptorParseException("Cannot parse file "
           + descriptorFile.getName());
     }
-  }
-
-  public static byte[] collectionToBytes(Collection<String> lines) {
-    return lines.stream().collect(Collectors.joining("\n", "", "\n"))
-        .getBytes();
   }
 
   @Override

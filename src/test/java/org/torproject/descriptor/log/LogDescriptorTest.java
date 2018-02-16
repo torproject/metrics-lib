@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import java.io.File;
@@ -46,44 +47,43 @@ public class LogDescriptorTest {
   protected DescriptorReader reader
       = DescriptorSourceFactory.createDescriptorReader();
 
-  protected int size;
-  protected String[] pan;
-  protected Class<LogDescriptor> type;
-  protected boolean isDecompressionTest;
-  protected int lineCount;
+  @Parameter(0)
+  public boolean isDecompressedLog;
+
+  @Parameter(1)
+  public int size;
+
+  @Parameter(2)
+  public String[] pan;
+
+  @Parameter(3)
+  public Class<LogDescriptor> type;
+
+  @Parameter(4)
+  public int lineCount;
 
   /** All types of data that can be encountered during sync. */
   @Parameters
   public static Collection<Object[]> pathAndName() {
     return Arrays.asList(new Object[][] {
-        {Boolean.TRUE, 1878, new String[]{"meronense.torproject.org",
+        {Boolean.FALSE, 1878, new String[]{"meronense.torproject.org",
             "metrics.torproject.org_meronense.torproject.org_access.log"
             + "_20170530.gz",
             "metrics.torproject.org", "20170530", "gz"},
          WebServerAccessLog.class, 24},
-        {Boolean.FALSE, 1878, new String[]{"meronense.torproject.org",
+        {Boolean.TRUE, 1878, new String[]{"meronense.torproject.org",
             "xy.host.org_meronense.torproject.org_access.log_20170530.log",
             "metrics.torproject.org", "20170530", "xz"},
          WebServerAccessLog.class, 24},
-        {Boolean.TRUE, 70730, new String[]{"archeotrichon.torproject.org",
+        {Boolean.FALSE, 70730, new String[]{"archeotrichon.torproject.org",
             "archive.torproject.org_archeotrichon.torproject.org_access.log_"
             + "20151007.xz",
             "archive.torproject.org", "20151007", "xz"},
          WebServerAccessLog.class, 655},
-        {Boolean.TRUE, 0, new String[]{"dummy.host.net",
+        {Boolean.FALSE, 0, new String[]{"dummy.host.net",
             "nix.server.org_dummy.host.net_access.log_20111111.bz2",
             "nix.server.org", "20111111", "bz2"},
          WebServerAccessLog.class, 0}});
-  }
-
-  /** This constructor receives the above defined data for each run. */
-  public LogDescriptorTest(boolean decompression, int size, String[] pan,
-        Class<LogDescriptor> type, int lineCount) {
-    this.pan = pan;
-    this.size = size;
-    this.type = type;
-    this.isDecompressionTest = decompression;
-    this.lineCount = lineCount;
   }
 
   /** Prepares the temporary folder and writes files to it for this test. */
@@ -157,7 +157,7 @@ public class LogDescriptorTest {
 
   @Test
   public void testCompressionInvalid() throws Exception {
-    if (!isDecompressionTest) {
+    if (isDecompressedLog) {
       return;
     }
     assertEquals(1, this.reader.getParsedFiles().size());

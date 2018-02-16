@@ -11,12 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,10 +70,9 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
   }
 
   /** For internal use only. */
-  public WebServerAccessLogImpl(Collection<String> lines, String filename,
+  public WebServerAccessLogImpl(byte[] bytes, String filename,
       boolean validate) throws DescriptorParseException {
-    this(LogDescriptorImpl.collectionToBytes(lines), new File(filename),
-        FileType.XZ, validate);
+    this(bytes, new File(filename), FileType.XZ, validate);
   }
 
   private WebServerAccessLogImpl(byte[] logBytes, File file,
@@ -135,9 +132,8 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
   @Override
   public List<WebServerAccessLog.Line> logLines()
       throws DescriptorParseException {
-    try (BufferedReader br
-        = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(
-        this.getRawDescriptorBytes())))) {
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(
+        this.decompressedByteStream()))) {
       return br.lines().map(line
           -> (WebServerAccessLog.Line) WebServerAccessLogLine.makeLine(line))
         .filter(line -> line.isValid()).collect(Collectors.toList());
