@@ -62,6 +62,12 @@ public interface WebServerAccessLog extends LogDescriptor {
   @Override
   public List<String> getUnrecognizedLines();
 
+  /**
+   * Facilitates access to all log line fields that don't only contain
+   * default values post sanitization.
+   *
+   * @since 2.2.0
+   */
   public interface Line extends LogDescriptor.Line {
 
     /** Returns the IP address of the requesting host. */

@@ -15,10 +15,11 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Implementation of web server access log descriptors.
@@ -128,15 +129,34 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
     return this.logDate;
   }
 
-  /** Returns a list of all valid log lines. */
+  private static final int LISTLIMIT = Integer.MAX_VALUE / 2;
+
+  /** Returns a stream of all valid log lines. */
   @Override
-  public List<WebServerAccessLog.Line> logLines()
+  public Stream<WebServerAccessLog.Line> logLines()
       throws DescriptorParseException {
     try (BufferedReader br = new BufferedReader(new InputStreamReader(
         this.decompressedByteStream()))) {
-      return br.lines().map(line
-          -> (WebServerAccessLog.Line) WebServerAccessLogLine.makeLine(line))
-        .filter(line -> line.isValid()).collect(Collectors.toList());
+      List<List<WebServerAccessLogLine>> lists = new ArrayList<>();
+      List<WebServerAccessLogLine> currentList = new ArrayList<>();
+      lists.add(currentList);
+      String lineStr = br.readLine();
+      int count = 0;
+      while (null != lineStr) {
+        WebServerAccessLogLine wsal = WebServerAccessLogLine.makeLine(lineStr);
+        if (wsal.isValid()) {
+          currentList.add(wsal);
+          count++;
+        }
+        if (count >= LISTLIMIT) {
+          currentList = new ArrayList<>();
+          lists.add(currentList);
+          count = 0;
+        }
+        lineStr = br.readLine();
+      }
+      br.close();
+      return lists.stream().flatMap(list -> list.stream());
     } catch (Exception ex) {
       throw new DescriptorParseException("Cannot retrieve log lines.", ex);
     }

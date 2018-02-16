@@ -3,6 +3,8 @@
 
 package org.torproject.descriptor.log;
 
+import static java.util.stream.Collectors.toList;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -130,7 +132,8 @@ public class LogDescriptorTest {
     InternalLogDescriptor ld = (InternalLogDescriptor) descs.get(0);
     assertEquals("Wrong compression type string. " + dataUsed(),
         pan[4], ld.getCompressionType());
-    List<? extends LogDescriptor.Line> lines = ld.logLines();
+    List<? extends LogDescriptor.Line> lines
+        = ld.logLines().collect(toList());
     assertEquals(this.lineCount, lines.size());
   }
 

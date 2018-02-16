@@ -5,6 +5,7 @@ package org.torproject.descriptor;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Contains a log file.
@@ -64,11 +65,14 @@ public interface LogDescriptor extends Descriptor {
   public List<String> getUnrecognizedLines();
 
   /**
-   * Returns a list of all parseable log lines.
-   * <p>Might require a lot of memory depending on log size.</p>
+   * Returns a stream of all parseable log lines.
+   * <p>Depending on log size this might not fit into a collection type.</p>
+   *
+   * @since 2.2.0
    */
-  public List<? extends Line> logLines() throws DescriptorParseException;
+  public Stream<? extends Line> logLines() throws DescriptorParseException;
 
+  /** Base interface for accessing log lines. */
   public interface Line {
 
     /** Returns a log line string. */
