@@ -6,6 +6,7 @@ package org.torproject.descriptor;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Contains a sanitized web server access log file from a {@code torproject.org}
@@ -61,6 +62,15 @@ public interface WebServerAccessLog extends LogDescriptor {
    */
   @Override
   public List<String> getUnrecognizedLines();
+
+  /**
+   * Returns a stream of all valid log lines.
+   *
+   * @since 2.3.0
+   */
+  @Override
+  public Stream<WebServerAccessLog.Line> logLines()
+      throws DescriptorParseException;
 
   /**
    * Facilitates access to all log line fields that don't only contain
