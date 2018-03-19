@@ -1,3 +1,10 @@
+# Changes in version 2.3.0 - 2018-0?-??
+
+ * Minor changes.
+   - Override logLines() method from LogDescriptor in
+     WebServerAccessLog.
+
+
 # Changes in version 2.2.0 - 2018-02-26
 
  * Major changes
