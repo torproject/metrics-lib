@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.SortedMap;
@@ -36,6 +37,12 @@ import java.util.TreeSet;
 public class IndexNode {
 
   private static Logger log = LoggerFactory.getLogger(IndexNode.class);
+
+  private static final int READ_TIMEOUT = Integer.parseInt(System
+      .getProperty("sun.net.client.defaultReadTimeout", "60000"));
+
+  private static final int CONNECT_TIMEOUT = Integer.parseInt(System
+      .getProperty("sun.net.client.defaultConnectTimeout", "60000"));
 
   /** An empty node, which is not added to JSON output. */
   public static final IndexNode emptyNode = new IndexNode("", "",
@@ -97,8 +104,12 @@ public class IndexNode {
   public static IndexNode fetchIndex(String urlString) throws Exception {
     String ending
         = urlString.substring(urlString.lastIndexOf(".") + 1).toUpperCase();
+    URLConnection connection = (new URL(urlString)).openConnection();
+    connection.setReadTimeout(READ_TIMEOUT);
+    connection.setConnectTimeout(CONNECT_TIMEOUT);
+    connection.connect();
     try (InputStream is = FileType.valueOf(ending)
-        .inputStream(new URL(urlString).openStream())) {
+        .inputStream(connection.getInputStream())) {
       return fetchIndex(is);
     }
   }
