@@ -64,14 +64,15 @@ public abstract class LogDescriptorImpl
    * @since 2.2.0
    */
   protected LogDescriptorImpl(byte[] logBytes, File descriptorFile,
-       FileType defaultCompression) throws DescriptorParseException {
+       String logName, FileType defaultCompression)
+       throws DescriptorParseException {
     this.logBytes = logBytes;
     this.descriptorFile = descriptorFile;
     try {
-      Matcher mat = filenamePattern.matcher(descriptorFile.getName());
+      Matcher mat = filenamePattern.matcher(logName);
       if (!mat.find()) {
         throw new DescriptorParseException(
-            "Log file name doesn't comply to standard: " + descriptorFile);
+            "Log file name doesn't comply to standard: " + logName);
       }
       this.fileType = FileType.findType(mat.group(1).toUpperCase());
       if (FileType.PLAIN == this.fileType) {
@@ -80,7 +81,7 @@ public abstract class LogDescriptorImpl
       }
     } catch (Exception ex) {
       throw new DescriptorParseException("Cannot parse file "
-          + descriptorFile.getName(), ex);
+          + logName + " from file " + descriptorFile.getName(), ex);
     }
   }
 
@@ -112,13 +113,13 @@ public abstract class LogDescriptorImpl
    * @since 2.2.0
    */
   public static List<Descriptor> parse(byte[] logBytes,
-      File descriptorFile) throws DescriptorParseException {
-    if (descriptorFile.getName().contains(InternalWebServerAccessLog.MARKER)) {
+      File descriptorFile, String logName) throws DescriptorParseException {
+    if (logName.contains(InternalWebServerAccessLog.MARKER)) {
       return Arrays.asList(new Descriptor[]{
-          new WebServerAccessLogImpl(logBytes, descriptorFile)});
+          new WebServerAccessLogImpl(logBytes, descriptorFile, logName)});
     } else {
-      throw new DescriptorParseException("Cannot parse file "
-          + descriptorFile.getName());
+      throw new DescriptorParseException("Cannot parse file " + logName
+          + " from file " + descriptorFile.getName());
     }
   }
 

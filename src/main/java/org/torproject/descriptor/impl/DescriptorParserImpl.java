@@ -130,8 +130,8 @@ public class DescriptorParserImpl implements DescriptorParser {
     } else if (firstLines.startsWith("@type torperf 1.")) {
       return TorperfResultImpl.parseTorperfResults(rawDescriptorBytes,
           sourceFile);
-    } else if (sourceFile.getName().contains(LogDescriptorImpl.MARKER)) {
-      return LogDescriptorImpl.parse(rawDescriptorBytes, sourceFile);
+    } else if (fileName.contains(LogDescriptorImpl.MARKER)) {
+      return LogDescriptorImpl.parse(rawDescriptorBytes, sourceFile, fileName);
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");

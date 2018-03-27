@@ -79,7 +79,7 @@ public class WebServerAccessLogTest {
   @Test
   public void testValidation() throws Exception {
     WebServerAccessLogImpl wsal
-        = new WebServerAccessLogImpl(real.getBytes(), file);
+        = new WebServerAccessLogImpl(real.getBytes(), file, fn);
     wsal.validate();
     if (valid) {
       assertEquals(0, wsal.getUnrecognizedLines().size());

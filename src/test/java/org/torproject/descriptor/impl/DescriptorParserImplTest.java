@@ -4,9 +4,13 @@
 package org.torproject.descriptor.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
+import org.torproject.descriptor.DescriptorReader;
+import org.torproject.descriptor.DescriptorSourceFactory;
+import org.torproject.descriptor.WebServerAccessLog;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,6 +49,20 @@ public class DescriptorParserImplTest {
       parsedDescriptors++;
     }
     assertEquals(1, parsedDescriptors);
+  }
+
+  @Test
+  public void testParseDescriptorTar() throws Exception {
+    DescriptorReader dr = DescriptorSourceFactory.createDescriptorReader();
+    int count = 0;
+    for (Descriptor desc : dr.readDescriptors(new File(getClass()
+        .getClassLoader().getResource("webstats-2015-02.tar").toURI()))) {
+      assertTrue(desc instanceof WebServerAccessLog);
+      assertTrue(desc.getDescriptorFile().toString()
+          .endsWith("webstats-2015-02.tar"));
+      count++;
+    }
+    assertEquals(7, count);
   }
 
   @Test

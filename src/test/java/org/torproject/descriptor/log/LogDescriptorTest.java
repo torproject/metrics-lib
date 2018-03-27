@@ -149,8 +149,8 @@ public class LogDescriptorTest {
     File invalidFile = new File(this.reader.getParsedFiles().firstKey()
         .replace("access", "-"));
     List<Descriptor> descs = new ArrayList<>();
-    for (Descriptor desc // note: only 'invalidFile' is used by LogDescriptor
-        : dp.parseDescriptors(new byte[]{}, invalidFile, logFile.getName())) {
+    for (Descriptor desc // note: only 'invalidFile' is used by DescriptorReader
+        : dp.parseDescriptors(new byte[]{}, logFile, invalidFile.getName())) {
       descs.add(desc);
     }
     assertTrue(dataUsed() + "\nWrong type: "

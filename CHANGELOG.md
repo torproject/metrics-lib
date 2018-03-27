@@ -4,6 +4,9 @@
    - Replace ServerDescriptor#getHiddenServiceDirVersions with
      ServerDescriptor#isHiddenServiceDir, because Tor has never
      supported versions in the hidden-service-dir descriptor line.
+   - Add support for reading web server logs contained in tarballs by
+     providing file names of both the tarball and of contained files
+     to WebServerAccessLog.
 
  * Minor changes
    - Override logLines() method from LogDescriptor in

@@ -14,7 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -31,8 +30,7 @@ public class WebServerModuleTest {
     thrown.expectMessage(Matchers
          .containsString("Cannot parse WebServerAccessLog file: "
          + filename));
-    new WebServerAccessLogImpl(new byte[0],
-        new File(filename));
+    new WebServerAccessLogImpl(new byte[0], null, filename);
   }
 
   @Test
@@ -42,8 +40,7 @@ public class WebServerModuleTest {
     thrown.expectMessage(Matchers
          .containsString("Cannot parse WebServerAccessLog file: "
          + filename));
-    new WebServerAccessLogImpl(new byte[0],
-        new File(filename));
+    new WebServerAccessLogImpl(new byte[0], null, filename);
   }
 
   @Test
@@ -53,8 +50,7 @@ public class WebServerModuleTest {
     thrown.expectMessage(Matchers
          .containsString("WebServerAccessLog "
          + "file name doesn't comply to standard: " + filename));
-    new WebServerAccessLogImpl(new byte[0],
-        new File(filename));
+    new WebServerAccessLogImpl(new byte[0], null, filename);
   }
 
   @Test
@@ -64,8 +60,7 @@ public class WebServerModuleTest {
     thrown.expectMessage(Matchers
          .containsString("WebServerAccessLog "
          + "file name doesn't comply to standard: " + filename));
-    new WebServerAccessLogImpl(new byte[0],
-        new File(filename));
+    new WebServerAccessLogImpl(new byte[0], null, filename);
   }
 
   @Test
@@ -75,8 +70,7 @@ public class WebServerModuleTest {
     thrown.expectMessage(Matchers
          .containsString("WebServerAccessLog "
          + "file name doesn't comply to standard: " + filename));
-    new WebServerAccessLogImpl(new byte[0],
-        new File(filename));
+    new WebServerAccessLogImpl(new byte[0], null, filename);
   }
 
   private static String[] logLines = {
@@ -103,7 +97,7 @@ public class WebServerModuleTest {
   @Test
   public void testBasics() throws Exception {
     WebServerAccessLogImpl wsal = new WebServerAccessLogImpl(logText.getBytes(),
-        new File("vhost_host7_access.log_20170530"));
+        null, "vhost_host7_access.log_20170530");
     assertEquals(wsal.getAnnotations().size(), 0);
     assertEquals(logText,
         new String(FileType.XZ.decompress(wsal.getRawDescriptorBytes())));

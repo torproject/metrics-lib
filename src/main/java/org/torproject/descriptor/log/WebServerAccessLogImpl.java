@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -65,28 +66,34 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
    * The immediate parent name is taken to be the physical host collecting the
    * logs.</p>
    */
-  protected WebServerAccessLogImpl(byte[] logBytes, File file)
+  protected WebServerAccessLogImpl(byte[] logBytes, File file, String logName)
       throws DescriptorParseException {
-    this(logBytes, file, FileType.XZ);
+    this(logBytes, file, logName, FileType.XZ);
   }
 
   /** For internal use only. */
   public WebServerAccessLogImpl(byte[] bytes, String filename,
       boolean validate) throws DescriptorParseException {
-    this(bytes, new File(filename), FileType.XZ, validate);
+    this(bytes, null, filename, FileType.XZ, validate);
   }
 
-  private WebServerAccessLogImpl(byte[] logBytes, File file,
+  /** For internal use only. */
+  public WebServerAccessLogImpl(byte[] bytes, File sourceFile, String filename,
+      boolean validate) throws DescriptorParseException {
+    this(bytes, sourceFile, filename, FileType.XZ, validate);
+  }
+
+  private WebServerAccessLogImpl(byte[] logBytes, File file, String logName,
       FileType defaultCompression) throws DescriptorParseException {
-    this(logBytes, file, defaultCompression, true);
+    this(logBytes, file, logName, defaultCompression, true);
   }
 
-  private WebServerAccessLogImpl(byte[] logBytes, File file,
+  private WebServerAccessLogImpl(byte[] logBytes, File file, String logName,
       FileType defaultCompression, boolean validate)
       throws DescriptorParseException {
-    super(logBytes, file, defaultCompression);
+    super(logBytes, file, logName, defaultCompression);
     try {
-      String fn = file.toPath().getFileName().toString();
+      String fn = Paths.get(logName).getFileName().toString();
       Matcher mat = filenamePattern.matcher(fn);
       if (!mat.find()) {
         throw new DescriptorParseException(
@@ -110,7 +117,7 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
       throw dpe; // escalate
     } catch (Exception pe) {
       throw new DescriptorParseException(
-          "Cannot parse WebServerAccessLog file: " + file, pe);
+          "Cannot parse WebServerAccessLog file: " + logName, pe);
     }
   }
 
