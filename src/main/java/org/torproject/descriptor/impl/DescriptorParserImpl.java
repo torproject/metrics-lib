@@ -28,21 +28,21 @@ public class DescriptorParserImpl implements DescriptorParser {
 
   @Override
   public Iterable<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
-      File descriptorFile, String fileName) {
+      File sourceFile, String fileName) {
     try {
       return this.detectTypeAndParseDescriptors(rawDescriptorBytes,
-          descriptorFile, fileName);
+          sourceFile, fileName);
     } catch (DescriptorParseException e) {
-      log.debug("Cannot parse descriptor file ’{}’.", descriptorFile, e);
+      log.debug("Cannot parse descriptor file ’{}’.", sourceFile, e);
       List<Descriptor> parsedDescriptors = new ArrayList<>();
       parsedDescriptors.add(new UnparseableDescriptorImpl(rawDescriptorBytes,
-          new int[] { 0, rawDescriptorBytes.length }, descriptorFile, e));
+          new int[] { 0, rawDescriptorBytes.length }, sourceFile, e));
       return parsedDescriptors;
     }
   }
 
   private List<Descriptor> detectTypeAndParseDescriptors(
-      byte[] rawDescriptorBytes, File descriptorFile, String fileName)
+      byte[] rawDescriptorBytes, File sourceFile, String fileName)
       throws DescriptorParseException {
     byte[] first100Chars = new byte[Math.min(100,
         rawDescriptorBytes.length)];
@@ -58,7 +58,7 @@ public class DescriptorParserImpl implements DescriptorParser {
         NL + Key.NETWORK_STATUS_VERSION.keyword + SP + "3"))
         && firstLines.contains(
         NL + Key.VOTE_STATUS.keyword + SP + "consensus" + NL))) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.NETWORK_STATUS_VERSION, RelayNetworkStatusConsensusImpl.class);
     } else if (firstLines.startsWith("@type network-status-vote-3 1.")
         || ((firstLines.startsWith(
@@ -67,52 +67,52 @@ public class DescriptorParserImpl implements DescriptorParser {
         NL + Key.NETWORK_STATUS_VERSION.keyword + SP + "3" + NL))
         && firstLines.contains(
         NL + Key.VOTE_STATUS.keyword + SP + "vote" + NL))) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.NETWORK_STATUS_VERSION, RelayNetworkStatusVoteImpl.class);
     } else if (firstLines.startsWith("@type bridge-network-status 1.")
         || firstLines.startsWith(Key.R.keyword + SP)) {
       List<Descriptor> parsedDescriptors = new ArrayList<>();
       parsedDescriptors.add(new BridgeNetworkStatusImpl(
           rawDescriptorBytes, new int[] { 0, rawDescriptorBytes.length },
-          descriptorFile, fileName));
+          sourceFile, fileName));
       return parsedDescriptors;
     } else if (firstLines.startsWith("@type bridge-server-descriptor 1.")) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.ROUTER, BridgeServerDescriptorImpl.class);
     } else if (firstLines.startsWith("@type server-descriptor 1.")
         || firstLines.startsWith(Key.ROUTER.keyword + SP)
         || firstLines.contains(NL + Key.ROUTER.keyword + SP)) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.ROUTER, RelayServerDescriptorImpl.class);
     } else if (firstLines.startsWith("@type bridge-extra-info 1.")) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.EXTRA_INFO, BridgeExtraInfoDescriptorImpl.class);
     } else if (firstLines.startsWith("@type extra-info 1.")
         || firstLines.startsWith(Key.EXTRA_INFO.keyword + SP)
         || firstLines.contains(NL + Key.EXTRA_INFO.keyword + SP)) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.EXTRA_INFO, RelayExtraInfoDescriptorImpl.class);
     } else if (firstLines.startsWith("@type microdescriptor 1.")
         || firstLines.startsWith(Key.ONION_KEY.keyword + NL)
         || firstLines.contains(NL + Key.ONION_KEY.keyword + NL)) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.ONION_KEY, MicrodescriptorImpl.class);
     } else if (firstLines.startsWith("@type bridge-pool-assignment 1.")
         || firstLines.startsWith(Key.BRIDGE_POOL_ASSIGNMENT.keyword + SP)
         || firstLines.contains(NL + Key.BRIDGE_POOL_ASSIGNMENT.keyword + SP)) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.BRIDGE_POOL_ASSIGNMENT, BridgePoolAssignmentImpl.class);
     } else if (firstLines.startsWith("@type dir-key-certificate-3 1.")
         || firstLines.startsWith(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP)
         || firstLines.contains(
         NL + Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP)) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.DIR_KEY_CERTIFICATE_VERSION, DirectoryKeyCertificateImpl.class);
     } else if (firstLines.startsWith("@type tordnsel 1.")
         || firstLines.startsWith("ExitNode" + SP)
         || firstLines.contains(NL + "ExitNode" + SP)) {
       List<Descriptor> parsedDescriptors = new ArrayList<>();
-      parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, descriptorFile,
+      parsedDescriptors.add(new ExitListImpl(rawDescriptorBytes, sourceFile,
           fileName));
       return parsedDescriptors;
     } else if (firstLines.startsWith("@type network-status-2 1.")
@@ -120,18 +120,18 @@ public class DescriptorParserImpl implements DescriptorParser {
         Key.NETWORK_STATUS_VERSION.keyword + SP + "2" + NL)
         || firstLines.contains(
         NL + Key.NETWORK_STATUS_VERSION.keyword + SP + "2" + NL)) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.NETWORK_STATUS_VERSION, RelayNetworkStatusImpl.class);
     } else if (firstLines.startsWith("@type directory 1.")
         || firstLines.startsWith(Key.SIGNED_DIRECTORY.keyword + NL)
         || firstLines.contains(NL + Key.SIGNED_DIRECTORY.keyword + NL)) {
-      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, descriptorFile,
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.SIGNED_DIRECTORY, RelayDirectoryImpl.class);
     } else if (firstLines.startsWith("@type torperf 1.")) {
       return TorperfResultImpl.parseTorperfResults(rawDescriptorBytes,
-          descriptorFile);
-    } else if (descriptorFile.getName().contains(LogDescriptorImpl.MARKER)) {
-      return LogDescriptorImpl.parse(rawDescriptorBytes, descriptorFile);
+          sourceFile);
+    } else if (sourceFile.getName().contains(LogDescriptorImpl.MARKER)) {
+      return LogDescriptorImpl.parse(rawDescriptorBytes, sourceFile);
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");
@@ -139,7 +139,7 @@ public class DescriptorParserImpl implements DescriptorParser {
   }
 
   private List<Descriptor> parseOneOrMoreDescriptors(byte[] rawDescriptorBytes,
-      File descriptorFile, Key key,
+      File sourceFile, Key key,
       Class<? extends DescriptorImpl> descriptorClass)
       throws DescriptorParseException {
     List<Descriptor> parsedDescriptors = new ArrayList<>();
@@ -192,10 +192,10 @@ public class DescriptorParserImpl implements DescriptorParser {
           endDescriptor - startAnnotations };
       try {
         parsedDescriptors.add(this.parseOneDescriptor(rawDescriptorBytes,
-            offsetAndLength, descriptorFile, constructor));
+            offsetAndLength, sourceFile, constructor));
       } catch (DescriptorParseException e) {
         parsedDescriptors.add(new UnparseableDescriptorImpl(
-            rawDescriptorBytes, offsetAndLength, descriptorFile, e));
+            rawDescriptorBytes, offsetAndLength, sourceFile, e));
       }
       startAnnotations = endDescriptor;
     }
@@ -203,12 +203,12 @@ public class DescriptorParserImpl implements DescriptorParser {
   }
 
   Descriptor parseOneDescriptor(byte[] rawDescriptorBytes,
-      int[] offsetAndLength, File descriptorFile,
+      int[] offsetAndLength, File sourceFile,
       Constructor<? extends DescriptorImpl> constructor)
       throws DescriptorParseException {
     try {
       return constructor.newInstance(rawDescriptorBytes, offsetAndLength,
-          descriptorFile);
+          sourceFile);
     } catch (InvocationTargetException e) {
       if (null != e.getCause()
           && e.getCause() instanceof DescriptorParseException) {

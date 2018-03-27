@@ -28,9 +28,10 @@ public interface DescriptorParser {
    *
    * @param rawDescriptorBytes Raw descriptor bytes containing one or more
    *     descriptors
-   * @param descriptorFile Optional descriptor file reference included in
-   *     parsed/unparseable descriptors
-   * @param fileName Descriptor file name used for parsing the descriptor
+   * @param sourceFile Optional descriptor source file reference, e.g., the name
+   *     of a tar file that contains descriptors, included in parsed/unparseable
+   *     descriptors.
+   * @param fileName Proper file name for the descriptor used as a parser hint,
    *     publication time of some descriptor types
    *
    * @return Parsed/unparseable descriptors
@@ -38,5 +39,5 @@ public interface DescriptorParser {
    * @since 1.9.0
    */
   public Iterable<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
-      File descriptorFile, String fileName);
+      File sourceFile, String fileName);
 }
