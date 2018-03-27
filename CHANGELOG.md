@@ -3,6 +3,8 @@
  * Minor changes.
    - Override logLines() method from LogDescriptor in
      WebServerAccessLog.
+   - Use 1-minute connect and read timeouts for fetching CollecTor's
+     index.json.
 
 
 # Changes in version 2.2.0 - 2018-02-26
