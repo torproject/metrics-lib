@@ -482,8 +482,7 @@ public class ServerDescriptorImplTest {
     assertEquals(53470, (int) descriptor.getBandwidthObserved());
     assertEquals("1469D1550738A25B1E7B47CDDBCD7B2899F51B74",
         descriptor.getExtraInfoDigestSha1Hex());
-    assertEquals(Arrays.asList(new Integer[] {2}),
-        descriptor.getHiddenServiceDirVersions());
+    assertTrue(descriptor.isHiddenServiceDir());
     assertEquals("Random Person <nobody AT example dot com>",
         descriptor.getContact());
     assertEquals(Arrays.asList(new String[] {"reject *:*"}),
@@ -1014,7 +1013,7 @@ public class ServerDescriptorImplTest {
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithHiddenServiceDirLine(null);
-    assertNull(descriptor.getHiddenServiceDirVersions());
+    assertFalse(descriptor.isHiddenServiceDir());
   }
 
   @Test
@@ -1022,8 +1021,7 @@ public class ServerDescriptorImplTest {
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithHiddenServiceDirLine("hidden-service-dir");
-    assertEquals(Arrays.asList(new Integer[] {2}),
-        descriptor.getHiddenServiceDirVersions());
+    assertTrue(descriptor.isHiddenServiceDir());
   }
 
   @Test
@@ -1031,8 +1029,7 @@ public class ServerDescriptorImplTest {
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithHiddenServiceDirLine("hidden-service-dir 2 3");
-    assertEquals(Arrays.asList(new Integer[] {2, 3}),
-        descriptor.getHiddenServiceDirVersions());
+    assertTrue(descriptor.isHiddenServiceDir());
   }
 
   @Test

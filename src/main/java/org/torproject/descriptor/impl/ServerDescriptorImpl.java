@@ -10,6 +10,7 @@ import org.torproject.descriptor.ServerDescriptor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Scanner;
@@ -462,21 +463,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   }
 
   private void parseHiddenServiceDirLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
-    if (partsNoOpt.length == 1) {
-      this.hiddenServiceDirVersions = new Integer[] { 2 };
-    } else {
-      try {
-        Integer[] result = new Integer[partsNoOpt.length - 1];
-        for (int i = 1; i < partsNoOpt.length; i++) {
-          result[i - 1] = Integer.parseInt(partsNoOpt[i]);
-        }
-        this.hiddenServiceDirVersions = result;
-      } catch (NumberFormatException e) {
-        throw new DescriptorParseException("Illegal value in line '"
-            + line + "'.");
-      }
-    }
+      String[] partsNoOpt) {
+    this.hiddenServiceDir = true;
   }
 
   private void parseProtocolsLine(String line, String lineNoOpt,
@@ -854,12 +842,17 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     return this.extraInfoDigestSha256;
   }
 
-  private Integer[] hiddenServiceDirVersions;
+  private boolean hiddenServiceDir;
 
   @Override
+  public boolean isHiddenServiceDir() {
+    return this.hiddenServiceDir;
+  }
+
+  @Override
+  @SuppressWarnings("deprecation")
   public List<Integer> getHiddenServiceDirVersions() {
-    return this.hiddenServiceDirVersions == null ? null
-        : Arrays.asList(this.hiddenServiceDirVersions);
+    return this.hiddenServiceDir ? null : Collections.singletonList(2);
   }
 
   private Integer[] linkProtocolVersions;

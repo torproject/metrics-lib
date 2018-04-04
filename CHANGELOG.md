@@ -1,6 +1,11 @@
 # Changes in version 2.3.0 - 2018-0?-??
 
- * Minor changes.
+ * Medium changes
+   - Replace ServerDescriptor#getHiddenServiceDirVersions with
+     ServerDescriptor#isHiddenServiceDir, because Tor has never
+     supported versions in the hidden-service-dir descriptor line.
+
+ * Minor changes
    - Override logLines() method from LogDescriptor in
      WebServerAccessLog.
    - Use 1-minute connect and read timeouts for fetching CollecTor's

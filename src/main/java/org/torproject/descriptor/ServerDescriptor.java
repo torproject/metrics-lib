@@ -318,9 +318,19 @@ public interface ServerDescriptor extends Descriptor {
    * this server stores and serves, or null if it doesn't store and serve
    * any hidden service descriptors.
    *
+   * @deprecated Replaced with {@link #isHiddenServiceDir}, because Tor has
+   *     never supported versions in the hidden-service-dir descriptor line.
+   *
    * @since 1.0.0
    */
   public List<Integer> getHiddenServiceDirVersions();
+
+  /**
+   * Return whether this server stores and serves hidden service descriptors.
+   *
+   * @since 2.3.0
+   */
+  public boolean isHiddenServiceDir();
 
   /**
    * Return the list of link protocol versions that this server
