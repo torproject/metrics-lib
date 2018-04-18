@@ -1,4 +1,4 @@
-# Changes in version 2.3.0 - 2018-0?-??
+# Changes in version 2.3.0 - 2018-04-18
 
  * Medium changes
    - Replace ServerDescriptor#getHiddenServiceDirVersions with
