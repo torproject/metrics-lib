@@ -5,19 +5,20 @@ package org.torproject.descriptor.index;
 
 import org.torproject.descriptor.internal.FileType;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -34,6 +35,7 @@ import java.util.TreeSet;
  *
  * @since 1.4.0
  */
+@JsonPropertyOrder({ "created", "revision", "path", "directories", "files" })
 public class IndexNode {
 
   private static Logger log = LoggerFactory.getLogger(IndexNode.class);
@@ -48,29 +50,30 @@ public class IndexNode {
   public static final IndexNode emptyNode = new IndexNode("", "",
       new TreeSet<FileNode>(), new TreeSet<DirectoryNode>());
 
+  private static ObjectMapper objectMapper = new ObjectMapper()
+      .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+      .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+      .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+      .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
   /** The created date-time is exposed in JSON as 'index_created' field. */
-  @Expose
-  @SerializedName("index_created")
+  @JsonProperty("index_created")
   public final String created;
 
   /** The software's build revision JSON as 'build_revision' field. */
-  @Expose
-  @SerializedName("build_revision")
+  @JsonProperty("build_revision")
   public final String revision;
 
   /** Path (i.e. base url) is exposed in JSON. */
-  @Expose
   public final String path;
 
   /** The directory list is exposed in JSON. Sorted according to path. */
-  @Expose
   public final SortedSet<DirectoryNode> directories;
 
   /** The file list is exposed in JSON. Sorted according to path. */
-  @Expose
   public final SortedSet<FileNode> files;
 
-  /* Added to satisfy Gson. */
+  /* Added to satisfy Jackson. */
   private IndexNode() {
     this.created = null;
     this.revision = null;
@@ -119,11 +122,7 @@ public class IndexNode {
    * Returns an empty IndexNode in case of an error.
    */
   public static IndexNode fetchIndex(InputStream is) throws IOException {
-    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-        .create();
-    try (Reader reader = new InputStreamReader(is)) {
-      return gson.fromJson(reader, IndexNode.class);
-    }
+    return objectMapper.readValue(is, IndexNode.class);
   }
 
   /** Return a map of file paths for the given directories. */
@@ -185,10 +184,8 @@ public class IndexNode {
   }
 
   /** Write JSON representation of the given index node to a string. */
-  public static String makeJsonString(IndexNode indexNode) {
-    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-        .create();
-    return gson.toJson(indexNode);
+  public static String makeJsonString(IndexNode indexNode) throws IOException {
+    return objectMapper.writeValueAsString(indexNode);
   }
 
   /** For debugging purposes. */

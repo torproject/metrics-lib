@@ -3,8 +3,6 @@
 
 package org.torproject.descriptor.index;
 
-import com.google.gson.annotations.Expose;
-
 import java.util.SortedSet;
 
 /**
@@ -15,22 +13,19 @@ import java.util.SortedSet;
 public class DirectoryNode implements Comparable<DirectoryNode> {
 
   /** Path (i.e. directory name) is exposed in JSON. */
-  @Expose
   public final String path;
 
   /** The file list is exposed in JSON. Sorted according to path. */
-  @Expose
   public final SortedSet<FileNode> files;
 
   /** The directory list is exposed in JSON. Sorted according to path. */
-  @Expose
   public final SortedSet<DirectoryNode> directories;
 
-  /* Added to satisfy Gson. */
+  /* Added to satisfy Jackson. */
   private DirectoryNode() {
-    path = null;
-    files = null;
-    directories = null;
+    this.path = null;
+    this.files = null;
+    this.directories = null;
   }
 
   /** A directory for the JSON structure. */

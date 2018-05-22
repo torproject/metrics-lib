@@ -7,6 +7,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.fasterxml.jackson.core.JsonParseException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -114,7 +116,7 @@ public class IndexNodeTest {
     IndexNode.fetchIndex(indexUrl.toString());
   }
 
-  @Test(expected = com.google.gson.JsonSyntaxException.class)
+  @Test(expected = JsonParseException.class)
   public void testWrongJson() throws Exception {
     URL indexUrl = getClass().getClassLoader().getResource("index1.json.gz");
     IndexNode.fetchIndex(indexUrl.openStream());

@@ -1,3 +1,11 @@
+# Changes in version 2.4.0 - 2018-05-??
+
+ * Medium changes
+   - Replace Gson with Jackson. Applications must provide Jackson
+     2.8.6 or compatible as dependency and do not need to provide Gson
+     as dependency anymore.
+
+
 # Changes in version 2.3.0 - 2018-04-18
 
  * Medium changes

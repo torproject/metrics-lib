@@ -3,8 +3,7 @@
 
 package org.torproject.descriptor.index;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,18 +24,15 @@ public class FileNode implements Comparable<FileNode> {
   private static Logger log = LoggerFactory.getLogger(FileNode.class);
 
   /** Path (i.e. file name) is exposed in JSON. */
-  @Expose
   public final String path;
 
   /** The file size is exposed in JSON. */
-  @Expose
   public final long size;
 
   /** The last modified date-time string is exposed in JSON. */
-  @Expose
-  @SerializedName("last_modified")
   public final String lastModified;
 
+  @JsonIgnore
   private long lastModifiedMillis;
 
   /* Added to satisfy Gson. */

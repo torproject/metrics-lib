@@ -15,7 +15,9 @@
 
   <patternset id="runtime" >
       <include name="commons-compress-1.13.jar"/>
-      <include name="gson-2.4.jar"/>
+      <include name="jackson-annotations-2.8.6.jar"/>
+      <include name="jackson-core-2.8.6.jar"/>
+      <include name="jackson-databind-2.8.6.jar"/>
       <include name="slf4j-api-1.7.22.jar" />
       <include name="xz-1.6.jar"/>
   </patternset>
