@@ -1,4 +1,4 @@
-# Changes in version 2.4.0 - 2018-05-??
+# Changes in version 2.4.0 - 2018-05-23
 
  * Medium changes
    - Replace Gson with Jackson. Applications must provide Jackson
