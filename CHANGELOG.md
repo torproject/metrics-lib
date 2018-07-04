@@ -6,6 +6,9 @@
      after upgrading from Java 8 to 9. Applications must provide
      Apache Commons Codec 1.10 as dependency.
 
+ * Minor changes
+   - Make DescriptorCollector resume previously aborted downloads.
+
 
 # Changes in version 2.4.0 - 2018-05-23
 
