@@ -5,6 +5,9 @@ package org.torproject.descriptor.impl;
 
 import org.torproject.descriptor.DescriptorParseException;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,8 +21,6 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * Parse helper for descriptor contents.
@@ -302,8 +303,7 @@ public class ParseHelper {
           + "' in line '" + line + "' is not a valid base64-encoded "
           + "20-byte value.");
     }
-    return DatatypeConverter.printHexBinary(
-        DatatypeConverter.parseBase64Binary(base64String + "="))
+    return Hex.encodeHexString(Base64.decodeBase64(base64String + "="))
         .toUpperCase();
   }
 
@@ -322,8 +322,7 @@ public class ParseHelper {
           + "' in line '" + line + "' is not a valid base64-encoded "
           + "32-byte value.");
     }
-    return DatatypeConverter.printHexBinary(
-        DatatypeConverter.parseBase64Binary(base64String + "="))
+    return Hex.encodeHexString(Base64.decodeBase64(base64String + "="))
         .toUpperCase();
   }
 
@@ -457,8 +456,7 @@ public class ParseHelper {
         .substring(beginEd25519CertLine.length(),
         identityEd25519CryptoBlock.length()
         - endEd25519CertLine.length()).replaceAll("=", "");
-    byte[] identityEd25519 = DatatypeConverter.parseBase64Binary(
-        identityEd25519Base64);
+    byte[] identityEd25519 = Base64.decodeBase64(identityEd25519Base64);
     if (identityEd25519.length < 40) {
       throw new DescriptorParseException("Invalid length of "
           + "identity-ed25519 (in bytes): " + identityEd25519.length);
@@ -494,8 +492,8 @@ public class ParseHelper {
           byte[] masterKeyEd25519 = new byte[32];
           System.arraycopy(identityEd25519, extensionStart + 4,
               masterKeyEd25519, 0, masterKeyEd25519.length);
-          String masterKeyEd25519Base64 = DatatypeConverter
-              .printBase64Binary(masterKeyEd25519).replaceAll("=", "");
+          String masterKeyEd25519Base64
+              = Base64.encodeBase64String(masterKeyEd25519).replaceAll("=", "");
           String masterKeyEd25519Base64NoTrailingEqualSigns =
               masterKeyEd25519Base64.replaceAll("=", "");
           return masterKeyEd25519Base64NoTrailingEqualSigns;

@@ -1,3 +1,12 @@
+# Changes in version 2.5.0 - 2018-??-??
+
+ * Medium changes
+   - Go back to using Apache Commons Codec as base64 and hexadecimal
+     codec rather than using JAXB which won't be available anymore
+     after upgrading from Java 8 to 9. Applications must provide
+     Apache Commons Codec 1.10 as dependency.
+
+
 # Changes in version 2.4.0 - 2018-05-23
 
  * Medium changes

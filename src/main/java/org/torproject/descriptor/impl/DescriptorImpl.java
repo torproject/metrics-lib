@@ -6,6 +6,9 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -18,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-
-import javax.xml.bind.DatatypeConverter;
 
 public abstract class DescriptorImpl implements Descriptor {
 
@@ -383,7 +384,7 @@ public abstract class DescriptorImpl implements Descriptor {
         end = ascii.indexOf(endToken) + endToken.length();
       }
       if (start >= 0 && end >= 0 && end > start) {
-        this.digestSha1Hex = DatatypeConverter.printHexBinary(
+        this.digestSha1Hex = Hex.encodeHexString(
             messageDigest("SHA-1", start, end)).toLowerCase();
       }
     }
@@ -426,7 +427,7 @@ public abstract class DescriptorImpl implements Descriptor {
         end = ascii.indexOf(endToken) + endToken.length();
       }
       if (start >= 0 && end >= 0 && end > start) {
-        this.digestSha256Base64 = DatatypeConverter.printBase64Binary(
+        this.digestSha256Base64 = Base64.encodeBase64String(
             messageDigest("SHA-256", start, end)).replaceAll("=", "");
       }
     }

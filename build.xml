@@ -14,6 +14,7 @@
   <property name="jarpatternprop" value="empty" />
 
   <patternset id="runtime" >
+      <include name="commons-codec-1.10.jar"/>
       <include name="commons-compress-1.13.jar"/>
       <include name="jackson-annotations-2.8.6.jar"/>
       <include name="jackson-core-2.8.6.jar"/>
