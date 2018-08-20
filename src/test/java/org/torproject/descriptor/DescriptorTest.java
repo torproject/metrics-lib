@@ -29,58 +29,58 @@ public class DescriptorTest {
           {"other/2017-07-17-17-02-00", // test-filename in src/test/resources
            ExitList.class, // descriptor type, i.e., the most specific interface
            new String[] {"@type tordnsel 1.0"}, // all annotations
-           Integer.valueOf(1)}, // expected descriptor count in descriptor file
+              1}, // expected descriptor count in descriptor file
 
           {"other/op-nl-5242880-2017-07-17.tpf",
            TorperfResult.class,
            new String[] {"@type torperf 1.1"},
-           Integer.valueOf(4)},
+              4},
 
           {"relay/2017-07-17-17-00-00-consensus",
            RelayNetworkStatusConsensus.class,
            new String[] {"@type network-status-consensus-3 1.0"},
-           Integer.valueOf(1)},
+              1},
 
           {"relay/2017-07-17-17-00-00-consensus-microdesc",
            RelayNetworkStatusConsensus.class,
            new String[] {"@type network-status-microdesc-consensus-3 1.0"},
-           Integer.valueOf(1)},
+              1},
 
           {"relay/2017-07-17-17-00-00-vote-0232AF901C31A04EE9848595AF9BB"
              + "7620D4C5B2E-6C2F5B0D52DFB3E4CA3DDEEAD690CC563CAF0601",
            RelayNetworkStatusVote.class,
            new String[] {"@type network-status-vote-3 1.0"},
-           Integer.valueOf(1)},
+              1},
 
           {"relay/2017-07-17-17-20-00-extra-infos",
            RelayExtraInfoDescriptor.class,
            new String[] {"@type extra-info 1.0"},
-           Integer.valueOf(6)},
+              6},
 
           {"relay/2017-07-17-17-20-00-micro",
            Microdescriptor.class,
            new String[] {"@type microdescriptor 1.0"},
-           Integer.valueOf(14)},
+              14},
 
           {"relay/2017-07-17-17-20-00-server-descriptors",
            RelayServerDescriptor.class,
            new String[] {"@type server-descriptor 1.0"},
-           Integer.valueOf(4)},
+              4},
 
           {"bridge/20170717-170645-1D8F3A91C37C5D1C4C19B1AD1D0CFBE8BF72D8E1",
            BridgeNetworkStatus.class,
            new String[] {"@type bridge-network-status 1.2"},
-           Integer.valueOf(1)},
+              1},
 
           {"bridge/2017-07-17-17-09-00-extra-infos",
            BridgeExtraInfoDescriptor.class,
            new String[] {"@type bridge-extra-info 1.3"},
-           Integer.valueOf(6)},
+              6},
 
           {"bridge/2017-07-17-17-09-00-server-descriptors",
            BridgeServerDescriptor.class,
            new String[] {"@type bridge-server-descriptor 1.2"},
-           Integer.valueOf(13)}
+              13}
         });
   }
 
