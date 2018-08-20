@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -605,28 +604,20 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private SortedMap<String, Long> sortByPorts(
       SortedMap<String, Long> naturalOrder) {
     SortedMap<String, Long> byPortNumber =
-        new TreeMap<>(new Comparator<String>() {
-          public int compare(String arg0, String arg1) {
-            int port0 = 0;
-            int port1 = 0;
-            try {
-              port1 = Integer.parseInt(arg1);
-            } catch (NumberFormatException e) {
-              return -1;
-            }
-            try {
-              port0 = Integer.parseInt(arg0);
-            } catch (NumberFormatException e) {
-              return 1;
-            }
-            if (port0 < port1) {
-              return -1;
-            } else if (port0 > port1) {
-              return 1;
-            } else {
-              return 0;
-            }
+        new TreeMap<>((arg0, arg1) -> {
+          int port0;
+          int port1;
+          try {
+            port1 = Integer.parseInt(arg1);
+          } catch (NumberFormatException e) {
+            return -1;
           }
+          try {
+            port0 = Integer.parseInt(arg0);
+          } catch (NumberFormatException e) {
+            return 1;
+          }
+          return Integer.compare(port0, port1);
         }
         );
     byPortNumber.putAll(naturalOrder);
