@@ -137,13 +137,13 @@ public class IndexNode {
       if (null == currentDir) {
         continue;
       }
-      String currentPath = dirs[0] + "/";
+      StringBuilder currentPath = new StringBuilder(dirs[0] + "/");
       for (int k = 1; k < dirs.length; k++) {
         DirectoryNode dn = findPathIn(dirs[k], currentDir.directories);
         if (null == dn) {
           break;
         } else {
-          currentPath += dirs[k] + "/";
+          currentPath.append(dirs[k]).append("/");
           currentDir = dn;
         }
       }
@@ -152,7 +152,7 @@ public class IndexNode {
       }
       for (FileNode file : currentDir.files) {
         if (file.lastModifiedMillis() > 0) { // only add valid files
-          map.put(currentPath + file.path, file);
+          map.put(currentPath.toString() + file.path, file);
         }
       }
     }
