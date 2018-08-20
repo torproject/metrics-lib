@@ -223,9 +223,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
 
   private void parseDirOptionsLine(String[] parts) {
     String[] dirOptions = new String[parts.length - 1];
-    for (int i = 1; i < parts.length; i++) {
-      dirOptions[i - 1] = parts[i];
-    }
+    System.arraycopy(parts, 1, dirOptions, 0, parts.length - 1);
     this.dirOptions = dirOptions;
   }
 

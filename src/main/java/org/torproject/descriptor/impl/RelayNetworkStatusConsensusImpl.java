@@ -285,9 +285,7 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
           + "'.");
     }
     String[] knownFlags = new String[parts.length - 1];
-    for (int i = 1; i < parts.length; i++) {
-      knownFlags[i - 1] = parts[i];
-    }
+    System.arraycopy(parts, 1, knownFlags, 0, parts.length - 1);
     this.knownFlags = knownFlags;
   }
 
