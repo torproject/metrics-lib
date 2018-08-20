@@ -125,8 +125,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     private BlockingIteratorImpl<Descriptor> descriptorQueue;
 
-    private File autoSaveHistoryFile;
-
     private File manualSaveHistoryFile;
 
     private List<File> tarballs = new ArrayList<>();
@@ -146,7 +144,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
         File manualSaveHistoryFile, SortedMap<String, Long> excludedFiles) {
       this.descriptorFiles = descriptorFiles;
       this.descriptorQueue = descriptorQueue;
-      this.autoSaveHistoryFile = autoSaveHistoryFile;
       this.manualSaveHistoryFile = manualSaveHistoryFile;
       if (excludedFiles != null) {
         this.excludedFilesBefore = excludedFiles;
@@ -156,7 +153,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
 
     public void run() {
       try {
-        this.readOldHistory(this.autoSaveHistoryFile);
         this.readOldHistory(this.manualSaveHistoryFile);
         this.readDescriptorFiles();
         this.readTarballs();
@@ -168,9 +164,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
         if (null != this.descriptorQueue) {
           this.descriptorQueue.setOutOfDescriptors();
         }
-      }
-      if (this.hasFinishedReading) {
-        this.writeNewHistory(this.autoSaveHistoryFile);
       }
     }
 
