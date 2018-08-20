@@ -286,8 +286,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parsePlatformLine(String lineNoOpt)
-      throws DescriptorParseException {
+  private void parsePlatformLine(String lineNoOpt) {
     if (lineNoOpt.length() > Key.PLATFORM.keyword.length() + 1) {
       this.platform = lineNoOpt.substring(Key.PLATFORM.keyword.length() + 1);
     } else {
@@ -384,8 +383,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseContactLine(String lineNoOpt)
-      throws DescriptorParseException {
+  private void parseContactLine(String lineNoOpt) {
     if (lineNoOpt.length() > Key.CONTACT.keyword.length() + 1) {
       this.contact = lineNoOpt.substring(Key.CONTACT.keyword.length() + 1);
     } else {

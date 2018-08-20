@@ -436,8 +436,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.orPort = ParseHelper.parsePort(line, parts[6]);
   }
 
-  private void parseContactLine(String line)
-      throws DescriptorParseException {
+  private void parseContactLine(String line) {
     if (line.length() > Key.CONTACT.keyword.length() + 1) {
       this.contactLine = line.substring(Key.CONTACT.keyword.length() + 1);
     } else {
@@ -454,8 +453,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.sharedRandParticipate = true;
   }
 
-  private void parseSharedRandCommitLine(String line)
-      throws DescriptorParseException {
+  private void parseSharedRandCommitLine(String line) {
     if (this.sharedRandCommitLines == null) {
       this.sharedRandCommitLines = new ArrayList<>();
     }
@@ -571,8 +569,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     }
   }
 
-  protected void parseFooter(int offset, int length)
-      throws DescriptorParseException {
+  protected void parseFooter(int offset, int length) {
     Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     while (scanner.hasNext()) {
       String line = scanner.next();

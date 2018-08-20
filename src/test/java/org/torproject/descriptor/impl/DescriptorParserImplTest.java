@@ -24,7 +24,7 @@ public class DescriptorParserImplTest {
   @Rule
   public ExpectedException thrown = ExpectedException.none();
 
-  private TestDescriptor makeTestDesc(byte[] bytes) throws Exception {
+  private TestDescriptor makeTestDesc(byte[] bytes) {
     return new TestDescriptor(bytes, new int[]{0, bytes.length});
   }
 
@@ -40,7 +40,7 @@ public class DescriptorParserImplTest {
       + "id ed25519 ihsbrlWToq8b01rvfszqqTMUl2ulyPV3TniKuTENCzY\n";
 
   @Test
-  public void testAnnotation() throws Exception {
+  public void testAnnotation() {
     TestDescriptor des = makeTestDesc(MICRO.getBytes());
     DescriptorParserImpl dpi = new DescriptorParserImpl();
     int parsedDescriptors = 0;

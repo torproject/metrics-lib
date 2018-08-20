@@ -140,8 +140,7 @@ public class DescriptorParserImpl implements DescriptorParser {
 
   private List<Descriptor> parseOneOrMoreDescriptors(byte[] rawDescriptorBytes,
       File sourceFile, Key key,
-      Class<? extends DescriptorImpl> descriptorClass)
-      throws DescriptorParseException {
+      Class<? extends DescriptorImpl> descriptorClass) {
     List<Descriptor> parsedDescriptors = new ArrayList<>();
     Constructor<? extends DescriptorImpl> constructor;
     try {

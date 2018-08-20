@@ -170,8 +170,8 @@ public class DescriptorIndexCollector implements DescriptorCollector {
       Files.walkFileTree(localDir.toPath(),
           new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult visitFile(Path path, BasicFileAttributes bfa)
-                throws IOException {
+            public FileVisitResult visitFile(Path path,
+                BasicFileAttributes bfa) {
               locals.put(path.toFile().getAbsolutePath()
                   .replace(localDir.getAbsolutePath() + "/", ""),
                       path.toFile().lastModified());

@@ -107,7 +107,7 @@ public class DescriptorTest {
   }
 
   @Test
-  public void testCounts() throws Exception {
+  public void testCounts() {
     int descCount = 0;
     while (descs.hasNext()) {
       Descriptor desc = descs.next();
@@ -119,7 +119,7 @@ public class DescriptorTest {
   }
 
   @Test
-  public void testNewline() throws Exception {
+  public void testNewline() {
     while (descs.hasNext()) {
       Descriptor desc = descs.next();
       byte[] raw = desc.getRawDescriptorBytes();
@@ -128,7 +128,7 @@ public class DescriptorTest {
   }
 
   @Test
-  public void testTypes() throws Exception {
+  public void testTypes() {
     while (descs.hasNext()) {
       Descriptor desc = descs.next();
       assertTrue(filename + ": Expected " + descClass.getName()
@@ -139,7 +139,7 @@ public class DescriptorTest {
   }
 
   @Test
-  public void testAnnotations() throws Exception {
+  public void testAnnotations() {
     while (descs.hasNext()) {
       Descriptor desc = descs.next();
       for (String anno : annos) {

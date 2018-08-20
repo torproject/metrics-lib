@@ -188,8 +188,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         parts[1]);
   }
 
-  private void parseContactLine(String line)
-      throws DescriptorParseException {
+  private void parseContactLine(String line) {
     if (line.length() > Key.CONTACT.keyword.length() + 1) {
       this.contactLine = line.substring(Key.CONTACT.keyword.length() + 1);
     } else {
@@ -222,8 +221,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         1, 2);
   }
 
-  private void parseDirOptionsLine(String[] parts)
-      throws DescriptorParseException {
+  private void parseDirOptionsLine(String[] parts) {
     String[] dirOptions = new String[parts.length - 1];
     for (int i = 1; i < parts.length; i++) {
       dirOptions[i - 1] = parts[i];

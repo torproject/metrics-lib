@@ -13,8 +13,7 @@ public class TestDescriptor extends DescriptorImpl {
     super(rawDescriptorBytes, offsetAndLength, null, blankLinesAllowed);
   }
 
-  protected TestDescriptor(byte[] rawDescriptorBytes, int[] offsetAndLength)
-      throws DescriptorParseException {
+  protected TestDescriptor(byte[] rawDescriptorBytes, int[] offsetAndLength) {
     super(rawDescriptorBytes, offsetAndLength, null);
   }
 }

@@ -142,7 +142,7 @@ public class LogDescriptorTest {
   }
 
   @Test
-  public void testUnknownLogType() throws Exception {
+  public void testUnknownLogType() {
     assertEquals(dataUsed(), 1, this.reader.getParsedFiles().size());
     File logFile = new File(this.reader.getParsedFiles().firstKey());
     DescriptorParser dp = DescriptorSourceFactory.createDescriptorParser();

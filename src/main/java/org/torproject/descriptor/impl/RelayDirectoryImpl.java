@@ -60,8 +60,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
     }
   }
 
-  private void parseServerDescriptors(int offset, int length)
-      throws DescriptorParseException {
+  private void parseServerDescriptors(int offset, int length) {
     List<int[]> offsetsAndLengths = this.splitByKey(Key.ROUTER, offset, length,
         true);
     for (int[] offsetAndLength : offsetsAndLengths) {

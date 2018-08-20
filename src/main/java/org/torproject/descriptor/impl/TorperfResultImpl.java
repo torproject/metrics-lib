@@ -215,8 +215,7 @@ public class TorperfResultImpl extends DescriptorImpl
     }
   }
 
-  private void parseSource(String value)
-      throws DescriptorParseException {
+  private void parseSource(String value) {
     this.source = value;
   }
 

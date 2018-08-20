@@ -276,7 +276,7 @@ public class DescriptorIndexCollectorTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testNullDirectory() throws IOException {
+  public void testNullDirectory() {
     new DescriptorIndexCollector().collectDescriptors(
         null, new String[]{}, 100L, null, false);
   }
