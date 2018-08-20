@@ -163,7 +163,7 @@ public enum Key {
   /** Retrieve a Key for a keyword.
    *  Returns Key.INVALID for non-existing keywords. */
   public static Key get(String keyword) {
-    Key res = INVALID;
+    Key res;
     try {
       res = keywordMap.get(keyword);
     } catch (Throwable th) {

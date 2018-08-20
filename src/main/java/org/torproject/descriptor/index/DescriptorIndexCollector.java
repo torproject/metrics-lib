@@ -62,8 +62,8 @@ public class DescriptorIndexCollector implements DescriptorCollector {
     }
     log.info("Indexing local directory {}.", localDirectory.getAbsolutePath());
     SortedMap<String, Long> localFiles = statLocalDirectory(localDirectory);
-    SortedMap<String, FileNode> remoteFiles = null;
-    IndexNode index = null;
+    SortedMap<String, FileNode> remoteFiles;
+    IndexNode index;
     String indexUrlString = "";
     try {
       URL indexUrl = new URL(collecTorIndexUrlString);

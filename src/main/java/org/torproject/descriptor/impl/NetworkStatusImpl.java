@@ -116,7 +116,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
 
   protected String[] parseClientOrServerVersions(String line,
       String[] parts) throws DescriptorParseException {
-    String[] result = null;
+    String[] result;
     switch (parts.length) {
       case 1:
         result = new String[0];

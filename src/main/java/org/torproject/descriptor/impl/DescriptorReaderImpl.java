@@ -178,7 +178,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
       if (historyFile == null || !historyFile.exists()) {
         return;
       }
-      List<String> lines = null;
+      List<String> lines;
       try {
         lines = Files.readAllLines(historyFile.toPath(),
             StandardCharsets.UTF_8);

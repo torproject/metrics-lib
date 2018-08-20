@@ -77,7 +77,7 @@ public class ParseHelper {
 
   protected static int parsePort(String line, String portString)
       throws DescriptorParseException {
-    int port = -1;
+    int port;
     try {
       port = Integer.parseInt(portString);
     } catch (NumberFormatException e) {

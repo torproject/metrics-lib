@@ -49,7 +49,7 @@ public enum FileType {
    * @since 2.1.0
    */
   public static FileType findType(String ext) {
-    FileType res = null;
+    FileType res;
     try {
       res = FileType.valueOf(ext.toUpperCase());
       return res;

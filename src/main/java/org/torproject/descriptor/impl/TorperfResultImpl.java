@@ -300,7 +300,7 @@ public class TorperfResultImpl extends DescriptorImpl
       String line) throws DescriptorParseException {
     String key = keyValue.substring(0, keyValue.indexOf("="));
     String percentileString = key.substring("DATAPERC".length());
-    int percentile = -1;
+    int percentile;
     try {
       percentile = Integer.parseInt(percentileString);
     } catch (NumberFormatException e) {

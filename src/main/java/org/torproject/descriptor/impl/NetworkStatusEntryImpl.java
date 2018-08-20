@@ -77,7 +77,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
      * this.parent.length as bounds, which is not what we want! */
     Scanner scanner = this.parent.newScanner(this.offset, this.length)
         .useDelimiter(NL);
-    String line = null;
+    String line;
     if (!scanner.hasNext() || !(line = scanner.next()).startsWith("r ")) {
       throw new DescriptorParseException("Status entry must start with "
           + "an r line.");
