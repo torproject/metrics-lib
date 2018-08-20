@@ -464,22 +464,22 @@ public class ServerDescriptorImplTest {
     ServerDescriptor descriptor = db.buildDescriptor();
     assertEquals("saberrider2008", descriptor.getNickname());
     assertEquals("94.134.192.243", descriptor.getAddress());
-    assertEquals(9001, (int) descriptor.getOrPort());
-    assertEquals(0, (int) descriptor.getSocksPort());
-    assertEquals(0, (int) descriptor.getDirPort());
+    assertEquals(9001, descriptor.getOrPort());
+    assertEquals(0, descriptor.getSocksPort());
+    assertEquals(0, descriptor.getDirPort());
     assertEquals("Tor 0.2.2.35 (git-b04388f9e7546a9f) on Linux i686",
         descriptor.getPlatform());
-    assertEquals(new TreeSet<Long>(Arrays.asList(
-        new Long[] { 1L, 2L, 3L, 4L })), descriptor.getProtocols().get("Link"));
-    assertEquals(new TreeSet<Long>(Arrays.asList(
-        new Long[] { 1L })), descriptor.getProtocols().get("LinkAuth"));
+    assertEquals(new TreeSet<>(Arrays.asList(
+        new Long[]{1L, 2L, 3L, 4L})), descriptor.getProtocols().get("Link"));
+    assertEquals(new TreeSet<>(Arrays.asList(
+        new Long[]{1L})), descriptor.getProtocols().get("LinkAuth"));
     assertEquals(1325390599000L, descriptor.getPublishedMillis());
     assertEquals("D8733048FC8EC9102466AD8F3098622BF1BF71FD",
         descriptor.getFingerprint());
     assertEquals(48, descriptor.getUptime().longValue());
-    assertEquals(51200, (int) descriptor.getBandwidthRate());
-    assertEquals(51200, (int) descriptor.getBandwidthBurst());
-    assertEquals(53470, (int) descriptor.getBandwidthObserved());
+    assertEquals(51200, descriptor.getBandwidthRate());
+    assertEquals(51200, descriptor.getBandwidthBurst());
+    assertEquals(53470, descriptor.getBandwidthObserved());
     assertEquals("1469D1550738A25B1E7B47CDDBCD7B2899F51B74",
         descriptor.getExtraInfoDigestSha1Hex());
     assertTrue(descriptor.isHiddenServiceDir());
@@ -516,9 +516,9 @@ public class ServerDescriptorImplTest {
         + "94.134.192.243 9001 0 0");
     assertEquals("saberrider2008", descriptor.getNickname());
     assertEquals("94.134.192.243", descriptor.getAddress());
-    assertEquals(9001, (int) descriptor.getOrPort());
-    assertEquals(0, (int) descriptor.getSocksPort());
-    assertEquals(0, (int) descriptor.getDirPort());
+    assertEquals(9001, descriptor.getOrPort());
+    assertEquals(0, descriptor.getSocksPort());
+    assertEquals(0, descriptor.getDirPort());
   }
 
   @Test
@@ -710,9 +710,9 @@ public class ServerDescriptorImplTest {
   public void testProtoGreenPurple() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithProtoLine("proto Green=23 Purple=42");
-    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 23L })),
+    assertEquals(new TreeSet<>(Arrays.asList(new Long[]{23L})),
         descriptor.getProtocols().get("Green"));
-    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 42L })),
+    assertEquals(new TreeSet<>(Arrays.asList(new Long[]{42L})),
         descriptor.getProtocols().get("Purple"));
   }
 
@@ -876,9 +876,9 @@ public class ServerDescriptorImplTest {
   public void testBandwidthOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithBandwidthLine("opt bandwidth 51200 51200 53470");
-    assertEquals(51200, (int) descriptor.getBandwidthRate());
-    assertEquals(51200, (int) descriptor.getBandwidthBurst());
-    assertEquals(53470, (int) descriptor.getBandwidthObserved());
+    assertEquals(51200, descriptor.getBandwidthRate());
+    assertEquals(51200, descriptor.getBandwidthBurst());
+    assertEquals(53470, descriptor.getBandwidthObserved());
   }
 
   @Test
@@ -904,9 +904,9 @@ public class ServerDescriptorImplTest {
      * value. */
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithBandwidthLine("bandwidth 51200 51200");
-    assertEquals(51200, (int) descriptor.getBandwidthRate());
-    assertEquals(51200, (int) descriptor.getBandwidthBurst());
-    assertEquals(-1, (int) descriptor.getBandwidthObserved());
+    assertEquals(51200, descriptor.getBandwidthRate());
+    assertEquals(51200, descriptor.getBandwidthBurst());
+    assertEquals(-1, descriptor.getBandwidthObserved());
   }
 
   @Test
@@ -1298,9 +1298,9 @@ public class ServerDescriptorImplTest {
     assertNotNull(descriptor.getWriteHistory());
     BandwidthHistory parsedWriteHistory = descriptor.getWriteHistory();
     assertEquals(writeHistoryLine, parsedWriteHistory.getLine());
-    assertEquals(1325389904000L, (long) parsedWriteHistory
+    assertEquals(1325389904000L, parsedWriteHistory
         .getHistoryEndMillis());
-    assertEquals(900L, (long) parsedWriteHistory.getIntervalLength());
+    assertEquals(900L, parsedWriteHistory.getIntervalLength());
     SortedMap<Long, Long> bandwidthValues = parsedWriteHistory
         .getBandwidthValues();
     assertEquals(4345856L, (long) bandwidthValues.remove(1325387204000L));
@@ -1386,7 +1386,7 @@ public class ServerDescriptorImplTest {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithWriteHistoryLine("write-history 2012-01-01 03:51:44 "
         + "(900 s) ");
-    assertEquals(900, (long) descriptor.getWriteHistory()
+    assertEquals(900, descriptor.getWriteHistory()
         .getIntervalLength());
     assertTrue(descriptor.getWriteHistory().getBandwidthValues()
         .isEmpty());
@@ -1398,7 +1398,7 @@ public class ServerDescriptorImplTest {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithWriteHistoryLine("write-history 2012-01-01 03:51:44 "
         + "(900 s)");
-    assertEquals(900, (long) descriptor.getWriteHistory()
+    assertEquals(900, descriptor.getWriteHistory()
         .getIntervalLength());
     assertTrue(descriptor.getWriteHistory().getBandwidthValues()
         .isEmpty());
@@ -1426,7 +1426,7 @@ public class ServerDescriptorImplTest {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithWriteHistoryLine("write-history 2012-01-01 03:51:44 "
         + "(1800 s) 4345856");
-    assertEquals(1800L, (long) descriptor.getWriteHistory()
+    assertEquals(1800L, descriptor.getWriteHistory()
         .getIntervalLength());
   }
 
@@ -1439,9 +1439,9 @@ public class ServerDescriptorImplTest {
     assertNotNull(descriptor.getReadHistory());
     BandwidthHistory parsedReadHistory = descriptor.getReadHistory();
     assertEquals(readHistoryLine, parsedReadHistory.getLine());
-    assertEquals(1325389904000L, (long) parsedReadHistory
+    assertEquals(1325389904000L, parsedReadHistory
         .getHistoryEndMillis());
-    assertEquals(900L, (long) parsedReadHistory.getIntervalLength());
+    assertEquals(900L, parsedReadHistory.getIntervalLength());
     SortedMap<Long, Long> bandwidthValues = parsedReadHistory
         .getBandwidthValues();
     assertEquals(4268032L, (long) bandwidthValues.remove(1325387204000L));

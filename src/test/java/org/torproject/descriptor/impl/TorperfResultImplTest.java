@@ -41,12 +41,12 @@ public class TorperfResultImplTest {
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
         asciiBytes, null);
     assertEquals("Expected one annotation.", 1,
-        ((TorperfResultImpl)(result.get(0))).getAnnotations().size());
+        result.get(0).getAnnotations().size());
     assertEquals(3, result.size());
     assertEquals("Expected zero annotations.", 0,
-        ((TorperfResultImpl)(result.get(1))).getAnnotations().size());
+        result.get(1).getAnnotations().size());
     assertEquals("Expected zero annotations.", 0,
-        ((TorperfResultImpl)(result.get(2))).getAnnotations().size());
+        result.get(2).getAnnotations().size());
   }
 
   @Test
@@ -57,12 +57,12 @@ public class TorperfResultImplTest {
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
         asciiBytes, null);
     assertEquals("Expected one annotation.", 1,
-        ((TorperfResultImpl)(result.get(0))).getAnnotations().size());
+        result.get(0).getAnnotations().size());
     assertEquals(3, result.size());
     assertEquals("Expected one annotation.", 1,
-        ((TorperfResultImpl)(result.get(1))).getAnnotations().size());
+        result.get(1).getAnnotations().size());
     assertEquals("Expected one annotation.", 1,
-        ((TorperfResultImpl)(result.get(2))).getAnnotations().size());
+        result.get(2).getAnnotations().size());
   }
 
   @Test
