@@ -154,24 +154,7 @@ public class ParseHelper {
   }
 
   private static ThreadLocal<Map<String, DateFormat>> dateFormats =
-      new ThreadLocal<Map<String, DateFormat>>() {
-
-    public Map<String, DateFormat> get() {
-      return super.get();
-    }
-
-    protected Map<String, DateFormat> initialValue() {
-      return new HashMap<>();
-    }
-
-    public void remove() {
-      super.remove();
-    }
-
-    public void set(Map<String, DateFormat> value) {
-      super.set(value);
-    }
-  };
+      ThreadLocal.withInitial(HashMap::new);
 
   static DateFormat getDateFormat(String format) {
     Map<String, DateFormat> threadDateFormats = dateFormats.get();
