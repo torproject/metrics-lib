@@ -131,7 +131,7 @@ public class DescriptorIndexCollectorTest {
     IndexNode in = new IndexNode("2016-01-01 01:01",
         remoteDirectory, null, dm);
     File indexFile = tmpf.newFile(name);
-    in.writeIndex(indexFile.toPath(), in);
+    IndexNode.writeIndex(indexFile.toPath(), in);
     return indexFile;
   }
 
