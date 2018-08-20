@@ -796,7 +796,7 @@ public class RelayNetworkStatusConsensusImplTest {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
         .createWithRecommendedClientProtocolsLine(
         "recommended-client-protocols Cons=1,2,3");
-    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 1L, 2L, 3L })),
+    assertEquals(new TreeSet<>(Arrays.asList(1L, 2L, 3L)),
         consensus.getRecommendedClientProtocols().get("Cons"));
   }
 
@@ -806,7 +806,7 @@ public class RelayNetworkStatusConsensusImplTest {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
         .createWithRecommendedRelayProtocolsLine(
         "recommended-relay-protocols Cons=1,3-4");
-    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 1L, 3L, 4L })),
+    assertEquals(new TreeSet<>(Arrays.asList(1L, 3L, 4L)),
         consensus.getRecommendedRelayProtocols().get("Cons"));
   }
 
@@ -816,8 +816,8 @@ public class RelayNetworkStatusConsensusImplTest {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
         .createWithRequiredClientProtocolsLine(
         "required-client-protocols Cons=1-3,2-4");
-    assertEquals(new TreeSet<Long>(Arrays.asList(
-        new Long[] { 1L, 2L, 3L, 4L })),
+    assertEquals(new TreeSet<>(Arrays.asList(
+        1L, 2L, 3L, 4L)),
         consensus.getRequiredClientProtocols().get("Cons"));
   }
 
@@ -827,7 +827,7 @@ public class RelayNetworkStatusConsensusImplTest {
     RelayNetworkStatusConsensus consensus = ConsensusBuilder
         .createWithRequiredRelayProtocolsLine(
         "required-relay-protocols Cons=1-1,1-1");
-    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 1L })),
+    assertEquals(new TreeSet<>(Arrays.asList(1L)),
         consensus.getRequiredRelayProtocols().get("Cons"));
   }
 

@@ -470,9 +470,9 @@ public class ServerDescriptorImplTest {
     assertEquals("Tor 0.2.2.35 (git-b04388f9e7546a9f) on Linux i686",
         descriptor.getPlatform());
     assertEquals(new TreeSet<>(Arrays.asList(
-        new Long[]{1L, 2L, 3L, 4L})), descriptor.getProtocols().get("Link"));
+        1L, 2L, 3L, 4L)), descriptor.getProtocols().get("Link"));
     assertEquals(new TreeSet<>(Arrays.asList(
-        new Long[]{1L})), descriptor.getProtocols().get("LinkAuth"));
+        1L)), descriptor.getProtocols().get("LinkAuth"));
     assertEquals(1325390599000L, descriptor.getPublishedMillis());
     assertEquals("D8733048FC8EC9102466AD8F3098622BF1BF71FD",
         descriptor.getFingerprint());
@@ -485,7 +485,7 @@ public class ServerDescriptorImplTest {
     assertTrue(descriptor.isHiddenServiceDir());
     assertEquals("Random Person <nobody AT example dot com>",
         descriptor.getContact());
-    assertEquals(Arrays.asList(new String[] {"reject *:*"}),
+    assertEquals(Arrays.asList("reject *:*"),
         descriptor.getExitPolicyLines());
     assertFalse(descriptor.isHibernating());
     assertNull(descriptor.getFamilyEntries());
@@ -673,9 +673,9 @@ public class ServerDescriptorImplTest {
   public void testProtocolsOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithProtocolsLine("opt protocols Link 1 2 Circuit 1");
-    assertEquals(Arrays.asList(new Integer[] {1, 2}),
+    assertEquals(Arrays.asList(1, 2),
         descriptor.getLinkProtocolVersions());
-    assertEquals(Arrays.asList(new Integer[] {1}),
+    assertEquals(Arrays.asList(1),
         descriptor.getCircuitProtocolVersions());
   }
 
@@ -683,9 +683,9 @@ public class ServerDescriptorImplTest {
   public void testProtocolsNoOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithProtocolsLine("protocols Link 1 2 Circuit 1");
-    assertEquals(Arrays.asList(new Integer[] {1, 2}),
+    assertEquals(Arrays.asList(1, 2),
         descriptor.getLinkProtocolVersions());
-    assertEquals(Arrays.asList(new Integer[] {1}),
+    assertEquals(Arrays.asList(1),
         descriptor.getCircuitProtocolVersions());
   }
 
@@ -710,9 +710,9 @@ public class ServerDescriptorImplTest {
   public void testProtoGreenPurple() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithProtoLine("proto Green=23 Purple=42");
-    assertEquals(new TreeSet<>(Arrays.asList(new Long[]{23L})),
+    assertEquals(new TreeSet<>(Arrays.asList(23L)),
         descriptor.getProtocols().get("Green"));
-    assertEquals(new TreeSet<>(Arrays.asList(new Long[]{42L})),
+    assertEquals(new TreeSet<>(Arrays.asList(42L)),
         descriptor.getProtocols().get("Purple"));
   }
 
@@ -1082,7 +1082,7 @@ public class ServerDescriptorImplTest {
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExitPolicyLines("reject *:*\naccept *:*");
-    assertEquals(Arrays.asList(new String[] {"reject *:*", "accept *:*"}),
+    assertEquals(Arrays.asList("reject *:*", "accept *:*"),
         descriptor.getExitPolicyLines());
   }
 
@@ -1090,7 +1090,7 @@ public class ServerDescriptorImplTest {
   public void testExitPolicyOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExitPolicyLines("opt reject *:*");
-    assertEquals(Arrays.asList(new String[] {"reject *:*"}),
+    assertEquals(Arrays.asList("reject *:*"),
         descriptor.getExitPolicyLines());
   }
 
@@ -1107,8 +1107,8 @@ public class ServerDescriptorImplTest {
       throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExitPolicyLines("accept *:80\nreject *:*");
-    assertEquals(Arrays.asList(new String[] {"accept *:80",
-        "reject *:*"}), descriptor.getExitPolicyLines());
+    assertEquals(Arrays.asList("accept *:80",
+        "reject *:*"), descriptor.getExitPolicyLines());
   }
 
   @Test
@@ -1150,8 +1150,8 @@ public class ServerDescriptorImplTest {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithExitPolicyLines("reject 192.168.0.0/16:*\n"
         + "reject 94.134.192.243/255.255.255.0:*");
-    assertEquals(Arrays.asList(new String[] { "reject 192.168.0.0/16:*",
-        "reject 94.134.192.243/255.255.255.0:*"}),
+    assertEquals(Arrays.asList("reject 192.168.0.0/16:*",
+        "reject 94.134.192.243/255.255.255.0:*"),
         descriptor.getExitPolicyLines());
   }
 
@@ -1218,7 +1218,7 @@ public class ServerDescriptorImplTest {
   public void testFamilyOpt() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFamilyLine("opt family saberrider2008");
-    assertEquals(Arrays.asList(new String[] {"saberrider2008"}),
+    assertEquals(Arrays.asList("saberrider2008"),
         descriptor.getFamilyEntries());
   }
 
@@ -1227,8 +1227,7 @@ public class ServerDescriptorImplTest {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFamilyLine("family "
         + "$D8733048FC8EC9102466AD8F3098622BF1BF71FD");
-    assertEquals(Arrays.asList(new String[] {
-        "$D8733048FC8EC9102466AD8F3098622BF1BF71FD"}),
+    assertEquals(Arrays.asList("$D8733048FC8EC9102466AD8F3098622BF1BF71FD"),
         descriptor.getFamilyEntries());
   }
 
@@ -1236,7 +1235,7 @@ public class ServerDescriptorImplTest {
   public void testFamilyNickname() throws DescriptorParseException {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFamilyLine("family saberrider2008");
-    assertEquals(Arrays.asList(new String[] {"saberrider2008"}),
+    assertEquals(Arrays.asList("saberrider2008"),
         descriptor.getFamilyEntries());
   }
 
@@ -1273,8 +1272,8 @@ public class ServerDescriptorImplTest {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFamilyLine("family "
         + "$D8733048FC8EC9102466AD8F3098622BF1BF71FD=saberrider2008");
-    assertEquals(Arrays.asList(new String[]
-        { "$D8733048FC8EC9102466AD8F3098622BF1BF71FD=saberrider2008" }),
+    assertEquals(Arrays.asList(
+        "$D8733048FC8EC9102466AD8F3098622BF1BF71FD=saberrider2008"),
         descriptor.getFamilyEntries());
   }
 
@@ -1284,8 +1283,8 @@ public class ServerDescriptorImplTest {
     ServerDescriptor descriptor = DescriptorBuilder
         .createWithFamilyLine("family "
         + "$D8733048FC8EC9102466AD8F3098622BF1BF71FD~saberrider2008");
-    assertEquals(Arrays.asList(new String[]
-        { "$D8733048FC8EC9102466AD8F3098622BF1BF71FD~saberrider2008" }),
+    assertEquals(Arrays.asList(
+        "$D8733048FC8EC9102466AD8F3098622BF1BF71FD~saberrider2008"),
         descriptor.getFamilyEntries());
   }
 

@@ -267,13 +267,13 @@ public class RelayNetworkStatusVoteImplTest {
       return vb.buildVote();
     }
 
-    private List<String> sharedRandCommitLines = Arrays.asList(new String[] {
+    private List<String> sharedRandCommitLines = Arrays.asList(
         "shared-rand-commit 1 sha3-256 "
         + "0232AF901C31A04EE9848595AF9BB7620D4C5B2E "
         + "AAAAAFieVABh3Aauk2h31FVKaW0xIm28T7VPDkzP5nHwoMItxp7iQg==",
         "shared-rand-commit 1 sha3-256 "
         + "14C131DFC5C6F93646BE72FA1401C02A8DF2E8B4 "
-        + "AAAAAFieVAA26LuAu9z2UhalmV7zuczWauSkqp1c/bsPA3AkH85iGw==" });
+        + "AAAAAFieVAA26LuAu9z2UhalmV7zuczWauSkqp1c/bsPA3AkH85iGw==");
 
     private static RelayNetworkStatusVote createWithSharedRandCommitLines(
         List<String> lines) throws DescriptorParseException {
@@ -701,7 +701,7 @@ public class RelayNetworkStatusVoteImplTest {
     RelayNetworkStatusVote vote = vb.buildVote();
     assertEquals(3, vote.getNetworkStatusVersion());
     List<Integer> consensusMethods = Arrays.asList(
-        new Integer[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
     assertEquals(vote.getConsensusMethods(), consensusMethods);
     assertEquals(1322643001000L, vote.getPublishedMillis());
     assertEquals(1322643600000L, vote.getValidAfterMillis());
@@ -1127,7 +1127,7 @@ public class RelayNetworkStatusVoteImplTest {
     RelayNetworkStatusVote vote =
         VoteBuilder.createWithRecommendedRelayProtocolsLine(
         "recommended-relay-protocols Cons=0");
-    assertEquals(new TreeSet<Long>(Arrays.asList(new Long[] { 0L })),
+    assertEquals(new TreeSet<>(Arrays.asList(0L)),
         vote.getRecommendedRelayProtocols().get("Cons"));
   }
 

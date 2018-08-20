@@ -95,17 +95,17 @@ public class IndexNodeTest {
     assertTrue(index.retrieveFilesIn(new String[]{"b2"}).isEmpty());
     assertTrue(index.retrieveFilesIn(new String[]{"a1"}).isEmpty());
     SortedMap<String, FileNode> oneFile
-        = index.retrieveFilesIn(new String[]{"a1/p2"});
+        = index.retrieveFilesIn("a1/p2");
     assertFalse(oneFile.isEmpty());
     assertEquals(1330787700_000L,
         oneFile.get("a1/p2/file3").lastModifiedMillis());
     SortedMap<String, FileNode> twoFiles
-        = index.retrieveFilesIn(new String[]{"y", "a1/x", "a1/p1"});
+        = index.retrieveFilesIn("y", "a1/x", "a1/p1");
     assertEquals(2, twoFiles.size());
     assertEquals(1328192040_000L,
         twoFiles.get("a1/p1/file2").lastModifiedMillis());
     SortedMap<String, FileNode> someFile
-        = index.retrieveFilesIn(new String[]{"a1"});
+        = index.retrieveFilesIn("a1");
     assertTrue(someFile.isEmpty());
   }
 
@@ -126,17 +126,17 @@ public class IndexNodeTest {
   public void testRetrieveEmpty() throws Exception {
     URL indexUrl = getClass().getClassLoader().getResource("index1.json");
     IndexNode index = IndexNode.fetchIndex(indexUrl.toString());
-    Map<String, FileNode> map = index.retrieveFilesIn(new String[]{});
+    Map<String, FileNode> map = index.retrieveFilesIn();
     assertTrue("map was " + map, map.isEmpty());
-    map = index.retrieveFilesIn(new String[]{});
+    map = index.retrieveFilesIn();
     assertTrue("map was " + map, map.isEmpty());
-    map = index.retrieveFilesIn(new String[]{"/", null, ""});
+    map = index.retrieveFilesIn("/", null, "");
     assertTrue("map was " + map, map.isEmpty());
     indexUrl = getClass().getClassLoader().getResource("index3.json");
     index = IndexNode.fetchIndex(indexUrl.toString());
-    map = index.retrieveFilesIn(new String[]{"a1/p1"});
+    map = index.retrieveFilesIn("a1/p1");
     assertTrue("map was " + map, map.isEmpty());
-    map = index.retrieveFilesIn(new String[]{"a1/p3"});
+    map = index.retrieveFilesIn("a1/p3");
     assertTrue("map was " + map, map.isEmpty());
   }
 }
