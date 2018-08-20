@@ -354,11 +354,7 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   protected int getKeyCount(Key key) {
-    if (!this.parsedKeys.containsKey(key)) {
-      return 0;
-    } else {
-      return this.parsedKeys.get(key);
-    }
+    return this.parsedKeys.getOrDefault(key, 0);
   }
 
   protected void clearParsedKeys() {
