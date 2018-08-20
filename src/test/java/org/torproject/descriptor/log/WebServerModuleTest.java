@@ -90,7 +90,7 @@ public class WebServerModuleTest {
       + "/server-status HTTP/1.1\" 200 1201"
   };
 
-  private static String logText = Arrays.asList(logLines).stream()
+  private static String logText = Arrays.stream(logLines)
       .map((String line) -> line + (" some content"))
       .collect(Collectors.joining("\n"));
 
