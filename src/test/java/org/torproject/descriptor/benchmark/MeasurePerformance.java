@@ -14,7 +14,6 @@ import org.torproject.descriptor.ServerDescriptor;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedMap;
 
@@ -93,10 +92,8 @@ public class MeasurePerformance {
     long countedServerDescriptors = 0;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
-    Iterator<Descriptor> descriptors =
-        descriptorReader.readDescriptors(tarballFileOrDirectory).iterator();
-    while (descriptors.hasNext()) {
-      Descriptor descriptor = descriptors.next();
+    for (Descriptor descriptor
+        : descriptorReader.readDescriptors(tarballFileOrDirectory)) {
       if (!(descriptor instanceof ServerDescriptor)) {
         continue;
       }
@@ -127,10 +124,8 @@ public class MeasurePerformance {
     long countedExtraInfoDescriptors = 0;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
-    Iterator<Descriptor> descriptors =
-        descriptorReader.readDescriptors(tarballFile).iterator();
-    while (descriptors.hasNext()) {
-      Descriptor descriptor = descriptors.next();
+    for (Descriptor descriptor
+        : descriptorReader.readDescriptors(tarballFile)) {
       if (!(descriptor instanceof ExtraInfoDescriptor)) {
         continue;
       }
@@ -165,10 +160,8 @@ public class MeasurePerformance {
     long countedConsensuses = 0L;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
-    Iterator<Descriptor> descriptors =
-        descriptorReader.readDescriptors(tarballFileOrDirectory).iterator();
-    while (descriptors.hasNext()) {
-      Descriptor descriptor = descriptors.next();
+    for (Descriptor descriptor
+        : descriptorReader.readDescriptors(tarballFileOrDirectory)) {
       if (!(descriptor instanceof RelayNetworkStatusConsensus)) {
         continue;
       }
@@ -207,10 +200,8 @@ public class MeasurePerformance {
     long countedMicrodescriptors = 0L;
     DescriptorReader descriptorReader =
         DescriptorSourceFactory.createDescriptorReader();
-    Iterator<Descriptor> descriptors =
-        descriptorReader.readDescriptors(tarballFile).iterator();
-    while (descriptors.hasNext()) {
-      Descriptor descriptor = descriptors.next();
+    for (Descriptor descriptor
+        : descriptorReader.readDescriptors(tarballFile)) {
       if (!(descriptor instanceof Microdescriptor)) {
         continue;
       }
@@ -221,7 +212,7 @@ public class MeasurePerformance {
         continue;
       }
       boolean accept = "accept".equals(
-                                       microdescriptor.getDefaultPolicy());
+          microdescriptor.getDefaultPolicy());
       for (String ports : microdescriptor.getPortList().split(",")) {
         if (ports.contains("-")) {
           String[] parts = ports.split("-");
