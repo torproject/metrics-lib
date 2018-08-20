@@ -11,7 +11,7 @@ import java.util.TreeMap;
 
 public class BandwidthHistoryImpl implements BandwidthHistory {
 
-  protected BandwidthHistoryImpl(String line, String lineNoOpt,
+  protected BandwidthHistoryImpl(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     boolean isValid = false;
     this.line = line;

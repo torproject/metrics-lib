@@ -75,7 +75,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
       Key key = Key.get(parts[0]);
       switch (key) {
         case NETWORK_STATUS_VERSION:
-          this.parseNetworkStatusVersionLine(line, parts);
+          this.parseNetworkStatusVersionLine(line);
           break;
         case VOTE_STATUS:
           this.parseVoteStatusLine(line, parts);
@@ -132,13 +132,13 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           this.parseDirSourceLine(line, parts);
           break;
         case CONTACT:
-          this.parseContactLine(line, parts);
+          this.parseContactLine(line);
           break;
         case SHARED_RAND_PARTICIPATE:
           this.parseSharedRandParticipateLine(line, parts);
           break;
         case SHARED_RAND_COMMIT:
-          this.parseSharedRandCommitLine(line, parts);
+          this.parseSharedRandCommitLine(line);
           break;
         case SHARED_RAND_PREVIOUS_VALUE:
           this.parseSharedRandPreviousValueLine(line, parts);
@@ -150,7 +150,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           this.parseDirKeyCertificateVersionLine(line, parts);
           break;
         case DIR_ADDRESS:
-          this.parseDirAddressLine(line, parts);
+          /* Nothing new to learn here.  Also, this line hasn't been observed
+           * "in the wild" yet.  Maybe it's just an urban legend. */
           break;
         case FINGERPRINT:
           this.parseFingerprintLine(line, parts);
@@ -165,19 +166,19 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           this.parseDirKeyExpiresLine(line, parts);
           break;
         case DIR_IDENTITY_KEY:
-          this.parseDirIdentityKeyLine(line, parts);
+          this.parseDirIdentityKeyLine(line);
           nextCrypto = key;
           break;
         case DIR_SIGNING_KEY:
-          this.parseDirSigningKeyLine(line, parts);
+          this.parseDirSigningKeyLine(line);
           nextCrypto = key;
           break;
         case DIR_KEY_CROSSCERT:
-          this.parseDirKeyCrosscertLine(line, parts);
+          this.parseDirKeyCrosscertLine(line);
           nextCrypto = key;
           break;
         case DIR_KEY_CERTIFICATION:
-          this.parseDirKeyCertificationLine(line, parts);
+          this.parseDirKeyCertificationLine(line);
           nextCrypto = key;
           break;
         case CRYPTO_BEGIN:
@@ -220,7 +221,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     }
   }
 
-  private void parseNetworkStatusVersionLine(String line, String[] parts)
+  private void parseNetworkStatusVersionLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.NETWORK_STATUS_VERSION.keyword + SP + "3")) {
       throw new DescriptorParseException("Illegal network status version "
@@ -435,7 +436,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.orPort = ParseHelper.parsePort(line, parts[6]);
   }
 
-  private void parseContactLine(String line, String[] parts)
+  private void parseContactLine(String line)
       throws DescriptorParseException {
     if (line.length() > Key.CONTACT.keyword.length() + 1) {
       this.contactLine = line.substring(Key.CONTACT.keyword.length() + 1);
@@ -453,7 +454,7 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.sharedRandParticipate = true;
   }
 
-  private void parseSharedRandCommitLine(String line, String[] parts)
+  private void parseSharedRandCommitLine(String line)
       throws DescriptorParseException {
     if (this.sharedRandCommitLines == null) {
       this.sharedRandCommitLines = new ArrayList<>();
@@ -509,11 +510,6 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     }
   }
 
-  private void parseDirAddressLine(String line, String[] parts) {
-    /* Nothing new to learn here.  Also, this line hasn't been observed
-     * "in the wild" yet.  Maybe it's just an urban legend. */
-  }
-
   private void parseFingerprintLine(String line, String[] parts)
       throws DescriptorParseException {
     /* Nothing new to learn here.  We already know the fingerprint from
@@ -547,28 +543,28 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         parts, 1, 2);
   }
 
-  private void parseDirIdentityKeyLine(String line, String[] parts)
+  private void parseDirIdentityKeyLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_IDENTITY_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseDirSigningKeyLine(String line, String[] parts)
+  private void parseDirSigningKeyLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_SIGNING_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseDirKeyCrosscertLine(String line, String[] parts)
+  private void parseDirKeyCrosscertLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_KEY_CROSSCERT.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseDirKeyCertificationLine(String line, String[] parts)
+  private void parseDirKeyCertificationLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_KEY_CERTIFICATION.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");

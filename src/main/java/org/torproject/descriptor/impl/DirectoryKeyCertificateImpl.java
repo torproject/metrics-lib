@@ -45,7 +45,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
       Key key = Key.get(parts[0]);
       switch (key) {
         case DIR_KEY_CERTIFICATE_VERSION:
-          this.parseDirKeyCertificateVersionLine(line, parts);
+          this.parseDirKeyCertificateVersionLine(line);
           break;
         case DIR_ADDRESS:
           this.parseDirAddressLine(line, parts);
@@ -54,7 +54,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
           this.parseFingerprintLine(line, parts);
           break;
         case DIR_IDENTITY_KEY:
-          this.parseDirIdentityKeyLine(line, parts);
+          this.parseDirIdentityKeyLine(line);
           nextCrypto = key;
           break;
         case DIR_KEY_PUBLISHED:
@@ -64,15 +64,15 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
           this.parseDirKeyExpiresLine(line, parts);
           break;
         case DIR_SIGNING_KEY:
-          this.parseDirSigningKeyLine(line, parts);
+          this.parseDirSigningKeyLine(line);
           nextCrypto = key;
           break;
         case DIR_KEY_CROSSCERT:
-          this.parseDirKeyCrosscertLine(line, parts);
+          this.parseDirKeyCrosscertLine(line);
           nextCrypto = key;
           break;
         case DIR_KEY_CERTIFICATION:
-          this.parseDirKeyCertificationLine(line, parts);
+          this.parseDirKeyCertificationLine(line);
           nextCrypto = key;
           break;
         case CRYPTO_BEGIN:
@@ -115,8 +115,8 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
     }
   }
 
-  private void parseDirKeyCertificateVersionLine(String line,
-      String[] parts) throws DescriptorParseException {
+  private void parseDirKeyCertificateVersionLine(String line)
+      throws DescriptorParseException {
     if (!line.equals(Key.DIR_KEY_CERTIFICATE_VERSION.keyword + SP + "3")) {
       throw new DescriptorParseException("Illegal directory key "
           + "certificate version number in line '" + line + "'.");
@@ -145,7 +145,7 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
         parts[1]);
   }
 
-  private void parseDirIdentityKeyLine(String line, String[] parts)
+  private void parseDirIdentityKeyLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_IDENTITY_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -164,21 +164,21 @@ public class DirectoryKeyCertificateImpl extends DescriptorImpl
         parts, 1, 2);
   }
 
-  private void parseDirSigningKeyLine(String line, String[] parts)
+  private void parseDirSigningKeyLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_SIGNING_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseDirKeyCrosscertLine(String line, String[] parts)
+  private void parseDirKeyCrosscertLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_KEY_CROSSCERT.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseDirKeyCertificationLine(String line, String[] parts)
+  private void parseDirKeyCertificationLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_KEY_CERTIFICATION.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");

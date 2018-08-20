@@ -49,7 +49,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       Key key = Key.get(parts[0]);
       switch (key) {
         case NETWORK_STATUS_VERSION:
-          this.parseNetworkStatusVersionLine(line, parts);
+          this.parseNetworkStatusVersionLine(line);
           break;
         case DIR_SOURCE:
           this.parseDirSourceLine(line, parts);
@@ -58,10 +58,10 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
           this.parseFingerprintLine(line, parts);
           break;
         case CONTACT:
-          this.parseContactLine(line, parts);
+          this.parseContactLine(line);
           break;
         case DIR_SIGNING_KEY:
-          this.parseDirSigningKeyLine(line, parts);
+          this.parseDirSigningKeyLine(line);
           nextCrypto = key;
           break;
         case CLIENT_VERSIONS:
@@ -74,7 +74,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
           this.parsePublishedLine(line, parts);
           break;
         case DIR_OPTIONS:
-          this.parseDirOptionsLine(line, parts);
+          this.parseDirOptionsLine(parts);
           break;
         case CRYPTO_BEGIN:
           crypto = new StringBuilder();
@@ -154,7 +154,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     }
   }
 
-  private void parseNetworkStatusVersionLine(String line, String[] parts)
+  private void parseNetworkStatusVersionLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.NETWORK_STATUS_VERSION.keyword + SP + "2")) {
       throw new DescriptorParseException("Illegal network status version "
@@ -188,7 +188,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         parts[1]);
   }
 
-  private void parseContactLine(String line, String[] parts)
+  private void parseContactLine(String line)
       throws DescriptorParseException {
     if (line.length() > Key.CONTACT.keyword.length() + 1) {
       this.contactLine = line.substring(Key.CONTACT.keyword.length() + 1);
@@ -197,7 +197,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
     }
   }
 
-  private void parseDirSigningKeyLine(String line, String[] parts)
+  private void parseDirSigningKeyLine(String line)
       throws DescriptorParseException {
     if (!line.equals(Key.DIR_SIGNING_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -222,7 +222,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
         1, 2);
   }
 
-  private void parseDirOptionsLine(String line, String[] parts)
+  private void parseDirOptionsLine(String[] parts)
       throws DescriptorParseException {
     String[] dirOptions = new String[parts.length - 1];
     for (int i = 1; i < parts.length; i++) {

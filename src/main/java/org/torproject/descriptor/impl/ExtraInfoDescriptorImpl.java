@@ -86,158 +86,158 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
       Key key = Key.get(partsNoOpt[0]);
       switch (key) {
         case EXTRA_INFO:
-          this.parseExtraInfoLine(line, lineNoOpt, partsNoOpt);
+          this.parseExtraInfoLine(line, partsNoOpt);
           break;
         case PUBLISHED:
-          this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
+          this.parsePublishedLine(line, partsNoOpt);
           break;
         case READ_HISTORY:
-          this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
+          this.parseReadHistoryLine(line, partsNoOpt);
           break;
         case WRITE_HISTORY:
-          this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
+          this.parseWriteHistoryLine(line, partsNoOpt);
           break;
         case GEOIP_DB_DIGEST:
-          this.parseGeoipDbDigestLine(line, lineNoOpt, partsNoOpt);
+          this.parseGeoipDbDigestLine(line, partsNoOpt);
           break;
         case GEOIP6_DB_DIGEST:
-          this.parseGeoip6DbDigestLine(line, lineNoOpt, partsNoOpt);
+          this.parseGeoip6DbDigestLine(line, partsNoOpt);
           break;
         case GEOIP_START_TIME:
-          this.parseGeoipStartTimeLine(line, lineNoOpt, partsNoOpt);
+          this.parseGeoipStartTimeLine(line, partsNoOpt);
           break;
         case GEOIP_CLIENT_ORIGINS:
-          this.parseGeoipClientOriginsLine(line, lineNoOpt, partsNoOpt);
+          this.parseGeoipClientOriginsLine(line, partsNoOpt);
           break;
         case DIRREQ_STATS_END:
-          this.parseDirreqStatsEndLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqStatsEndLine(line, partsNoOpt);
           break;
         case DIRREQ_V2_IPS:
-          this.parseDirreqV2IpsLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV2IpsLine(line, partsNoOpt);
           break;
         case DIRREQ_V3_IPS:
-          this.parseDirreqV3IpsLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV3IpsLine(line, partsNoOpt);
           break;
         case DIRREQ_V2_REQS:
-          this.parseDirreqV2ReqsLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV2ReqsLine(line, partsNoOpt);
           break;
         case DIRREQ_V3_REQS:
-          this.parseDirreqV3ReqsLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV3ReqsLine(line, partsNoOpt);
           break;
         case DIRREQ_V2_SHARE:
-          this.parseDirreqV2ShareLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV2ShareLine(line, partsNoOpt);
           break;
         case DIRREQ_V3_SHARE:
-          this.parseDirreqV3ShareLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV3ShareLine(line, partsNoOpt);
           break;
         case DIRREQ_V2_RESP:
-          this.parseDirreqV2RespLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV2RespLine(line, partsNoOpt);
           break;
         case DIRREQ_V3_RESP:
-          this.parseDirreqV3RespLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV3RespLine(line, partsNoOpt);
           break;
         case DIRREQ_V2_DIRECT_DL:
-          this.parseDirreqV2DirectDlLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV2DirectDlLine(line, partsNoOpt);
           break;
         case DIRREQ_V3_DIRECT_DL:
-          this.parseDirreqV3DirectDlLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV3DirectDlLine(line, partsNoOpt);
           break;
         case DIRREQ_V2_TUNNELED_DL:
-          this.parseDirreqV2TunneledDlLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV2TunneledDlLine(line, partsNoOpt);
           break;
         case DIRREQ_V3_TUNNELED_DL:
-          this.parseDirreqV3TunneledDlLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqV3TunneledDlLine(line, partsNoOpt);
           break;
         case DIRREQ_READ_HISTORY:
-          this.parseDirreqReadHistoryLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqReadHistoryLine(line, partsNoOpt);
           break;
         case DIRREQ_WRITE_HISTORY:
-          this.parseDirreqWriteHistoryLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirreqWriteHistoryLine(line, partsNoOpt);
           break;
         case ENTRY_STATS_END:
-          this.parseEntryStatsEndLine(line, lineNoOpt, partsNoOpt);
+          this.parseEntryStatsEndLine(line, partsNoOpt);
           break;
         case ENTRY_IPS:
-          this.parseEntryIpsLine(line, lineNoOpt, partsNoOpt);
+          this.parseEntryIpsLine(line, partsNoOpt);
           break;
         case CELL_STATS_END:
-          this.parseCellStatsEndLine(line, lineNoOpt, partsNoOpt);
+          this.parseCellStatsEndLine(line, partsNoOpt);
           break;
         case CELL_PROCESSED_CELLS:
-          this.parseCellProcessedCellsLine(line, lineNoOpt, partsNoOpt);
+          this.parseCellProcessedCellsLine(line, partsNoOpt);
           break;
         case CELL_QUEUED_CELLS:
-          this.parseCellQueuedCellsLine(line, lineNoOpt, partsNoOpt);
+          this.parseCellQueuedCellsLine(line, partsNoOpt);
           break;
         case CELL_TIME_IN_QUEUE:
-          this.parseCellTimeInQueueLine(line, lineNoOpt, partsNoOpt);
+          this.parseCellTimeInQueueLine(line, partsNoOpt);
           break;
         case CELL_CIRCUITS_PER_DECILE:
-          this.parseCellCircuitsPerDecileLine(line, lineNoOpt,
+          this.parseCellCircuitsPerDecileLine(line,
               partsNoOpt);
           break;
         case CONN_BI_DIRECT:
-          this.parseConnBiDirectLine(line, lineNoOpt, partsNoOpt);
+          this.parseConnBiDirectLine(line, partsNoOpt);
           break;
         case EXIT_STATS_END:
-          this.parseExitStatsEndLine(line, lineNoOpt, partsNoOpt);
+          this.parseExitStatsEndLine(line, partsNoOpt);
           break;
         case EXIT_KIBIBYTES_WRITTEN:
-          this.parseExitKibibytesWrittenLine(line, lineNoOpt, partsNoOpt);
+          this.parseExitKibibytesWrittenLine(line, partsNoOpt);
           break;
         case EXIT_KIBIBYTES_READ:
-          this.parseExitKibibytesReadLine(line, lineNoOpt, partsNoOpt);
+          this.parseExitKibibytesReadLine(line, partsNoOpt);
           break;
         case EXIT_STREAMS_OPENED:
-          this.parseExitStreamsOpenedLine(line, lineNoOpt, partsNoOpt);
+          this.parseExitStreamsOpenedLine(line, partsNoOpt);
           break;
         case BRIDGE_STATS_END:
-          this.parseBridgeStatsEndLine(line, lineNoOpt, partsNoOpt);
+          this.parseBridgeStatsEndLine(line, partsNoOpt);
           break;
         case BRIDGE_IPS:
-          this.parseBridgeStatsIpsLine(line, lineNoOpt, partsNoOpt);
+          this.parseBridgeStatsIpsLine(line, partsNoOpt);
           break;
         case BRIDGE_IP_VERSIONS:
-          this.parseBridgeIpVersionsLine(line, lineNoOpt, partsNoOpt);
+          this.parseBridgeIpVersionsLine(line, partsNoOpt);
           break;
         case BRIDGE_IP_TRANSPORTS:
-          this.parseBridgeIpTransportsLine(line, lineNoOpt, partsNoOpt);
+          this.parseBridgeIpTransportsLine(line, partsNoOpt);
           break;
         case TRANSPORT:
-          this.parseTransportLine(line, lineNoOpt, partsNoOpt);
+          this.parseTransportLine(line, partsNoOpt);
           break;
         case HIDSERV_STATS_END:
-          this.parseHidservStatsEndLine(line, lineNoOpt, partsNoOpt);
+          this.parseHidservStatsEndLine(line, partsNoOpt);
           break;
         case HIDSERV_REND_RELAYED_CELLS:
-          this.parseHidservRendRelayedCellsLine(line, lineNoOpt,
+          this.parseHidservRendRelayedCellsLine(line,
               partsNoOpt);
           break;
         case HIDSERV_DIR_ONIONS_SEEN:
-          this.parseHidservDirOnionsSeenLine(line, lineNoOpt, partsNoOpt);
+          this.parseHidservDirOnionsSeenLine(line, partsNoOpt);
           break;
         case PADDING_COUNTS:
-          this.parsePaddingCountsLine(line, lineNoOpt, partsNoOpt);
+          this.parsePaddingCountsLine(line, partsNoOpt);
           break;
         case IDENTITY_ED25519:
-          this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
+          this.parseIdentityEd25519Line(line, partsNoOpt);
           nextCrypto = key;
           break;
         case MASTER_KEY_ED25519:
-          this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
+          this.parseMasterKeyEd25519Line(line, partsNoOpt);
           break;
         case ROUTER_SIG_ED25519:
-          this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
+          this.parseRouterSigEd25519Line(line, partsNoOpt);
           break;
         case ROUTER_SIGNATURE:
-          this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
+          this.parseRouterSignatureLine(line, lineNoOpt);
           nextCrypto = key;
           break;
         case ROUTER_DIGEST:
-          this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
+          this.parseRouterDigestLine(line, partsNoOpt);
           break;
         case ROUTER_DIGEST_SHA256:
-          this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
+          this.parseRouterDigestSha256Line(line, partsNoOpt);
           break;
         case CRYPTO_BEGIN:
           cryptoLines = new ArrayList<>();
@@ -281,7 +281,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseExtraInfoLine(String line, String lineNoOpt,
+  private void parseExtraInfoLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 3) {
       throw new DescriptorParseException("Illegal line '" + line
@@ -292,25 +292,25 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         partsNoOpt[2]);
   }
 
-  private void parsePublishedLine(String line, String lineNoOpt,
+  private void parsePublishedLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.publishedMillis = ParseHelper.parseTimestampAtIndex(line,
         partsNoOpt, 1, 2);
   }
 
-  private void parseReadHistoryLine(String line, String lineNoOpt,
+  private void parseReadHistoryLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.readHistory = new BandwidthHistoryImpl(line, lineNoOpt,
+    this.readHistory = new BandwidthHistoryImpl(line,
         partsNoOpt);
   }
 
-  private void parseWriteHistoryLine(String line, String lineNoOpt,
+  private void parseWriteHistoryLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.writeHistory = new BandwidthHistoryImpl(line, lineNoOpt,
+    this.writeHistory = new BandwidthHistoryImpl(line,
         partsNoOpt);
   }
 
-  private void parseGeoipDbDigestLine(String line, String lineNoOpt,
+  private void parseGeoipDbDigestLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line
@@ -320,7 +320,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         partsNoOpt[1]);
   }
 
-  private void parseGeoip6DbDigestLine(String line, String lineNoOpt,
+  private void parseGeoip6DbDigestLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line
@@ -330,7 +330,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         partsNoOpt[1]);
   }
 
-  private void parseGeoipStartTimeLine(String line, String lineNoOpt,
+  private void parseGeoipStartTimeLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length < 3) {
       throw new DescriptorParseException("Illegal line '" + line
@@ -340,14 +340,14 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         partsNoOpt, 1, 2);
   }
 
-  private void parseGeoipClientOriginsLine(String line, String lineNoOpt,
+  private void parseGeoipClientOriginsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.geoipClientOrigins =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 2);
   }
 
-  private void parseDirreqStatsEndLine(String line, String lineNoOpt,
+  private void parseDirreqStatsEndLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
         5);
@@ -373,38 +373,38 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     return result;
   }
 
-  private void parseDirreqV2IpsLine(String line, String lineNoOpt,
+  private void parseDirreqV2IpsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV2Ips = ParseHelper.parseCommaSeparatedKeyIntegerValueList(
         line, partsNoOpt, 1, 2);
   }
 
-  private void parseDirreqV3IpsLine(String line, String lineNoOpt,
+  private void parseDirreqV3IpsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV3Ips = ParseHelper.parseCommaSeparatedKeyIntegerValueList(
         line, partsNoOpt, 1, 2);
   }
 
-  private void parseDirreqV2ReqsLine(String line, String lineNoOpt,
+  private void parseDirreqV2ReqsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV2Reqs =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 2);
   }
 
-  private void parseDirreqV3ReqsLine(String line, String lineNoOpt,
+  private void parseDirreqV3ReqsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV3Reqs =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 2);
   }
 
-  private void parseDirreqV2ShareLine(String line, String lineNoOpt,
+  private void parseDirreqV2ShareLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV2Share = this.parseShareLine(line, partsNoOpt);
   }
 
-  private void parseDirreqV3ShareLine(String line, String lineNoOpt,
+  private void parseDirreqV3ShareLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV3Share = this.parseShareLine(line, partsNoOpt);
   }
@@ -428,61 +428,61 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     return share;
   }
 
-  private void parseDirreqV2RespLine(String line, String lineNoOpt,
+  private void parseDirreqV2RespLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV2Resp =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 0);
   }
 
-  private void parseDirreqV3RespLine(String line, String lineNoOpt,
+  private void parseDirreqV3RespLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV3Resp =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 0);
   }
 
-  private void parseDirreqV2DirectDlLine(String line, String lineNoOpt,
+  private void parseDirreqV2DirectDlLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV2DirectDl =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 0);
   }
 
-  private void parseDirreqV3DirectDlLine(String line, String lineNoOpt,
+  private void parseDirreqV3DirectDlLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV3DirectDl =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 0);
   }
 
-  private void parseDirreqV2TunneledDlLine(String line, String lineNoOpt,
+  private void parseDirreqV2TunneledDlLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV2TunneledDl =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 0);
   }
 
-  private void parseDirreqV3TunneledDlLine(String line, String lineNoOpt,
+  private void parseDirreqV3TunneledDlLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.dirreqV3TunneledDl =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(
         line,partsNoOpt, 1, 0);
   }
 
-  private void parseDirreqReadHistoryLine(String line, String lineNoOpt,
+  private void parseDirreqReadHistoryLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqReadHistory = new BandwidthHistoryImpl(line, lineNoOpt,
+    this.dirreqReadHistory = new BandwidthHistoryImpl(line,
         partsNoOpt);
   }
 
-  private void parseDirreqWriteHistoryLine(String line, String lineNoOpt,
+  private void parseDirreqWriteHistoryLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
-    this.dirreqWriteHistory = new BandwidthHistoryImpl(line, lineNoOpt,
+    this.dirreqWriteHistory = new BandwidthHistoryImpl(line,
         partsNoOpt);
   }
 
-  private void parseEntryStatsEndLine(String line, String lineNoOpt,
+  private void parseEntryStatsEndLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
         5);
@@ -490,13 +490,13 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.entryStatsIntervalLength = parsedStatsEndData[1];
   }
 
-  private void parseEntryIpsLine(String line, String lineNoOpt,
+  private void parseEntryIpsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.entryIps = ParseHelper.parseCommaSeparatedKeyIntegerValueList(
         line, partsNoOpt, 1, 2);
   }
 
-  private void parseCellStatsEndLine(String line, String lineNoOpt,
+  private void parseCellStatsEndLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
         5);
@@ -504,7 +504,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.cellStatsIntervalLength = parsedStatsEndData[1];
   }
 
-  private void parseCellProcessedCellsLine(String line, String lineNoOpt,
+  private void parseCellProcessedCellsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellProcessedCells = ParseHelper
         .parseCommaSeparatedIntegerValueList(line, partsNoOpt, 1);
@@ -514,7 +514,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseCellQueuedCellsLine(String line, String lineNoOpt,
+  private void parseCellQueuedCellsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellQueuedCells = ParseHelper.parseCommaSeparatedDoubleValueList(
         line, partsNoOpt, 1);
@@ -524,7 +524,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseCellTimeInQueueLine(String line, String lineNoOpt,
+  private void parseCellTimeInQueueLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.cellTimeInQueue = ParseHelper
         .parseCommaSeparatedIntegerValueList(line, partsNoOpt, 1);
@@ -535,7 +535,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseCellCircuitsPerDecileLine(String line,
-      String lineNoOpt, String[] partsNoOpt)
+      String[] partsNoOpt)
       throws DescriptorParseException {
     int circuits = -1;
     if (partsNoOpt.length >= 2) {
@@ -551,7 +551,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.cellCircuitsPerDecile = circuits;
   }
 
-  private void parseConnBiDirectLine(String line, String lineNoOpt,
+  private void parseConnBiDirectLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
         6);
@@ -569,7 +569,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.connBiDirectBoth = parsedConnBiDirectStats[3];
   }
 
-  private void parseExitStatsEndLine(String line, String lineNoOpt,
+  private void parseExitStatsEndLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
         5);
@@ -578,7 +578,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseExitKibibytesWrittenLine(String line,
-      String lineNoOpt, String[] partsNoOpt)
+      String[] partsNoOpt)
       throws DescriptorParseException {
     this.exitKibibytesWritten = this.sortByPorts(ParseHelper
         .parseCommaSeparatedKeyLongValueList(line, partsNoOpt, 1, 0));
@@ -586,7 +586,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.verifyBytesOrStreams(line, this.exitKibibytesWritten.values());
   }
 
-  private void parseExitKibibytesReadLine(String line, String lineNoOpt,
+  private void parseExitKibibytesReadLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.exitKibibytesRead = this.sortByPorts(ParseHelper
         .parseCommaSeparatedKeyLongValueList(line, partsNoOpt, 1, 0));
@@ -594,7 +594,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.verifyBytesOrStreams(line, this.exitKibibytesRead.values());
   }
 
-  private void parseExitStreamsOpenedLine(String line, String lineNoOpt,
+  private void parseExitStreamsOpenedLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.exitStreamsOpened = this.sortByPorts(ParseHelper
         .parseCommaSeparatedKeyLongValueList(line, partsNoOpt, 1, 0));
@@ -667,7 +667,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseBridgeStatsEndLine(String line, String lineNoOpt,
+  private void parseBridgeStatsEndLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
         5);
@@ -675,28 +675,28 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.bridgeStatsIntervalLength = parsedStatsEndData[1];
   }
 
-  private void parseBridgeStatsIpsLine(String line, String lineNoOpt,
+  private void parseBridgeStatsIpsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.bridgeIps =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 2);
   }
 
-  private void parseBridgeIpVersionsLine(String line, String lineNoOpt,
+  private void parseBridgeIpVersionsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.bridgeIpVersions =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 2);
   }
 
-  private void parseBridgeIpTransportsLine(String line, String lineNoOpt,
+  private void parseBridgeIpTransportsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.bridgeIpTransports =
         ParseHelper.parseCommaSeparatedKeyIntegerValueList(line,
         partsNoOpt, 1, 0);
   }
 
-  private void parseTransportLine(String line, String lineNoOpt,
+  private void parseTransportLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -704,7 +704,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.transports.add(partsNoOpt[1]);
   }
 
-  private void parseHidservStatsEndLine(String line, String lineNoOpt,
+  private void parseHidservStatsEndLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
         5);
@@ -713,7 +713,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseHidservRendRelayedCellsLine(String line,
-      String lineNoOpt, String[] partsNoOpt)
+      String[] partsNoOpt)
       throws DescriptorParseException {
     if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -729,7 +729,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   }
 
   private void parseHidservDirOnionsSeenLine(String line,
-      String lineNoOpt, String[] partsNoOpt)
+      String[] partsNoOpt)
       throws DescriptorParseException {
     if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -744,7 +744,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         partsNoOpt, 2);
   }
 
-  private void parsePaddingCountsLine(String line, String lineNoOpt,
+  private void parsePaddingCountsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
         6);
@@ -754,14 +754,14 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         line, partsNoOpt, 5);
   }
 
-  private void parseRouterSignatureLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseRouterSignatureLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (!lineNoOpt.equals("router-signature")) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseRouterDigestLine(String line, String lineNoOpt,
+  private void parseRouterDigestLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -770,7 +770,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         partsNoOpt[1]));
   }
 
-  private void parseIdentityEd25519Line(String line, String lineNoOpt,
+  private void parseIdentityEd25519Line(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 1) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -790,7 +790,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.masterKeyEd25519 = masterKeyEd25519FromIdentityEd25519;
   }
 
-  private void parseMasterKeyEd25519Line(String line, String lineNoOpt,
+  private void parseMasterKeyEd25519Line(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -804,7 +804,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.masterKeyEd25519 = masterKeyEd25519FromMasterKeyEd25519Line;
   }
 
-  private void parseRouterSigEd25519Line(String line, String lineNoOpt,
+  private void parseRouterSigEd25519Line(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -812,7 +812,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.routerSignatureEd25519 = partsNoOpt[1];
   }
 
-  private void parseRouterDigestSha256Line(String line, String lineNoOpt,
+  private void parseRouterDigestSha256Line(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");

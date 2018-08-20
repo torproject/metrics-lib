@@ -97,7 +97,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
       Key key = Key.get(partsNoOpt[0]);
       switch (key) {
         case SIGNED_DIRECTORY:
-          this.parseSignedDirectoryLine(line, lineNoOpt, partsNoOpt);
+          this.parseSignedDirectoryLine(line, lineNoOpt);
           break;
         case PUBLISHED:
           if (publishedLine != null) {
@@ -109,11 +109,11 @@ public class RelayDirectoryImpl extends DescriptorImpl
           }
           break;
         case DIR_SIGNING_KEY:
-          this.parseDirSigningKeyLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirSigningKeyLine(line, partsNoOpt);
           nextCrypto = key;
           break;
         case RECOMMENDED_SOFTWARE:
-          this.parseRecommendedSoftwareLine(line, lineNoOpt, partsNoOpt);
+          this.parseRecommendedSoftwareLine(line, partsNoOpt);
           break;
         case RUNNING_ROUTERS:
           runningRoutersLine = line;
@@ -157,7 +157,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
           ? publishedLine.substring(Key.OPT.keyword.length() + 1)
           : publishedLine;
       String[] publishedPartsNoOpt = publishedLineNoOpt.split("[ \t]+");
-      this.parsePublishedLine(publishedLine, publishedLineNoOpt,
+      this.parsePublishedLine(publishedLine,
           publishedPartsNoOpt);
     }
     if (routerStatusLine != null) {
@@ -167,7 +167,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
           : routerStatusLine;
       String[] routerStatusPartsNoOpt =
           routerStatusLineNoOpt.split("[ \t]+");
-      this.parseRouterStatusLine(routerStatusLine, routerStatusLineNoOpt,
+      this.parseRouterStatusLine(
           routerStatusPartsNoOpt);
     } else if (runningRoutersLine != null) {
       String runningRoutersLineNoOpt =
@@ -176,8 +176,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
           : runningRoutersLine;
       String[] runningRoutersPartsNoOpt =
           runningRoutersLineNoOpt.split("[ \t]+");
-      this.parseRunningRoutersLine(runningRoutersLine,
-          runningRoutersLineNoOpt, runningRoutersPartsNoOpt);
+      this.parseRunningRoutersLine(
+          runningRoutersPartsNoOpt);
     } else {
       throw new DescriptorParseException("Either running-routers or "
           + "router-status line must be given.");
@@ -208,7 +208,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
       Key key = Key.get(partsNoOpt[0]);
       switch (key) {
         case DIRECTORY_SIGNATURE:
-          this.parseDirectorySignatureLine(line, lineNoOpt, partsNoOpt);
+          this.parseDirectorySignatureLine(line, partsNoOpt);
           nextCrypto = key;
           break;
         case CRYPTO_BEGIN:
@@ -240,20 +240,20 @@ public class RelayDirectoryImpl extends DescriptorImpl
     }
   }
 
-  private void parseSignedDirectoryLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseSignedDirectoryLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (!lineNoOpt.equals(Key.SIGNED_DIRECTORY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parsePublishedLine(String line, String lineNoOpt,
+  private void parsePublishedLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.publishedMillis = ParseHelper.parseTimestampAtIndex(line,
         partsNoOpt, 1, 2);
   }
 
-  private void parseDirSigningKeyLine(String line, String lineNoOpt,
+  private void parseDirSigningKeyLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length > 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -276,7 +276,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
     }
   }
 
-  private void parseRecommendedSoftwareLine(String line, String lineNoOpt,
+  private void parseRecommendedSoftwareLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     List<String> result = new ArrayList<>();
     if (partsNoOpt.length > 2) {
@@ -296,8 +296,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
     this.recommendedSoftware = result;
   }
 
-  private void parseRunningRoutersLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseRunningRoutersLine(String[] partsNoOpt)
+      throws DescriptorParseException {
     for (int i = 1; i < partsNoOpt.length; i++) {
       String part = partsNoOpt[i];
       String debugLine = "running-routers [...] " + part + " [...]";
@@ -322,8 +322,8 @@ public class RelayDirectoryImpl extends DescriptorImpl
     }
   }
 
-  private void parseRouterStatusLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseRouterStatusLine(String[] partsNoOpt)
+      throws DescriptorParseException {
     for (int i = 1; i < partsNoOpt.length; i++) {
       String part = partsNoOpt[i];
       String debugLine = "router-status [...] " + part + " [...]";
@@ -372,7 +372,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
     }
   }
 
-  private void parseDirectorySignatureLine(String line, String lineNoOpt,
+  private void parseDirectorySignatureLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");

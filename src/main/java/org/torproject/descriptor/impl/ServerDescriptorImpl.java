@@ -67,38 +67,38 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
       Key key = Key.get(partsNoOpt[0]);
       switch (key) {
         case ROUTER:
-          this.parseRouterLine(line, lineNoOpt, partsNoOpt);
+          this.parseRouterLine(line, partsNoOpt);
           break;
         case OR_ADDRESS:
-          this.parseOrAddressLine(line, lineNoOpt, partsNoOpt);
+          this.parseOrAddressLine(line, partsNoOpt);
           break;
         case BANDWIDTH:
-          this.parseBandwidthLine(line, lineNoOpt, partsNoOpt);
+          this.parseBandwidthLine(line, partsNoOpt);
           break;
         case PLATFORM:
-          this.parsePlatformLine(line, lineNoOpt, partsNoOpt);
+          this.parsePlatformLine(lineNoOpt);
           break;
         case PROTO:
           this.parseProtoLine(line, lineNoOpt, partsNoOpt);
           break;
         case PUBLISHED:
-          this.parsePublishedLine(line, lineNoOpt, partsNoOpt);
+          this.parsePublishedLine(line, partsNoOpt);
           break;
         case FINGERPRINT:
-          this.parseFingerprintLine(line, lineNoOpt, partsNoOpt);
+          this.parseFingerprintLine(line, lineNoOpt);
           break;
         case HIBERNATING:
-          this.parseHibernatingLine(line, lineNoOpt, partsNoOpt);
+          this.parseHibernatingLine(line, partsNoOpt);
           break;
         case UPTIME:
-          this.parseUptimeLine(line, lineNoOpt, partsNoOpt);
+          this.parseUptimeLine(line, partsNoOpt);
           break;
         case ONION_KEY:
-          this.parseOnionKeyLine(line, lineNoOpt, partsNoOpt);
+          this.parseOnionKeyLine(line, lineNoOpt);
           nextCrypto = key;
           break;
         case SIGNING_KEY:
-          this.parseSigningKeyLine(line, lineNoOpt, partsNoOpt);
+          this.parseSigningKeyLine(line, lineNoOpt);
           nextCrypto = key;
           break;
         case ACCEPT:
@@ -108,74 +108,74 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           this.parseRejectLine(line, lineNoOpt, partsNoOpt);
           break;
         case ROUTER_SIGNATURE:
-          this.parseRouterSignatureLine(line, lineNoOpt, partsNoOpt);
+          this.parseRouterSignatureLine(line, lineNoOpt);
           nextCrypto = key;
           break;
         case CONTACT:
-          this.parseContactLine(line, lineNoOpt, partsNoOpt);
+          this.parseContactLine(lineNoOpt);
           break;
         case FAMILY:
-          this.parseFamilyLine(line, lineNoOpt, partsNoOpt);
+          this.parseFamilyLine(line, partsNoOpt);
           break;
         case READ_HISTORY:
-          this.parseReadHistoryLine(line, lineNoOpt, partsNoOpt);
+          this.parseReadHistoryLine(line, partsNoOpt);
           break;
         case WRITE_HISTORY:
-          this.parseWriteHistoryLine(line, lineNoOpt, partsNoOpt);
+          this.parseWriteHistoryLine(line, partsNoOpt);
           break;
         case EVENTDNS:
-          this.parseEventdnsLine(line, lineNoOpt, partsNoOpt);
+          this.parseEventdnsLine(line, partsNoOpt);
           break;
         case CACHES_EXTRA_INFO:
-          this.parseCachesExtraInfoLine(line, lineNoOpt, partsNoOpt);
+          this.parseCachesExtraInfoLine(line, lineNoOpt);
           break;
         case EXTRA_INFO_DIGEST:
-          this.parseExtraInfoDigestLine(line, lineNoOpt, partsNoOpt);
+          this.parseExtraInfoDigestLine(line, partsNoOpt);
           break;
         case HIDDEN_SERVICE_DIR:
-          this.parseHiddenServiceDirLine(line, lineNoOpt, partsNoOpt);
+          this.parseHiddenServiceDirLine();
           break;
         case PROTOCOLS:
-          this.parseProtocolsLine(line, lineNoOpt, partsNoOpt);
+          this.parseProtocolsLine(line, partsNoOpt);
           break;
         case ALLOW_SINGLE_HOP_EXITS:
-          this.parseAllowSingleHopExitsLine(line, lineNoOpt, partsNoOpt);
+          this.parseAllowSingleHopExitsLine(line, lineNoOpt);
           break;
         case DIRCACHEPORT:
-          this.parseDircacheportLine(line, lineNoOpt, partsNoOpt);
+          this.parseDircacheportLine(line, partsNoOpt);
           break;
         case ROUTER_DIGEST:
-          this.parseRouterDigestLine(line, lineNoOpt, partsNoOpt);
+          this.parseRouterDigestLine(line, partsNoOpt);
           break;
         case ROUTER_DIGEST_SHA256:
-          this.parseRouterDigestSha256Line(line, lineNoOpt, partsNoOpt);
+          this.parseRouterDigestSha256Line(line, partsNoOpt);
           break;
         case IPV6_POLICY:
-          this.parseIpv6PolicyLine(line, lineNoOpt, partsNoOpt);
+          this.parseIpv6PolicyLine(line, partsNoOpt);
           break;
         case NTOR_ONION_KEY:
-          this.parseNtorOnionKeyLine(line, lineNoOpt, partsNoOpt);
+          this.parseNtorOnionKeyLine(line, partsNoOpt);
           break;
         case IDENTITY_ED25519:
-          this.parseIdentityEd25519Line(line, lineNoOpt, partsNoOpt);
+          this.parseIdentityEd25519Line(line, partsNoOpt);
           nextCrypto = key;
           break;
         case MASTER_KEY_ED25519:
-          this.parseMasterKeyEd25519Line(line, lineNoOpt, partsNoOpt);
+          this.parseMasterKeyEd25519Line(line, partsNoOpt);
           break;
         case ROUTER_SIG_ED25519:
-          this.parseRouterSigEd25519Line(line, lineNoOpt, partsNoOpt);
+          this.parseRouterSigEd25519Line(line, partsNoOpt);
           break;
         case ONION_KEY_CROSSCERT:
-          this.parseOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
+          this.parseOnionKeyCrosscert(line, partsNoOpt);
           nextCrypto = key;
           break;
         case NTOR_ONION_KEY_CROSSCERT:
-          this.parseNtorOnionKeyCrosscert(line, lineNoOpt, partsNoOpt);
+          this.parseNtorOnionKeyCrosscert(line, partsNoOpt);
           nextCrypto = key;
           break;
         case TUNNELLED_DIR_SERVER:
-          this.parseTunnelledDirServerLine(line, lineNoOpt, partsNoOpt);
+          this.parseTunnelledDirServerLine(line, lineNoOpt);
           break;
         case CRYPTO_BEGIN:
           cryptoLines = new ArrayList<>();
@@ -232,7 +232,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseRouterLine(String line, String lineNoOpt,
+  private void parseRouterLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 6) {
       throw new DescriptorParseException("Illegal line '" + line
@@ -245,7 +245,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.dirPort = ParseHelper.parsePort(line, partsNoOpt[5]);
   }
 
-  private void parseOrAddressLine(String line, String lineNoOpt,
+  private void parseOrAddressLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Wrong number of values in line "
@@ -255,7 +255,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.orAddresses.add(partsNoOpt[1]);
   }
 
-  private void parseBandwidthLine(String line, String lineNoOpt,
+  private void parseBandwidthLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length < 3 || partsNoOpt.length > 4) {
       throw new DescriptorParseException("Wrong number of values in line "
@@ -286,8 +286,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parsePlatformLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parsePlatformLine(String lineNoOpt)
+      throws DescriptorParseException {
     if (lineNoOpt.length() > Key.PLATFORM.keyword.length() + 1) {
       this.platform = lineNoOpt.substring(Key.PLATFORM.keyword.length() + 1);
     } else {
@@ -301,14 +301,14 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         partsNoOpt);
   }
 
-  private void parsePublishedLine(String line, String lineNoOpt,
+  private void parsePublishedLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.publishedMillis = ParseHelper.parseTimestampAtIndex(line,
         partsNoOpt, 1, 2);
   }
 
-  private void parseFingerprintLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseFingerprintLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (lineNoOpt.length() != Key.FINGERPRINT.keyword.length() + 5 * 10) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
@@ -317,7 +317,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
             .replaceAll(SP, ""));
   }
 
-  private void parseHibernatingLine(String line, String lineNoOpt,
+  private void parseHibernatingLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -325,7 +325,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.hibernating = ParseHelper.parseBoolean(partsNoOpt[1], line);
   }
 
-  private void parseUptimeLine(String line, String lineNoOpt,
+  private void parseUptimeLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Wrong number of values in line "
@@ -344,15 +344,15 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseOnionKeyLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseOnionKeyLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (!lineNoOpt.equals(Key.ONION_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseSigningKeyLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseSigningKeyLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (!lineNoOpt.equals(Key.SIGNING_KEY.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
@@ -377,15 +377,15 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.exitPolicyLines.add(lineNoOpt);
   }
 
-  private void parseRouterSignatureLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseRouterSignatureLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (!lineNoOpt.equals(Key.ROUTER_SIGNATURE.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseContactLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseContactLine(String lineNoOpt)
+      throws DescriptorParseException {
     if (lineNoOpt.length() > Key.CONTACT.keyword.length() + 1) {
       this.contact = lineNoOpt.substring(Key.CONTACT.keyword.length() + 1);
     } else {
@@ -393,7 +393,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseFamilyLine(String line, String lineNoOpt,
+  private void parseFamilyLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     String[] familyEntries = new String[partsNoOpt.length - 1];
     for (int i = 1; i < partsNoOpt.length; i++) {
@@ -420,19 +420,17 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.familyEntries = familyEntries;
   }
 
-  private void parseReadHistoryLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
-    this.readHistory = new BandwidthHistoryImpl(line, lineNoOpt,
-        partsNoOpt);
+  private void parseReadHistoryLine(String line, String[] partsNoOpt)
+      throws DescriptorParseException {
+    this.readHistory = new BandwidthHistoryImpl(line, partsNoOpt);
   }
 
-  private void parseWriteHistoryLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
-    this.writeHistory = new BandwidthHistoryImpl(line, lineNoOpt,
-        partsNoOpt);
+  private void parseWriteHistoryLine(String line, String[] partsNoOpt)
+      throws DescriptorParseException {
+    this.writeHistory = new BandwidthHistoryImpl(line, partsNoOpt);
   }
 
-  private void parseEventdnsLine(String line, String lineNoOpt,
+  private void parseEventdnsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -441,15 +439,15 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         line);
   }
 
-  private void parseCachesExtraInfoLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseCachesExtraInfoLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (!lineNoOpt.equals(Key.CACHES_EXTRA_INFO.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.cachesExtraInfo = true;
   }
 
-  private void parseExtraInfoDigestLine(String line, String lineNoOpt,
+  private void parseExtraInfoDigestLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length < 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -462,12 +460,11 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseHiddenServiceDirLine(String line, String lineNoOpt,
-      String[] partsNoOpt) {
+  private void parseHiddenServiceDirLine() {
     this.hiddenServiceDir = true;
   }
 
-  private void parseProtocolsLine(String line, String lineNoOpt,
+  private void parseProtocolsLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     int linkIndex = -1;
     int circuitIndex = -1;
@@ -505,15 +502,15 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseAllowSingleHopExitsLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseAllowSingleHopExitsLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (!lineNoOpt.equals(Key.ALLOW_SINGLE_HOP_EXITS.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
     this.allowSingleHopExits = true;
   }
 
-  private void parseDircacheportLine(String line, String lineNoOpt,
+  private void parseDircacheportLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     /* The dircacheport line was only contained in server descriptors
      * published by Tor 0.0.8 and before.  It's only specified in old
@@ -528,7 +525,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.dirPort = ParseHelper.parsePort(line, partsNoOpt[1]);
   }
 
-  private void parseRouterDigestLine(String line, String lineNoOpt,
+  private void parseRouterDigestLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -537,7 +534,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
         line, partsNoOpt[1]));
   }
 
-  private void parseIpv6PolicyLine(String line, String lineNoOpt,
+  private void parseIpv6PolicyLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     boolean isValid = true;
     if (partsNoOpt.length != 3) {
@@ -566,7 +563,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseNtorOnionKeyLine(String line, String lineNoOpt,
+  private void parseNtorOnionKeyLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -574,21 +571,21 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.ntorOnionKey = partsNoOpt[1].replaceAll("=", "");
   }
 
-  private void parseIdentityEd25519Line(String line, String lineNoOpt,
+  private void parseIdentityEd25519Line(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 1) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseOnionKeyCrosscert(String line, String lineNoOpt,
+  private void parseOnionKeyCrosscert(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 1) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
   }
 
-  private void parseNtorOnionKeyCrosscert(String line, String lineNoOpt,
+  private void parseNtorOnionKeyCrosscert(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -600,8 +597,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     }
   }
 
-  private void parseTunnelledDirServerLine(String line, String lineNoOpt,
-      String[] partsNoOpt) throws DescriptorParseException {
+  private void parseTunnelledDirServerLine(String line, String lineNoOpt)
+      throws DescriptorParseException {
     if (!lineNoOpt.equals(Key.TUNNELLED_DIR_SERVER.keyword)) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
     }
@@ -621,7 +618,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.masterKeyEd25519 = masterKeyEd25519FromIdentityEd25519;
   }
 
-  private void parseMasterKeyEd25519Line(String line, String lineNoOpt,
+  private void parseMasterKeyEd25519Line(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -635,7 +632,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.masterKeyEd25519 = masterKeyEd25519FromMasterKeyEd25519Line;
   }
 
-  private void parseRouterSigEd25519Line(String line, String lineNoOpt,
+  private void parseRouterSigEd25519Line(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");
@@ -643,7 +640,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     this.routerSignatureEd25519 = partsNoOpt[1];
   }
 
-  private void parseRouterDigestSha256Line(String line, String lineNoOpt,
+  private void parseRouterDigestSha256Line(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     if (partsNoOpt.length != 2) {
       throw new DescriptorParseException("Illegal line '" + line + "'.");

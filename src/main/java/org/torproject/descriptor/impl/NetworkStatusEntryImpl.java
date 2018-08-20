@@ -95,10 +95,10 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
           this.parseALine(line, parts);
           break;
         case S:
-          this.parseSLine(line, parts);
+          this.parseSLine(parts);
           break;
         case V:
-          this.parseVLine(line, parts);
+          this.parseVLine(line);
           break;
         case PR:
           this.parsePrLine(line, parts);
@@ -164,7 +164,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
   private static Map<Integer, String> flagStrings = new HashMap<>();
 
-  private void parseSLine(String line, String[] parts)
+  private void parseSLine(String[] parts)
       throws DescriptorParseException {
     this.parsedAtMostOnceKey(Key.S);
     BitSet flags = new BitSet(flagIndexes.size());
@@ -179,7 +179,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.flags = flags;
   }
 
-  private void parseVLine(String line, String[] parts)
+  private void parseVLine(String line)
       throws DescriptorParseException {
     this.parsedAtMostOnceKey(Key.V);
     String noOptLine = line;

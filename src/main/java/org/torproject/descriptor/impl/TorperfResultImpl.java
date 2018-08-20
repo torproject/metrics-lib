@@ -86,7 +86,7 @@ public class TorperfResultImpl extends DescriptorImpl
       String value = keyValueParts[1];
       switch (key) {
         case "SOURCE":
-          this.parseSource(value, keyValue, line);
+          this.parseSource(value);
           break;
         case "FILESIZE":
           this.parseFileSize(value, keyValue, line);
@@ -152,22 +152,22 @@ public class TorperfResultImpl extends DescriptorImpl
           this.parseUsedBy(value, keyValue, line);
           break;
         case "ENDPOINTLOCAL":
-          this.parseEndpointLocal(value, keyValue, line);
+          this.parseEndpointLocal(value);
           break;
         case "ENDPOINTPROXY":
-          this.parseEndpointProxy(value, keyValue, line);
+          this.parseEndpointProxy(value);
           break;
         case "ENDPOINTREMOTE":
-          this.parseEndpointRemote(value, keyValue, line);
+          this.parseEndpointRemote(value);
           break;
         case "HOSTNAMELOCAL":
-          this.parseHostnameLocal(value, keyValue, line);
+          this.parseHostnameLocal(value);
           break;
         case "HOSTNAMEREMOTE":
-          this.parseHostnameRemote(value, keyValue, line);
+          this.parseHostnameRemote(value);
           break;
         case "SOURCEADDRESS":
-          this.parseSourceAddress(value, keyValue, line);
+          this.parseSourceAddress(value);
           break;
         default:
           if (key.startsWith("DATAPERC")) {
@@ -216,7 +216,7 @@ public class TorperfResultImpl extends DescriptorImpl
     }
   }
 
-  private void parseSource(String value, String keyValue, String line)
+  private void parseSource(String value)
       throws DescriptorParseException {
     this.source = value;
   }
@@ -378,27 +378,27 @@ public class TorperfResultImpl extends DescriptorImpl
     this.usedBy = this.parseInt(value, keyValue, line);
   }
 
-  private void parseEndpointLocal(String value, String keyValue, String line) {
+  private void parseEndpointLocal(String value) {
     this.endpointLocal = value;
   }
 
-  private void parseEndpointProxy(String value, String keyValue, String line) {
+  private void parseEndpointProxy(String value) {
     this.endpointProxy = value;
   }
 
-  private void parseEndpointRemote(String value, String keyValue, String line) {
+  private void parseEndpointRemote(String value) {
     this.endpointRemote = value;
   }
 
-  private void parseHostnameLocal(String value, String keyValue, String line) {
+  private void parseHostnameLocal(String value) {
     this.hostnameLocal = value;
   }
 
-  private void parseHostnameRemote(String value, String keyValue, String line) {
+  private void parseHostnameRemote(String value) {
     this.hostnameRemote = value;
   }
 
-  private void parseSourceAddress(String value, String keyValue, String line) {
+  private void parseSourceAddress(String value) {
     this.sourceAddress = value;
   }
 
