@@ -189,7 +189,7 @@ public abstract class DescriptorImpl implements Descriptor {
 
   @Override
   public List<String> getUnrecognizedLines() {
-    return this.unrecognizedLines == null ? new ArrayList<String>()
+    return this.unrecognizedLines == null ? new ArrayList<>()
         : new ArrayList<>(this.unrecognizedLines);
   }
 

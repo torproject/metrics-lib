@@ -252,14 +252,14 @@ public class ParseHelper {
   protected static SortedMap<String, String> parseKeyValueStringPairs(
       String line, String[] parts, int startIndex)
       throws DescriptorParseException {
-    return (new KeyValueMap<String>(String.class))
+    return (new KeyValueMap<>(String.class))
         .parseKeyValueList(line, parts, startIndex, 0, " ");
   }
 
   protected static SortedMap<String, Integer> parseKeyValueIntegerPairs(
       String line, String[] parts, int startIndex)
       throws DescriptorParseException {
-    return (new KeyValueMap<Integer>(Integer.class))
+    return (new KeyValueMap<>(Integer.class))
         .parseKeyValueList(line, parts, startIndex, 0, " ");
   }
 
@@ -354,7 +354,7 @@ public class ParseHelper {
       parseCommaSeparatedKeyLongValueList(String line,
       String[] partsNoOpt, int index, int keyLength)
       throws DescriptorParseException {
-    return (new KeyValueMap<Long>(Long.class))
+    return (new KeyValueMap<>(Long.class))
         .parseKeyValueList(line, partsNoOpt, index, keyLength, ",");
   }
 
@@ -410,7 +410,7 @@ public class ParseHelper {
       parseSpaceSeparatedStringKeyDoubleValueMap(String line,
       String[] partsNoOpt, int startIndex)
       throws DescriptorParseException {
-    return (new KeyValueMap<Double>(Double.class))
+    return (new KeyValueMap<>(Double.class))
         .parseKeyValueList(line, partsNoOpt, startIndex, -1, " ");
   }
 
@@ -418,7 +418,7 @@ public class ParseHelper {
       parseSpaceSeparatedStringKeyLongValueMap(String line,
       String[] partsNoOpt, int startIndex)
       throws DescriptorParseException {
-    return (new KeyValueMap<Long>(Long.class))
+    return (new KeyValueMap<>(Long.class))
         .parseKeyValueList(line, partsNoOpt, startIndex, -1, " ");
   }
 

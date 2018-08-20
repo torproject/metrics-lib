@@ -546,8 +546,8 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           this.ipv6DefaultPolicy = partsNoOpt[1];
           this.ipv6PortList = partsNoOpt[2];
           String[] ports = partsNoOpt[2].split(",", -1);
-          for (int i = 0; i < ports.length; i++) {
-            if (ports[i].length() < 1) {
+          for (String port : ports) {
+            if (port.length() < 1) {
               isValid = false;
               break;
             }

@@ -288,7 +288,7 @@ public class DescriptorIndexCollectorTest {
     SortedMap<String, FileNode> fm = new TreeMap<>();
     fm.put("readonly", new FileNode("w", 2L, "2100-01-01 01:01"));
     new DescriptorIndexCollector()
-        .fetchRemoteFiles("", fm, 100L, dir, new TreeMap<String, Long>());
+        .fetchRemoteFiles("", fm, 100L, dir, new TreeMap<>());
   }
 }
 

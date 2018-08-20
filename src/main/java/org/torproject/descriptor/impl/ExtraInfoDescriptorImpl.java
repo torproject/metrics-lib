@@ -605,7 +605,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private SortedMap<String, Long> sortByPorts(
       SortedMap<String, Long> naturalOrder) {
     SortedMap<String, Long> byPortNumber =
-        new TreeMap<String, Long>(new Comparator<String>() {
+        new TreeMap<>(new Comparator<String>() {
           public int compare(String arg0, String arg1) {
             int port0 = 0;
             int port1 = 0;

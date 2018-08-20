@@ -74,8 +74,7 @@ public class TorperfResultImpl extends DescriptorImpl
       throw new DescriptorParseException("Blank lines are not allowed.");
     }
     String[] parts = line.split(" ");
-    for (int i = 0; i < parts.length; i++) {
-      String keyValue = parts[i];
+    for (String keyValue : parts) {
       String[] keyValueParts = keyValue.split("=");
       if (keyValueParts.length != 2) {
         throw new DescriptorParseException("Illegal key-value pair in "

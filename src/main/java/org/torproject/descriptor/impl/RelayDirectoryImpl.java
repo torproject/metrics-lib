@@ -284,8 +284,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
           + "'.");
     } else if (partsNoOpt.length == 2) {
       String[] versions = partsNoOpt[1].split(",", -1);
-      for (int i = 0; i < versions.length; i++) {
-        String version = versions[i];
+      for (String version : versions) {
         if (version.length() < 1) {
           throw new DescriptorParseException("Illegal versions line '"
               + line + "'.");

@@ -170,8 +170,8 @@ public class MicrodescriptorImpl extends DescriptorImpl
         case "accept":
         case "reject":
           String[] ports = parts[2].split(",", -1);
-          for (int i = 0; i < ports.length; i++) {
-            if (ports[i].length() < 1) {
+          for (String port : ports) {
+            if (port.length() < 1) {
               isValid = false;
               break;
             }
