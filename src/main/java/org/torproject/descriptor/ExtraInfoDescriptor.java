@@ -50,7 +50,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha1Hex();
+  String getDigestSha1Hex();
 
   /**
    * Return the SHA-256 descriptor digest, encoded as 43 base64
@@ -59,7 +59,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha256Base64();
+  String getDigestSha256Base64();
 
   /**
    * Return the server's nickname consisting of 1 to 19 alphanumeric
@@ -67,7 +67,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getNickname();
+  String getNickname();
 
   /**
    * Return a SHA-1 digest of the server's public identity key, encoded
@@ -76,7 +76,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getFingerprint();
+  String getFingerprint();
 
   /**
    * Return the time in milliseconds since the epoch when this descriptor
@@ -84,7 +84,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getPublishedMillis();
+  long getPublishedMillis();
 
   /**
    * Return the server's history of read bytes, or null if the descriptor
@@ -94,7 +94,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public BandwidthHistory getReadHistory();
+  BandwidthHistory getReadHistory();
 
   /**
    * Return the server's history of written bytes, or null if the
@@ -104,7 +104,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public BandwidthHistory getWriteHistory();
+  BandwidthHistory getWriteHistory();
 
   /**
    * Return a SHA-1 digest of the GeoIP database file used by this server
@@ -114,7 +114,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getGeoipDbDigestSha1Hex();
+  String getGeoipDbDigestSha1Hex();
 
   /**
    * Return a SHA-1 digest of the GeoIPv6 database file used by this
@@ -124,7 +124,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getGeoip6DbDigestSha1Hex();
+  String getGeoip6DbDigestSha1Hex();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -133,7 +133,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDirreqStatsEndMillis();
+  long getDirreqStatsEndMillis();
 
   /**
    * Return the interval length of the included directory request
@@ -141,7 +141,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDirreqStatsIntervalLength();
+  long getDirreqStatsIntervalLength();
 
   /**
    * Return statistics on unique IP addresses requesting v2 network
@@ -152,7 +152,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV2Ips();
+  SortedMap<String, Integer> getDirreqV2Ips();
 
   /**
    * Return statistics on unique IP addresses requesting v3 network
@@ -162,7 +162,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV3Ips();
+  SortedMap<String, Integer> getDirreqV3Ips();
 
   /**
    * Return statistics on directory requests for v2 network statuses with
@@ -173,7 +173,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV2Reqs();
+  SortedMap<String, Integer> getDirreqV2Reqs();
 
   /**
    * Return statistics on directory requests for v3 network status
@@ -183,7 +183,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV3Reqs();
+  SortedMap<String, Integer> getDirreqV3Reqs();
 
   /**
    * Return the share of requests for v2 network statuses that the server
@@ -192,7 +192,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public double getDirreqV2Share();
+  double getDirreqV2Share();
 
   /**
    * Return the share of requests for v3 network status consensuses of
@@ -202,7 +202,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public double getDirreqV3Share();
+  double getDirreqV3Share();
 
   /**
    * Return statistics on responses to directory requests for v2 network
@@ -213,7 +213,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV2Resp();
+  SortedMap<String, Integer> getDirreqV2Resp();
 
   /**
    * Return statistics on responses to directory requests for v3 network
@@ -223,7 +223,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV3Resp();
+  SortedMap<String, Integer> getDirreqV3Resp();
 
   /**
    * Return statistics on directory requests for v2 network statuses to
@@ -234,7 +234,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV2DirectDl();
+  SortedMap<String, Integer> getDirreqV2DirectDl();
 
   /**
    * Return statistics on directory requests for v3 network status
@@ -244,7 +244,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV3DirectDl();
+  SortedMap<String, Integer> getDirreqV3DirectDl();
 
   /**
    * Return statistics on directory requests for v2 network statuses
@@ -254,7 +254,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV2TunneledDl();
+  SortedMap<String, Integer> getDirreqV2TunneledDl();
 
   /**
    * Return statistics on directory requests for v3 network status
@@ -264,7 +264,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getDirreqV3TunneledDl();
+  SortedMap<String, Integer> getDirreqV3TunneledDl();
 
   /**
    * Return the directory request read history contained in this
@@ -272,7 +272,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public BandwidthHistory getDirreqReadHistory();
+  BandwidthHistory getDirreqReadHistory();
 
   /**
    * Return the directory request write history contained in this
@@ -280,7 +280,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public BandwidthHistory getDirreqWriteHistory();
+  BandwidthHistory getDirreqWriteHistory();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -289,7 +289,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getEntryStatsEndMillis();
+  long getEntryStatsEndMillis();
 
   /**
    * Return the interval length of the included entry statistics in
@@ -297,7 +297,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getEntryStatsIntervalLength();
+  long getEntryStatsIntervalLength();
 
   /**
    * Return statistics on client IP addresses with map keys being country
@@ -307,7 +307,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getEntryIps();
+  SortedMap<String, Integer> getEntryIps();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -316,7 +316,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getCellStatsEndMillis();
+  long getCellStatsEndMillis();
 
   /**
    * Return the interval length of the included cell statistics in
@@ -324,7 +324,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getCellStatsIntervalLength();
+  long getCellStatsIntervalLength();
 
   /**
    * Return the mean number of processed cells per circuit by circuit
@@ -333,7 +333,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Integer> getCellProcessedCells();
+  List<Integer> getCellProcessedCells();
 
   /**
    * Return the mean number of cells contained in circuit queues by
@@ -343,7 +343,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Double> getCellQueuedCells();
+  List<Double> getCellQueuedCells();
 
   /**
    * Return the mean times in milliseconds that cells spend in circuit
@@ -353,7 +353,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Integer> getCellTimeInQueue();
+  List<Integer> getCellTimeInQueue();
 
   /**
    * Return the mean number of circuits included in any of the cell
@@ -361,7 +361,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getCellCircuitsPerDecile();
+  int getCellCircuitsPerDecile();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -370,7 +370,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getConnBiDirectStatsEndMillis();
+  long getConnBiDirectStatsEndMillis();
 
   /**
    * Return the interval length of the included statistics on
@@ -379,7 +379,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getConnBiDirectStatsIntervalLength();
+  long getConnBiDirectStatsIntervalLength();
 
   /**
    * Return the number of connections on which this server read and wrote
@@ -388,7 +388,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getConnBiDirectBelow();
+  int getConnBiDirectBelow();
 
   /**
    * Return the number of connections on which this server read and wrote
@@ -398,7 +398,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getConnBiDirectRead();
+  int getConnBiDirectRead();
 
   /**
    * Return the number of connections on which this server read and wrote
@@ -408,7 +408,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getConnBiDirectWrite();
+  int getConnBiDirectWrite();
 
   /**
    * Return the number of connections on which this server read and wrote
@@ -417,7 +417,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getConnBiDirectBoth();
+  int getConnBiDirectBoth();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -426,7 +426,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getExitStatsEndMillis();
+  long getExitStatsEndMillis();
 
   /**
    * Return the interval length of the included exit statistics in
@@ -434,7 +434,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getExitStatsIntervalLength();
+  long getExitStatsIntervalLength();
 
   /**
    * Return statistics on KiB written to streams exiting the Tor network
@@ -444,7 +444,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Long> getExitKibibytesWritten();
+  SortedMap<String, Long> getExitKibibytesWritten();
 
   /**
    * Return statistics on KiB read from streams exiting the Tor network
@@ -454,7 +454,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Long> getExitKibibytesRead();
+  SortedMap<String, Long> getExitKibibytesRead();
 
   /**
    * Return statistics on opened streams exiting the Tor network by
@@ -465,7 +465,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Long> getExitStreamsOpened();
+  SortedMap<String, Long> getExitStreamsOpened();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -474,7 +474,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getGeoipStartTimeMillis();
+  long getGeoipStartTimeMillis();
 
   /**
    * Return statistics on the origin of client IP addresses with map keys
@@ -486,7 +486,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getGeoipClientOrigins();
+  SortedMap<String, Integer> getGeoipClientOrigins();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -495,7 +495,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getBridgeStatsEndMillis();
+  long getBridgeStatsEndMillis();
 
   /**
    * Return the interval length of the included bridge statistics in
@@ -503,7 +503,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getBridgeStatsIntervalLength();
+  long getBridgeStatsIntervalLength();
 
   /**
    * Return statistics on bridge client IP addresses by country with map
@@ -513,7 +513,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getBridgeIps();
+  SortedMap<String, Integer> getBridgeIps();
 
   /**
    * Return statistics on bridge client IP addresses by IP version with
@@ -524,7 +524,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getBridgeIpVersions();
+  SortedMap<String, Integer> getBridgeIpVersions();
 
   /**
    * Return statistics on bridge client IP addresses by transport with
@@ -537,7 +537,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getBridgeIpTransports();
+  SortedMap<String, Integer> getBridgeIpTransports();
 
   /**
    * Return the (possibly empty) list of pluggable transports supported
@@ -545,7 +545,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getTransports();
+  List<String> getTransports();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -554,7 +554,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public long getHidservStatsEndMillis();
+  long getHidservStatsEndMillis();
 
   /**
    * Return the interval length of the included hidden-service statistics
@@ -562,7 +562,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public long getHidservStatsIntervalLength();
+  long getHidservStatsIntervalLength();
 
   /**
    * Return the approximate number of RELAY cells seen in either
@@ -571,7 +571,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public Double getHidservRendRelayedCells();
+  Double getHidservRendRelayedCells();
 
   /**
    * Return the obfuscation parameters applied to the original
@@ -581,7 +581,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public Map<String, Double> getHidservRendRelayedCellsParameters();
+  Map<String, Double> getHidservRendRelayedCellsParameters();
 
   /**
    * Return the approximate number of unique hidden-service identities
@@ -590,7 +590,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public Double getHidservDirOnionsSeen();
+  Double getHidservDirOnionsSeen();
 
   /**
    * Return the obfuscation parameters applied to the original
@@ -600,7 +600,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public Map<String, Double> getHidservDirOnionsSeenParameters();
+  Map<String, Double> getHidservDirOnionsSeenParameters();
 
   /**
    * Return the time in milliseconds since the epoch when the included
@@ -608,7 +608,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public long getPaddingCountsStatsEndMillis();
+  long getPaddingCountsStatsEndMillis();
 
   /**
    * Return the interval length of the included padding-counts statistics in
@@ -616,7 +616,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public long getPaddingCountsStatsIntervalLength();
+  long getPaddingCountsStatsIntervalLength();
 
   /**
    * Return padding-counts statistics, or <code>null</code> if no such
@@ -624,7 +624,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public Map<String, Long> getPaddingCounts();
+  Map<String, Long> getPaddingCounts();
 
   /**
    * Return the RSA-1024 signature of the PKCS1-padded descriptor digest,
@@ -634,7 +634,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getRouterSignature();
+  String getRouterSignature();
 
   /**
    * Return the Ed25519 certificate in PEM format, or null if the
@@ -642,7 +642,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getIdentityEd25519();
+  String getIdentityEd25519();
 
   /**
    * Return the Ed25519 master key, encoded as 43 base64 characters
@@ -654,7 +654,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getMasterKeyEd25519();
+  String getMasterKeyEd25519();
 
   /**
    * Return the Ed25519 signature of the SHA-256 digest of the entire
@@ -665,6 +665,6 @@ public interface ExtraInfoDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getRouterSignatureEd25519();
+  String getRouterSignatureEd25519();
 }
 

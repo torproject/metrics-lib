@@ -53,7 +53,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha1Hex();
+  String getDigestSha1Hex();
 
   /**
    * Return the SHA-256 descriptor digest, encoded as 43 base64
@@ -62,7 +62,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha256Base64();
+  String getDigestSha256Base64();
 
   /**
    * Return the server's nickname consisting of 1 to 19 alphanumeric
@@ -70,14 +70,14 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getNickname();
+  String getNickname();
 
   /**
    * Return the server's primary IPv4 address in dotted-quad format.
    *
    * @since 1.0.0
    */
-  public String getAddress();
+  String getAddress();
 
   /**
    * Return the TCP port where this server accepts TLS connections for
@@ -86,7 +86,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getOrPort();
+  int getOrPort();
 
   /**
    * Return the TCP port where this server accepts SOCKS connections,
@@ -94,7 +94,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getSocksPort();
+  int getSocksPort();
 
   /**
    * Return the TCP port where this server accepts directory-related HTTP
@@ -102,7 +102,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getDirPort();
+  int getDirPort();
 
   /**
    * Return IP addresses and TCP ports where this server accepts TLS
@@ -115,7 +115,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getOrAddresses();
+  List<String> getOrAddresses();
 
   /**
    * Return the average bandwidth in bytes per second that the server is
@@ -123,7 +123,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getBandwidthRate();
+  int getBandwidthRate();
 
   /**
    * Return the burst bandwidth in bytes per second that the server is
@@ -131,7 +131,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getBandwidthBurst();
+  int getBandwidthBurst();
 
   /**
    * Return the observed bandwidth in bytes per second as an estimate of
@@ -141,7 +141,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getBandwidthObserved();
+  int getBandwidthObserved();
 
   /**
    * Return a human-readable string describing the Tor software version
@@ -151,7 +151,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getPlatform();
+  String getPlatform();
 
   /**
    * Return the version numbers of all protocols supported by this server, or
@@ -159,7 +159,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getProtocols();
+  SortedMap<String, SortedSet<Long>> getProtocols();
 
   /**
    * Return the time in milliseconds since the epoch when this descriptor
@@ -167,7 +167,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getPublishedMillis();
+  long getPublishedMillis();
 
   /**
    * Return a SHA-1 digest of the server's public identity key, encoded
@@ -178,7 +178,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getFingerprint();
+  String getFingerprint();
 
   /**
    * Return whether the server was hibernating when this descriptor was
@@ -186,7 +186,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public boolean isHibernating();
+  boolean isHibernating();
 
   /**
    * Return the number of seconds that the server process has been
@@ -196,7 +196,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public Long getUptime();
+  Long getUptime();
 
   /**
    * Return the RSA-1024 public key in PEM format used to encrypt CREATE
@@ -205,7 +205,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getOnionKey();
+  String getOnionKey();
 
   /**
    * Return the RSA-1024 public key in PEM format used by this server as
@@ -214,7 +214,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getSigningKey();
+  String getSigningKey();
 
   /**
    * Return the server's exit policy consisting of one or more accept or
@@ -223,7 +223,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getExitPolicyLines();
+  List<String> getExitPolicyLines();
 
   /**
    * Return the RSA-1024 signature of the PKCS1-padded descriptor digest,
@@ -233,7 +233,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getRouterSignature();
+  String getRouterSignature();
 
   /**
    * Return the contact information for this server, which may contain
@@ -242,7 +242,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getContact();
+  String getContact();
 
   /**
    * Return nicknames, $-prefixed identity fingerprints, or tuples of the
@@ -252,7 +252,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getFamilyEntries();
+  List<String> getFamilyEntries();
 
   /**
    * Return the server's history of read bytes, or null if the descriptor
@@ -263,7 +263,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public BandwidthHistory getReadHistory();
+  BandwidthHistory getReadHistory();
 
   /**
    * Return the server's history of written bytes, or null if the
@@ -274,7 +274,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public BandwidthHistory getWriteHistory();
+  BandwidthHistory getWriteHistory();
 
   /**
    * Return true if the server uses the enhanced DNS logic, or false if
@@ -284,7 +284,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public boolean getUsesEnhancedDnsLogic();
+  boolean getUsesEnhancedDnsLogic();
 
   /**
    * Return whether this server is a directory cache that provides
@@ -292,7 +292,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public boolean getCachesExtraInfo();
+  boolean getCachesExtraInfo();
 
   /**
    * Return the SHA-1 digest of the server's extra-info descriptor,
@@ -301,7 +301,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getExtraInfoDigestSha1Hex();
+  String getExtraInfoDigestSha1Hex();
 
   /**
    * Return the SHA-256 digest of the server's extra-info descriptor,
@@ -311,7 +311,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getExtraInfoDigestSha256Base64();
+  String getExtraInfoDigestSha256Base64();
 
   /**
    * Return the list of hidden service descriptor version numbers that
@@ -323,14 +323,14 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Integer> getHiddenServiceDirVersions();
+  List<Integer> getHiddenServiceDirVersions();
 
   /**
    * Return whether this server stores and serves hidden service descriptors.
    *
    * @since 2.3.0
    */
-  public boolean isHiddenServiceDir();
+  boolean isHiddenServiceDir();
 
   /**
    * Return the list of link protocol versions that this server
@@ -338,7 +338,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Integer> getLinkProtocolVersions();
+  List<Integer> getLinkProtocolVersions();
 
   /**
    * Return the list of circuit protocol versions that this server
@@ -346,7 +346,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Integer> getCircuitProtocolVersions();
+  List<Integer> getCircuitProtocolVersions();
 
   /**
    * Return whether this server allows single-hop circuits to make exit
@@ -354,7 +354,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public boolean getAllowSingleHopExits();
+  boolean getAllowSingleHopExits();
 
   /**
    * Return the default policy, {@code "accept"} or {@code "reject"}, of
@@ -364,7 +364,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getIpv6DefaultPolicy();
+  String getIpv6DefaultPolicy();
 
   /**
    * Return the port list of the IPv6 exit-policy summary, or null if the
@@ -373,14 +373,14 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getIpv6PortList();
+  String getIpv6PortList();
 
   /**
    * Return the curve25519 public key, encoded as 43 base64 characters
    * without padding characters, that is used for the ntor circuit
    * extended handshake, or null if the descriptor didn't contain an
    * ntor-onion-key line. */
-  public String getNtorOnionKey();
+  String getNtorOnionKey();
 
   /**
    * Return the Ed25519 certificate in PEM format, or null if the
@@ -388,7 +388,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getIdentityEd25519();
+  String getIdentityEd25519();
 
   /**
    * Return the Ed25519 master key, encoded as 43 base64 characters
@@ -400,7 +400,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getMasterKeyEd25519();
+  String getMasterKeyEd25519();
 
   /**
    * Return the Ed25519 signature of the SHA-256 digest of the entire
@@ -411,7 +411,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getRouterSignatureEd25519();
+  String getRouterSignatureEd25519();
 
   /**
    * Return an RSA-1024 signature in PEM format, generated using the
@@ -422,7 +422,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getOnionKeyCrosscert();
+  String getOnionKeyCrosscert();
 
   /**
    * Return an Ed25519 signature in PEM format, generated using the
@@ -433,7 +433,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getNtorOnionKeyCrosscert();
+  String getNtorOnionKeyCrosscert();
 
   /**
    * Return the sign of the Ed25519 public key corresponding to the ntor
@@ -442,7 +442,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public int getNtorOnionKeyCrosscertSign();
+  int getNtorOnionKeyCrosscertSign();
 
   /**
    * Return whether the server accepts "tunneled" directory requests using
@@ -450,6 +450,6 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.3.0
    */
-  public boolean getTunnelledDirServer();
+  boolean getTunnelledDirServer();
 }
 

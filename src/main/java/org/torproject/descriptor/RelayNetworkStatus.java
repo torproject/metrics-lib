@@ -36,14 +36,14 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getNetworkStatusVersion();
+  int getNetworkStatusVersion();
 
   /**
    * Return the authority's hostname.
    *
    * @since 1.0.0
    */
-  public String getHostname();
+  String getHostname();
 
   /**
    * Return the authority's primary IPv4 address in dotted-quad format,
@@ -51,7 +51,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getAddress();
+  String getAddress();
 
   /**
    * Return the TCP port where this authority accepts directory-related
@@ -60,7 +60,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getDirport();
+  int getDirport();
 
   /**
    * Return a SHA-1 digest of the authority's public identity key,
@@ -69,7 +69,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getFingerprint();
+  String getFingerprint();
 
   /**
    * Return the contact information for this authority, which may contain
@@ -77,7 +77,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getContactLine();
+  String getContactLine();
 
   /**
    * Return the RSA-1024 public key in PEM format used by this authority
@@ -85,7 +85,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getDirSigningKey();
+  String getDirSigningKey();
 
   /**
    * Return recommended Tor versions for server usage, or null if the
@@ -93,7 +93,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getRecommendedServerVersions();
+  List<String> getRecommendedServerVersions();
 
   /**
    * Return recommended Tor versions for client usage, or null if the
@@ -101,7 +101,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getRecommendedClientVersions();
+  List<String> getRecommendedClientVersions();
 
   /**
    * Return the time in milliseconds since the epoch when this descriptor
@@ -109,7 +109,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getPublishedMillis();
+  long getPublishedMillis();
 
   /**
    * Return the set of flags that this directory assigns to relays, or
@@ -117,7 +117,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedSet<String> getDirOptions();
+  SortedSet<String> getDirOptions();
 
   /**
    * Return status entries for each contained server, with map keys being
@@ -126,7 +126,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, NetworkStatusEntry> getStatusEntries();
+  SortedMap<String, NetworkStatusEntry> getStatusEntries();
 
   /**
    * Return whether a status entry with the given relay fingerprint
@@ -136,7 +136,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public boolean containsStatusEntry(String fingerprint);
+  boolean containsStatusEntry(String fingerprint);
 
   /**
    * Return a status entry by relay fingerprint (SHA-1 digest of the
@@ -146,7 +146,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public NetworkStatusEntry getStatusEntry(String fingerprint);
+  NetworkStatusEntry getStatusEntry(String fingerprint);
 
   /**
    * Return the authority's nickname consisting of 1 to 19 alphanumeric
@@ -154,7 +154,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getNickname();
+  String getNickname();
 
   /**
    * Return the directory signature string made with the authority's
@@ -162,7 +162,7 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getDirectorySignature();
+  String getDirectorySignature();
 
   /**
    * Return the SHA-1 status digest, encoded as 40 lower-case hexadecimal
@@ -171,6 +171,6 @@ public interface RelayNetworkStatus extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha1Hex();
+  String getDigestSha1Hex();
 }
 

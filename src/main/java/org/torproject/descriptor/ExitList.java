@@ -19,14 +19,14 @@ public interface ExitList extends Descriptor {
    *
    * @since 1.0.0
    */
-  public static final String EOL = "\n";
+  String EOL = "\n";
 
   /**
    * Exit list entry containing results from a single exit scan.
    *
    * @since 1.1.0
    */
-  public interface Entry {
+  interface Entry {
 
     /**
      * Return the scanned relay's fingerprint, which is a SHA-1 digest of
@@ -35,7 +35,7 @@ public interface ExitList extends Descriptor {
      *
      * @since 1.1.0
      */
-    public String getFingerprint();
+    String getFingerprint();
 
     /**
      * Return the time in milliseconds since the epoch when the scanned
@@ -43,7 +43,7 @@ public interface ExitList extends Descriptor {
      *
      * @since 1.1.0
      */
-    public long getPublishedMillis();
+    long getPublishedMillis();
 
     /**
      * Return the time in milliseconds since the epoch when the network
@@ -51,7 +51,7 @@ public interface ExitList extends Descriptor {
      *
      * @since 1.1.0
      */
-    public long getLastStatusMillis();
+    long getLastStatusMillis();
 
     /**
      * Return the IP addresses that were determined in the scan with map
@@ -60,7 +60,7 @@ public interface ExitList extends Descriptor {
      *
      * @since 1.1.0
      */
-    public Map<String, Long> getExitAddresses();
+    Map<String, Long> getExitAddresses();
   }
 
   /**
@@ -69,13 +69,13 @@ public interface ExitList extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDownloadedMillis();
+  long getDownloadedMillis();
 
   /**
    * Return the unordered set of exit scan results.
    *
    * @since 1.1.0
    */
-  public Set<ExitList.Entry> getEntries();
+  Set<ExitList.Entry> getEntries();
 }
 

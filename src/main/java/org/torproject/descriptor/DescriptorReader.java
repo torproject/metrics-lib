@@ -46,7 +46,7 @@ public interface DescriptorReader {
    *
    * @since 1.6.0
    */
-  public void setHistoryFile(File historyFile);
+  void setHistoryFile(File historyFile);
 
   /**
    * Save a history file with file names and last modified timestamps of
@@ -59,7 +59,7 @@ public interface DescriptorReader {
    *
    * @since 1.6.0
    */
-  public void saveHistoryFile(File historyFile);
+  void saveHistoryFile(File historyFile);
 
   /**
    * Exclude files if they haven't changed since the corresponding last
@@ -69,7 +69,7 @@ public interface DescriptorReader {
    *
    * @since 1.0.0
    */
-  public void setExcludedFiles(SortedMap<String, Long> excludedFiles);
+  void setExcludedFiles(SortedMap<String, Long> excludedFiles);
 
   /**
    * Return files and last modified timestamps of files that exist in the
@@ -81,7 +81,7 @@ public interface DescriptorReader {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Long> getExcludedFiles();
+  SortedMap<String, Long> getExcludedFiles();
 
   /**
    * Return files and last modified timestamps of files that exist in the
@@ -92,7 +92,7 @@ public interface DescriptorReader {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Long> getParsedFiles();
+  SortedMap<String, Long> getParsedFiles();
 
   /**
    * Don't keep more than this number of descriptors in the queue (default:
@@ -102,7 +102,7 @@ public interface DescriptorReader {
    *
    * @since 1.9.0
    */
-  public void setMaxDescriptorsInQueue(int maxDescriptorsInQueue);
+  void setMaxDescriptorsInQueue(int maxDescriptorsInQueue);
 
   /**
    * Read descriptors from the given descriptor file(s) and return the parsed
@@ -119,6 +119,6 @@ public interface DescriptorReader {
    *
    * @since 1.9.0
    */
-  public Iterable<Descriptor> readDescriptors(File... descriptorFiles);
+  Iterable<Descriptor> readDescriptors(File... descriptorFiles);
 }
 

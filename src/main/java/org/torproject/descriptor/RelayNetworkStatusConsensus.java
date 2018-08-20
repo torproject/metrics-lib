@@ -32,7 +32,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getNetworkStatusVersion();
+  int getNetworkStatusVersion();
 
   /**
    * Return the consensus flavor name, which denotes the variant of the
@@ -42,7 +42,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getConsensusFlavor();
+  String getConsensusFlavor();
 
   /**
    * Return the consensus method number of this descriptor, which is the
@@ -52,7 +52,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getConsensusMethod();
+  int getConsensusMethod();
 
   /**
    * Return the time in milliseconds since the epoch at which this
@@ -60,7 +60,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getValidAfterMillis();
+  long getValidAfterMillis();
 
   /**
    * Return the time in milliseconds since the epoch until which this
@@ -68,7 +68,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getFreshUntilMillis();
+  long getFreshUntilMillis();
 
   /**
    * Return the time in milliseconds since the epoch until which this
@@ -76,7 +76,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getValidUntilMillis();
+  long getValidUntilMillis();
 
   /**
    * Return the number of seconds that the directory authorities will
@@ -85,7 +85,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getVoteSeconds();
+  long getVoteSeconds();
 
   /**
    * Return the number of seconds that the directory authorities will
@@ -94,7 +94,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDistSeconds();
+  long getDistSeconds();
 
   /**
    * Return recommended Tor versions for server usage, or null if the
@@ -102,7 +102,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getRecommendedServerVersions();
+  List<String> getRecommendedServerVersions();
 
   /**
    * Return recommended Tor versions for client usage, or null if the
@@ -110,7 +110,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getRecommendedClientVersions();
+  List<String> getRecommendedClientVersions();
 
   /**
    * Return the version numbers of all protocols that clients should support,
@@ -119,7 +119,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getRecommendedClientProtocols();
+  SortedMap<String, SortedSet<Long>> getRecommendedClientProtocols();
 
   /**
    * Return the version numbers of all protocols that relays should support,
@@ -128,7 +128,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getRecommendedRelayProtocols();
+  SortedMap<String, SortedSet<Long>> getRecommendedRelayProtocols();
 
   /**
    * Return the version numbers of all protocols that clients must support,
@@ -137,7 +137,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getRequiredClientProtocols();
+  SortedMap<String, SortedSet<Long>> getRequiredClientProtocols();
 
   /**
    * Return the version numbers of all protocols that relays must support,
@@ -146,7 +146,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getRequiredRelayProtocols();
+  SortedMap<String, SortedSet<Long>> getRequiredRelayProtocols();
 
   /**
    * Return a list of software packages and their versions together with a
@@ -157,7 +157,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.3.0
    */
-  public List<String> getPackageLines();
+  List<String> getPackageLines();
 
   /**
    * Return known relay flags in this descriptor that were contained in
@@ -166,7 +166,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedSet<String> getKnownFlags();
+  SortedSet<String> getKnownFlags();
 
   /**
    * Return consensus parameters contained in this descriptor with map
@@ -176,7 +176,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getConsensusParams();
+  SortedMap<String, Integer> getConsensusParams();
 
   /**
    * Return the number of commits used to generate the second-to-last shared
@@ -185,7 +185,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.6.0
    */
-  public int getSharedRandPreviousNumReveals();
+  int getSharedRandPreviousNumReveals();
 
   /**
    * Return the second-to-last shared random value, encoded in base64, or null
@@ -193,7 +193,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.6.0
    */
-  public String getSharedRandPreviousValue();
+  String getSharedRandPreviousValue();
 
   /**
    * Return the number of commits used to generate the latest shared random
@@ -202,7 +202,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.6.0
    */
-  public int getSharedRandCurrentNumReveals();
+  int getSharedRandCurrentNumReveals();
 
   /**
    * Return the latest shared random value, encoded in base64, or null if the
@@ -210,7 +210,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.6.0
    */
-  public String getSharedRandCurrentValue();
+  String getSharedRandCurrentValue();
 
   /**
    * Return directory source entries for each directory authority that
@@ -220,7 +220,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, DirSourceEntry> getDirSourceEntries();
+  SortedMap<String, DirSourceEntry> getDirSourceEntries();
 
   /**
    * Return status entries for each contained server, with map keys being
@@ -229,7 +229,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, NetworkStatusEntry> getStatusEntries();
+  SortedMap<String, NetworkStatusEntry> getStatusEntries();
 
   /**
    * Return whether a status entry with the given relay fingerprint
@@ -239,7 +239,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public boolean containsStatusEntry(String fingerprint);
+  boolean containsStatusEntry(String fingerprint);
 
   /**
    * Return a status entry by relay fingerprint (SHA-1 digest of the
@@ -249,14 +249,14 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public NetworkStatusEntry getStatusEntry(String fingerprint);
+  NetworkStatusEntry getStatusEntry(String fingerprint);
 
   /**
    * Return the list of signatures contained in this consensus.
    *
    * @since 1.3.0
    */
-  public List<DirectorySignature> getSignatures();
+  List<DirectorySignature> getSignatures();
 
   /**
    * Return optional weights to be applied to router bandwidths during
@@ -266,7 +266,7 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getBandwidthWeights();
+  SortedMap<String, Integer> getBandwidthWeights();
 
   /**
    * Return the SHA-1 digest of this consensus, encoded as 40 lower-case
@@ -275,6 +275,6 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha1Hex();
+  String getDigestSha1Hex();
 }
 

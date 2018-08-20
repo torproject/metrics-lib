@@ -57,7 +57,7 @@ public interface DescriptorCollector {
    *
    * @since 1.0.0
    */
-  public void collectDescriptors(String collecTorBaseUrl,
+  void collectDescriptors(String collecTorBaseUrl,
       String[] remoteDirectories, long minLastModified,
       File localDirectory, boolean deleteExtraneousLocalFiles);
 }

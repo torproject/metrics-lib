@@ -24,7 +24,7 @@ public interface Descriptor {
    *
    * @since 1.0.0
    */
-  public byte[] getRawDescriptorBytes();
+  byte[] getRawDescriptorBytes();
 
   /**
    * Return the raw descriptor length in bytes.
@@ -34,7 +34,7 @@ public interface Descriptor {
    *
    * @since 1.9.0
    */
-  public int getRawDescriptorLength();
+  int getRawDescriptorLength();
 
   /**
    * Return the (possibly empty) list of annotations in the format
@@ -46,7 +46,7 @@ public interface Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getAnnotations();
+  List<String> getAnnotations();
 
   /**
    * Return any unrecognized lines when parsing this descriptor, or an
@@ -58,7 +58,7 @@ public interface Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getUnrecognizedLines();
+  List<String> getUnrecognizedLines();
 
   /**
    * Return the file, tarball or plain file, that contained this descriptor, or
@@ -68,6 +68,6 @@ public interface Descriptor {
    *
    * @since 1.9.0
    */
-  public File getDescriptorFile();
+  File getDescriptorFile();
 }
 

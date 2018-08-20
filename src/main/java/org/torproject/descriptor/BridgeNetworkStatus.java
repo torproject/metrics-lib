@@ -31,7 +31,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getPublishedMillis();
+  long getPublishedMillis();
 
   /**
    * Return the minimum uptime in seconds that this authority requires
@@ -40,7 +40,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public long getStableUptime();
+  long getStableUptime();
 
   /**
    * Return the minimum MTBF (mean time between failure) that this
@@ -49,7 +49,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public long getStableMtbf();
+  long getStableMtbf();
 
   /**
    * Return the minimum bandwidth that this authority requires for
@@ -58,7 +58,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public long getFastBandwidth();
+  long getFastBandwidth();
 
   /**
    * Return the minimum WFU (weighted fractional uptime) in percent that
@@ -67,7 +67,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public double getGuardWfu();
+  double getGuardWfu();
 
   /**
    * Return the minimum weighted time in seconds that this authority
@@ -76,7 +76,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public long getGuardTk();
+  long getGuardTk();
 
   /**
    * Return the minimum bandwidth that this authority requires for
@@ -85,7 +85,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public long getGuardBandwidthIncludingExits();
+  long getGuardBandwidthIncludingExits();
 
   /**
    * Return the minimum bandwidth that this authority requires for
@@ -94,7 +94,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public long getGuardBandwidthExcludingExits();
+  long getGuardBandwidthExcludingExits();
 
   /**
    * Return 1 if the authority has measured enough MTBF info to use the
@@ -104,7 +104,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public int getEnoughMtbfInfo();
+  int getEnoughMtbfInfo();
 
   /**
    * Return 1 if the authority has enough measured bandwidths that it'll
@@ -114,7 +114,7 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.1.0
    */
-  public int getIgnoringAdvertisedBws();
+  int getIgnoringAdvertisedBws();
 
   /**
    * Return status entries for each contained bridge, with map keys being
@@ -123,6 +123,6 @@ public interface BridgeNetworkStatus extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, NetworkStatusEntry> getStatusEntries();
+  SortedMap<String, NetworkStatusEntry> getStatusEntries();
 }
 

@@ -25,21 +25,21 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.2.0
    */
-  public SortedMap<String, String> getUnrecognizedKeys();
+  SortedMap<String, String> getUnrecognizedKeys();
 
   /**
    * Return the configured name of the data source.
    *
    * @since 1.0.0
    */
-  public String getSource();
+  String getSource();
 
   /**
    * Return the configured file size in bytes.
    *
    * @since 1.0.0
    */
-  public int getFileSize();
+  int getFileSize();
 
   /**
    * Return the time in milliseconds since the epoch when the connection
@@ -47,7 +47,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getStartMillis();
+  long getStartMillis();
 
   /**
    * Return the time in milliseconds since the epoch when the socket was
@@ -55,7 +55,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getSocketMillis();
+  long getSocketMillis();
 
   /**
    * Return the time in milliseconds since the epoch when the socket was
@@ -63,7 +63,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getConnectMillis();
+  long getConnectMillis();
 
   /**
    * Return the time in milliseconds since the epoch when SOCKS 5
@@ -71,7 +71,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getNegotiateMillis();
+  long getNegotiateMillis();
 
   /**
    * Return the time in milliseconds since the epoch when the SOCKS
@@ -79,7 +79,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getRequestMillis();
+  long getRequestMillis();
 
   /**
    * Return the time in milliseconds since the epoch when the SOCKS
@@ -87,7 +87,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getResponseMillis();
+  long getResponseMillis();
 
   /**
    * Return the time in milliseconds since the epoch when the HTTP
@@ -95,7 +95,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDataRequestMillis();
+  long getDataRequestMillis();
 
   /**
    * Return the time in milliseconds since the epoch when the first
@@ -103,7 +103,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDataResponseMillis();
+  long getDataResponseMillis();
 
   /**
    * Return the time in milliseconds since the epoch when the payload was
@@ -111,21 +111,21 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDataCompleteMillis();
+  long getDataCompleteMillis();
 
   /**
    * Return the total number of bytes written.
    *
    * @since 1.0.0
    */
-  public int getWriteBytes();
+  int getWriteBytes();
 
   /**
    * Return the total number of bytes read.
    *
    * @since 1.0.0
    */
-  public int getReadBytes();
+  int getReadBytes();
 
   /**
    * Return whether the request timed out (as opposed to failing), or
@@ -133,7 +133,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public Boolean didTimeout();
+  Boolean didTimeout();
 
   /**
    * Return the times in milliseconds since the epoch when {@code x%} of
@@ -142,7 +142,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<Integer, Long> getDataPercentiles();
+  SortedMap<Integer, Long> getDataPercentiles();
 
   /**
    * Return the time in milliseconds since the epoch when the circuit was
@@ -151,7 +151,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getLaunchMillis();
+  long getLaunchMillis();
 
   /**
    * Return the time in milliseconds since the epoch when the circuit was
@@ -159,7 +159,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getUsedAtMillis();
+  long getUsedAtMillis();
 
   /**
    * Return a list of fingerprints of the relays in the circuit, or null
@@ -167,7 +167,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getPath();
+  List<String> getPath();
 
   /**
    * Return a list of times in milliseconds since the epoch when circuit
@@ -176,7 +176,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Long> getBuildTimes();
+  List<Long> getBuildTimes();
 
   /**
    * Return the circuit build timeout that the Tor client used when
@@ -185,7 +185,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getTimeout();
+  long getTimeout();
 
   /**
    * Return the circuit build time quantile that the Tor client uses to
@@ -194,7 +194,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public double getQuantile();
+  double getQuantile();
 
   /**
    * Return the identifier of the circuit used for this measurement, or
@@ -202,7 +202,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getCircId();
+  int getCircId();
 
   /**
    * Return the identifier of the stream used for this measurement, or -1
@@ -210,7 +210,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getUsedBy();
+  int getUsedBy();
 
   /**
    * Return the hostname, IP address, and port that the TGen client used to
@@ -221,7 +221,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getEndpointLocal();
+  String getEndpointLocal();
 
   /**
    * Return the hostname, IP address, and port that the TGen client used to
@@ -232,7 +232,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getEndpointProxy();
+  String getEndpointProxy();
 
   /**
    * Return the hostname, IP address, and port that the TGen client used to
@@ -243,7 +243,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getEndpointRemote();
+  String getEndpointRemote();
 
   /**
    * Return the client machine hostname, which may be <code>"(NULL)"</code> if
@@ -252,7 +252,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getHostnameLocal();
+  String getHostnameLocal();
 
   /**
    * Return the server machine hostname, which may be <code>"(NULL)"</code> if
@@ -261,7 +261,7 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getHostnameRemote();
+  String getHostnameRemote();
 
   /**
    * Return the public IP address of the OnionPerf host obtained by connecting
@@ -272,6 +272,6 @@ public interface TorperfResult extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getSourceAddress();
+  String getSourceAddress();
 }
 

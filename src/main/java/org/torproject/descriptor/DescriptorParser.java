@@ -38,6 +38,6 @@ public interface DescriptorParser {
    *
    * @since 1.9.0
    */
-  public Iterable<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
+  Iterable<Descriptor> parseDescriptors(byte[] rawDescriptorBytes,
       File sourceFile, String fileName);
 }

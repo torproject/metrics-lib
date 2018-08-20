@@ -30,7 +30,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha256Base64();
+  String getDigestSha256Base64();
 
   /**
    * Return the RSA-1024 public key in PEM format used to encrypt CREATE
@@ -39,7 +39,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getOnionKey();
+  String getOnionKey();
 
   /**
    * Return the curve25519 public key, encoded as 43 base64 characters
@@ -49,7 +49,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getNtorOnionKey();
+  String getNtorOnionKey();
 
   /**
    * Return IP addresses and TCP ports where this server accepts TLS
@@ -62,7 +62,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getOrAddresses();
+  List<String> getOrAddresses();
 
   /**
    * Return nicknames, $-prefixed identity fingerprints, or tuples of the
@@ -72,7 +72,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getFamilyEntries();
+  List<String> getFamilyEntries();
 
   /**
    * Return the default policy, {@code "accept"} or {@code "reject"}, of
@@ -82,7 +82,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getDefaultPolicy();
+  String getDefaultPolicy();
 
   /**
    * Return the port list of the IPv4 exit-policy summary, or null if the
@@ -91,7 +91,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getPortList();
+  String getPortList();
 
   /**
    * Return the default policy, {@code "accept"} or {@code "reject"}, of
@@ -101,7 +101,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getIpv6DefaultPolicy();
+  String getIpv6DefaultPolicy();
 
   /**
    * Return the port list of the IPv6 exit-policy summary, or null if the
@@ -110,7 +110,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getIpv6PortList();
+  String getIpv6PortList();
 
   /**
    * Return a SHA-1 digest of the server's RSA-1024 identity key, encoded
@@ -120,7 +120,7 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getRsa1024Identity();
+  String getRsa1024Identity();
 
   /**
    * Return a SHA-256 digest of the server's Ed25519 identity key,
@@ -130,6 +130,6 @@ public interface Microdescriptor extends Descriptor {
    *
    * @since 1.1.0
    */
-  public String getEd25519Identity();
+  String getEd25519Identity();
 }
 

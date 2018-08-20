@@ -11,7 +11,7 @@ package org.torproject.descriptor.log;
 public interface InternalWebServerAccessLog extends InternalLogDescriptor {
 
   /** The log's name should include this string. */
-  public static final String MARKER = "access.log";
+  String MARKER = "access.log";
 
 }
 

@@ -36,14 +36,14 @@ public interface LogDescriptor extends Descriptor {
    * @since 2.2.0
    */
   @Override
-  public byte[] getRawDescriptorBytes();
+  byte[] getRawDescriptorBytes();
 
   /**
    * Returns the decompressed raw descriptor bytes of the log as stream.
    *
    * @since 2.2.0
    */
-  public InputStream decompressedByteStream() throws DescriptorParseException;
+  InputStream decompressedByteStream() throws DescriptorParseException;
 
   /**
    * Returns annotations found in the log file, which may be an empty List if a
@@ -52,7 +52,7 @@ public interface LogDescriptor extends Descriptor {
    * @since 2.2.0
    */
   @Override
-  public List<String> getAnnotations();
+  List<String> getAnnotations();
 
   /**
    * Returns unrecognized lines encountered while parsing the log, which may be
@@ -62,7 +62,7 @@ public interface LogDescriptor extends Descriptor {
    * @since 2.2.0
    */
   @Override
-  public List<String> getUnrecognizedLines();
+  List<String> getUnrecognizedLines();
 
   /**
    * Returns a stream of all parseable log lines.
@@ -70,13 +70,13 @@ public interface LogDescriptor extends Descriptor {
    *
    * @since 2.2.0
    */
-  public Stream<? extends Line> logLines() throws DescriptorParseException;
+  Stream<? extends Line> logLines() throws DescriptorParseException;
 
   /** Base interface for accessing log lines. */
-  public interface Line {
+  interface Line {
 
     /** Returns a log line string. */
-    public String toLogString();
+    String toLogString();
 
   }
 }

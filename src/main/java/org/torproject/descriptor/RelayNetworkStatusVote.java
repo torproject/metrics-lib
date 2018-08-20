@@ -27,7 +27,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getNetworkStatusVersion();
+  int getNetworkStatusVersion();
 
   /**
    * Return the list of consensus method numbers supported by this
@@ -36,7 +36,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Integer> getConsensusMethods();
+  List<Integer> getConsensusMethods();
 
   /**
    * Return the time in milliseconds since the epoch when this descriptor
@@ -44,7 +44,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getPublishedMillis();
+  long getPublishedMillis();
 
   /**
    * Return the time in milliseconds since the epoch at which the
@@ -52,7 +52,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getValidAfterMillis();
+  long getValidAfterMillis();
 
   /**
    * Return the time in milliseconds since the epoch until which the
@@ -60,7 +60,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getFreshUntilMillis();
+  long getFreshUntilMillis();
 
   /**
    * Return the time in milliseconds since the epoch until which the
@@ -68,7 +68,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getValidUntilMillis();
+  long getValidUntilMillis();
 
   /**
    * Return the number of seconds that the directory authorities will
@@ -77,7 +77,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getVoteSeconds();
+  long getVoteSeconds();
 
   /**
    * Return the number of seconds that the directory authorities will
@@ -86,7 +86,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDistSeconds();
+  long getDistSeconds();
 
   /**
    * Return recommended Tor versions for server usage, or null if the
@@ -94,7 +94,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getRecommendedServerVersions();
+  List<String> getRecommendedServerVersions();
 
   /**
    * Return recommended Tor versions for client usage, or null if the
@@ -102,7 +102,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<String> getRecommendedClientVersions();
+  List<String> getRecommendedClientVersions();
 
   /**
    * Return the version numbers of all protocols that clients should support,
@@ -110,7 +110,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getRecommendedClientProtocols();
+  SortedMap<String, SortedSet<Long>> getRecommendedClientProtocols();
 
   /**
    * Return the version numbers of all protocols that relays should support,
@@ -118,7 +118,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getRecommendedRelayProtocols();
+  SortedMap<String, SortedSet<Long>> getRecommendedRelayProtocols();
 
   /**
    * Return the version numbers of all protocols that clients must support,
@@ -126,7 +126,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getRequiredClientProtocols();
+  SortedMap<String, SortedSet<Long>> getRequiredClientProtocols();
 
   /**
    * Return the version numbers of all protocols that relays must support,
@@ -134,7 +134,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getRequiredRelayProtocols();
+  SortedMap<String, SortedSet<Long>> getRequiredRelayProtocols();
 
   /**
    * Return a list of software packages and their versions together with a
@@ -144,14 +144,14 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.3.0
    */
-  public List<String> getPackageLines();
+  List<String> getPackageLines();
 
   /**
    * Return known relay flags by this authority.
    *
    * @since 1.0.0
    */
-  public SortedSet<String> getKnownFlags();
+  SortedSet<String> getKnownFlags();
 
   /**
    * Return the minimum uptime in seconds that this authority requires
@@ -160,7 +160,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getStableUptime();
+  long getStableUptime();
 
   /**
    * Return the minimum MTBF (mean time between failure) that this
@@ -169,7 +169,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getStableMtbf();
+  long getStableMtbf();
 
   /**
    * Return the minimum bandwidth that this authority requires for
@@ -178,7 +178,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getFastBandwidth();
+  long getFastBandwidth();
 
   /**
    * Return the minimum WFU (weighted fractional uptime) in percent that
@@ -187,7 +187,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public double getGuardWfu();
+  double getGuardWfu();
 
   /**
    * Return the minimum weighted time in seconds that this authority
@@ -196,7 +196,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getGuardTk();
+  long getGuardTk();
 
   /**
    * Return the minimum bandwidth that this authority requires for
@@ -205,7 +205,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getGuardBandwidthIncludingExits();
+  long getGuardBandwidthIncludingExits();
 
   /**
    * Return the minimum bandwidth that this authority requires for
@@ -214,7 +214,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getGuardBandwidthExcludingExits();
+  long getGuardBandwidthExcludingExits();
 
   /**
    * Return 1 if the authority has measured enough MTBF info to use the
@@ -224,7 +224,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getEnoughMtbfInfo();
+  int getEnoughMtbfInfo();
 
   /**
    * Return 1 if the authority has enough measured bandwidths that it'll
@@ -234,7 +234,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.1.0
    */
-  public int getIgnoringAdvertisedBws();
+  int getIgnoringAdvertisedBws();
 
   /**
    * Return consensus parameters contained in this descriptor with map
@@ -244,7 +244,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, Integer> getConsensusParams();
+  SortedMap<String, Integer> getConsensusParams();
 
   /**
    * Return the authority's nickname consisting of 1 to 19 alphanumeric
@@ -252,7 +252,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getNickname();
+  String getNickname();
 
   /**
    * Return a SHA-1 digest of the authority's long-term authority
@@ -261,14 +261,14 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getIdentity();
+  String getIdentity();
 
   /**
    * Return the authority's hostname.
    *
    * @since 1.2.0
    */
-  public String getHostname();
+  String getHostname();
 
   /**
    * Return the authority's primary IPv4 address in dotted-quad format,
@@ -276,7 +276,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getAddress();
+  String getAddress();
 
   /**
    * Return the TCP port where this authority accepts directory-related
@@ -285,7 +285,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getDirport();
+  int getDirport();
 
   /**
    * Return the TCP port where this authority accepts TLS connections for
@@ -294,7 +294,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getOrport();
+  int getOrport();
 
   /**
    * Return the contact information for this authority, which may contain
@@ -303,7 +303,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getContactLine();
+  String getContactLine();
 
   /**
    * Return whether this directory authority supports and can participate in
@@ -311,7 +311,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public boolean isSharedRandParticipate();
+  boolean isSharedRandParticipate();
 
   /**
    * Return all currently known directory authority commit lines for the shared
@@ -325,7 +325,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public List<String> getSharedRandCommitLines();
+  List<String> getSharedRandCommitLines();
 
   /**
    * Return the number of commits used to generate the second-to-last shared
@@ -334,7 +334,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public int getSharedRandPreviousNumReveals();
+  int getSharedRandPreviousNumReveals();
 
   /**
    * Return the second-to-last shared random value, encoded in base64, or null
@@ -342,7 +342,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public String getSharedRandPreviousValue();
+  String getSharedRandPreviousValue();
 
   /**
    * Return the number of commits used to generate the latest shared random
@@ -350,7 +350,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public int getSharedRandCurrentNumReveals();
+  int getSharedRandCurrentNumReveals();
 
   /**
    * Return the latest shared random value, encoded in base64, or null if this
@@ -358,7 +358,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.6.0
    */
-  public String getSharedRandCurrentValue();
+  String getSharedRandCurrentValue();
 
   /**
    * Return the version of the directory key certificate used by this
@@ -366,7 +366,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getDirKeyCertificateVersion();
+  int getDirKeyCertificateVersion();
 
   /**
    * Return the SHA-1 digest for an obsolete authority identity key still
@@ -375,14 +375,14 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getLegacyDirKey();
+  String getLegacyDirKey();
 
   /**
    * Return the authority's identity key in PEM format.
    *
    * @since 1.2.0
    */
-  public String getDirIdentityKey();
+  String getDirIdentityKey();
 
   /**
    * Return the time in milliseconds since the epoch when the authority's
@@ -390,7 +390,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDirKeyPublishedMillis();
+  long getDirKeyPublishedMillis();
 
   /**
    * Return the time in milliseconds since the epoch after which the
@@ -398,14 +398,14 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDirKeyExpiresMillis();
+  long getDirKeyExpiresMillis();
 
   /**
    * Return the authority's signing key in PEM format.
    *
    * @since 1.2.0
    */
-  public String getDirSigningKey();
+  String getDirSigningKey();
 
   /**
    * Return the signature of the authority's identity key made using the
@@ -414,7 +414,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.2.0
    */
-  public String getDirKeyCrosscert();
+  String getDirKeyCrosscert();
 
   /**
    * Return the certificate signature from the initial item
@@ -423,7 +423,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.2.0
    */
-  public String getDirKeyCertification();
+  String getDirKeyCertification();
 
   /**
    * Return status entries for each contained server, with map keys being
@@ -432,7 +432,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, NetworkStatusEntry> getStatusEntries();
+  SortedMap<String, NetworkStatusEntry> getStatusEntries();
 
   /**
    * Return whether a status entry with the given relay fingerprint
@@ -442,7 +442,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public boolean containsStatusEntry(String fingerprint);
+  boolean containsStatusEntry(String fingerprint);
 
   /**
    * Return a status entry by relay fingerprint (SHA-1 digest of the
@@ -452,7 +452,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.0.0
    */
-  public NetworkStatusEntry getStatusEntry(String fingerprint);
+  NetworkStatusEntry getStatusEntry(String fingerprint);
 
   /**
    * Return a list of signatures contained in this vote, which is
@@ -461,7 +461,7 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.3.0
    */
-  public List<DirectorySignature> getSignatures();
+  List<DirectorySignature> getSignatures();
 
   /**
    * Return the SHA-1 digest of this vote, encoded as 40 lower-case hexadecimal
@@ -469,6 +469,6 @@ public interface RelayNetworkStatusVote extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha1Hex();
+  String getDigestSha1Hex();
 }
 

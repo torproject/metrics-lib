@@ -21,7 +21,7 @@ public interface DirectorySignature {
    *
    * @since 1.0.0
    */
-  public String getAlgorithm();
+  String getAlgorithm();
 
   /**
    * Return the SHA-1 digest of the authority's long-term identity key in
@@ -30,7 +30,7 @@ public interface DirectorySignature {
    *
    * @since 1.0.0
    */
-  public String getIdentity();
+  String getIdentity();
 
   /**
    * Return the SHA-1 digest of the authority's medium-term signing key
@@ -39,7 +39,7 @@ public interface DirectorySignature {
    *
    * @since 1.7.0
    */
-  public String getSigningKeyDigestSha1Hex();
+  String getSigningKeyDigestSha1Hex();
 
   /**
    * Return the directory signature string made with the authority's
@@ -47,6 +47,6 @@ public interface DirectorySignature {
    *
    * @since 1.0.0
    */
-  public String getSignature();
+  String getSignature();
 }
 

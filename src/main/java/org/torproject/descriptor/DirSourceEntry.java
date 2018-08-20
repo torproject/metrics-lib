@@ -20,7 +20,7 @@ public interface DirSourceEntry {
    *
    * @since 1.0.0
    */
-  public byte[] getDirSourceEntryBytes();
+  byte[] getDirSourceEntryBytes();
 
   /**
    * Return the authority's nickname consisting of 1 to 19 alphanumeric
@@ -28,7 +28,7 @@ public interface DirSourceEntry {
    *
    * @since 1.0.0
    */
-  public String getNickname();
+  String getNickname();
 
   /**
    * Return a SHA-1 digest of the authority's long-term authority
@@ -37,21 +37,21 @@ public interface DirSourceEntry {
    *
    * @since 1.0.0
    */
-  public String getIdentity();
+  String getIdentity();
 
   /**
    * Return the authority's hostname.
    *
    * @since 1.2.0
    */
-  public String getHostname();
+  String getHostname();
 
   /**
    * Return the authority's primary IPv4 address in dotted-quad format.
    *
    * @since 1.0.0
    */
-  public String getIp();
+  String getIp();
 
   /**
    * Return the TCP port where this authority accepts directory-related
@@ -59,7 +59,7 @@ public interface DirSourceEntry {
    *
    * @since 1.0.0
    */
-  public int getDirPort();
+  int getDirPort();
 
   /**
    * Return the TCP port where this authority accepts TLS connections for
@@ -67,7 +67,7 @@ public interface DirSourceEntry {
    *
    * @since 1.0.0
    */
-  public int getOrPort();
+  int getOrPort();
 
   /**
    * Return whether this directory source entry was created using a
@@ -75,7 +75,7 @@ public interface DirSourceEntry {
    *
    * @since 1.0.0
    */
-  public boolean isLegacy();
+  boolean isLegacy();
 
   /**
    * Return the contact information for this authority, which may contain
@@ -83,7 +83,7 @@ public interface DirSourceEntry {
    *
    * @since 1.0.0
    */
-  public String getContactLine();
+  String getContactLine();
 
   /**
    * Return the SHA-1 vote digest, encoded as 40 lower-case hexadecimal
@@ -91,6 +91,6 @@ public interface DirSourceEntry {
    *
    * @since 1.7.0
    */
-  public String getVoteDigestSha1Hex();
+  String getVoteDigestSha1Hex();
 }
 

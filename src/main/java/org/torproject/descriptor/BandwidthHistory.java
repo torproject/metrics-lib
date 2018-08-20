@@ -22,7 +22,7 @@ public interface BandwidthHistory {
    *
    * @since 1.0.0
    */
-  public String getLine();
+  String getLine();
 
   /**
    * Return the time in milliseconds since the epoch when the most recent
@@ -30,14 +30,14 @@ public interface BandwidthHistory {
    *
    * @since 1.0.0
    */
-  public long getHistoryEndMillis();
+  long getHistoryEndMillis();
 
   /**
    * Return the interval length in seconds.
    *
    * @since 1.0.0
    */
-  public long getIntervalLength();
+  long getIntervalLength();
 
   /**
    * Return the (possibly empty) bandwidth history with map keys being
@@ -47,6 +47,6 @@ public interface BandwidthHistory {
    *
    * @since 1.0.0
    */
-  public SortedMap<Long, Long> getBandwidthValues();
+  SortedMap<Long, Long> getBandwidthValues();
 }
 

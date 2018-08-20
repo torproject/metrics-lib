@@ -31,7 +31,7 @@ public interface BridgePoolAssignment extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getPublishedMillis();
+  long getPublishedMillis();
 
   /**
    * Return the entries contained in this bridge pool assignment list
@@ -42,6 +42,6 @@ public interface BridgePoolAssignment extends Descriptor {
    *
    * @since 1.0.0
    */
-  public SortedMap<String, String> getEntries();
+  SortedMap<String, String> getEntries();
 }
 

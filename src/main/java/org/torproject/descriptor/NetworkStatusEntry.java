@@ -30,7 +30,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public byte[] getStatusEntryBytes();
+  byte[] getStatusEntryBytes();
 
   /**
    * Return the server nickname consisting of 1 to 19 alphanumeric
@@ -38,7 +38,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public String getNickname();
+  String getNickname();
 
   /**
    * Return a SHA-1 digest of the server's identity key, encoded as 40
@@ -46,7 +46,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public String getFingerprint();
+  String getFingerprint();
 
   /**
    * Return the SHA-1 digest of the server descriptor, or null if the
@@ -55,7 +55,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public String getDescriptor();
+  String getDescriptor();
 
   /**
    * Return the time in milliseconds since the epoch when this descriptor
@@ -63,14 +63,14 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public long getPublishedMillis();
+  long getPublishedMillis();
 
   /**
    * Return the server's primary IPv4 address in dotted-quad format.
    *
    * @since 1.0.0
    */
-  public String getAddress();
+  String getAddress();
 
   /**
    * Return the TCP port where this server accepts TLS connections for
@@ -78,7 +78,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public int getOrPort();
+  int getOrPort();
 
   /**
    * Return the TCP port where this server accepts directory-related HTTP
@@ -86,7 +86,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public int getDirPort();
+  int getDirPort();
 
   /**
    * Return the (possibly empty) set of microdescriptor digests, encoded as 43
@@ -95,7 +95,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.7.0
    */
-  public Set<String> getMicrodescriptorDigestsSha256Base64();
+  Set<String> getMicrodescriptorDigestsSha256Base64();
 
   /**
    * Return additional IP addresses and TCP ports where this server
@@ -105,7 +105,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public List<String> getOrAddresses();
+  List<String> getOrAddresses();
 
   /**
    * Return the relay flags assigned to this server, or null if the
@@ -113,7 +113,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public SortedSet<String> getFlags();
+  SortedSet<String> getFlags();
 
   /**
    * Return the Tor software version, or null if the status entry didn't
@@ -121,7 +121,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public String getVersion();
+  String getVersion();
 
   /**
    * Return the version numbers of all protocols supported by this server, or
@@ -129,7 +129,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.6.0
    */
-  public SortedMap<String, SortedSet<Long>> getProtocols();
+  SortedMap<String, SortedSet<Long>> getProtocols();
 
   /**
    * Return the bandwidth weight of this server or -1 if the status entry
@@ -137,7 +137,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public long getBandwidth();
+  long getBandwidth();
 
   /**
    * Return the measured bandwidth or -1 if the status entry either
@@ -146,7 +146,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public long getMeasured();
+  long getMeasured();
 
   /**
    * Return whether the status entry is yet unmeasured by the bandwidth
@@ -154,7 +154,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public boolean getUnmeasured();
+  boolean getUnmeasured();
 
   /**
    * Return the default policy of the port summary, which can be either
@@ -163,7 +163,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public String getDefaultPolicy();
+  String getDefaultPolicy();
 
   /**
    * Return the list of ports or port intervals of the exit port summary,
@@ -171,7 +171,7 @@ public interface NetworkStatusEntry {
    *
    * @since 1.0.0
    */
-  public String getPortList();
+  String getPortList();
 
   /**
    * Return the server's Ed25519 master key, encoded as 43 base64
@@ -181,6 +181,6 @@ public interface NetworkStatusEntry {
    *
    * @since 1.1.0
    */
-  public String getMasterKeyEd25519();
+  String getMasterKeyEd25519();
 }
 

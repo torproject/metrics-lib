@@ -22,7 +22,7 @@ public interface UnparseableDescriptor extends Descriptor {
    *
    * @since 1.9.0
    */
-  public DescriptorParseException getDescriptorParseException();
+  DescriptorParseException getDescriptorParseException();
 
   /**
    * Will always throw an {@code UnsupportedOperationException}.
@@ -30,7 +30,7 @@ public interface UnparseableDescriptor extends Descriptor {
    * @since 1.9.0
    */
   @Override
-  public List<String> getAnnotations();
+  List<String> getAnnotations();
 
   /**
    * Will always throw an {@code UnsupportedOperationException}.
@@ -38,7 +38,7 @@ public interface UnparseableDescriptor extends Descriptor {
    * @since 1.9.0
    */
   @Override
-  public List<String> getUnrecognizedLines();
+  List<String> getUnrecognizedLines();
 
 }
 

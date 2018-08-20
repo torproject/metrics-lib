@@ -23,7 +23,7 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getDirKeyCertificateVersion();
+  int getDirKeyCertificateVersion();
 
   /**
    * Return the authority's primary IPv4 address in dotted-quad format,
@@ -31,7 +31,7 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getAddress();
+  String getAddress();
 
   /**
    * Return the TCP port where this authority accepts directory-related
@@ -39,7 +39,7 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.0.0
    */
-  public int getPort();
+  int getPort();
 
   /**
    * Return a SHA-1 digest of the authority's long-term authority
@@ -48,14 +48,14 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getFingerprint();
+  String getFingerprint();
 
   /**
    * Return the authority's identity key in PEM format.
    *
    * @since 1.0.0
    */
-  public String getDirIdentityKey();
+  String getDirIdentityKey();
 
   /**
    * Return the time in milliseconds since the epoch when the authority's
@@ -63,7 +63,7 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDirKeyPublishedMillis();
+  long getDirKeyPublishedMillis();
 
   /**
    * Return the time in milliseconds since the epoch after which the
@@ -71,14 +71,14 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getDirKeyExpiresMillis();
+  long getDirKeyExpiresMillis();
 
   /**
    * Return the authority's signing key in PEM format.
    *
    * @since 1.0.0
    */
-  public String getDirSigningKey();
+  String getDirSigningKey();
 
   /**
    * Return the signature of the authority's identity key made using the
@@ -87,7 +87,7 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getDirKeyCrosscert();
+  String getDirKeyCrosscert();
 
   /**
    * Return the certificate signature from the initial item
@@ -96,7 +96,7 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getDirKeyCertification();
+  String getDirKeyCertification();
 
   /**
    * Return the SHA-1 certificate digest, encoded as 40 lower-case
@@ -104,6 +104,6 @@ public interface DirectoryKeyCertificate extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha1Hex();
+  String getDigestSha1Hex();
 }
 

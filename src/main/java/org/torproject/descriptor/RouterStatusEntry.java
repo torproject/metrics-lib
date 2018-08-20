@@ -24,7 +24,7 @@ public interface RouterStatusEntry {
    *
    * @since 1.0.0
    */
-  public String getNickname();
+  String getNickname();
 
   /**
    * Return a SHA-1 digest of the relay's identity key, encoded as 40
@@ -32,20 +32,20 @@ public interface RouterStatusEntry {
    *
    * @since 1.0.0
    */
-  public String getFingerprint();
+  String getFingerprint();
 
   /**
    * Return whether the relay is verified.
    *
    * @since 1.0.0
    */
-  public boolean isVerified();
+  boolean isVerified();
 
   /**
    * Return whether the relay is live.
    *
    * @since 1.0.0
    */
-  public boolean isLive();
+  boolean isLive();
 }
 

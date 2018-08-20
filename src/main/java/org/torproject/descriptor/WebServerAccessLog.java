@@ -31,7 +31,7 @@ public interface WebServerAccessLog extends LogDescriptor {
    *
    * @since 2.2.0
    */
-  public LocalDate getLogDate();
+  LocalDate getLogDate();
 
   /**
    * Returns the hostname of the physical host writing this log file, which is
@@ -42,7 +42,7 @@ public interface WebServerAccessLog extends LogDescriptor {
    *
    * @since 2.2.0
    */
-  public String getPhysicalHost();
+  String getPhysicalHost();
 
   /**
    * Returns the hostname of the virtual host that this log file was written
@@ -53,7 +53,7 @@ public interface WebServerAccessLog extends LogDescriptor {
    *
    * @since 2.2.0
    */
-  public String getVirtualHost();
+  String getVirtualHost();
 
   /**
    * Returns at most three unrecognized lines encountered while parsing the log.
@@ -61,7 +61,7 @@ public interface WebServerAccessLog extends LogDescriptor {
    * @since 2.2.0
    */
   @Override
-  public List<String> getUnrecognizedLines();
+  List<String> getUnrecognizedLines();
 
   /**
    * Returns a stream of all valid log lines.
@@ -69,7 +69,7 @@ public interface WebServerAccessLog extends LogDescriptor {
    * @since 2.3.0
    */
   @Override
-  public Stream<WebServerAccessLog.Line> logLines()
+  Stream<WebServerAccessLog.Line> logLines()
       throws DescriptorParseException;
 
   /**
@@ -78,31 +78,31 @@ public interface WebServerAccessLog extends LogDescriptor {
    *
    * @since 2.2.0
    */
-  public interface Line extends LogDescriptor.Line {
+  interface Line extends LogDescriptor.Line {
 
     /** Returns the IP address of the requesting host. */
-    public String getIp();
+    String getIp();
 
     /** Returns the HTTP method, e.g., GET. */
-    public Method getMethod();
+    Method getMethod();
 
     /** Returns the protocol and version, e.g., HTTP/1.1. */
-    public String getProtocol();
+    String getProtocol();
 
     /** Returns the requested resource. */
-    public String getRequest();
+    String getRequest();
 
     /** Returns the size of the response in bytes, if available. */
-    public Optional<Integer> getSize();
+    Optional<Integer> getSize();
 
     /** Returns the final status code, e.g., 200. */
-    public int getResponse();
+    int getResponse();
 
     /** Returns the date when the request was received. */
-    public LocalDate getDate();
+    LocalDate getDate();
 
     /** True, if this is a valid web server access log line. */
-    public boolean isValid();
+    boolean isValid();
   }
 
 }

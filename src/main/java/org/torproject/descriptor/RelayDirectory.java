@@ -35,7 +35,7 @@ public interface RelayDirectory extends Descriptor {
    *
    * @since 1.0.0
    */
-  public long getPublishedMillis();
+  long getPublishedMillis();
 
   /**
    * Return the RSA-1024 public key in PEM format used by this authority
@@ -44,14 +44,14 @@ public interface RelayDirectory extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getDirSigningKey();
+  String getDirSigningKey();
 
   /**
    * Return recommended Tor versions.
    *
    * @since 1.0.0
    */
-  public List<String> getRecommendedSoftware();
+  List<String> getRecommendedSoftware();
 
   /**
    * Return the directory signature string made with the authority's
@@ -59,14 +59,14 @@ public interface RelayDirectory extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getDirectorySignature();
+  String getDirectorySignature();
 
   /**
    * Return router status entries, one for each contained relay.
    *
    * @since 1.0.0
    */
-  public List<RouterStatusEntry> getRouterStatusEntries();
+  List<RouterStatusEntry> getRouterStatusEntries();
 
   /**
    * Return a list of server descriptors contained in the signed
@@ -74,7 +74,7 @@ public interface RelayDirectory extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<ServerDescriptor> getServerDescriptors();
+  List<ServerDescriptor> getServerDescriptors();
 
   /**
    * Return a (very likely empty) list of exceptions from parsing the
@@ -82,7 +82,7 @@ public interface RelayDirectory extends Descriptor {
    *
    * @since 1.0.0
    */
-  public List<Exception> getServerDescriptorParseExceptions();
+  List<Exception> getServerDescriptorParseExceptions();
 
   /**
    * Return the directory nickname consisting of 1 to 19 alphanumeric
@@ -90,7 +90,7 @@ public interface RelayDirectory extends Descriptor {
    *
    * @since 1.0.0
    */
-  public String getNickname();
+  String getNickname();
 
   /**
    * Return the SHA-1 directory digest, encoded as 40 lower-case
@@ -99,6 +99,6 @@ public interface RelayDirectory extends Descriptor {
    *
    * @since 1.7.0
    */
-  public String getDigestSha1Hex();
+  String getDigestSha1Hex();
 }
 
