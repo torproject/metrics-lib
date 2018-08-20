@@ -166,7 +166,7 @@ public class WebServerAccessLogLine implements WebServerAccessLog.Line {
 
   @Override
   public boolean equals(Object other) {
-    if (null != other && other instanceof WebServerAccessLogLine) {
+    if (other instanceof WebServerAccessLogLine) {
       return this.toLogString()
           .equals(((WebServerAccessLogLine)other).toLogString());
     }
