@@ -44,7 +44,7 @@ public class ParseHelper {
     return keyword;
   }
 
-  private static Pattern ipv4Pattern = Pattern.compile("^[0-9\\.]{7,15}$");
+  private static Pattern ipv4Pattern = Pattern.compile("^[0-9.]{7,15}$");
 
   protected static String parseIpv4Address(String line, String address)
       throws DescriptorParseException {
