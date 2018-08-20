@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -163,7 +164,7 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
         lineStr = br.readLine();
       }
       br.close();
-      return lists.stream().flatMap(list -> list.stream());
+      return lists.stream().flatMap(Collection::stream);
     } catch (Exception ex) {
       throw new DescriptorParseException("Cannot retrieve log lines.", ex);
     }
