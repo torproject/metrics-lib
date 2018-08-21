@@ -5,5 +5,5 @@ package org.torproject.descriptor;
 
 /** Enum for web server access log methods. */
 public enum Method {
-    GET, HEAD, POST;
+    GET, HEAD, POST
 }

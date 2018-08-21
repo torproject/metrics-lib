@@ -357,7 +357,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
         } else {
           isLive = true;
           fingerprint = ParseHelper.parseTwentyByteHexString(
-              debugLine, part.substring(1));;
+              debugLine, part.substring(1));
         }
         entry = new RouterStatusEntryImpl(fingerprint, nickname, isLive,
             isVerified);

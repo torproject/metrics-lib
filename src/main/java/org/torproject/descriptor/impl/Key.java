@@ -156,7 +156,7 @@ public enum Key {
     keywordMap.remove(EMPTY.keyword);
   }
 
-  private Key(String keyword) {
+  Key(String keyword) {
     this.keyword = keyword;
   }
 
