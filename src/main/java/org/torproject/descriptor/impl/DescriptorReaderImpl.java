@@ -158,8 +158,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
         this.readTarballs();
         this.hasFinishedReading = true;
       } catch (Throwable t) {
-        log.error("Bug: uncaught exception or error while "
-            + "reading descriptors: " + t.getMessage(), t);
+        log.error("Bug: uncaught exception or error while reading descriptors.",
+            t);
       } finally {
         if (null != this.descriptorQueue) {
           this.descriptorQueue.setOutOfDescriptors();
