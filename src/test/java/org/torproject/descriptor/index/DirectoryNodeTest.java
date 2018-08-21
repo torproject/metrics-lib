@@ -17,10 +17,10 @@ public class DirectoryNodeTest {
   public void testCompare() {
     DirectoryNode dn1 = new DirectoryNode("a1", null, null);
     DirectoryNode dn2 = new DirectoryNode("a2", null,
-        new TreeSet<DirectoryNode>());
+        new TreeSet<>());
     assertEquals(-1, dn1.compareTo(dn2));
-    DirectoryNode dn3 = new DirectoryNode("a1", new TreeSet<FileNode>(),
-        new TreeSet<DirectoryNode>());
+    DirectoryNode dn3 = new DirectoryNode("a1", new TreeSet<>(),
+        new TreeSet<>());
     assertEquals(0, dn1.compareTo(dn3));
     assertEquals(1, dn2.compareTo(dn3));
   }

@@ -48,7 +48,7 @@ public class IndexNode {
 
   /** An empty node, which is not added to JSON output. */
   public static final IndexNode emptyNode = new IndexNode("", "",
-      new TreeSet<FileNode>(), new TreeSet<DirectoryNode>());
+      new TreeSet<>(), new TreeSet<>());
 
   private static ObjectMapper objectMapper = new ObjectMapper()
       .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
