@@ -264,7 +264,7 @@ public class RelayDirectoryImpl extends DescriptorImpl
       sb.append("-----BEGIN RSA PUBLIC KEY-----\n");
       String keyString = partsNoOpt[1];
       while (keyString.length() > 64) {
-        sb.append(keyString.substring(0, 64)).append(NL);
+        sb.append(keyString, 0, 64).append(NL);
         keyString = keyString.substring(64);
       }
       if (keyString.length() > 0) {
