@@ -141,9 +141,8 @@ public class RelayNetworkStatusConsensusImplTest {
         sb.append(this.voteDigestLine).append("\n");
       }
       String dirSourceWithTrailingNewLine = sb.toString();
-      String dirSource = dirSourceWithTrailingNewLine.substring(0,
+      return dirSourceWithTrailingNewLine.substring(0,
           dirSourceWithTrailingNewLine.length() - 1);
-      return dirSource;
     }
   }
 
@@ -299,9 +298,8 @@ public class RelayNetworkStatusConsensusImplTest {
         sb.append(this.pLine).append("\n");
       }
       String statusEntryWithTrailingNewLine = sb.toString();
-      String statusEntry = statusEntryWithTrailingNewLine.substring(0,
+      return statusEntryWithTrailingNewLine.substring(0,
           statusEntryWithTrailingNewLine.length() - 1);
-      return statusEntry;
     }
   }
 
@@ -339,7 +337,7 @@ public class RelayNetworkStatusConsensusImplTest {
     }
 
     private String buildDirectorySignature() {
-      String directorySignature = "directory-signature " + identity + " "
+      return "directory-signature " + identity + " "
           + signingKey + "\n"
           + "-----BEGIN SIGNATURE-----\n"
           + "gE64+/4BH43v1+7jS9FK1tu2+94at8xhVSPn4O/PpOx7b0Yb+S1hac1QHAiS"
@@ -348,7 +346,6 @@ public class RelayNetworkStatusConsensusImplTest {
                 + "P3JG\n"
           + "z89A+wrsN17I5490y66AEvws54BYZMbgRfp8HXn/0Ss=\n"
           + "-----END SIGNATURE-----";
-      return directorySignature;
     }
   }
 

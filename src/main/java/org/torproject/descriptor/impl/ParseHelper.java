@@ -477,9 +477,7 @@ public class ParseHelper {
               masterKeyEd25519, 0, masterKeyEd25519.length);
           String masterKeyEd25519Base64
               = Base64.encodeBase64String(masterKeyEd25519).replaceAll("=", "");
-          String masterKeyEd25519Base64NoTrailingEqualSigns =
-              masterKeyEd25519Base64.replaceAll("=", "");
-          return masterKeyEd25519Base64NoTrailingEqualSigns;
+          return masterKeyEd25519Base64.replaceAll("=", "");
         }
         extensionStart += 4 + extensionLength;
       }
