@@ -31,10 +31,10 @@ import org.slf4j.LoggerFactory;
  * the following is an example for using a different implementation of the
  * descriptor downloader:</p>
  *
- * <p><code>
+ * <p>{@code
  *  java -Ddescriptor.downloader=my.special.descriptorimpl.Downloader \
  *      my.app.Mainclass
- * </code></p>
+ * }</p>
  *
  * @since 1.0.0
  */

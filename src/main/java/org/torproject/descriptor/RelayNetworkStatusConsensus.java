@@ -150,8 +150,8 @@ public interface RelayNetworkStatusConsensus extends Descriptor {
 
   /**
    * Return a list of software packages and their versions together with a
-   * URL and one or more digests in the format <code>PackageName Version
-   * URL DIGESTS</code> that are known by at least three directory
+   * URL and one or more digests in the format {@code PackageName Version
+   * URL DIGESTS} that are known by at least three directory
    * authorities and agreed upon by the majority of directory authorities,
    * or null if the consensus does not contain package information.
    *

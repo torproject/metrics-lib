@@ -24,7 +24,7 @@ public interface InternalLogDescriptor extends LogDescriptor {
   void validate() throws DescriptorParseException;
 
   /**
-   * Set the <code>Validator</code> that will perform the validation on log
+   * Set the {@code Validator} that will perform the validation on log
    * lines.
    *
    * <p>Usually set by the implementing class.</p>

@@ -34,11 +34,11 @@ public class DescriptorIndexCollector implements DescriptorCollector {
       .getLogger(DescriptorIndexCollector.class);
 
   /**
-   * If <code>collecTorIndexUrlString</code> contains just the
+   * If {@code collecTorIndexUrlString} contains just the
    * base url, e.g. https://some.host.org, the path
-   * <code>/index/index.json</code> will be appended.
+   * {@code /index/index.json} will be appended.
    * If a path is given (even just a final slash, e.g. https://some.host.org/),
-   * the <code>collecTorIndexUrlString</code> will be used as is.
+   * the {@code collecTorIndexUrlString} will be used as is.
    */
   @Override
   public void collectDescriptors(String collecTorIndexUrlString,

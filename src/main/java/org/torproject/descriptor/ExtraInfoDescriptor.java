@@ -619,7 +619,7 @@ public interface ExtraInfoDescriptor extends Descriptor {
   long getPaddingCountsStatsIntervalLength();
 
   /**
-   * Return padding-counts statistics, or <code>null</code> if no such
+   * Return padding-counts statistics, or {@code null} if no such
    * statistics are included.
    *
    * @since 1.7.0

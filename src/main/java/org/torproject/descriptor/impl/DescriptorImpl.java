@@ -60,7 +60,7 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   /**
-   * Returns a <emph>copy</emph> of the full raw descriptor bytes.
+   * Returns a <em>copy</em> of the full raw descriptor bytes.
    *
    * <p>If possible, subclasses should avoid retrieving raw descriptor bytes and
    * converting them to a String themselves and instead rely on
@@ -74,8 +74,8 @@ public abstract class DescriptorImpl implements Descriptor {
   }
 
   /**
-   * Returns a <emph>copy</emph> of raw descriptor bytes starting at
-   * <code>offset</code> and containing <code>length</code> bytes.
+   * Returns a <em>copy</em> of raw descriptor bytes starting at
+   * {@code offset} and containing {@code length} bytes.
    *
    * <p>If possible, subclasses should avoid retrieving raw descriptor bytes and
    * converting them to a String themselves and instead rely on
@@ -109,7 +109,7 @@ public abstract class DescriptorImpl implements Descriptor {
 
   /**
    * Returns a new {@link Scanner} for parsing the raw descriptor starting at
-   * byte <code>offset</code> containing <code>length</code> bytes using UTF-8
+   * byte {@code offset} containing {@code length} bytes using UTF-8
    * as charset.
    *
    * @param offset The index of the first byte to parse.
@@ -123,7 +123,7 @@ public abstract class DescriptorImpl implements Descriptor {
 
   /**
    * Returns the index within the raw descriptor of the first occurrence of the
-   * given <code>key</code>, or <code>-1</code> if the key is not contained.
+   * given {@code key}, or {@code -1} if the key is not contained.
    *
    * @param key Key to search for.
    * @return Index of the first occurrence, or -1.
@@ -148,8 +148,8 @@ public abstract class DescriptorImpl implements Descriptor {
 
   /**
    * Returns a list of two-element arrays containing offsets and lengths of
-   * descriptors starting with the given <code>key</code> in the raw descriptor
-   * starting at byte <code>offset</code> containing <code>length</code> bytes.
+   * descriptors starting with the given {@code key} in the raw descriptor
+   * starting at byte {@code offset} containing {@code length} bytes.
    *
    * @param key Key to search for.
    * @param offset The index of the first byte to split.

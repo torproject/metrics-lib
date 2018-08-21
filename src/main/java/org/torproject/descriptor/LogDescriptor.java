@@ -13,7 +13,8 @@ import java.util.stream.Stream;
  * <p>Unlike other descriptors, logs can get very large and are typically stored
  * on disk in compressed form. Access to log contents through this
  * interface and its subinterfaces is made available in compressed and
- * decompressed form:
+ * decompressed form:</p>
+ *
  * <ul>
  * <li>The raw descriptor bytes are compressed, because logs contain
  * often redundant information that can achieve high compression rates.
@@ -21,7 +22,6 @@ import java.util.stream.Stream;
  * <li>The uncompressed log contents can be accessed as a stream of bytes.</li>
  * <li>A list of log lines (decompressed) can be retrieved.</li>
  * </ul>
- * </p>
  *
  * @since 2.2.0
  */

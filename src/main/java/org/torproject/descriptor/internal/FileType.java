@@ -43,7 +43,7 @@ public enum FileType {
   }
 
   /**
-   * Returns <code>valueOf</code> or the default enum {@link #PLAIN}, i.e.,
+   * Returns {@code valueOf} or the default enum {@link #PLAIN}, i.e.,
    * this method doesn't throw any exceptions and allways returns a valid enum.
    *
    * @since 2.1.0

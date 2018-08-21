@@ -215,8 +215,8 @@ public interface TorperfResult extends Descriptor {
   /**
    * Return the hostname, IP address, and port that the TGen client used to
    * connect to the local tor SOCKS port, formatted as
-   * <code>hostname:ip:port</code>, which may be <code>"NULL:0.0.0.0:0"</code>
-   * if TGen was not able to find this information or <code>null</code> if the
+   * {@code hostname:ip:port}, which may be {@code "NULL:0.0.0.0:0"}
+   * if TGen was not able to find this information or {@code null} if the
    * OnionPerf line didn't contain this information.
    *
    * @since 1.7.0
@@ -226,8 +226,8 @@ public interface TorperfResult extends Descriptor {
   /**
    * Return the hostname, IP address, and port that the TGen client used to
    * connect to the SOCKS proxy server that tor runs, formatted as
-   * <code>hostname:ip:port</code>, which may be <code>"NULL:0.0.0.0:0"</code>
-   * if TGen was not able to find this information or <code>null</code> if the
+   * {@code hostname:ip:port}, which may be {@code "NULL:0.0.0.0:0"}
+   * if TGen was not able to find this information or {@code null} if the
    * OnionPerf line didn't contain this information.
    *
    * @since 1.7.0
@@ -236,9 +236,9 @@ public interface TorperfResult extends Descriptor {
 
   /**
    * Return the hostname, IP address, and port that the TGen client used to
-   * connect to the remote server, formatted as <code>hostname:ip:port</code>,
-   * which may be <code>"NULL:0.0.0.0:0"</code> if TGen was not able to find
-   * this information or <code>null</code> if the OnionPerf line didn't contain
+   * connect to the remote server, formatted as {@code hostname:ip:port},
+   * which may be {@code "NULL:0.0.0.0:0"} if TGen was not able to find
+   * this information or {@code null} if the OnionPerf line didn't contain
    * this information.
    *
    * @since 1.7.0
@@ -246,8 +246,8 @@ public interface TorperfResult extends Descriptor {
   String getEndpointRemote();
 
   /**
-   * Return the client machine hostname, which may be <code>"(NULL)"</code> if
-   * the TGen client was not able to find this information or <code>null</code>
+   * Return the client machine hostname, which may be {@code "(NULL)"} if
+   * the TGen client was not able to find this information or {@code null}
    * if the OnionPerf line didn't contain this information.
    *
    * @since 1.7.0
@@ -255,8 +255,8 @@ public interface TorperfResult extends Descriptor {
   String getHostnameLocal();
 
   /**
-   * Return the server machine hostname, which may be <code>"(NULL)"</code> if
-   * the TGen server was not able to find this information or <code>null</code>
+   * Return the server machine hostname, which may be {@code "(NULL)"} if
+   * the TGen server was not able to find this information or {@code null}
    * if the OnionPerf line didn't contain this information.
    *
    * @since 1.7.0
@@ -266,8 +266,8 @@ public interface TorperfResult extends Descriptor {
   /**
    * Return the public IP address of the OnionPerf host obtained by connecting
    * to well-known servers and finding the IP address in the result, which may
-   * be <code>"unknown"</code> if OnionPerf was not able to find this
-   * information or <code>null</code> if the OnionPerf line didn't contain this
+   * be {@code "unknown"} if OnionPerf was not able to find this
+   * information or {@code null} if the OnionPerf line didn't contain this
    * information.
    *
    * @since 1.7.0
