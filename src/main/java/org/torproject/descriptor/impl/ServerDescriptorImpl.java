@@ -49,7 +49,6 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           + "'reject' must be contained at least once.");
     }
     this.clearParsedKeys();
-    return;
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {

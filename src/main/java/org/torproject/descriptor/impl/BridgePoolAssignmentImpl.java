@@ -23,7 +23,6 @@ public class BridgePoolAssignmentImpl extends DescriptorImpl
     this.checkExactlyOnceKeys(EnumSet.of(Key.BRIDGE_POOL_ASSIGNMENT));
     this.checkFirstKey(Key.BRIDGE_POOL_ASSIGNMENT);
     this.clearParsedKeys();
-    return;
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {

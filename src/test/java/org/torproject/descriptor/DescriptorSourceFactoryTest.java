@@ -64,9 +64,7 @@ public class DescriptorSourceFactoryTest {
       retrieve.setAccessible(true);
       retrieve.invoke(null, "unknown.property");
     } catch (InvocationTargetException ite) {
-      if (ite.getCause() instanceof RuntimeException) {
-        return;
-      } else {
+      if (!(ite.getCause() instanceof RuntimeException)) {
         fail("Cause was " + ite.getCause()
             + ", but expected InvocationTargetException.");
       }

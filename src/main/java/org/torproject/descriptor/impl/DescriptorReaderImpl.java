@@ -187,7 +187,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
         }
       } catch (IOException | NumberFormatException e) {
         log.warn("Trouble reading given history file {}.", historyFile, e);
-        return;
       }
     }
 

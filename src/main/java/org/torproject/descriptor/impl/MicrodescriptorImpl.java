@@ -30,7 +30,6 @@ public class MicrodescriptorImpl extends DescriptorImpl
     this.checkAtMostOnceKeys(atMostOnceKeys);
     this.checkFirstKey(Key.ONION_KEY);
     this.clearParsedKeys();
-    return;
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {

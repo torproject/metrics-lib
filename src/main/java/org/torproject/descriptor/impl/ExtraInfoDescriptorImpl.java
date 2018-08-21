@@ -70,7 +70,6 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.checkKeysDependOn(bridgeStatsKeys, Key.BRIDGE_STATS_END);
     this.checkFirstKey(Key.EXTRA_INFO);
     this.clearParsedKeys();
-    return;
   }
 
   private void parseDescriptorBytes() throws DescriptorParseException {
