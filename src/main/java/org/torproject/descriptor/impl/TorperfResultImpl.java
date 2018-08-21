@@ -286,13 +286,16 @@ public class TorperfResultImpl extends DescriptorImpl
 
   private void parseDidTimeout(String value, String keyValue, String line)
       throws DescriptorParseException {
-    if (value.equals("1")) {
-      this.didTimeout = true;
-    } else if (value.equals("0")) {
-      this.didTimeout = false;
-    } else {
-      throw new DescriptorParseException("Illegal value in '" + keyValue
-          + "' in line '" + line + "'.");
+    switch (value) {
+      case "1":
+        this.didTimeout = true;
+        break;
+      case "0":
+        this.didTimeout = false;
+        break;
+      default:
+        throw new DescriptorParseException("Illegal value in '" + keyValue
+            + "' in line '" + line + "'.");
     }
   }
 
