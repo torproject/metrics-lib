@@ -217,9 +217,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     if (pairs.containsKey("Unmeasured")) {
       this.unmeasured = pairs.remove("Unmeasured") == 1L;
     }
-    if (!pairs.isEmpty()) {
-      /* Ignore unknown key-value pair. */
-    }
+    /* Ignore unknown key-value pair. */
   }
 
   private void parsePLine(String line, String[] parts)

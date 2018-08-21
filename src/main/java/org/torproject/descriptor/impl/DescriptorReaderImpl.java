@@ -229,8 +229,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
           try {
             String absolutePath = file.getAbsolutePath();
             long lastModifiedMillis = file.lastModified();
-            if (this.excludedFilesBefore.containsKey(absolutePath)
-                && this.excludedFilesBefore.get(absolutePath)
+            if (this.excludedFilesBefore.getOrDefault(absolutePath, 0L)
                 == lastModifiedMillis) {
               this.excludedFilesAfter.put(absolutePath, lastModifiedMillis);
               continue;

@@ -279,11 +279,7 @@ public abstract class DescriptorImpl implements Descriptor {
           this.firstKey = key;
         }
         lastKey = key;
-        if (parsedKeys.containsKey(key)) {
-          parsedKeys.put(key, parsedKeys.get(key) + 1);
-        } else {
-          parsedKeys.put(key, 1);
-        }
+        parsedKeys.put(key, parsedKeys.getOrDefault(key, 0) + 1);
       }
     }
   }
@@ -307,10 +303,7 @@ public abstract class DescriptorImpl implements Descriptor {
   protected void checkExactlyOnceKeys(Set<Key> keys)
       throws DescriptorParseException {
     for (Key key : keys) {
-      int contained = 0;
-      if (this.parsedKeys.containsKey(key)) {
-        contained = this.parsedKeys.get(key);
-      }
+      int contained = this.parsedKeys.getOrDefault(key, 0);
       if (contained != 1) {
         throw new DescriptorParseException("Keyword '" + key.keyword + "' is "
             + "contained " + contained + " times, but must be contained "
@@ -332,10 +325,10 @@ public abstract class DescriptorImpl implements Descriptor {
   protected void checkAtMostOnceKeys(Set<Key> keys)
       throws DescriptorParseException {
     for (Key key : keys) {
-      if (this.parsedKeys.containsKey(key)
-          && this.parsedKeys.get(key) > 1) {
+      int contained = this.parsedKeys.getOrDefault(key, 0);
+      if (contained > 1) {
         throw new DescriptorParseException("Keyword '" + key.keyword + "' is "
-            + "contained " + this.parsedKeys.get(key) + " times, "
+            + "contained " + contained + " times, "
             + "but must be contained at most once.");
       }
     }
