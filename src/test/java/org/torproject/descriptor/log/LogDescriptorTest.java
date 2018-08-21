@@ -32,7 +32,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 @RunWith(Parameterized.class)
@@ -104,11 +103,9 @@ public class LogDescriptorTest {
   @Before
   public void readAll() throws IOException {
     createTemporaryFolderAndContents();
-    Iterator<Descriptor> descs = this.reader
-        .readDescriptors(this.indir).iterator();
-    while (descs.hasNext()) {
-      descs.next();
-    }
+    this.reader.readDescriptors(this.indir).forEach(descriptor -> {
+      /* Nothing to do with read descriptors. */
+    });
   }
 
   protected List<Descriptor> retrieve() throws Exception {
