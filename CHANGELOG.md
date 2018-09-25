@@ -1,4 +1,4 @@
-# Changes in version 2.5.0 - 2018-??-??
+# Changes in version 2.5.0 - 2018-09-25
 
  * Medium changes
    - Go back to using Apache Commons Codec as base64 and hexadecimal
