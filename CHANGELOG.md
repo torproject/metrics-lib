@@ -1,3 +1,9 @@
+# Changes in version 2.6.0 - 2019-04-??
+
+ * Medium changes
+   - Add new BandwidthFile descriptor for parsed bandwidth files.
+
+
 # Changes in version 2.5.0 - 2018-09-25
 
  * Medium changes

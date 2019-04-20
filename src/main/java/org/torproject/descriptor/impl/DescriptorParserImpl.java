@@ -132,6 +132,15 @@ public class DescriptorParserImpl implements DescriptorParser {
           sourceFile);
     } else if (fileName.contains(LogDescriptorImpl.MARKER)) {
       return LogDescriptorImpl.parse(rawDescriptorBytes, sourceFile, fileName);
+    } else if (firstLines.matches("^[0-9]{10}\\n")) {
+      /* Identifying bandwidth files by a 10-digit timestamp in the first line
+       * breaks with files generated before 2002 or after 2286 and when the next
+       * descriptor identifier starts with just a timestamp in the first line
+       * rather than a document type identifier. */
+      List<Descriptor> parsedDescriptors = new ArrayList<>();
+      parsedDescriptors.add(new BandwidthFileImpl(rawDescriptorBytes,
+          sourceFile));
+      return parsedDescriptors;
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");
