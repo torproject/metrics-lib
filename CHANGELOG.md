@@ -1,6 +1,7 @@
-# Changes in version 2.6.0 - 2019-04-??
+# Changes in version 2.6.0 - 2019-04-29
 
  * Medium changes
+   - Stop signing jar files.
    - Add new BandwidthFile descriptor for parsed bandwidth files.
 
 
