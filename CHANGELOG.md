@@ -1,4 +1,4 @@
-# Changes in version 2.6.1 - 2019-05-??
+# Changes in version 2.6.1 - 2019-05-03
 
  * Medium changes
    - Fix a bug in recognizing descriptors as bandwidth files.
