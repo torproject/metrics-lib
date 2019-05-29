@@ -1,4 +1,4 @@
-# Changes in version 2.6.2 - 2019-05-??
+# Changes in version 2.6.2 - 2019-05-29
 
  * Medium changes
    - Recognize bandwidth files with @type annotation.
