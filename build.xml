@@ -14,13 +14,13 @@
   <property name="jarpatternprop" value="empty" />
 
   <patternset id="runtime" >
-      <include name="commons-codec-1.10.jar"/>
-      <include name="commons-compress-1.13.jar"/>
-      <include name="jackson-annotations-2.8.6.jar"/>
-      <include name="jackson-core-2.8.6.jar"/>
-      <include name="jackson-databind-2.8.6.jar"/>
-      <include name="slf4j-api-1.7.22.jar" />
-      <include name="xz-1.6.jar"/>
+      <include name="commons-codec-1.11.jar"/>
+      <include name="commons-compress-1.18.jar"/>
+      <include name="jackson-annotations-2.9.8.jar"/>
+      <include name="jackson-core-2.9.8.jar"/>
+      <include name="jackson-databind-2.9.8.jar"/>
+      <include name="slf4j-api-1.7.25.jar" />
+      <include name="xz-1.8.jar"/>
   </patternset>
 
   <target name="coverage-check">
