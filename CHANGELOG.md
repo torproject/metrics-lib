@@ -12,6 +12,10 @@
      checkstyle-8.15.jar, commons-beanutils-1.9.3.jar,
      commons-collections3-3.2.2.jar, commons-logging-1.2.jar,
      guava-19.0.jar, java-atk-wrapper.jar, and picocli-3.9.2.jar.
+   * Update Cobertura dependencies to versions found in Debian buster,
+     including: asm4-5.0.4.jar, asm4-util-5.0.4.jar,
+     asm4-tree-5.0.4.jar, asm4-commons-5.0.4.jar,
+     asm4-analysis-5.0.4.jar, and commons-lang3-3.8.jar
 
 
 # Changes in version 2.6.2 - 2019-05-29
