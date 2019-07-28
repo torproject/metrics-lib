@@ -1,23 +1,3 @@
-# Changes in version 2.7.0 - 2019-0?-??
-
- * Medium changes
-   * Update build-time and run-time dependencies to versions found in
-     Debian buster, including: commons-codec-1.11.jar,
-     commons-compress-1.18.jar, jackson-annotations-2.9.8.jar,
-     jackson-core-2.9.8.jar, jackson-databind-2.9.8.jar,
-     logback-core-1.2.3.jar, logback-classic-1.2.3.jar,
-     slf4j-api-1.7.25.jar, and xz-1.8.jar.
-   * Update Checkstyle dependencies to versions found in Debian
-     buster, including: antlr-2.7.7.jar, antlr4-runtime-4.7.2.jar,
-     checkstyle-8.15.jar, commons-beanutils-1.9.3.jar,
-     commons-collections3-3.2.2.jar, commons-logging-1.2.jar,
-     guava-19.0.jar, java-atk-wrapper.jar, and picocli-3.9.2.jar.
-   * Update Cobertura dependencies to versions found in Debian buster,
-     including: asm4-5.0.4.jar, asm4-util-5.0.4.jar,
-     asm4-tree-5.0.4.jar, asm4-commons-5.0.4.jar,
-     asm4-analysis-5.0.4.jar, and commons-lang3-3.8.jar
-
-
 # Changes in version 2.6.2 - 2019-05-29
 
  * Medium changes
