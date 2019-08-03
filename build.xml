@@ -4,7 +4,8 @@
        <!ENTITY base SYSTEM "src/build/java/base.xml">
 ]>
 
-<project default="usage" name="metrics-lib" basedir=".">
+<project default="usage" name="metrics-lib" basedir="."
+         xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <property name="release.version" value="2.6.2-dev" />
   <property name="javadoc-title" value="Tor Metrics Library API Documentation"/>
