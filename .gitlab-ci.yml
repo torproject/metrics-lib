@@ -1,0 +1,18 @@
+variables:
+  GIT_STRATEGY: clone
+
+stages:
+ - test
+
+test:
+ stage: test
+ image: debian:buster
+ script:
+  - apt update
+  - apt -y install default-jdk ant ivy git
+  - git submodule init
+  - git submodule update
+  - mkdir lib
+  - ant -lib /usr/share/java resolve
+  - ant test
+  - ant checks
