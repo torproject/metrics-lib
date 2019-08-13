@@ -130,6 +130,11 @@ public class DescriptorParserImpl implements DescriptorParser {
     } else if (firstLines.startsWith("@type torperf 1.")) {
       return TorperfResultImpl.parseTorperfResults(rawDescriptorBytes,
           sourceFile);
+    } else if (firstLines.startsWith("@type snowflake-stats 1.")
+        || firstLines.startsWith(Key.SNOWFLAKE_STATS_END.keyword + SP)
+        || firstLines.contains(NL + Key.SNOWFLAKE_STATS_END.keyword + SP)) {
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
+          Key.SNOWFLAKE_STATS_END, SnowflakeStatsImpl.class);
     } else if (fileName.contains(LogDescriptorImpl.MARKER)) {
       return LogDescriptorImpl.parse(rawDescriptorBytes, sourceFile, fileName);
     } else if (firstLines.startsWith("@type bandwidth-file 1.")

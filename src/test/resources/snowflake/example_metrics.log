@@ -1,0 +1,12 @@
+snowflake-stats-end 2019-08-07 19:52:11 (86400 s)
+snowflake-ips VN=5,NL=26,AU=30,GT=2,NO=5,EG=3,NI=1,AT=22,FR=42,CA=44,ZA=3,PL=20,RU=10,HR=1,CN=1,RO=4,??=7,TH=7,UA=5,DZ=5,HU=5,CH=15,AE=1,PH=6,RS=3,BR=20,IT=8,KR=13,HK=7,GR=5,GB=41,DK=4,CZ=7,IE=4,PT=7,TR=2,NP=2,BA=1,BE=2,IN=45,SE=23,CL=3,IL=3,FI=7,MX=6,CO=1,PK=4,ID=9,IR=7,JO=2,CR=2,US=265,DE=92,LV=1,MY=8,AR=5,NZ=10,BG=2,UY=1,TW=5,SI=3,LU=2,GE=2,BN=1,JP=15,ES=9,SG=7,EC=1
+snowflake-ips-total 937
+snowflake-idle-count 660976
+client-denied-count 0
+client-snowflake-match-count 864
+snowflake-stats-end 2019-08-08 19:52:11 (86400 s)
+snowflake-ips IE=7,IN=31,ES=17,MY=7,NO=7,IR=6,NL=36,ZA=2,GT=1,PK=5,US=284,SE=21,UY=1,AR=8,VN=6,RS=3,GB=37,CZ=12,NZ=7,CO=2,PH=6,RO=5,AT=24,GE=1,BE=5,EE=1,TR=5,CL=5,CA=59,PT=9,MX=76,IL=3,BG=2,BA=1,HU=9,JO=2,PL=16,GR=5,KR=13,EG=2,TW=10,ID=14,FI=9,DK=3,IT=11,TH=3,DE=118,SI=4,CH=19,UA=5,AU=32,NG=3,AE=1,RU=17,NI=1,JP=18,SD=1,LU=2,FR=80,BR=12,CR=6,CN=16,DZ=4,SG=13,NP=2,??=7,HK=12,HR=5,BN=1
+snowflake-ips-total 1178
+snowflake-idle-count 979344
+client-denied-count 0
+client-snowflake-match-count 392

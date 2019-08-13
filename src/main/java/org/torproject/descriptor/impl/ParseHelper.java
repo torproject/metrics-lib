@@ -11,6 +11,10 @@ import org.apache.commons.codec.binary.Hex;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
@@ -101,6 +105,16 @@ public class ParseHelper {
     }
   }
 
+  static Duration parseDuration(String line, String secondsString)
+      throws DescriptorParseException {
+    long parsedSeconds = parseSeconds(line, secondsString);
+    if (parsedSeconds <= 0L) {
+      throw new DescriptorParseException("Duration must be positive in line '"
+          + line + "'.");
+    }
+    return Duration.ofSeconds(parsedSeconds);
+  }
+
   protected static String parseExitPattern(String line, String exitPattern)
       throws DescriptorParseException {
     if (!exitPattern.contains(":")) {
@@ -186,6 +200,13 @@ public class ParseHelper {
           + "line '" + line + "'.");
     }
     return result;
+  }
+
+  static LocalDateTime parseLocalDateTime(String line, String[] parts,
+      int dateIndex, int timeIndex) throws DescriptorParseException {
+    return LocalDateTime.ofInstant(Instant.ofEpochMilli(
+        parseTimestampAtIndex(line, parts, dateIndex, timeIndex)),
+        ZoneOffset.UTC);
   }
 
   protected static long parseDateAtIndex(String line, String[] parts,

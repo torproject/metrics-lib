@@ -80,7 +80,12 @@ public class DescriptorTest {
           {"bridge/2017-07-17-17-09-00-server-descriptors",
            BridgeServerDescriptor.class,
            new String[] {"@type bridge-server-descriptor 1.2"},
-              13}
+              13},
+
+          {"snowflake/example_metrics.log",
+           SnowflakeStats.class,
+           new String[0],
+              2}
         });
   }
 

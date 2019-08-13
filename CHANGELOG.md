@@ -11,6 +11,7 @@
      versions resolved by Ivy are the same as in Debian stretch with
      few exceptions.
    - Remove Cobertura from the build process.
+   - Add new SnowflakeStats descriptor type.
 
 
 # Changes in version 2.6.2 - 2019-05-29
