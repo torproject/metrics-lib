@@ -62,31 +62,32 @@ public class ExitListEntryImpl implements ExitList.Entry {
   }
 
   private void parseExitListEntry()
-      throws DescriptorParseException {
-    Scanner scanner = new Scanner(this.exitListEntryString)
-        .useDelimiter(ExitList.EOL);
-    while (scanner.hasNext()) {
-      String line = scanner.next();
-      String[] parts = line.split(" ");
-      String keyword = parts[0];
-      switch (keyword) {
-        case "ExitNode":
-          this.parseExitNodeLine(line, parts);
-          break;
-        case "Published":
-          this.parsePublishedLine(line, parts);
-          break;
-        case "LastStatus":
-          this.parseLastStatusLine(line, parts);
-          break;
-        case "ExitAddress":
-          this.parseExitAddressLine(line, parts);
-          break;
-        default:
-          if (this.unrecognizedLines == null) {
-            this.unrecognizedLines = new ArrayList<>();
-          }
-          this.unrecognizedLines.add(line);
+          throws DescriptorParseException {
+    try (Scanner scanner = new Scanner(this.exitListEntryString)
+            .useDelimiter(ExitList.EOL)) {
+      while (scanner.hasNext()) {
+        String line = scanner.next();
+        String[] parts = line.split(" ");
+        String keyword = parts[0];
+        switch (keyword) {
+          case "ExitNode":
+            this.parseExitNodeLine(line, parts);
+            break;
+          case "Published":
+            this.parsePublishedLine(line, parts);
+            break;
+          case "LastStatus":
+            this.parseLastStatusLine(line, parts);
+            break;
+          case "ExitAddress":
+            this.parseExitAddressLine(line, parts);
+            break;
+          default:
+            if (this.unrecognizedLines == null) {
+              this.unrecognizedLines = new ArrayList<>();
+            }
+            this.unrecognizedLines.add(line);
+        }
       }
     }
   }
