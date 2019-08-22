@@ -281,41 +281,45 @@ public class DescriptorReaderImpl implements DescriptorReader {
     }
 
     private void readTarball(File file) throws IOException {
-      FileInputStream in = new FileInputStream(file);
-      if (in.available() <= 0) {
-        return;
-      }
-      TarArchiveInputStream tais;
-      if (file.getName().endsWith(".tar.bz2")) {
-        tais = new TarArchiveInputStream(new BZip2CompressorInputStream(in));
-      } else if (file.getName().endsWith(".tar.xz")) {
-        tais = new TarArchiveInputStream(new XZCompressorInputStream(in));
-      } else if (file.getName().endsWith(".tar")) {
-        tais = new TarArchiveInputStream(in);
-      } else {
-        return;
-      }
-      BufferedInputStream bis = new BufferedInputStream(tais);
-      TarArchiveEntry tae;
-      while ((tae = tais.getNextTarEntry()) != null) {
-        if (tae.isDirectory()) {
-          continue;
+      try (FileInputStream in = new FileInputStream(file)) {
+        if (in.available() <= 0) {
+          return;
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int len;
-        byte[] data = new byte[1024];
-        while ((len = bis.read(data, 0, 1024)) >= 0) {
-          baos.write(data, 0, len);
+        TarArchiveInputStream tais;
+        if (file.getName().endsWith(".tar.bz2")) {
+          tais = new TarArchiveInputStream(new BZip2CompressorInputStream(in));
+        } else if (file.getName().endsWith(".tar.xz")) {
+          tais = new TarArchiveInputStream(new XZCompressorInputStream(in));
+        } else if (file.getName().endsWith(".tar")) {
+          tais = new TarArchiveInputStream(in);
+        } else {
+          return;
         }
-        byte[] rawDescriptorBytes = baos.toByteArray();
-        if (rawDescriptorBytes.length < 1) {
-          continue;
-        }
-        String fileName = tae.getName().substring(
-            tae.getName().lastIndexOf("/") + 1);
-        for (Descriptor descriptor : this.descriptorParser.parseDescriptors(
-            rawDescriptorBytes, file, fileName)) {
-          this.descriptorQueue.add(descriptor);
+        try (BufferedInputStream bis = new BufferedInputStream(tais)) {
+          TarArchiveEntry tae;
+          while ((tae = tais.getNextTarEntry()) != null) {
+            if (tae.isDirectory()) {
+              continue;
+            }
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+              int len;
+              byte[] data = new byte[1024];
+              while ((len = bis.read(data, 0, 1024)) >= 0) {
+                baos.write(data, 0, len);
+              }
+              byte[] rawDescriptorBytes = baos.toByteArray();
+              if (rawDescriptorBytes.length < 1) {
+                continue;
+              }
+              String fileName = tae.getName().substring(
+                      tae.getName().lastIndexOf("/") + 1);
+              for (Descriptor descriptor :
+                      this.descriptorParser.parseDescriptors(
+                      rawDescriptorBytes, file, fileName)) {
+                this.descriptorQueue.add(descriptor);
+              }
+            }
+          }
         }
       }
     }
