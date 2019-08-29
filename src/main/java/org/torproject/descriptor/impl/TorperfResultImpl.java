@@ -30,28 +30,31 @@ public class TorperfResultImpl extends DescriptorImpl
     List<Descriptor> parsedDescriptors = new ArrayList<>();
     String descriptorString = new String(rawDescriptorBytes,
         StandardCharsets.UTF_8);
-    Scanner scanner = new Scanner(descriptorString).useDelimiter("\r?\n");
-    String typeAnnotation = "";
-    while (scanner.hasNext()) {
-      String line = scanner.next();
-      if (line.startsWith("@type torperf ")) {
-        String[] parts = line.split(" ");
-        if (parts.length != 3) {
-          throw new DescriptorParseException("Illegal line '" + line
-              + "'.");
+    try (Scanner scanner =
+                 new Scanner(descriptorString).useDelimiter("\r?\n")) {
+      String typeAnnotation = "";
+      while (scanner.hasNext()) {
+        String line = scanner.next();
+        if (line.startsWith("@type torperf ")) {
+          String[] parts = line.split(" ");
+          if (parts.length != 3) {
+            throw new DescriptorParseException("Illegal line '" + line
+                    + "'.");
+          }
+          String version = parts[2];
+          if (!version.startsWith("1.")) {
+            throw new DescriptorParseException("Unsupported version in "
+                    + " line '" + line + "'.");
+          }
+          typeAnnotation = line + "\n";
+        } else {
+          /* XXX21932 */
+          parsedDescriptors.add(new TorperfResultImpl(
+                  (typeAnnotation + line + "\n")
+                          .getBytes(StandardCharsets.UTF_8),
+                  descriptorFile));
+          typeAnnotation = "";
         }
-        String version = parts[2];
-        if (!version.startsWith("1.")) {
-          throw new DescriptorParseException("Unsupported version in "
-              + " line '" + line + "'.");
-        }
-        typeAnnotation = line + "\n";
-      } else {
-        /* XXX21932 */
-        parsedDescriptors.add(new TorperfResultImpl(
-            (typeAnnotation + line + "\n").getBytes(StandardCharsets.UTF_8),
-            descriptorFile));
-        typeAnnotation = "";
       }
     }
     return parsedDescriptors;
