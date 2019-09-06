@@ -1,4 +1,4 @@
-# Changes in version 2.7.0 - 2019-0?-??
+# Changes in version 2.7.0 - 2019-09-06
 
  * Medium changes
    - Use Ivy for resolving external dependencies rather than relying
