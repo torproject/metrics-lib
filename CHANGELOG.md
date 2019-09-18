@@ -1,3 +1,11 @@
+# Changes in version 2.?.? - 2019-??-??
+
+ * Medium changes
+   - Extend DescriptorReader#readDescriptors to support .gz-compressed
+     files.
+   - Add new BridgedbMetrics descriptor type.
+
+
 # Changes in version 2.7.0 - 2019-09-06
 
  * Medium changes

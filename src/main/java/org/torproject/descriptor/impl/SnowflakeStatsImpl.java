@@ -101,36 +101,22 @@ public class SnowflakeStatsImpl extends DescriptorImpl
 
   private void parseSnowflakeIpsTotal(String line, String[] parts)
       throws DescriptorParseException {
-    this.snowflakeIpsTotal = parseLong(line, parts, 1);
+    this.snowflakeIpsTotal = ParseHelper.parseLong(line, parts, 1);
   }
 
   private void parseSnowflakeIdleCount(String line, String[] parts)
       throws DescriptorParseException {
-    this.snowflakeIdleCount = parseLong(line, parts, 1);
+    this.snowflakeIdleCount = ParseHelper.parseLong(line, parts, 1);
   }
 
   private void parseClientDeniedCount(String line, String[] parts)
       throws DescriptorParseException {
-    this.clientDeniedCount = parseLong(line, parts, 1);
+    this.clientDeniedCount = ParseHelper.parseLong(line, parts, 1);
   }
 
   private void parseClientSnowflakeMatchCount(String line, String[] parts)
       throws DescriptorParseException {
-    this.clientSnowflakeMatchCount = parseLong(line, parts, 1);
-  }
-
-  private static Long parseLong(String line, String[] parts, int index)
-      throws DescriptorParseException {
-    if (index >= parts.length) {
-      throw new DescriptorParseException(String.format(
-          "Line '%s' does not contain a long value at index %d.", line, index));
-    }
-    try {
-      return Long.parseLong(parts[index]);
-    } catch (NumberFormatException e) {
-      throw new DescriptorParseException(String.format(
-          "Unable to parse long value '%s' in line '%s'.", parts[index], line));
-    }
+    this.clientSnowflakeMatchCount = ParseHelper.parseLong(line, parts, 1);
   }
 
   private LocalDateTime snowflakeStatsEnd;

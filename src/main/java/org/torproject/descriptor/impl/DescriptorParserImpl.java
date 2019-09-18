@@ -135,6 +135,11 @@ public class DescriptorParserImpl implements DescriptorParser {
         || firstLines.contains(NL + Key.SNOWFLAKE_STATS_END.keyword + SP)) {
       return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.SNOWFLAKE_STATS_END, SnowflakeStatsImpl.class);
+    } else if (firstLines.startsWith("@type bridgedb-metrics 1.")
+        || firstLines.startsWith(Key.BRIDGEDB_METRICS_END.keyword + SP)
+        || firstLines.contains(NL + Key.BRIDGEDB_METRICS_END.keyword + SP)) {
+      return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
+          Key.BRIDGEDB_METRICS_END, BridgedbMetricsImpl.class);
     } else if (fileName.contains(LogDescriptorImpl.MARKER)) {
       return LogDescriptorImpl.parse(rawDescriptorBytes, sourceFile, fileName);
     } else if (firstLines.startsWith("@type bandwidth-file 1.")

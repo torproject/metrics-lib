@@ -115,6 +115,20 @@ public class ParseHelper {
     return Duration.ofSeconds(parsedSeconds);
   }
 
+  protected static Long parseLong(String line, String[] parts, int index)
+      throws DescriptorParseException {
+    if (index >= parts.length) {
+      throw new DescriptorParseException(String.format(
+          "Line '%s' does not contain a long value at index %d.", line, index));
+    }
+    try {
+      return Long.parseLong(parts[index]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException(String.format(
+          "Unable to parse long value '%s' in line '%s'.", parts[index], line));
+    }
+  }
+
   protected static String parseExitPattern(String line, String exitPattern)
       throws DescriptorParseException {
     if (!exitPattern.contains(":")) {

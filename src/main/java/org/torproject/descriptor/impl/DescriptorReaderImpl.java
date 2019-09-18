@@ -10,7 +10,9 @@ import org.torproject.descriptor.DescriptorReader;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -325,10 +328,18 @@ public class DescriptorReaderImpl implements DescriptorReader {
     }
 
     private void readDescriptorFile(File file) throws IOException {
-      byte[] rawDescriptorBytes = Files.readAllBytes(file.toPath());
-      for (Descriptor descriptor : this.descriptorParser.parseDescriptors(
-          rawDescriptorBytes, file, file.getName())) {
-        this.descriptorQueue.add(descriptor);
+      try (FileInputStream fis = new FileInputStream(file)) {
+        InputStream is = fis;
+        if (file.getName().endsWith(".gz")) {
+          is = new GzipCompressorInputStream(fis);
+        }
+        byte[] rawDescriptorBytes = IOUtils.toByteArray(is);
+        if (rawDescriptorBytes.length > 0) {
+          for (Descriptor descriptor : this.descriptorParser.parseDescriptors(
+              rawDescriptorBytes, file, file.getName())) {
+            this.descriptorQueue.add(descriptor);
+          }
+        }
       }
     }
   }
