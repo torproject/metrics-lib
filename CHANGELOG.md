@@ -1,3 +1,6 @@
+# Changes in version 2.?.? - 2019-??-??
+
+
 # Changes in version 2.8.0 - 2019-10-18
 
  * Medium changes
