@@ -12,7 +12,6 @@ import org.torproject.descriptor.NetworkStatusEntry;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,13 +47,19 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     return lines;
   }
 
+  private Map<String, Integer> flagIndexes;
+
+  private Map<Integer, String> flagStrings;
+
   protected NetworkStatusEntryImpl(DescriptorImpl parent, int offset,
-      int length, boolean microdescConsensus)
-      throws DescriptorParseException {
+      int length, boolean microdescConsensus, Map<String, Integer> flagIndexes,
+      Map<Integer, String> flagStrings) throws DescriptorParseException {
     this.parent = parent;
     this.offset = offset;
     this.length = length;
     this.microdescConsensus = microdescConsensus;
+    this.flagIndexes = flagIndexes;
+    this.flagStrings = flagStrings;
     this.parseStatusEntryBytes();
     this.clearAtMostOnceKeys();
   }
@@ -160,21 +165,17 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     this.orAddresses.add(parts[1]);
   }
 
-  private static Map<String, Integer> flagIndexes = new HashMap<>();
-
-  private static Map<Integer, String> flagStrings = new HashMap<>();
-
   private void parseSLine(String[] parts)
       throws DescriptorParseException {
     this.parsedAtMostOnceKey(Key.S);
-    BitSet flags = new BitSet(flagIndexes.size());
+    BitSet flags = new BitSet(this.flagIndexes.size());
     for (int i = 1; i < parts.length; i++) {
       String flag = parts[i];
-      if (!flagIndexes.containsKey(flag)) {
-        flagStrings.put(flagIndexes.size(), flag);
-        flagIndexes.put(flag, flagIndexes.size());
+      if (!this.flagIndexes.containsKey(flag)) {
+        this.flagStrings.put(this.flagIndexes.size(), flag);
+        this.flagIndexes.put(flag, this.flagIndexes.size());
       }
-      flags.set(flagIndexes.get(flag));
+      flags.set(this.flagIndexes.get(flag));
     }
     this.flags = flags;
   }
@@ -353,7 +354,7 @@ public class NetworkStatusEntryImpl implements NetworkStatusEntry {
     if (this.flags != null) {
       for (int i = this.flags.nextSetBit(0); i >= 0;
           i = this.flags.nextSetBit(i + 1)) {
-        result.add(flagStrings.get(i));
+        result.add(this.flagStrings.get(i));
       }
     }
     return result;

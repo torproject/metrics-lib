@@ -119,7 +119,8 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   protected void parseStatusEntry(int offset, int length)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(this,
-        offset, length, this.microdescConsensus);
+        offset, length, this.microdescConsensus, this.flagIndexes,
+        this.flagStrings);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
     List<String> unrecognizedStatusEntryLines = statusEntry
         .getAndClearUnrecognizedLines();

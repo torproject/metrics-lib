@@ -10,7 +10,9 @@ import org.torproject.descriptor.NetworkStatusEntry;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -18,6 +20,10 @@ import java.util.TreeMap;
  * consensuses, v2 statuses, and sanitized bridge network statuses and
  * delegate the specific parts to the subclasses. */
 public abstract class NetworkStatusImpl extends DescriptorImpl {
+
+  protected Map<String, Integer> flagIndexes = new HashMap<>();
+
+  protected Map<Integer, String> flagStrings = new HashMap<>();
 
   protected NetworkStatusImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
       File descriptorFile, boolean containsDirSourceEntries,
@@ -140,7 +146,7 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   protected void parseStatusEntry(int offset, int length)
       throws DescriptorParseException {
     NetworkStatusEntryImpl statusEntry = new NetworkStatusEntryImpl(
-        this, offset, length, false);
+        this, offset, length, false, this.flagIndexes, this.flagStrings);
     this.statusEntries.put(statusEntry.getFingerprint(), statusEntry);
     List<String> unrecognizedStatusEntryLines = statusEntry
         .getAndClearUnrecognizedLines();
