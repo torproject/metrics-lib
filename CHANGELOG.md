@@ -1,4 +1,4 @@
-# Changes in version 2.?.? - 2019-??-??
+# Changes in version 2.9.0 - 2019-11-01
 
  * Medium changes
    - Make NetworkStatusEntryImpl#parseSLine thread-safe.
