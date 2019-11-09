@@ -1,4 +1,7 @@
-# Changes in version 2.?.? - 2019-1?-??
+# Changes in version 2.9.1 - 2019-11-09
+
+ * Minor changes
+   - Do not fail when processing index.json files with unknown fields.
 
 
 # Changes in version 2.9.0 - 2019-11-01
