@@ -323,6 +323,7 @@ public interface ServerDescriptor extends Descriptor {
    *
    * @since 1.0.0
    */
+  @Deprecated
   List<Integer> getHiddenServiceDirVersions();
 
   /**
