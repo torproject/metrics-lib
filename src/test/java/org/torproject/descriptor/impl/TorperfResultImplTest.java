@@ -22,7 +22,7 @@ public class TorperfResultImplTest {
   public void testAnnotatedInput() throws Exception {
     TorperfResultImpl result = (TorperfResultImpl)
         (TorperfResultImpl.parseTorperfResults((torperfAnnotation + input)
-        .getBytes("US-ASCII"), null).get(0));
+        .getBytes(StandardCharsets.US_ASCII), null).get(0));
     assertEquals("Expected one annotation.", 1,
         result.getAnnotations().size());
     assertEquals(torperfAnnotation.substring(0, 17),
@@ -37,7 +37,7 @@ public class TorperfResultImplTest {
   @Test
   public void testPartiallyAnnotatedInput() throws Exception {
     byte[] asciiBytes = (torperfAnnotation
-        + input + input + input).getBytes("US-ASCII");
+        + input + input + input).getBytes(StandardCharsets.US_ASCII);
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
         asciiBytes, null);
     assertEquals("Expected one annotation.", 1,
@@ -53,7 +53,7 @@ public class TorperfResultImplTest {
   public void testAllAnnotatedInput() throws Exception {
     byte[] asciiBytes = (torperfAnnotation + input
         + torperfAnnotation + input
-        + torperfAnnotation + input).getBytes("US-ASCII");
+        + torperfAnnotation + input).getBytes(StandardCharsets.US_ASCII);
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
         asciiBytes, null);
     assertEquals("Expected one annotation.", 1,
@@ -68,7 +68,7 @@ public class TorperfResultImplTest {
   @Test
   public void testTrailingNewlinesRetained() throws Exception {
     byte[] asciiBytes = (torperfAnnotation + input
-        + torperfAnnotation + input).getBytes("US-ASCII");
+        + torperfAnnotation + input).getBytes(StandardCharsets.US_ASCII);
     List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
         asciiBytes, null);
     for (Descriptor descriptor : result) {

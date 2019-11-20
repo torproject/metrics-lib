@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class ExitListImplTest {
@@ -22,7 +23,7 @@ public class ExitListImplTest {
   @Test
   public void testAnnotatedInput() throws Exception {
     ExitListImpl result = new ExitListImpl((tordnselAnnotation + input)
-        .getBytes("US-ASCII"), null, fileName);
+        .getBytes(StandardCharsets.US_ASCII), null, fileName);
     assertEquals("Expected one annotation.", 1,
         result.getAnnotations().size());
     assertEquals(tordnselAnnotation.substring(0, 18),
@@ -38,7 +39,7 @@ public class ExitListImplTest {
   public void testMultipleExitAddresses() throws Exception {
     ExitListImpl result = new ExitListImpl(
         (tordnselAnnotation + multiExitAddressInput)
-        .getBytes("US-ASCII"), null, fileName);
+        .getBytes(StandardCharsets.US_ASCII), null, fileName);
     assertTrue("Unrecognized lines: " + result.getUnrecognizedLines(),
         result.getUnrecognizedLines().isEmpty());
     Map<String, Long> map = result.getEntries()
@@ -54,7 +55,7 @@ public class ExitListImplTest {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("Missing 'ExitAddress' line in exit list entry.");
     new ExitListImpl((tordnselAnnotation + insufficientInput[0])
-        .getBytes("US-ASCII"), null, fileName);
+        .getBytes(StandardCharsets.US_ASCII), null, fileName);
   }
 
   @Test
@@ -62,7 +63,7 @@ public class ExitListImplTest {
     this.thrown.expect(DescriptorParseException.class);
     this.thrown.expectMessage("Missing 'Published' line in exit list entry.");
     new ExitListImpl((tordnselAnnotation + insufficientInput[1])
-        .getBytes("US-ASCII"), null, fileName);
+        .getBytes(StandardCharsets.US_ASCII), null, fileName);
   }
 
   private static final String tordnselAnnotation = "@type tordnsel 1.0\n";
