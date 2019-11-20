@@ -181,6 +181,7 @@ public class RelayNetworkStatusImpl extends NetworkStatusImpl
       throw new DescriptorParseException("Illegal hostname in '" + line
           + "'.");
     }
+    this.hostname = parts[1];
     this.address = ParseHelper.parseIpv4Address(line, parts[2]);
     this.dirPort = ParseHelper.parsePort(line, parts[3]);
   }

@@ -60,6 +60,7 @@ public class RelayNetworkStatusImplTest {
         new int[] { 0, statusBytes.length }, null);
     assertEquals(rnsi.getContactLine(),
         "1024R/8D56913D Alex de Joode <adejoode@sabotage.org>");
+    assertEquals("194.109.206.212", rnsi.getHostname());
   }
 }
 

@@ -3,6 +3,8 @@
  * Minor changes
    - Fix a NullPointerException when parsing an invalid crypto block
      starting with "-----END " rather than "-----BEGIN ".
+   - Properly parse an authority's hostname from the "dir-source" line
+     in a v2 network status.
 
 
 # Changes in version 2.9.1 - 2019-11-09
