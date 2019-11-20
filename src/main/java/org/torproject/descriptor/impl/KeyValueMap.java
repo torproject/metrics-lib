@@ -20,7 +20,7 @@ public class KeyValueMap<T> extends TreeMap<String, T> {
 
   private void putPair(String key, T value, String line, String listElement,
       int keyLength) throws DescriptorParseException {
-    if (this.keySet().contains(key)) {
+    if (this.containsKey(key)) {
       throw new DescriptorParseException("Line '" + line + "' contains "
           + "duplicate key '" + key + "'.");
     }
