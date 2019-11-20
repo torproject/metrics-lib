@@ -98,7 +98,7 @@ public class MeasurePerformance {
         continue;
       }
       ServerDescriptor serverDescriptor = (ServerDescriptor) descriptor;
-      sumAdvertisedBandwidth += (long) Math.min(Math.min(
+      sumAdvertisedBandwidth += Math.min(Math.min(
           serverDescriptor.getBandwidthRate(),
           serverDescriptor.getBandwidthBurst()),
           serverDescriptor.getBandwidthObserved());
