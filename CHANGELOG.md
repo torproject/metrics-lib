@@ -1,5 +1,9 @@
 # Changes in version 2.?.? - 2019-1?-??
 
+ * Minor changes
+   - Fix a NullPointerException when parsing an invalid crypto block
+     starting with "-----END " rather than "-----BEGIN ".
+
 
 # Changes in version 2.9.1 - 2019-11-09
 

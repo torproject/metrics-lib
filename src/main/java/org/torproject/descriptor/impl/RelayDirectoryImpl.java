@@ -125,6 +125,10 @@ public class RelayDirectoryImpl extends DescriptorImpl
           crypto.append(line).append(NL);
           break;
         case CRYPTO_END:
+          if (null == crypto) {
+            throw new DescriptorParseException(Key.CRYPTO_END + " before "
+                + Key.CRYPTO_BEGIN);
+          }
           crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;
@@ -215,6 +219,10 @@ public class RelayDirectoryImpl extends DescriptorImpl
           crypto.append(line).append(NL);
           break;
         case CRYPTO_END:
+          if (null == crypto) {
+            throw new DescriptorParseException(Key.CRYPTO_END + " before "
+                + Key.CRYPTO_BEGIN);
+          }
           crypto.append(line).append(NL);
           String cryptoString = crypto.toString();
           crypto = null;

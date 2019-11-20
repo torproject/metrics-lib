@@ -242,6 +242,10 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
           cryptoLines.add(line);
           break;
         case CRYPTO_END:
+          if (null == cryptoLines) {
+            throw new DescriptorParseException(Key.CRYPTO_END + " before "
+                + Key.CRYPTO_BEGIN);
+          }
           cryptoLines.add(line);
           StringBuilder sb = new StringBuilder();
           for (String cryptoLine : cryptoLines) {

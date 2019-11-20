@@ -2244,6 +2244,16 @@ public class ExtraInfoDescriptorImplTest {
   }
 
   @Test
+  public void testEd25519IdentityInvalidCrypto()
+      throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("CRYPTO_END before CRYPTO_BEGIN");
+    DescriptorBuilder.createWithEd25519Lines("identity-ed25519\n"
+        + "-----END ED25519 CERT-----\n-----BEGIN ED25519 CERT-----",
+        MASTER_KEY_ED25519_LINE, ROUTER_SIG_ED25519_LINE);
+  }
+
+  @Test
   public void testEd25519MasterKeyMissing()
       throws DescriptorParseException {
     ExtraInfoDescriptor descriptor =
