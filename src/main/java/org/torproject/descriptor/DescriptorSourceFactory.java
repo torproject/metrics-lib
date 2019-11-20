@@ -146,10 +146,9 @@ public final class DescriptorSourceFactory {
               + ".");
       }
       object = ClassLoader.getSystemClassLoader().loadClass(clazzName)
-          .newInstance();
+          .getDeclaredConstructor().newInstance();
       log.info("Serving implementation {} for {}.", clazzName, type);
-    } catch (ClassNotFoundException | InstantiationException
-             | IllegalAccessException ex) {
+    } catch (ReflectiveOperationException ex) {
       throw new RuntimeException("Cannot load class "
           + clazzName + "for type " + type, ex);
     }
