@@ -19,10 +19,6 @@ public class BlockingIteratorImpl<T> implements Iterator<T>, Iterable<T> {
   /* Maximum number of elements in queue. */
   private int maxQueueSize = 100;
 
-  /* Restrict object construction to the impl package. */
-  protected BlockingIteratorImpl() {
-  }
-
   /* Create instance with maximum queue size. */
   protected BlockingIteratorImpl(Integer maxQueueSize) {
     if (null != maxQueueSize) {
