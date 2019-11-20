@@ -844,7 +844,6 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   }
 
   @Override
-  @SuppressWarnings("deprecation")
   public List<Integer> getHiddenServiceDirVersions() {
     return this.hiddenServiceDir ? null : Collections.singletonList(2);
   }
