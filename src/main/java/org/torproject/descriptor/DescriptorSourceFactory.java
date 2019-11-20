@@ -103,7 +103,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public static final DescriptorParser createDescriptorParser() {
+  public static DescriptorParser createDescriptorParser() {
     return (DescriptorParser) retrieve(PARSER_PROPERTY);
   }
 
@@ -113,7 +113,7 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public static final DescriptorReader createDescriptorReader() {
+  public static DescriptorReader createDescriptorReader() {
     return (DescriptorReader) retrieve(READER_PROPERTY);
   }
 
@@ -123,11 +123,11 @@ public final class DescriptorSourceFactory {
    *
    * @since 1.0.0
    */
-  public static final DescriptorCollector createDescriptorCollector() {
+  public static DescriptorCollector createDescriptorCollector() {
     return (DescriptorCollector) retrieve(COLLECTOR_PROPERTY);
   }
 
-  private static final <T> Object retrieve(String type) {
+  private static <T> Object retrieve(String type) {
     Object object;
     String clazzName = null;
     try {
