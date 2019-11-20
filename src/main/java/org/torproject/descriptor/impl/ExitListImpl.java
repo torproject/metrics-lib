@@ -77,11 +77,7 @@ public class ExitListImpl extends DescriptorImpl implements ExitList {
           sb.append(line).append(ExitList.EOL);
           break;
         case "Published":
-          sb.append(line).append(ExitList.EOL);
-          break;
         case "LastStatus":
-          sb.append(line).append(ExitList.EOL);
-          break;
         case "ExitAddress":
           sb.append(line).append(ExitList.EOL);
           break;
