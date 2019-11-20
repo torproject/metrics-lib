@@ -165,7 +165,7 @@ public class BandwidthFileImpl extends DescriptorImpl implements BandwidthFile {
     }
   }
 
-  private class RelayLineImpl implements RelayLine {
+  private static class RelayLineImpl implements RelayLine {
 
     private String nodeId;
 
