@@ -181,7 +181,7 @@ public class DescriptorIndexCollector implements DescriptorCollector {
     } catch (IOException ioe) {
       log.warn("Cannot index local directory {} to skip any remote files that "
           + "already exist locally.  Continuing with an either empty or "
-          + "incomplete index of local files.", ioe);
+          + "incomplete index of local files.", localDir, ioe);
     }
     return locals;
   }
