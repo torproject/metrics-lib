@@ -453,6 +453,9 @@ public class ServerDescriptorImplTest {
     private ServerDescriptorImpl buildDescriptor()
         throws DescriptorParseException {
       byte[] descriptorBytes = this.buildDescriptorBytes();
+      if (null == descriptorBytes) {
+        descriptorBytes = new byte[0];
+      }
       return new RelayServerDescriptorImpl(descriptorBytes,
           new int[] { 0, descriptorBytes.length }, null);
     }
