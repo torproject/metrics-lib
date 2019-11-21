@@ -223,26 +223,6 @@ public class ParseHelper {
         ZoneOffset.UTC);
   }
 
-  protected static long parseDateAtIndex(String line, String[] parts,
-      int dateIndex) throws DescriptorParseException {
-    if (dateIndex >= parts.length) {
-      throw new DescriptorParseException("Line '" + line + "' does not "
-          + "contain a date at the expected position.");
-    }
-    long result = -1L;
-    try {
-      DateFormat dateFormat = getDateFormat("yyyy-MM-dd");
-      result = dateFormat.parse(parts[dateIndex]).getTime();
-    } catch (ParseException e) {
-      /* Leave result at -1L. */
-    }
-    if (result < 0L || result / 1000L > (long) Integer.MAX_VALUE) {
-      throw new DescriptorParseException("Illegal date format in line '"
-          + line + "'.");
-    }
-    return result;
-  }
-
   protected static String parseTwentyByteHexString(String line,
       String hexString) throws DescriptorParseException {
     return parseHexString(line, hexString, 40);
@@ -330,18 +310,11 @@ public class ParseHelper {
 
   protected static void verifyThirtyTwoByteBase64String(String line,
       String base64String) throws DescriptorParseException {
-    convertThirtyTwoByteBase64StringToHex(line, base64String);
-  }
-
-  private static String convertThirtyTwoByteBase64StringToHex(String line,
-      String base64String) throws DescriptorParseException {
     if (!thirtyTwoByteBase64Pattern.matcher(base64String).matches()) {
       throw new DescriptorParseException("'" + base64String
           + "' in line '" + line + "' is not a valid base64-encoded "
           + "32-byte value.");
     }
-    return Hex.encodeHexString(Base64.decodeBase64(base64String + "="))
-        .toUpperCase();
   }
 
   protected static String parseCommaSeparatedKeyIntegerValueList(
