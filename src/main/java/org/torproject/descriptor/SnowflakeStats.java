@@ -52,6 +52,36 @@ public interface SnowflakeStats extends Descriptor {
   Optional<Long> snowflakeIpsTotal();
 
   /**
+   * Return a count of the total number of unique IP addresses of snowflake
+   * proxies of type "standalone" that have polled.
+   *
+   * @return Count of the total number of unique IP addresses of snowflake
+   *     proxies of type "standalone" that have polled.
+   * @since 2.10.0
+   */
+  Optional<Long> snowflakeIpsStandalone();
+
+  /**
+   * Return a count of the total number of unique IP addresses of snowflake
+   * proxies of type "badge" that have polled.
+   *
+   * @return Count of the total number of unique IP addresses of snowflake
+   *     proxies of type "badge" that have polled.
+   * @since 2.10.0
+   */
+  Optional<Long> snowflakeIpsBadge();
+
+  /**
+   * Return a count of the total number of unique IP addresses of snowflake
+   * proxies of type "webext" that have polled.
+   *
+   * @return Count of the total number of unique IP addresses of snowflake
+   *     proxies of type "webext" that have polled.
+   * @since 2.10.0
+   */
+  Optional<Long> snowflakeIpsWebext();
+
+  /**
    * Return a count of the number of times a proxy has polled but received no
    * client offer, rounded up to the nearest multiple of 8.
    *

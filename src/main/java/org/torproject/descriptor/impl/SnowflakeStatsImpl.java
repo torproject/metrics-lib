@@ -20,8 +20,10 @@ public class SnowflakeStatsImpl extends DescriptorImpl
     implements SnowflakeStats {
 
   private static final Set<Key> atMostOnce = EnumSet.of(
-      Key.SNOWFLAKE_IPS, Key.SNOWFLAKE_IPS_TOTAL, Key.SNOWFLAKE_IDLE_COUNT,
-      Key.CLIENT_DENIED_COUNT, Key.CLIENT_SNOWFLAKE_MATCH_COUNT);
+      Key.SNOWFLAKE_IPS, Key.SNOWFLAKE_IPS_TOTAL, Key.SNOWFLAKE_IPS_STANDALONE,
+      Key.SNOWFLAKE_IPS_BADGE, Key.SNOWFLAKE_IPS_WEBEXT,
+      Key.SNOWFLAKE_IDLE_COUNT, Key.CLIENT_DENIED_COUNT,
+      Key.CLIENT_SNOWFLAKE_MATCH_COUNT);
 
   private static final Set<Key> exactlyOnce = EnumSet.of(
       Key.SNOWFLAKE_STATS_END);
@@ -60,6 +62,15 @@ public class SnowflakeStatsImpl extends DescriptorImpl
           break;
         case SNOWFLAKE_IPS_TOTAL:
           this.parseSnowflakeIpsTotal(line, parts);
+          break;
+        case SNOWFLAKE_IPS_STANDALONE:
+          this.parseSnowflakeIpsStandalone(line, parts);
+          break;
+        case SNOWFLAKE_IPS_BADGE:
+          this.parseSnowflakeIpsBadge(line, parts);
+          break;
+        case SNOWFLAKE_IPS_WEBEXT:
+          this.parseSnowflakeIpsWebext(line, parts);
           break;
         case SNOWFLAKE_IDLE_COUNT:
           this.parseSnowflakeIdleCount(line, parts);
@@ -104,6 +115,21 @@ public class SnowflakeStatsImpl extends DescriptorImpl
     this.snowflakeIpsTotal = ParseHelper.parseLong(line, parts, 1);
   }
 
+  private void parseSnowflakeIpsStandalone(String line, String[] parts)
+      throws DescriptorParseException {
+    this.snowflakeIpsStandalone = ParseHelper.parseLong(line, parts, 1);
+  }
+
+  private void parseSnowflakeIpsBadge(String line, String[] parts)
+      throws DescriptorParseException {
+    this.snowflakeIpsBadge = ParseHelper.parseLong(line, parts, 1);
+  }
+
+  private void parseSnowflakeIpsWebext(String line, String[] parts)
+      throws DescriptorParseException {
+    this.snowflakeIpsWebext = ParseHelper.parseLong(line, parts, 1);
+  }
+
   private void parseSnowflakeIdleCount(String line, String[] parts)
       throws DescriptorParseException {
     this.snowflakeIdleCount = ParseHelper.parseLong(line, parts, 1);
@@ -145,6 +171,27 @@ public class SnowflakeStatsImpl extends DescriptorImpl
   @Override
   public Optional<Long> snowflakeIpsTotal() {
     return Optional.ofNullable(this.snowflakeIpsTotal);
+  }
+
+  private Long snowflakeIpsStandalone;
+
+  @Override
+  public Optional<Long> snowflakeIpsStandalone() {
+    return Optional.ofNullable(this.snowflakeIpsStandalone);
+  }
+
+  private Long snowflakeIpsBadge;
+
+  @Override
+  public Optional<Long> snowflakeIpsBadge() {
+    return Optional.ofNullable(this.snowflakeIpsBadge);
+  }
+
+  private Long snowflakeIpsWebext;
+
+  @Override
+  public Optional<Long> snowflakeIpsWebext() {
+    return Optional.ofNullable(this.snowflakeIpsWebext);
   }
 
   private Long snowflakeIdleCount;

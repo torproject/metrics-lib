@@ -1,4 +1,7 @@
-# Changes in version 2.?.? - 2019-1?-??
+# Changes in version 2.10.0 - 2019-1?-??
+
+ * Medium changes
+   - Parse three newly added lines in snowflake statistics files.
 
  * Minor changes
    - Fix a NullPointerException when parsing an invalid crypto block

@@ -35,6 +35,9 @@ public class SnowflakeStatsImplTest {
           + "PK=4,ID=9,IR=7,JO=2,CR=2,US=265,DE=92,LV=1,MY=8,AR=5,NZ=10,BG=2,"
           + "UY=1,TW=5,SI=3,LU=2,GE=2,BN=1,JP=15,ES=9,SG=7,EC=1",
       "snowflake-ips-total 937",
+      "snowflake-ips-standalone 3",
+      "snowflake-ips-badge 0",
+      "snowflake-ips-webext 4118",
       "snowflake-idle-count 660976",
       "client-denied-count 0",
       "client-snowflake-match-count 864" };
@@ -51,6 +54,12 @@ public class SnowflakeStatsImplTest {
     assertEquals(68, snowflakeStats.snowflakeIps().get().size());
     assertTrue(snowflakeStats.snowflakeIpsTotal().isPresent());
     assertEquals((Long) 937L, snowflakeStats.snowflakeIpsTotal().get());
+    assertTrue(snowflakeStats.snowflakeIpsStandalone().isPresent());
+    assertEquals((Long) 3L, snowflakeStats.snowflakeIpsStandalone().get());
+    assertTrue(snowflakeStats.snowflakeIpsBadge().isPresent());
+    assertEquals((Long) 0L, snowflakeStats.snowflakeIpsBadge().get());
+    assertTrue(snowflakeStats.snowflakeIpsWebext().isPresent());
+    assertEquals((Long) 4118L, snowflakeStats.snowflakeIpsWebext().get());
     assertTrue(snowflakeStats.snowflakeIdleCount().isPresent());
     assertEquals((Long) 660976L, snowflakeStats.snowflakeIdleCount().get());
     assertTrue(snowflakeStats.clientDeniedCount().isPresent());
@@ -69,6 +78,9 @@ public class SnowflakeStatsImplTest {
         snowflakeStats.snowflakeStatsIntervalLength());
     assertFalse(snowflakeStats.snowflakeIps().isPresent());
     assertFalse(snowflakeStats.snowflakeIpsTotal().isPresent());
+    assertFalse(snowflakeStats.snowflakeIpsStandalone().isPresent());
+    assertFalse(snowflakeStats.snowflakeIpsBadge().isPresent());
+    assertFalse(snowflakeStats.snowflakeIpsWebext().isPresent());
     assertFalse(snowflakeStats.snowflakeIdleCount().isPresent());
     assertFalse(snowflakeStats.clientDeniedCount().isPresent());
     assertFalse(snowflakeStats.clientSnowflakeMatchCount().isPresent());
