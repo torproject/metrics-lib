@@ -1,4 +1,4 @@
-# Changes in version 2.10.0 - 2019-1?-??
+# Changes in version 2.10.0 - 2020-01-15
 
  * Medium changes
    - Parse three newly added lines in snowflake statistics files.
