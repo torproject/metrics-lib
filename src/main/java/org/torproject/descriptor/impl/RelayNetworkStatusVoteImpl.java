@@ -26,7 +26,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   protected RelayNetworkStatusVoteImpl(byte[] voteBytes, int[] offsetAndLength,
       File descriptorFile)
       throws DescriptorParseException {
-    super(voteBytes, offsetAndLength, descriptorFile, false, false);
+    super(voteBytes, offsetAndLength, descriptorFile, false);
+    this.splitAndParseParts(false);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.VOTE_STATUS, Key.PUBLISHED, Key.VALID_AFTER, Key.FRESH_UNTIL,
         Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS, Key.DIR_SOURCE,
@@ -52,20 +53,6 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
 
   protected void parseHeader(int offset, int length)
       throws DescriptorParseException {
-    /* Initialize flag-thresholds values here for the case that the vote
-     * doesn't contain those values.  Initializing them in the constructor
-     * or when declaring variables wouldn't work, because those parts are
-     * evaluated later and would overwrite everything we parse here. */
-    this.stableUptime = -1L;
-    this.stableMtbf = -1L;
-    this.fastBandwidth = -1L;
-    this.guardWfu = -1.0;
-    this.guardTk = -1L;
-    this.guardBandwidthIncludingExits = -1L;
-    this.guardBandwidthExcludingExits = -1L;
-    this.enoughMtbfInfo = -1;
-    this.ignoringAdvertisedBws = -1;
-
     Scanner scanner = this.newScanner(offset, length).useDelimiter(NL);
     Key nextCrypto = Key.EMPTY;
     StringBuilder crypto = null;
@@ -847,63 +834,63 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     return new TreeSet<>(Arrays.asList(this.knownFlags));
   }
 
-  private long stableUptime;
+  private long stableUptime = -1L;
 
   @Override
   public long getStableUptime() {
     return this.stableUptime;
   }
 
-  private long stableMtbf;
+  private long stableMtbf = -1L;
 
   @Override
   public long getStableMtbf() {
     return this.stableMtbf;
   }
 
-  private long fastBandwidth;
+  private long fastBandwidth = -1L;
 
   @Override
   public long getFastBandwidth() {
     return this.fastBandwidth;
   }
 
-  private double guardWfu;
+  private double guardWfu = -1.0;
 
   @Override
   public double getGuardWfu() {
     return this.guardWfu;
   }
 
-  private long guardTk;
+  private long guardTk = -1L;
 
   @Override
   public long getGuardTk() {
     return this.guardTk;
   }
 
-  private long guardBandwidthIncludingExits;
+  private long guardBandwidthIncludingExits = -1L;
 
   @Override
   public long getGuardBandwidthIncludingExits() {
     return this.guardBandwidthIncludingExits;
   }
 
-  private long guardBandwidthExcludingExits;
+  private long guardBandwidthExcludingExits = -1L;
 
   @Override
   public long getGuardBandwidthExcludingExits() {
     return this.guardBandwidthExcludingExits;
   }
 
-  private int enoughMtbfInfo;
+  private int enoughMtbfInfo = -1;
 
   @Override
   public int getEnoughMtbfInfo() {
     return this.enoughMtbfInfo;
   }
 
-  private int ignoringAdvertisedBws;
+  private int ignoringAdvertisedBws = -1;
 
   @Override
   public int getIgnoringAdvertisedBws() {

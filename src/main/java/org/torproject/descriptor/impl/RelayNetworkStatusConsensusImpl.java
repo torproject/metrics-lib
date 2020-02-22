@@ -25,7 +25,8 @@ public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
   protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes,
       int[] offsetAndLimit, File descriptorFile)
       throws DescriptorParseException {
-    super(consensusBytes, offsetAndLimit, descriptorFile, true, false);
+    super(consensusBytes, offsetAndLimit, descriptorFile, false);
+    this.splitAndParseParts(true);
     Set<Key> exactlyOnceKeys = EnumSet.of(
         Key.VOTE_STATUS, Key.CONSENSUS_METHOD, Key.VALID_AFTER, Key.FRESH_UNTIL,
         Key.VALID_UNTIL, Key.VOTING_DELAY, Key.KNOWN_FLAGS);

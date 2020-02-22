@@ -26,14 +26,13 @@ public abstract class NetworkStatusImpl extends DescriptorImpl {
   protected Map<Integer, String> flagStrings = new HashMap<>();
 
   protected NetworkStatusImpl(byte[] rawDescriptorBytes, int[] offsetAndLength,
-      File descriptorFile, boolean containsDirSourceEntries,
-      boolean blankLinesAllowed) throws DescriptorParseException {
+      File descriptorFile, boolean blankLinesAllowed)
+      throws DescriptorParseException {
     super(rawDescriptorBytes, offsetAndLength, descriptorFile,
         blankLinesAllowed);
-    this.splitAndParseParts(containsDirSourceEntries);
   }
 
-  private void splitAndParseParts(boolean containsDirSourceEntries)
+  protected final void splitAndParseParts(boolean containsDirSourceEntries)
       throws DescriptorParseException {
     int firstRIndex = this.findFirstIndexOfKey(Key.R);
     int firstDirectorySignatureIndex = this.findFirstIndexOfKey(

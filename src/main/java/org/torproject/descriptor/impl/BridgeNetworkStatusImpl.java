@@ -22,8 +22,8 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
   protected BridgeNetworkStatusImpl(byte[] rawDescriptorBytes,
       int[] offsetAndLength, File descriptorFile, String fileName)
       throws DescriptorParseException {
-    super(rawDescriptorBytes, offsetAndLength, descriptorFile,
-        false, false);
+    super(rawDescriptorBytes, offsetAndLength, descriptorFile, false);
+    this.splitAndParseParts(false);
     this.setPublishedMillisFromFileName(fileName);
   }
 

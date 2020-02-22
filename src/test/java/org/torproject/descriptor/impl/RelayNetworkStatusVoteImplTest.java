@@ -721,6 +721,8 @@ public class RelayNetworkStatusVoteImplTest {
     assertEquals(3, vote.getDirKeyCertificateVersion());
     assertEquals("80550987E1D626E3EBA5E5E75A458DE0626D088C",
         vote.getIdentity());
+    assertTrue(vote.isSharedRandParticipate());
+    assertEquals(8, vote.getSharedRandCurrentNumReveals());
     assertEquals(1303882477000L, /* 2011-04-27 05:34:37 */
         vote.getDirKeyPublishedMillis());
     assertEquals(1335504877000L, /* 2012-04-27 05:34:37 */
@@ -745,6 +747,8 @@ public class RelayNetworkStatusVoteImplTest {
         + "F3Yh\nrXVaaoP07r6Ta+s0g1Zijm3lms50Nk/4tV2p8Y63c3F4Q3DAnK40Oi"
         + "kfOIwEj+Ny\n+zBRQssP3hPhTPOj/A7o3mZZwtL6x1sxpeu/nME1l5E=\n"
         + "-----END SIGNATURE-----\n", signature.getSignature());
+    assertEquals(184320, vote.getGuardBandwidthExcludingExits());
+    assertEquals(1, vote.getEnoughMtbfInfo());
     assertTrue(vote.getUnrecognizedLines().isEmpty());
   }
 
@@ -1546,6 +1550,15 @@ public class RelayNetworkStatusVoteImplTest {
     VoteBuilder.createWithSharedRandPreviousValueLine(
         "shared-rand-previous-value "
         + "grwbnD6I40odtsdtWYxqs0DvPweCur6qG2Fo5p5ivS4= 8");
+  }
+
+  @Test
+  public void testSharedRandCurrentValueLineEmpty()
+      throws DescriptorParseException {
+    RelayNetworkStatusVote vote =
+        VoteBuilder.createWithSharedRandCurrentValueLine(null);
+    assertEquals(-1, vote.getSharedRandCurrentNumReveals());
+    assertNull(vote.getSharedRandCurrentValue());
   }
 
   @Test
