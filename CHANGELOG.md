@@ -1,4 +1,10 @@
-# Changes in version 2.1?.? - 2020-0?-??
+# Changes in version 2.11.0 - 2020-0?-??
+
+ * Medium changes
+   - Compute bandwidth file digests.
+   - Parse bandwidth file header and bandwidth file digest in votes.
+   - Parse bridge distribution requests in bridge server descriptors.
+   - Parse authority fingerprint in bridge network statuses.
 
  * Minor changes
    - Avoid invoking overridable methods from constructors.

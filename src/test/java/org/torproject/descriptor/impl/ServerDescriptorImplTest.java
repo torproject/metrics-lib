@@ -338,6 +338,15 @@ public class ServerDescriptorImplTest {
       return db.buildDescriptor();
     }
 
+    private String bridgeDistributionRequestLine = null;
+
+    private static ServerDescriptor createWithBridgeDistributionRequestLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.bridgeDistributionRequestLine = line;
+      return db.buildDescriptor();
+    }
+
     private byte[] buildDescriptorBytes() {
       StringBuilder sb = new StringBuilder();
       if (this.routerLine != null) {
@@ -384,6 +393,9 @@ public class ServerDescriptorImplTest {
       }
       if (this.contactLine != null) {
         sb.append(this.contactLine).append("\n");
+      }
+      if (this.bridgeDistributionRequestLine != null) {
+        sb.append(this.bridgeDistributionRequestLine).append("\n");
       }
       if (this.familyLine != null) {
         sb.append(this.familyLine).append("\n");
@@ -1972,6 +1984,24 @@ public class ServerDescriptorImplTest {
         descriptorBytes, new int[] { 0, descriptorBytes.length }, null);
     assertNull(descriptor.getDigestSha1Hex());
     assertNull(descriptor.getDigestSha256Base64());
+  }
+
+  @Test
+  public void testBridgeDistributionRequestMoat()
+      throws DescriptorParseException {
+    ServerDescriptor descriptor =
+        DescriptorBuilder.createWithBridgeDistributionRequestLine(
+        "bridge-distribution-request moat");
+    assertEquals("moat", descriptor.getBridgeDistributionRequest());
+  }
+
+  @Test
+  public void testBridgeDistributionRequestEmptySpace()
+      throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Illegal line 'bridge-distribution-request '.");
+    DescriptorBuilder.createWithBridgeDistributionRequestLine(
+        "bridge-distribution-request ");
   }
 }
 

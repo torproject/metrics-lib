@@ -9,7 +9,9 @@ import static org.junit.Assert.assertTrue;
 import org.torproject.descriptor.BridgeNetworkStatus;
 import org.torproject.descriptor.DescriptorParseException;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,9 @@ import java.util.List;
 /* Test parsing of bridge network statuses.  Some of the parsing code is
  * already tested in the consensus/vote-parsing tests. */
 public class BridgeNetworkStatusTest {
+
+  @Rule
+  public ExpectedException thrown = ExpectedException.none();
 
   /* Helper class to build a bridge network status based on default data
    * and modifications requested by test methods. */
@@ -54,6 +59,16 @@ public class BridgeNetworkStatusTest {
         throws DescriptorParseException {
       StatusBuilder sb = new StatusBuilder();
       sb.flagThresholdsLine = line;
+      return sb.buildStatus();
+    }
+
+    private String fingerprintLine
+        = "fingerprint BA44A889E64B93FAA2B114E02C2A279A8555C533";
+
+    private static BridgeNetworkStatus createWithFingerprintLine(String line)
+        throws DescriptorParseException {
+      StatusBuilder sb = new StatusBuilder();
+      sb.fingerprintLine = line;
       return sb.buildStatus();
     }
 
@@ -106,6 +121,9 @@ public class BridgeNetworkStatusTest {
       if (this.flagThresholdsLine != null) {
         sb.append(this.flagThresholdsLine).append("\n");
       }
+      if (this.fingerprintLine != null) {
+        sb.append(this.fingerprintLine).append("\n");
+      }
       if (this.unrecognizedHeaderLine != null) {
         sb.append(this.unrecognizedHeaderLine).append("\n");
       }
@@ -135,6 +153,8 @@ public class BridgeNetworkStatusTest {
     assertEquals(339000L, status.getGuardBandwidthExcludingExits());
     assertEquals(1, status.getEnoughMtbfInfo());
     assertEquals(0, status.getIgnoringAdvertisedBws());
+    assertEquals("BA44A889E64B93FAA2B114E02C2A279A8555C533",
+        status.getFingerprint());
     assertEquals(264, status.getStatusEntries().get(
         "001934C20E23E812C27592A5795B6636B7F32462").getBandwidth());
     assertTrue(status.getUnrecognizedLines().isEmpty());
@@ -160,6 +180,17 @@ public class BridgeNetworkStatusTest {
     assertEquals(-1L, status.getGuardBandwidthExcludingExits());
     assertEquals(-1, status.getEnoughMtbfInfo());
     assertEquals(-1, status.getIgnoringAdvertisedBws());
+  }
+
+  @Test
+  public void testBridgeDistributionRequestGivenTwice()
+      throws DescriptorParseException {
+    this.thrown.expect(DescriptorParseException.class);
+    this.thrown.expectMessage("Keyword 'fingerprint' is contained 2 times, but "
+        + "must be contained at most once.");
+    StatusBuilder.createWithFingerprintLine(
+        "fingerprint BA44A889E64B93FAA2B114E02C2A279A8555C533\n"
+        + "fingerprint BA44A889E64B93FAA2B114E02C2A279A8555C533");
   }
 }
 

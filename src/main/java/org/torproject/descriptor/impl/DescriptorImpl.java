@@ -408,7 +408,10 @@ public abstract class DescriptorImpl implements Descriptor {
     if (null == this.digestSha256Base64) {
       String ascii = new String(this.rawDescriptorBytes, this.offset,
           this.length, StandardCharsets.US_ASCII);
-      int start = ascii.indexOf(startToken);
+      int start = 0;
+      if (null != startToken) {
+        start = ascii.indexOf(startToken);
+      }
       int end = -1;
       if (null == endToken) {
         end = ascii.length();
@@ -429,6 +432,10 @@ public abstract class DescriptorImpl implements Descriptor {
   protected void calculateDigestSha256Base64(String startToken)
       throws DescriptorParseException {
     this.calculateDigestSha256Base64(startToken, null);
+  }
+
+  protected void calculateDigestSha256Base64() throws DescriptorParseException {
+    this.calculateDigestSha256Base64(null, null);
   }
 
   public String getDigestSha256Base64() {

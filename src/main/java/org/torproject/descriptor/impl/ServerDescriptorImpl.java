@@ -31,7 +31,7 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
       Key.IPV6_POLICY, Key.NTOR_ONION_KEY, Key.ONION_KEY_CROSSCERT,
       Key.NTOR_ONION_KEY_CROSSCERT, Key.TUNNELLED_DIR_SERVER,
       Key.ROUTER_SIG_ED25519, Key.ROUTER_SIGNATURE, Key.ROUTER_DIGEST_SHA256,
-      Key.ROUTER_DIGEST);
+      Key.ROUTER_DIGEST, Key.BRIDGE_DISTRIBUTION_REQUEST);
 
   private static final Set<Key> exactlyOnce = EnumSet.of(
       Key.ROUTER, Key.BANDWIDTH, Key.PUBLISHED);
@@ -112,6 +112,9 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
           break;
         case CONTACT:
           this.parseContactLine(lineNoOpt);
+          break;
+        case BRIDGE_DISTRIBUTION_REQUEST:
+          this.parseBridgeDistributionRequestLine(line, partsNoOpt);
           break;
         case FAMILY:
           this.parseFamilyLine(line, partsNoOpt);
@@ -392,6 +395,14 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
     } else {
       this.contact = "";
     }
+  }
+
+  private void parseBridgeDistributionRequestLine(String line,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length < 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.bridgeDistributionRequest = partsNoOpt[1];
   }
 
   private void parseFamilyLine(String line,
@@ -788,6 +799,13 @@ public abstract class ServerDescriptorImpl extends DescriptorImpl
   @Override
   public String getContact() {
     return this.contact;
+  }
+
+  private String bridgeDistributionRequest = null;
+
+  @Override
+  public String getBridgeDistributionRequest() {
+    return this.bridgeDistributionRequest;
   }
 
   private String[] familyEntries;

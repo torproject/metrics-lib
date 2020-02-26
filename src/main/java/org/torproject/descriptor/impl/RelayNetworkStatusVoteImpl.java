@@ -41,7 +41,8 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
         Key.REQUIRED_CLIENT_PROTOCOLS, Key.REQUIRED_RELAY_PROTOCOLS,
         Key.FLAG_THRESHOLDS, Key.PARAMS, Key.CONTACT,
         Key.SHARED_RAND_PARTICIPATE, Key.SHARED_RAND_PREVIOUS_VALUE,
-        Key.SHARED_RAND_CURRENT_VALUE, Key.LEGACY_KEY, Key.DIR_KEY_CROSSCERT,
+        Key.SHARED_RAND_CURRENT_VALUE, Key.BANDWIDTH_FILE_HEADERS,
+        Key.BANDWIDTH_FILE_DIGEST, Key.LEGACY_KEY, Key.DIR_KEY_CROSSCERT,
         Key.DIR_ADDRESS, Key.DIRECTORY_FOOTER);
     this.checkAtMostOnceKeys(atMostOnceKeys);
     this.checkAtLeastOnceKeys(EnumSet.of(Key.DIRECTORY_SIGNATURE));
@@ -132,6 +133,12 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
           break;
         case SHARED_RAND_CURRENT_VALUE:
           this.parseSharedRandCurrentValueLine(line, parts);
+          break;
+        case BANDWIDTH_FILE_HEADERS:
+          this.parseBandwidthFileHeaders(line, parts);
+          break;
+        case BANDWIDTH_FILE_DIGEST:
+          this.parseBandwidthFileDigest(line, parts);
           break;
         case DIR_KEY_CERTIFICATE_VERSION:
           this.parseDirKeyCertificateVersionLine(line, parts);
@@ -479,6 +486,24 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     this.sharedRandCurrentValue = parts[2];
   }
 
+  protected void parseBandwidthFileHeaders(String line, String[] parts)
+      throws DescriptorParseException {
+    this.bandwidthFileHeaders
+        = ParseHelper.parseKeyValueStringPairs(line, parts, 1);
+  }
+
+  protected void parseBandwidthFileDigest(String line, String[] parts)
+      throws DescriptorParseException {
+    for (int i = 1; i < parts.length; i++) {
+      String part = parts[i];
+      if (part.startsWith("sha256=")) {
+        /* 7 == "sha256=".length() */
+        ParseHelper.verifyThirtyTwoByteBase64String(line, part.substring(7));
+        this.bandwidthFileDigestSha256Base64 = part.substring(7);
+      }
+    }
+  }
+
   private void parseDirKeyCertificateVersionLine(String line,
       String[] parts) throws DescriptorParseException {
     if (parts.length != 2) {
@@ -660,6 +685,20 @@ public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
   @Override
   public String getSharedRandCurrentValue() {
     return this.sharedRandCurrentValue;
+  }
+
+  private SortedMap<String, String> bandwidthFileHeaders;
+
+  @Override
+  public SortedMap<String, String> getBandwidthFileHeaders() {
+    return this.bandwidthFileHeaders;
+  }
+
+  private String bandwidthFileDigestSha256Base64;
+
+  @Override
+  public String getBandwidthFileDigestSha256Base64() {
+    return this.bandwidthFileDigestSha256Base64;
   }
 
   private int dirKeyCertificateVersion;

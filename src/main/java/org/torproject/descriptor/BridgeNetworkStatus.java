@@ -117,6 +117,14 @@ public interface BridgeNetworkStatus extends Descriptor {
   int getIgnoringAdvertisedBws();
 
   /**
+   * Return a SHA-1 digest of the bridge authority's identity key, encoded as 40
+   * upper-case hexadecimal characters.
+   *
+   * @since 2.11.0
+   */
+  String getFingerprint();
+
+  /**
    * Return status entries for each contained bridge, with map keys being
    * SHA-1 digests of SHA-1 digest of the bridges' public identity keys,
    * encoded as 40 upper-case hexadecimal characters.

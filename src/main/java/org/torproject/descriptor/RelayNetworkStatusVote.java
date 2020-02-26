@@ -361,6 +361,26 @@ public interface RelayNetworkStatusVote extends Descriptor {
   String getSharedRandCurrentValue();
 
   /**
+   * Return the headers from the bandwidth file used to generate this vote, or
+   * null if the authority producing this vote is not configured with a
+   * bandwidth file or does not include the headers of the configured bandwidth
+   * file in its vote.
+   *
+   * @since 2.11.0
+   */
+  SortedMap<String, String> getBandwidthFileHeaders();
+
+  /**
+   * Return the SHA256 digest of the bandwidth file, encoded as 43 base64
+   * characters without padding characters, or null if the authority producing
+   * this vote is not configured with a bandwidth file or does not include the
+   * SHA256 digest of the configured bandwidth file in its vote.
+   *
+   * @since 2.11.0
+   */
+  String getBandwidthFileDigestSha256Base64();
+
+  /**
    * Return the version of the directory key certificate used by this
    * authority, which must be 3 or higher.
    *

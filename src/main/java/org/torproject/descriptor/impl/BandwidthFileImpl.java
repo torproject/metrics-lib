@@ -66,6 +66,7 @@ public class BandwidthFileImpl extends DescriptorImpl implements BandwidthFile {
         this.parseRelayLine(line);
       }
     }
+    this.calculateDigestSha256Base64();
   }
 
   private void parseTimestampLine(String line) throws DescriptorParseException {
@@ -255,6 +256,11 @@ public class BandwidthFileImpl extends DescriptorImpl implements BandwidthFile {
     }
     this.relayLines.add(new RelayLineImpl(nodeId, masterKeyEd25519, bw,
         additionalKeyValues.isEmpty() ? null : additionalKeyValues));
+  }
+
+  @Override
+  public String digestSha256Base64() {
+    return this.getDigestSha256Base64();
   }
 
   private LocalDateTime timestamp;

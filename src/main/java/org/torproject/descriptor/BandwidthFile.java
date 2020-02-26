@@ -18,6 +18,15 @@ import java.util.Optional;
 public interface BandwidthFile extends Descriptor {
 
   /**
+   * Return the SHA-256 bandwidth file digest, encoded as 43 base64 characters
+   * without padding characters, that is used to reference this bandwidth file
+   * from a vote.
+   *
+   * @since 2.11.0
+   */
+  String digestSha256Base64();
+
+  /**
    * Time of the most recent generator bandwidth result.
    *
    * @since 2.6.0

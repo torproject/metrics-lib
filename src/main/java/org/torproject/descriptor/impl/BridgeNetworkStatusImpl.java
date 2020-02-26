@@ -10,8 +10,10 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TimeZone;
 
@@ -24,6 +26,10 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
       throws DescriptorParseException {
     super(rawDescriptorBytes, offsetAndLength, descriptorFile, false);
     this.splitAndParseParts(false);
+    Set<Key> atMostOnceKeys = EnumSet.of(Key.PUBLISHED, Key.FLAG_THRESHOLDS,
+        Key.FINGERPRINT);
+    this.checkAtMostOnceKeys(atMostOnceKeys);
+    this.clearParsedKeys();
     this.setPublishedMillisFromFileName(fileName);
   }
 
@@ -84,6 +90,9 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
           break;
         case FLAG_THRESHOLDS:
           this.parseFlagThresholdsLine(line, parts);
+          break;
+        case FINGERPRINT:
+          this.parseFingerprintLine(line, parts);
           break;
         default:
           if (this.unrecognizedLines == null) {
@@ -149,6 +158,16 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
       throw new DescriptorParseException("Illegal value in line '"
           + line + "'.", ex);
     }
+  }
+
+  private void parseFingerprintLine(String line,
+      String[] partsNoOpt) throws DescriptorParseException {
+    if (partsNoOpt.length < 2) {
+      throw new DescriptorParseException("Illegal line '" + line
+          + "' in bridge network status.");
+    }
+    this.fingerprint = ParseHelper.parseTwentyByteHexString(line,
+        partsNoOpt[1]);
   }
 
   protected void parseDirSource(int offset, int length)
@@ -237,6 +256,13 @@ public class BridgeNetworkStatusImpl extends NetworkStatusImpl
   @Override
   public int getIgnoringAdvertisedBws() {
     return this.ignoringAdvertisedBws;
+  }
+
+  private String fingerprint;
+
+  @Override
+  public String getFingerprint() {
+    return this.fingerprint;
   }
 }
 

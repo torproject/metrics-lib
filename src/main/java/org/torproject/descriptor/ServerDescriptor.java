@@ -245,6 +245,14 @@ public interface ServerDescriptor extends Descriptor {
   String getContact();
 
   /**
+   * Return the method how a bridge requests to be distributed by BridgeDB, or
+   * {@code null} if no such request is contained in the descriptor.
+   *
+   * @since 2.11.0
+   */
+  String getBridgeDistributionRequest();
+
+  /**
    * Return nicknames, $-prefixed identity fingerprints, or tuples of the
    * format {@code $fingerprint=nickname} or {@code $fingerprint~nickname}
    * of servers contained in this server's family, or null if the
