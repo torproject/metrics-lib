@@ -11,6 +11,8 @@ import java.io.File;
 public class BridgeExtraInfoDescriptorImpl
     extends ExtraInfoDescriptorImpl implements BridgeExtraInfoDescriptor {
 
+  private static final long serialVersionUID = -1458417007735415506L;
+
   protected BridgeExtraInfoDescriptorImpl(byte[] descriptorBytes,
       int[] offsetAndLimit, File descriptorFile)
       throws DescriptorParseException {

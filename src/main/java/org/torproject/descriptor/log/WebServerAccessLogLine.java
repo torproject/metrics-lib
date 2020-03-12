@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 
 public class WebServerAccessLogLine implements WebServerAccessLog.Line {
 
+  private static final long serialVersionUID = 6160416810587561460L;
+
   private static final Logger log = LoggerFactory
       .getLogger(WebServerAccessLogLine.class);
 

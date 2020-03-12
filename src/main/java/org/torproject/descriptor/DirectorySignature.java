@@ -3,6 +3,8 @@
 
 package org.torproject.descriptor;
 
+import java.io.Serializable;
+
 /**
  * Contains the signature of a network status consensus or vote.
  *
@@ -13,7 +15,7 @@ package org.torproject.descriptor;
  *
  * @since 1.0.0
  */
-public interface DirectorySignature {
+public interface DirectorySignature extends Serializable {
 
   /**
    * Return the digest algorithm, which is "sha1" by default and which

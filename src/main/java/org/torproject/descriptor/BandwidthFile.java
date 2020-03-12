@@ -3,6 +3,7 @@
 
 package org.torproject.descriptor;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -223,7 +224,7 @@ public interface BandwidthFile extends Descriptor {
    */
   List<RelayLine> relayLines();
 
-  interface RelayLine {
+  interface RelayLine extends Serializable {
 
     /**
      * Fingerprint for the relay's RSA identity key.

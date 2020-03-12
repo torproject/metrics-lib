@@ -11,6 +11,8 @@ import java.util.TreeMap;
 
 public class KeyValueMap<T> extends TreeMap<String, T> {
 
+  private static final long serialVersionUID = 1124527355143605927L;
+
   private Class<T> clazz;
 
   public KeyValueMap(Class<T> clazz) {

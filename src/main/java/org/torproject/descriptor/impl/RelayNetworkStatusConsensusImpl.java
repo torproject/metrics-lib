@@ -22,6 +22,8 @@ import java.util.TreeSet;
 public class RelayNetworkStatusConsensusImpl extends NetworkStatusImpl
     implements RelayNetworkStatusConsensus {
 
+  private static final long serialVersionUID = -2852336205396172171L;
+
   protected RelayNetworkStatusConsensusImpl(byte[] consensusBytes,
       int[] offsetAndLimit, File descriptorFile)
       throws DescriptorParseException {

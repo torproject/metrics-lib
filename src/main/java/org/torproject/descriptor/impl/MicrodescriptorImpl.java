@@ -18,6 +18,8 @@ import java.util.Set;
 public class MicrodescriptorImpl extends DescriptorImpl
     implements Microdescriptor {
 
+  private static final long serialVersionUID = 7792584185486747094L;
+
   protected MicrodescriptorImpl(byte[] descriptorBytes, int[] offsetAndLength,
       File descriptorFile)
       throws DescriptorParseException {

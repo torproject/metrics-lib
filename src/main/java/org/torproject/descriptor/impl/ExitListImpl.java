@@ -18,6 +18,8 @@ import java.util.TimeZone;
 
 public class ExitListImpl extends DescriptorImpl implements ExitList {
 
+  private static final long serialVersionUID = 4227448935362502463L;
+
   protected ExitListImpl(byte[] rawDescriptorBytes, File descriptorfile,
       String fileName) throws DescriptorParseException {
     super(rawDescriptorBytes, new int[] { 0, rawDescriptorBytes.length },

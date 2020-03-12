@@ -16,6 +16,8 @@ import java.util.TreeSet;
 
 public class ExitListEntryImpl implements ExitList.Entry {
 
+  private static final long serialVersionUID = 9014559583423738584L;
+
   private String exitListEntryString;
 
   private List<String> unrecognizedLines;

@@ -3,6 +3,7 @@
 
 package org.torproject.descriptor;
 
+import java.io.Serializable;
 import java.util.SortedMap;
 
 /**
@@ -14,7 +15,7 @@ import java.util.SortedMap;
  *
  * @since 1.0.0
  */
-public interface BandwidthHistory {
+public interface BandwidthHistory extends Serializable {
 
   /**
    * Return the original bandwidth history line as contained in the

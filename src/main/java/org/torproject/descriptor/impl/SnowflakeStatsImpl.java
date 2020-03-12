@@ -19,6 +19,8 @@ import java.util.SortedMap;
 public class SnowflakeStatsImpl extends DescriptorImpl
     implements SnowflakeStats {
 
+  private static final long serialVersionUID = 5588809239715099933L;
+
   private static final Set<Key> atMostOnce = EnumSet.of(
       Key.SNOWFLAKE_IPS, Key.SNOWFLAKE_IPS_TOTAL, Key.SNOWFLAKE_IPS_STANDALONE,
       Key.SNOWFLAKE_IPS_BADGE, Key.SNOWFLAKE_IPS_WEBEXT,

@@ -11,6 +11,8 @@ import java.util.TreeMap;
 
 public class BandwidthHistoryImpl implements BandwidthHistory {
 
+  private static final long serialVersionUID = -5266052169817153234L;
+
   protected BandwidthHistoryImpl(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     boolean isValid = false;

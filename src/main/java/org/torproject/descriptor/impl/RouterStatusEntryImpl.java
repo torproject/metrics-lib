@@ -7,6 +7,8 @@ import org.torproject.descriptor.RouterStatusEntry;
 
 public class RouterStatusEntryImpl implements RouterStatusEntry {
 
+  private static final long serialVersionUID = 4362115843485982121L;
+
   protected RouterStatusEntryImpl(String fingerprint, String nickname,
       boolean isLive, boolean isVerified) {
     this.fingerprint = fingerprint;

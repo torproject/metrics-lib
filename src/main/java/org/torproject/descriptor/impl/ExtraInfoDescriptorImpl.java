@@ -23,6 +23,8 @@ import java.util.TreeMap;
 public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     implements ExtraInfoDescriptor {
 
+  private static final long serialVersionUID = -4720810362228341775L;
+
   private Set<Key> exactlyOnceKeys = EnumSet.of(
       Key.EXTRA_INFO, Key.PUBLISHED);
 
@@ -607,22 +609,7 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private SortedMap<String, Long> sortByPorts(
       SortedMap<String, Long> naturalOrder) {
     SortedMap<String, Long> byPortNumber =
-        new TreeMap<>((arg0, arg1) -> {
-          int port0;
-          int port1;
-          try {
-            port1 = Integer.parseInt(arg1);
-          } catch (NumberFormatException e) {
-            return -1;
-          }
-          try {
-            port0 = Integer.parseInt(arg0);
-          } catch (NumberFormatException e) {
-            return 1;
-          }
-          return Integer.compare(port0, port1);
-        }
-        );
+        new TreeMap<>(new ExitStatisticsPortComparator());
     byPortNumber.putAll(naturalOrder);
     return byPortNumber;
   }

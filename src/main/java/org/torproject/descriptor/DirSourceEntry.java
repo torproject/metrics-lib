@@ -3,6 +3,8 @@
 
 package org.torproject.descriptor;
 
+import java.io.Serializable;
+
 /**
  * Contains details about an authority and its vote that contributed to a
  * consensus.
@@ -13,7 +15,7 @@ package org.torproject.descriptor;
  *
  * @since 1.0.0
  */
-public interface DirSourceEntry {
+public interface DirSourceEntry extends Serializable {
 
   /**
    * Return the raw directory source entry bytes.

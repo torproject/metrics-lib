@@ -33,6 +33,8 @@ import java.util.stream.Stream;
 public class WebServerAccessLogImpl extends LogDescriptorImpl
     implements InternalWebServerAccessLog, WebServerAccessLog {
 
+  private static final long serialVersionUID = 7528914359452568309L;
+
   private static final Logger log
       = LoggerFactory.getLogger(WebServerAccessLogImpl.class);
 

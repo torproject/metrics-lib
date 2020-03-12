@@ -21,6 +21,8 @@ import java.util.TreeMap;
  * delegate the specific parts to the subclasses. */
 public abstract class NetworkStatusImpl extends DescriptorImpl {
 
+  private static final long serialVersionUID = -2208207369822099643L;
+
   protected Map<String, Integer> flagIndexes = new HashMap<>();
 
   protected Map<Integer, String> flagStrings = new HashMap<>();

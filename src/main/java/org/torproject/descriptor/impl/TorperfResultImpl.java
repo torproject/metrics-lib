@@ -21,6 +21,8 @@ import java.util.TreeMap;
 public class TorperfResultImpl extends DescriptorImpl
     implements TorperfResult {
 
+  private static final long serialVersionUID = 8961567618137500044L;
+
   protected static List<Descriptor> parseTorperfResults(
       byte[] rawDescriptorBytes, File descriptorFile)
       throws DescriptorParseException {

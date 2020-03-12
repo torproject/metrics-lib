@@ -11,6 +11,8 @@ import java.io.File;
 public class RelayServerDescriptorImpl extends ServerDescriptorImpl
     implements RelayServerDescriptor {
 
+  private static final long serialVersionUID = -8871465152198614055L;
+
   protected RelayServerDescriptorImpl(byte[] descriptorBytes,
       int[] offsetAndLength, File descriptorFile)
       throws DescriptorParseException {

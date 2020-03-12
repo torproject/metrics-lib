@@ -4,6 +4,7 @@
 package org.torproject.descriptor;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @since 1.0.0
  */
-public interface Descriptor {
+public interface Descriptor extends Serializable {
 
   /**
    * Return the raw descriptor bytes.

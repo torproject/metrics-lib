@@ -3,6 +3,7 @@
 
 package org.torproject.descriptor;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
@@ -23,7 +24,7 @@ import java.util.SortedSet;
  *
  * @since 1.0.0
  */
-public interface NetworkStatusEntry {
+public interface NetworkStatusEntry extends Serializable {
 
   /**
    * Return the raw network status entry bytes.

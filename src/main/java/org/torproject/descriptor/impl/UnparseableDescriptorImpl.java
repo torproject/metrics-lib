@@ -12,6 +12,8 @@ import java.util.List;
 public class UnparseableDescriptorImpl extends DescriptorImpl
     implements UnparseableDescriptor {
 
+  private static final long serialVersionUID = 7750009166142114121L;
+
   protected UnparseableDescriptorImpl(byte[] rawDescriptorBytes,
       int[] offsetAndLength, File descriptorFile,
       DescriptorParseException descriptorParseException) {

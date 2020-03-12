@@ -21,6 +21,8 @@ import java.util.TimeZone;
 public class BridgeNetworkStatusImpl extends NetworkStatusImpl
     implements BridgeNetworkStatus {
 
+  private static final long serialVersionUID = -6468907268677472808L;
+
   protected BridgeNetworkStatusImpl(byte[] rawDescriptorBytes,
       int[] offsetAndLength, File descriptorFile, String fileName)
       throws DescriptorParseException {

@@ -17,6 +17,8 @@ import java.util.Set;
 
 public class DirSourceEntryImpl implements DirSourceEntry {
 
+  private static final long serialVersionUID = 7276698015074138852L;
+
   private DescriptorImpl parent;
 
   private int offset;

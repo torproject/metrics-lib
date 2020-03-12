@@ -22,6 +22,8 @@ import java.util.SortedSet;
 public abstract class ServerDescriptorImpl extends DescriptorImpl
     implements ServerDescriptor {
 
+  private static final long serialVersionUID = 5240701284736998121L;
+
   private static final Set<Key> atMostOnce = EnumSet.of(
       Key.IDENTITY_ED25519, Key.MASTER_KEY_ED25519, Key.PLATFORM, Key.PROTO,
       Key.FINGERPRINT, Key.HIBERNATING, Key.UPTIME, Key.CONTACT, Key.FAMILY,

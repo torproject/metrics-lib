@@ -11,6 +11,8 @@ import java.io.File;
 public class RelayExtraInfoDescriptorImpl
     extends ExtraInfoDescriptorImpl implements RelayExtraInfoDescriptor {
 
+  private static final long serialVersionUID = 2526561625458492428L;
+
   protected RelayExtraInfoDescriptorImpl(byte[] descriptorBytes,
       int[] offsetAndLimit, File descriptorFile)
       throws DescriptorParseException {

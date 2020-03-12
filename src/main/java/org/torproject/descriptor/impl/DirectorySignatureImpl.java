@@ -15,6 +15,8 @@ import java.util.Scanner;
 
 public class DirectorySignatureImpl implements DirectorySignature {
 
+  private static final long serialVersionUID = -1084841439595622290L;
+
   private DescriptorImpl parent;
 
   private int offset;

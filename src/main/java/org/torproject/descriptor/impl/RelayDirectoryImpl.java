@@ -18,6 +18,8 @@ import java.util.Set;
 public class RelayDirectoryImpl extends DescriptorImpl
     implements RelayDirectory {
 
+  private static final long serialVersionUID = -6770225160489757961L;
+
   protected RelayDirectoryImpl(byte[] directoryBytes, int[] offsetAndLength,
       File descriptorFile) throws DescriptorParseException {
     super(directoryBytes, offsetAndLength, descriptorFile, true);

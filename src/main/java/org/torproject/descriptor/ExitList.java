@@ -3,6 +3,7 @@
 
 package org.torproject.descriptor;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public interface ExitList extends Descriptor {
    *
    * @since 1.1.0
    */
-  interface Entry {
+  interface Entry extends Serializable {
 
     /**
      * Return the scanned relay's fingerprint, which is a SHA-1 digest of

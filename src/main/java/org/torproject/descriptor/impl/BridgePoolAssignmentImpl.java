@@ -15,6 +15,8 @@ import java.util.TreeMap;
 public class BridgePoolAssignmentImpl extends DescriptorImpl
     implements BridgePoolAssignment {
 
+  private static final long serialVersionUID = -8370471568586190472L;
+
   protected BridgePoolAssignmentImpl(byte[] rawDescriptorBytes,
       int[] offsetAndlength, File descriptorFile)
       throws DescriptorParseException {

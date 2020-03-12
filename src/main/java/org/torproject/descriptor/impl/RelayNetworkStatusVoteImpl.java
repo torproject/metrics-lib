@@ -23,6 +23,8 @@ import java.util.TreeSet;
 public class RelayNetworkStatusVoteImpl extends NetworkStatusImpl
     implements RelayNetworkStatusVote {
 
+  private static final long serialVersionUID = -39488588769922984L;
+
   protected RelayNetworkStatusVoteImpl(byte[] voteBytes, int[] offsetAndLength,
       File descriptorFile)
       throws DescriptorParseException {

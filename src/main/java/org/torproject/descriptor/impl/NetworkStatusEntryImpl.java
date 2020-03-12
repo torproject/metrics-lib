@@ -23,6 +23,8 @@ import java.util.TreeSet;
 
 public class NetworkStatusEntryImpl implements NetworkStatusEntry {
 
+  private static final long serialVersionUID = 8531564655041660420L;
+
   private DescriptorImpl parent;
 
   private int offset;

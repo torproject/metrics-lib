@@ -20,6 +20,8 @@ import java.util.Set;
 public class BridgedbMetricsImpl extends DescriptorImpl
     implements BridgedbMetrics {
 
+  private static final long serialVersionUID = 3899169611574577173L;
+
   private static final Set<Key> exactlyOnce = EnumSet.of(
       Key.BRIDGEDB_METRICS_END, Key.BRIDGEDB_METRICS_VERSION);
 

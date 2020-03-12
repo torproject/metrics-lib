@@ -19,6 +19,8 @@ import java.util.TreeSet;
 public class RelayNetworkStatusImpl extends NetworkStatusImpl
     implements RelayNetworkStatus {
 
+  private static final long serialVersionUID = 2872005332125710108L;
+
   protected RelayNetworkStatusImpl(byte[] statusBytes, int[] offsetAndLength,
       File descriptorFile) throws DescriptorParseException {
     super(statusBytes, offsetAndLength, descriptorFile, true);

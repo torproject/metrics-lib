@@ -15,6 +15,8 @@ import java.util.Set;
 public class DirectoryKeyCertificateImpl extends DescriptorImpl
     implements DirectoryKeyCertificate {
 
+  private static final long serialVersionUID = 1375140776886611946L;
+
   protected DirectoryKeyCertificateImpl(byte[] rawDescriptorBytes,
       int[] offsetAndLength, File descriptorFile)
       throws DescriptorParseException {
