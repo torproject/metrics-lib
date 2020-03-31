@@ -21,7 +21,7 @@ import java.util.TimeZone;
  */
 public class FileNode implements Comparable<FileNode> {
 
-  private static Logger log = LoggerFactory.getLogger(FileNode.class);
+  private static final Logger logger = LoggerFactory.getLogger(FileNode.class);
 
   /** Path (i.e. file name) is exposed in JSON. */
   public final String path;
@@ -70,9 +70,9 @@ public class FileNode implements Comparable<FileNode> {
       try {
         lastModifiedMillis = dateTimeFormat.parse(this.lastModified).getTime();
       } catch (ParseException ex) {
-        log.warn("Cannot parse last-modified time {} of remote file entry {}.  "
-            + "Fetching remote file regardless of configured last-modified "
-            + "time.  The following error message provides more details.",
+        logger.warn("Cannot parse last-modified time {} of remote file entry "
+            + "{}. Fetching remote file regardless of configured last-modified "
+            + "time. The following error message provides more details.",
             this.lastModified, this.path, ex);
         this.lastModifiedMillis = -1L;
       }

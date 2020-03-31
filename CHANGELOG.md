@@ -9,6 +9,7 @@
  * Minor changes
    - Avoid invoking overridable methods from constructors.
    - Make all descriptor instances serializable.
+   - Simplify logging configuration.
 
 
 # Changes in version 2.10.0 - 2020-01-15

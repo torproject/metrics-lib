@@ -23,7 +23,7 @@ import java.util.List;
 
 public class DescriptorParserImpl implements DescriptorParser {
 
-  private static final Logger log
+  private static final Logger logger
       = LoggerFactory.getLogger(DescriptorParserImpl.class);
 
   @Override
@@ -33,7 +33,7 @@ public class DescriptorParserImpl implements DescriptorParser {
       return this.detectTypeAndParseDescriptors(rawDescriptorBytes,
           sourceFile, fileName);
     } catch (DescriptorParseException e) {
-      log.debug("Cannot parse descriptor file '{}'.", sourceFile, e);
+      logger.debug("Cannot parse descriptor file '{}'.", sourceFile, e);
       List<Descriptor> parsedDescriptors = new ArrayList<>();
       parsedDescriptors.add(new UnparseableDescriptorImpl(rawDescriptorBytes,
           new int[] { 0, rawDescriptorBytes.length }, sourceFile, e));

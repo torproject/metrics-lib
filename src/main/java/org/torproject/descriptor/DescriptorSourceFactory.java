@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class DescriptorSourceFactory {
 
-  private static Logger log = LoggerFactory.getLogger(
+  private static final Logger logger = LoggerFactory.getLogger(
       DescriptorSourceFactory.class);
 
   /**
@@ -147,7 +147,7 @@ public final class DescriptorSourceFactory {
       }
       object = ClassLoader.getSystemClassLoader().loadClass(clazzName)
           .getDeclaredConstructor().newInstance();
-      log.info("Serving implementation {} for {}.", clazzName, type);
+      logger.debug("Serving implementation {} for {}.", clazzName, type);
     } catch (ReflectiveOperationException ex) {
       throw new RuntimeException("Cannot load class "
           + clazzName + "for type " + type, ex);

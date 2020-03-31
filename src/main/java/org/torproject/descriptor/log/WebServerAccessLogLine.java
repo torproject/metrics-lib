@@ -25,7 +25,7 @@ public class WebServerAccessLogLine implements WebServerAccessLog.Line {
 
   private static final long serialVersionUID = 6160416810587561460L;
 
-  private static final Logger log = LoggerFactory
+  private static final Logger logger = LoggerFactory
       .getLogger(WebServerAccessLogLine.class);
 
   private static final String DATE_PATTERN = "dd/MMM/yyyy";
@@ -153,7 +153,7 @@ public class WebServerAccessLogLine implements WebServerAccessLog.Line {
         res.valid = true;
       }
     } catch (Throwable th) {
-      log.debug("Unmatchable line: '{}'.", line, th);
+      logger.debug("Unmatchable line: '{}'.", line, th);
       return new WebServerAccessLogLine();
     }
     return res;

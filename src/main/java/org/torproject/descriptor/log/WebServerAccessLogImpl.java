@@ -7,9 +7,6 @@ import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.WebServerAccessLog;
 import org.torproject.descriptor.internal.FileType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -34,9 +31,6 @@ public class WebServerAccessLogImpl extends LogDescriptorImpl
     implements InternalWebServerAccessLog, WebServerAccessLog {
 
   private static final long serialVersionUID = 7528914359452568309L;
-
-  private static final Logger log
-      = LoggerFactory.getLogger(WebServerAccessLogImpl.class);
 
   /** The log's name should include this string. */
   public static final String MARKER = InternalWebServerAccessLog.MARKER;

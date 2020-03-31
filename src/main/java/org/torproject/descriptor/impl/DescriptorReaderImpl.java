@@ -36,10 +36,8 @@ import java.util.TreeMap;
 
 public class DescriptorReaderImpl implements DescriptorReader {
 
-  private static Logger log = LoggerFactory.getLogger(
+  private static final Logger logger = LoggerFactory.getLogger(
       DescriptorReaderImpl.class);
-
-  private static Logger statisticsLog = LoggerFactory.getLogger("statistics");
 
   private boolean hasStartedReading = false;
 
@@ -161,8 +159,8 @@ public class DescriptorReaderImpl implements DescriptorReader {
         this.readTarballs();
         this.hasFinishedReading = true;
       } catch (Throwable t) {
-        log.error("Bug: uncaught exception or error while reading descriptors.",
-            t);
+        logger.error("Bug: uncaught exception or error while reading "
+            + "descriptors.", t);
       } finally {
         if (null != this.descriptorQueue) {
           this.descriptorQueue.setOutOfDescriptors();
@@ -180,7 +178,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
             StandardCharsets.UTF_8);
         for (String line : lines) {
           if (!line.contains(" ")) {
-            log.warn("Unexpected line structure in old history: {}", line);
+            logger.warn("Unexpected line structure in old history: {}", line);
             continue;
           }
           long lastModifiedMillis = Long.parseLong(line.substring(0,
@@ -189,7 +187,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
           this.excludedFilesBefore.put(absolutePath, lastModifiedMillis);
         }
       } catch (IOException | NumberFormatException e) {
-        log.warn("Trouble reading given history file {}.", historyFile, e);
+        logger.warn("Trouble reading given history file {}.", historyFile, e);
       }
     }
 
@@ -212,7 +210,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
           bw.newLine();
         }
       } catch (IOException e) {
-        log.warn("Trouble writing new history file '{}'.",
+        logger.warn("Trouble writing new history file '{}'.",
             historyFile, e);
       }
     }
@@ -250,7 +248,7 @@ public class DescriptorReaderImpl implements DescriptorReader {
             }
             this.parsedFilesAfter.put(absolutePath, lastModifiedMillis);
           } catch (IOException e) {
-            log.warn("Unable to read descriptor file {}.", file, e);
+            logger.warn("Unable to read descriptor file {}.", file, e);
           }
         }
       }
@@ -271,13 +269,13 @@ public class DescriptorReaderImpl implements DescriptorReader {
           this.parsedFilesAfter.put(tarball.getAbsolutePath(),
               tarball.lastModified());
         } catch (IOException e) {
-          log.warn("Unable to read tarball {}.", tarball, e);
+          logger.warn("Unable to read tarball {}.", tarball, e);
         }
         long previousPercentDone = 100L * progress / total;
         progress += tarball.length();
         long percentDone = 100L * progress / total;
         if (percentDone > previousPercentDone) {
-          statisticsLog.info("Finished reading {}% of tarball bytes.",
+          logger.info("Finished reading {}% of tarball bytes.",
               percentDone);
         }
       }

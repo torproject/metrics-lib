@@ -8,9 +8,6 @@ import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.LogDescriptor;
 import org.torproject.descriptor.internal.FileType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -36,9 +33,6 @@ public abstract class LogDescriptorImpl
   public static final String MARKER = ".log";
 
   private static final int unrecognizedLinesLimit = 3;
-
-  private static final Logger log
-      = LoggerFactory.getLogger(LogDescriptorImpl.class);
 
   private static Pattern filenamePattern = Pattern.compile(
       "(?:\\S*)" + MARKER + SEP + "(?:[0-9a-zA-Z]*)(?:\\.?)([a-zA-Z2]*)");

@@ -14,9 +14,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,8 +35,6 @@ import java.util.TreeSet;
  */
 @JsonPropertyOrder({ "created", "revision", "path", "directories", "files" })
 public class IndexNode {
-
-  private static Logger log = LoggerFactory.getLogger(IndexNode.class);
 
   private static final int READ_TIMEOUT = Integer.parseInt(System
       .getProperty("sun.net.client.defaultReadTimeout", "60000"));
