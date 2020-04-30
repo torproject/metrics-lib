@@ -131,9 +131,6 @@ public class DescriptorParserImpl implements DescriptorParser {
     } else if (firstLines.startsWith("@type torperf 1.")) {
       return TorperfResultImpl.parseTorperfResults(rawDescriptorBytes,
           sourceFile);
-    } else if (fileName.endsWith(".onionperf.analysis.json.xz")) {
-      return new OnionPerfAnalysisConverter(rawDescriptorBytes, sourceFile)
-          .asTorperfResults();
     } else if (firstLines.startsWith("@type snowflake-stats 1.")
         || firstLines.startsWith(Key.SNOWFLAKE_STATS_END.keyword + SP)
         || firstLines.contains(NL + Key.SNOWFLAKE_STATS_END.keyword + SP)) {
@@ -144,8 +141,6 @@ public class DescriptorParserImpl implements DescriptorParser {
         || firstLines.contains(NL + Key.BRIDGEDB_METRICS_END.keyword + SP)) {
       return this.parseOneOrMoreDescriptors(rawDescriptorBytes, sourceFile,
           Key.BRIDGEDB_METRICS_END, BridgedbMetricsImpl.class);
-    } else if (fileName.contains(LogDescriptorImpl.MARKER)) {
-      return LogDescriptorImpl.parse(rawDescriptorBytes, sourceFile, fileName);
     } else if (firstLines.startsWith("@type bandwidth-file 1.")
         || firstLines.matches("(?s)[0-9]{10}\\n.*")) {
       /* Identifying bandwidth files by a 10-digit timestamp in the first line
@@ -156,6 +151,14 @@ public class DescriptorParserImpl implements DescriptorParser {
       parsedDescriptors.add(new BandwidthFileImpl(rawDescriptorBytes,
           sourceFile));
       return parsedDescriptors;
+    } else if (null != fileName
+        && fileName.contains(LogDescriptorImpl.MARKER)) {
+      return LogDescriptorImpl.parse(rawDescriptorBytes, sourceFile,
+          fileName);
+    } else if (null != fileName
+        && fileName.endsWith(".onionperf.analysis.json.xz")) {
+      return new OnionPerfAnalysisConverter(rawDescriptorBytes, sourceFile)
+          .asTorperfResults();
     } else {
       throw new DescriptorParseException("Could not detect descriptor "
           + "type in descriptor starting with '" + firstLines + "'.");
