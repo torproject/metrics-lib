@@ -1,4 +1,8 @@
-# Changes in version 2.??.? - 2020-??-??
+# Changes in version 2.12.2 - 2020-04-30
+
+ * Minor changes
+   - Change the order of detecting descriptor types by content and/
+     file name.
 
 
 # Changes in version 2.12.1 - 2020-04-30
