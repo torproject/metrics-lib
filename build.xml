@@ -7,7 +7,7 @@
 <project default="usage" name="metrics-lib" basedir="."
          xmlns:ivy="antlib:org.apache.ivy.ant">
 
-  <property name="release.version" value="2.12.2" />
+  <property name="release.version" value="2.12.2-dev" />
   <property name="javadoc-title" value="Tor Metrics Library API Documentation"/>
   <property name="javadoc-excludes" value="**/impl/** **/index/** **/internal/** **/log/**" />
   <property name="implementation-title" value="Tor Metrics Library" />
