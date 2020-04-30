@@ -23,7 +23,16 @@ public class TorperfResultImpl extends DescriptorImpl
 
   private static final long serialVersionUID = 8961567618137500044L;
 
-  protected static List<Descriptor> parseTorperfResults(
+  /**
+   * Parse the given descriptor to one or more {@link TorperfResult} instances.
+   *
+   * @param rawDescriptorBytes Bytes to parse
+   * @param descriptorFile Descriptor file containing the given bytes
+   * @return Parsed {@link TorperfResult} instances
+   * @throws DescriptorParseException Thrown if any of the lines cannot be
+   *     parsed.
+   */
+  public static List<Descriptor> parseTorperfResults(
       byte[] rawDescriptorBytes, File descriptorFile)
       throws DescriptorParseException {
     if (rawDescriptorBytes.length == 0) {

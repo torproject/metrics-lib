@@ -10,6 +10,7 @@ import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.DescriptorParser;
 import org.torproject.descriptor.log.LogDescriptorImpl;
+import org.torproject.descriptor.onionperf.OnionPerfAnalysisConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,6 +131,9 @@ public class DescriptorParserImpl implements DescriptorParser {
     } else if (firstLines.startsWith("@type torperf 1.")) {
       return TorperfResultImpl.parseTorperfResults(rawDescriptorBytes,
           sourceFile);
+    } else if (fileName.endsWith(".onionperf.analysis.json.xz")) {
+      return new OnionPerfAnalysisConverter(rawDescriptorBytes, sourceFile)
+          .asTorperfResults();
     } else if (firstLines.startsWith("@type snowflake-stats 1.")
         || firstLines.startsWith(Key.SNOWFLAKE_STATS_END.keyword + SP)
         || firstLines.contains(NL + Key.SNOWFLAKE_STATS_END.keyword + SP)) {

@@ -170,9 +170,9 @@ public interface TorperfResult extends Descriptor {
   List<String> getPath();
 
   /**
-   * Return a list of times in milliseconds since the epoch when circuit
-   * hops were built, or null if the torperf line didn't contain that
-   * information.
+   * Return a list of times in milliseconds between launching the circuit and
+   * extending to the next circuit hop, or null if the torperf line didn't
+   * contain that information.
    *
    * @since 1.0.0
    */

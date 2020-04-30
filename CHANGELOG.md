@@ -1,5 +1,9 @@
 # Changes in version 2.??.? - 2020-??-??
 
+ * Medium changes
+   - Add parsing support for OnionPerf analysis files by converting
+     and returning contained transfers as Torperf results.
+
 
 # Changes in version 2.11.0 - 2020-04-13
 
