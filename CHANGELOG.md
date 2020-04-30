@@ -1,4 +1,4 @@
-# Changes in version 2.??.? - 2020-??-??
+# Changes in version 2.12.1 - 2020-04-30
 
  * Minor changes
    - Change back how we treat xz-compressed files by leaving
