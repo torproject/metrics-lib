@@ -1,3 +1,6 @@
+# Changes in version 2.??.? - 2020-??-??
+
+
 # Changes in version 2.12.0 - 2020-04-30
 
  * Medium changes
