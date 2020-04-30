@@ -7,8 +7,13 @@ import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.impl.TorperfResultImpl;
 
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+import org.apache.commons.compress.utils.IOUtils;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,8 +71,13 @@ public class OnionPerfAnalysisConverter {
   public List<Descriptor> asTorperfResults() throws DescriptorParseException {
     ParsedOnionPerfAnalysis parsedOnionPerfAnalysis;
     try {
-      parsedOnionPerfAnalysis = ParsedOnionPerfAnalysis.fromBytes(
+      InputStream compressedInputStream = new ByteArrayInputStream(
           this.rawDescriptorBytes);
+      InputStream decompressedInputStream = new XZCompressorInputStream(
+          compressedInputStream);
+      byte[] decompressedBytes = IOUtils.toByteArray(decompressedInputStream);
+      parsedOnionPerfAnalysis = ParsedOnionPerfAnalysis.fromBytes(
+          decompressedBytes);
     } catch (IOException ioException) {
       throw new DescriptorParseException("Ran into an I/O error while "
           + "attempting to parse an OnionPerf analysis document.",

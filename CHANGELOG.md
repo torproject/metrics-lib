@@ -1,5 +1,9 @@
 # Changes in version 2.??.? - 2020-??-??
 
+ * Minor changes
+   - Change back how we treat xz-compressed files by leaving
+     decompression to descriptor implementations.
+
 
 # Changes in version 2.12.0 - 2020-04-30
 

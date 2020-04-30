@@ -330,8 +330,6 @@ public class DescriptorReaderImpl implements DescriptorReader {
         InputStream is = fis;
         if (file.getName().endsWith(".gz")) {
           is = new GzipCompressorInputStream(fis);
-        } else if (file.getName().endsWith(".xz")) {
-          is = new XZCompressorInputStream(fis);
         }
         byte[] rawDescriptorBytes = IOUtils.toByteArray(is);
         if (rawDescriptorBytes.length > 0) {

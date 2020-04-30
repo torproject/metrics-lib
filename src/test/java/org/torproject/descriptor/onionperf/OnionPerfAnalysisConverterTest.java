@@ -10,7 +10,6 @@ import org.torproject.descriptor.Descriptor;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.TorperfResult;
 
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.Test;
 
@@ -88,9 +87,7 @@ public class OnionPerfAnalysisConverterTest {
     assertNotNull(resouce);
     InputStream compressedInputStream = resouce.openStream();
     assertNotNull(compressedInputStream);
-    InputStream uncompressedInputStream = new XZCompressorInputStream(
-        compressedInputStream);
-    byte[] rawDescriptorBytes = IOUtils.toByteArray(uncompressedInputStream);
+    byte[] rawDescriptorBytes = IOUtils.toByteArray(compressedInputStream);
     OnionPerfAnalysisConverter onionPerfAnalysisConverter
         = new OnionPerfAnalysisConverter(rawDescriptorBytes, null);
     for (Descriptor descriptor
