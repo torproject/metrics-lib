@@ -127,18 +127,6 @@ public class OnionPerfAnalysisConverter {
   private StringBuilder formatTorperfResults(
       ParsedOnionPerfAnalysis parsedOnionPerfAnalysis) {
     StringBuilder formattedTorperfResults = new StringBuilder();
-    Map<String, String> errorCodes = new HashMap<>();
-    errorCodes.put("AUTH", "TGEN/AUTH");
-    errorCodes.put("READ", "TGEN/READ");
-    errorCodes.put("STALLOUT", "TGEN/STALLOUT");
-    errorCodes.put("TIMEOUT", "TGEN/TIMEOUT");
-    errorCodes.put("PROXY", "TOR");
-    errorCodes.put("PROXY_CANT_ATTACH", "TOR/CANT_ATTACH");
-    errorCodes.put("PROXY_DESTROY", "TOR/DESTROY");
-    errorCodes.put("PROXY_END_TIMEOUT", "TOR/END/TIMEOUT");
-    errorCodes.put("PROXY_END_CONNECTREFUSED", "TOR/END/CONNECTREFUSED");
-    errorCodes.put("PROXY_RESOLVEFAILED", "TOR/RESOLVEFAILED");
-    errorCodes.put("PROXY_TIMEOUT", "TOR/TIMEOUT");
     for (Map.Entry<String, ParsedOnionPerfAnalysis.MeasurementData> data
         : parsedOnionPerfAnalysis.data.entrySet()) {
       String nickname = data.getKey();
@@ -183,7 +171,12 @@ public class OnionPerfAnalysisConverter {
         List<String> errorCodeParts = null;
         if (transfer.isError) {
           errorCodeParts = new ArrayList<>();
-          errorCodeParts.add(transfer.errorCode);
+          if ("PROXY".equals(transfer.errorCode)) {
+            errorCodeParts.add("TOR");
+          } else {
+            errorCodeParts.add("TGEN");
+            errorCodeParts.add(transfer.errorCode);
+          }
         }
         String sourcePort = endpointLocalParts[2];
         if (streamsBySourcePort.containsKey(sourcePort)) {
@@ -207,9 +200,8 @@ public class OnionPerfAnalysisConverter {
           }
         }
         if (null != errorCodeParts) {
-          String errorCode = String.join("_", errorCodeParts);
-          torperfResultsBuilder.addString("ERRORCODE",
-              errorCodes.getOrDefault(errorCode, errorCode));
+          String errorCode = String.join("/", errorCodeParts);
+          torperfResultsBuilder.addString("ERRORCODE", errorCode);
         }
         formattedTorperfResults.append(torperfResultsBuilder.build());
       }

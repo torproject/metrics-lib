@@ -1,5 +1,9 @@
 # Changes in version 2.??.? - 2020-??-??
 
+ * Minor changes
+   - Include previously unknown error codes in Torperf results
+     converted from OnionPerf analysis files.
+
 
 # Changes in version 2.12.2 - 2020-04-30
 
