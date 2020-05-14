@@ -1,4 +1,8 @@
-# Changes in version 2.??.? - 2020-??-??
+# Changes in version 2.13.0 - 2020-??-??
+
+ * Medium changes
+   - Extend Torperf results to provide partial download times for 10,
+     20, 50, 100, 200, and 500 KiB as well as 1, 2, and 5 MiB.
 
  * Minor changes
    - Include previously unknown error codes in Torperf results

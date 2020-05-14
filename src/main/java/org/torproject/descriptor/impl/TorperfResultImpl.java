@@ -185,6 +185,8 @@ public class TorperfResultImpl extends DescriptorImpl
         default:
           if (key.startsWith("DATAPERC")) {
             this.parseDataPercentile(value, keyValue, line);
+          } else if (key.startsWith("PARTIAL")) {
+            this.parsePartial(value, keyValue, line);
           } else {
             if (this.unrecognizedKeys == null) {
               this.unrecognizedKeys = new TreeMap<>();
@@ -310,6 +312,31 @@ public class TorperfResultImpl extends DescriptorImpl
       default:
         throw new DescriptorParseException("Illegal value in '" + keyValue
             + "' in line '" + line + "'.");
+    }
+  }
+
+  private void parsePartial(String value, String keyValue, String line)
+      throws DescriptorParseException {
+    String key = keyValue.substring(0, keyValue.indexOf("="));
+    String bytesString = key.substring("PARTIAL".length());
+    int bytes;
+    try {
+      bytes = Integer.parseInt(bytesString);
+    } catch (NumberFormatException e) {
+      /* Treat key as unrecognized below. */
+      bytes = -1;
+    }
+    if (bytes < 0) {
+      if (this.unrecognizedKeys == null) {
+        this.unrecognizedKeys = new TreeMap<>();
+      }
+      this.unrecognizedKeys.put(key, value);
+    } else {
+      long timestamp = this.parseTimestamp(value, keyValue, line);
+      if (this.partials == null) {
+        this.partials = new TreeMap<>();
+      }
+      this.partials.put(bytes, timestamp);
     }
   }
 
@@ -562,6 +589,13 @@ public class TorperfResultImpl extends DescriptorImpl
   @Override
   public Boolean didTimeout() {
     return this.didTimeout;
+  }
+
+  private SortedMap<Integer, Long> partials;
+
+  @Override
+  public SortedMap<Integer, Long> getPartials() {
+    return this.partials == null ? null : new TreeMap<>(this.partials);
   }
 
   private SortedMap<Integer, Long> dataPercentiles;

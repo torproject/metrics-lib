@@ -200,6 +200,11 @@ public class ParsedOnionPerfAnalysis {
     Double lastByte;
 
     /**
+     * Time until the given number of bytes were read.
+     */
+    Map<String, Double> payloadBytes;
+
+    /**
      * Time until the given fraction of expected bytes were read.
      */
     Map<String, Double> payloadProgress;

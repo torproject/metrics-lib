@@ -32,7 +32,10 @@ public class OnionPerfAnalysisConverterTest {
       + "ENDPOINTPROXY=localhost:127.0.0.1:35900 "
       + "ENDPOINTREMOTE=m3eahz7co6lzi6jn.onion:0.0.0.0:443 FILESIZE=1048576 "
       + "HOSTNAMELOCAL=op-nl2 HOSTNAMEREMOTE=op-nl2 LAUNCH=1587991281.38 "
-      + "NEGOTIATE=1587991280.37 "
+      + "NEGOTIATE=1587991280.37 PARTIAL10240=1587991283.81 "
+      + "PARTIAL102400=1587991284.15 PARTIAL1048576=1587991286.62 "
+      + "PARTIAL20480=1587991283.81 PARTIAL204800=1587991284.38 "
+      + "PARTIAL51200=1587991283.81 PARTIAL512000=1587991285.14 "
       + "PATH=$970F0966DAA7EBDEE44E3772045527A6854E997B,"
       + "$8101421BEFCCF4C271D5483C5AABCAAD245BBB9D,"
       + "$1A7A2516A961F2838F7F94786A8811BE82F9CFFE READBYTES=1048643 "
@@ -54,6 +57,10 @@ public class OnionPerfAnalysisConverterTest {
       + "ENDPOINTREMOTE=3czoq6qyehjio6lcdo4tb4vk5uv2bm4gfk5iacnawza22do6klsj7wy"
       + "d.onion:0.0.0.0:443 FILESIZE=1048576 HOSTNAMELOCAL=op-nl2 "
       + "HOSTNAMEREMOTE=op-nl2 LAUNCH=1587991881.70 NEGOTIATE=1587991880.37 "
+      + "PARTIAL10240=1587991910.74 PARTIAL102400=1587991913.71 "
+      + "PARTIAL1048576=1587991927.74 PARTIAL20480=1587991910.74 "
+      + "PARTIAL204800=1587991916.00 PARTIAL51200=1587991910.74 "
+      + "PARTIAL512000=1587991921.80 "
       + "PATH=$D5C6F62A5D1B3C711CA5E6F9D3772A432E96F6C2,"
       + "$94EC34B871936504BE70671B44760BC99242E1F3,"
       + "$E0F638ECCE918B5455CE29D2CD9ECC9DBD8F8B21 READBYTES=1048643 "
@@ -96,7 +103,9 @@ public class OnionPerfAnalysisConverterTest {
       String formattedTorperfResult
           = new String(descriptor.getRawDescriptorBytes()).trim();
       assertNotNull(formattedTorperfResult);
-      assertTrue(formattedTorperfResult.equals(torperfResultTransfer1m1)
+      assertTrue(String.format("Unrecognized formatted Torperf result: %s",
+          formattedTorperfResult),
+          formattedTorperfResult.equals(torperfResultTransfer1m1)
           || formattedTorperfResult.equals(torperfResultTransfer1m3)
           || formattedTorperfResult.equals(torperfResultTransfer50k2));
     }

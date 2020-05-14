@@ -265,6 +265,15 @@ public class OnionPerfAnalysisConverter {
           transfer.elapsedSeconds.command);
       torperfResultsBuilder.addTimestamp("DATARESPONSE", transfer.unixTsStart,
           transfer.elapsedSeconds.response);
+      if (null != transfer.elapsedSeconds.payloadBytes) {
+        for (Map.Entry<String, Double> payloadBytesEntry
+            : transfer.elapsedSeconds.payloadBytes.entrySet()) {
+          String key = String.format("PARTIAL%s", payloadBytesEntry.getKey());
+          Double elapsedSeconds = payloadBytesEntry.getValue();
+          torperfResultsBuilder.addTimestamp(key, transfer.unixTsStart,
+              elapsedSeconds);
+        }
+      }
       if (null != transfer.elapsedSeconds.payloadProgress) {
         for (Map.Entry<String, Double> payloadProgressEntry
             : transfer.elapsedSeconds.payloadProgress.entrySet()) {

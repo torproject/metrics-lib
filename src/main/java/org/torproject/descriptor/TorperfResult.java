@@ -136,6 +136,15 @@ public interface TorperfResult extends Descriptor {
   Boolean didTimeout();
 
   /**
+   * Return the times in milliseconds since the epoch when the given number of
+   * bytes were read, or null if the torperf line didn't contain that
+   * information.
+   *
+   * @since 2.13.0
+   */
+  SortedMap<Integer, Long> getPartials();
+
+  /**
    * Return the times in milliseconds since the epoch when {@code x%} of
    * expected bytes were read for {@code 0 <= x <= 100}, or null if the
    * torperf line didn't contain that information.
