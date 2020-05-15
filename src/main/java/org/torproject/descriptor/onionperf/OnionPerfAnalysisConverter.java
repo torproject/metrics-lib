@@ -109,9 +109,9 @@ public class OnionPerfAnalysisConverter {
       throw new DescriptorParseException("Parsed OnionPerf analysis file does "
           + "not contain version information.");
     } else if ((parsedOnionPerfAnalysis.version instanceof Double
-        && (double) parsedOnionPerfAnalysis.version > 1.999)
+        && (double) parsedOnionPerfAnalysis.version > 2.999)
         || (parsedOnionPerfAnalysis.version instanceof String
-        && !((String) parsedOnionPerfAnalysis.version).startsWith("1."))) {
+        && ((String) parsedOnionPerfAnalysis.version).compareTo("3.") >= 0)) {
       throw new DescriptorParseException("Parsed OnionPerf analysis file "
           + "contains unsupported version " + parsedOnionPerfAnalysis.version
           + ".");
