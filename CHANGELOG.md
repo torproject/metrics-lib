@@ -1,5 +1,8 @@
 # Changes in version 2.??.? - 2020-??-??
 
+ * Medium changes
+   - Extend Torperf results to provide error codes.
+
 
 # Changes in version 2.13.0 - 2020-05-16
 

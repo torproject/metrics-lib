@@ -152,5 +152,32 @@ public class TorperfResultImplTest {
     assertEquals("op-us", torperfResult.getHostnameRemote());
     assertEquals("199.119.112.144", torperfResult.getSourceAddress());
   }
+
+  private static final String inputWithErrorcode =
+      "BUILDTIMES=0.0999999046326,0.139999866486,0.240000009537 CIRC_ID=94982 "
+      + "CONNECT=1554235190.26 DATACOMPLETE=0.0 DATAREQUEST=1554235192.60 "
+      + "DATARESPONSE=1554235192.92 DIDTIMEOUT=1 "
+      + "ENDPOINTLOCAL=localhost:127.0.0.1:56560 "
+      + "ENDPOINTPROXY=localhost:127.0.0.1:41204 "
+      + "ENDPOINTREMOTE=ywoeaxadmmsmewf7.onion:0.0.0.0:80 ERRORCODE=TGEN/READ "
+      + "FILESIZE=5242880 HOSTNAMELOCAL=op-ab HOSTNAMEREMOTE=op-ab "
+      + "LAUNCH=1554235084.64 NEGOTIATE=1554235190.26 "
+      + "PATH=$1FC89C159EA0F96D52D8A7092BF938C509DB6984,"
+      + "$EEDF0AF1F892C82F056063827B47283CC9AEAA41,"
+      + "$356B94BAD3096790E409790898144A4030AC225C QUANTILE=0.8 "
+      + "READBYTES=5069130 REQUEST=1554235190.26 RESPONSE=0.0 "
+      + "SOCKET=1554235190.26 SOURCE=cyan SOURCEADDRESS=unknown "
+      + "START=1554235190.26 TIMEOUT=1500 USED_AT=1554235192.92 "
+      + "USED_BY=149138 WRITEBYTES=56";
+
+  @Test
+  public void testErrorcode() throws DescriptorParseException {
+    List<Descriptor> result = TorperfResultImpl.parseTorperfResults(
+        inputWithErrorcode.getBytes(), null);
+    assertEquals(1, result.size());
+    TorperfResultImpl torperfResult = (TorperfResultImpl) result.get(0);
+    assertNull(torperfResult.getUnrecognizedKeys());
+    assertEquals("TGEN/READ", torperfResult.getErrorCode());
+  }
 }
 

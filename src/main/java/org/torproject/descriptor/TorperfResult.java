@@ -282,5 +282,14 @@ public interface TorperfResult extends Descriptor {
    * @since 1.7.0
    */
   String getSourceAddress();
+
+  /**
+   * Return the combined error code contained in the {@code tgen} client logs
+   * and the {@code tor} client logs, or {@code null} if no error occured or if
+   * the OnionPerf line didn't contain this information.
+   *
+   * @since 2.14.0
+   */
+  String getErrorCode();
 }
 

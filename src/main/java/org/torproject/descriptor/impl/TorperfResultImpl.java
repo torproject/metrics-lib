@@ -182,6 +182,9 @@ public class TorperfResultImpl extends DescriptorImpl
         case "SOURCEADDRESS":
           this.parseSourceAddress(value);
           break;
+        case "ERRORCODE":
+          this.parseErrorcode(value);
+          break;
         default:
           if (key.startsWith("DATAPERC")) {
             this.parseDataPercentile(value, keyValue, line);
@@ -444,6 +447,10 @@ public class TorperfResultImpl extends DescriptorImpl
     this.sourceAddress = value;
   }
 
+  private void parseErrorcode(String value) {
+    this.errorCode = value;
+  }
+
   private long parseTimestamp(String value, String keyValue, String line)
       throws DescriptorParseException {
     long timestamp = -1L;
@@ -703,6 +710,13 @@ public class TorperfResultImpl extends DescriptorImpl
   @Override
   public String getSourceAddress() {
     return this.sourceAddress;
+  }
+
+  private String errorCode;
+
+  @Override
+  public String getErrorCode() {
+    return this.errorCode;
   }
 }
 
