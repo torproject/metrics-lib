@@ -16,6 +16,19 @@ import java.util.TreeMap;
 public class TorperfResultsBuilder {
 
   /**
+   * Error code parts, to be formatted as
+   * {@code ERRORCODE=part_1/part_2/.../part_n}.
+   */
+  private List<String> errorCodeParts = null;
+
+  void addErrorCodePart(String errorCodePart) {
+    if (null == errorCodeParts) {
+      this.errorCodeParts = new ArrayList<>();
+    }
+    this.errorCodeParts.add(errorCodePart);
+  }
+
+  /**
    * Key-value pairs to be formatted as Torperf results line.
    */
   private final SortedMap<String, String> keyValuePairs = new TreeMap<>();
@@ -78,6 +91,27 @@ public class TorperfResultsBuilder {
   }
 
   /**
+   * Add a timestamp value as the sum of a double value, formatted as seconds
+   * since the epoch with two decimal places, and a string value, formatted as
+   * microseconds since the first value, unless either of the two summands is
+   * {@code null} or negative.
+   *
+   * @param key Key.
+   * @param unixTsStart First summand representing seconds since the epoch.
+   * @param elapsedMicroseconds Second summand representing microseconds
+   *     elapsed since the first summand.
+   */
+  void addTimestamp(String key, Double unixTsStart,
+      String elapsedMicroseconds) {
+    if (null != unixTsStart && unixTsStart >= 0.0 && null != elapsedMicroseconds
+        && !elapsedMicroseconds.startsWith("-")) {
+      double elapsedSeconds = Double.parseDouble(elapsedMicroseconds)
+          / 1000000.0;
+      this.addTimestamp(key, unixTsStart, elapsedSeconds);
+    }
+  }
+
+  /**
    * Build the Torperf results line by putting together all key-value pairs as
    * {@code "key=value"}, separated by spaces, prefixed by an annotation line
    * {@code "@type torperf 1.1"}.
@@ -89,6 +123,10 @@ public class TorperfResultsBuilder {
     StringBuilder result = new StringBuilder();
     result.append("@type torperf 1.1\r\n");
     List<String> torperfResultsParts = new ArrayList<>();
+    if (null != this.errorCodeParts) {
+      String errorCode = String.join("/", errorCodeParts);
+      this.addString("ERRORCODE", errorCode);
+    }
     for (Map.Entry<String, String> keyValuePairsEntry
         : this.keyValuePairs.entrySet()) {
       torperfResultsParts.add(String.format("%s=%s",

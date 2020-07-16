@@ -2,6 +2,7 @@
 
  * Medium changes
    - Extend Torperf results to provide error codes.
+   - Parse OnionPerf analysis results format version 3.0.
 
 
 # Changes in version 2.13.0 - 2020-05-16

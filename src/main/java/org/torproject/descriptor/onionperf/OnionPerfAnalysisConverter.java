@@ -69,25 +69,32 @@ public class OnionPerfAnalysisConverter {
    *     Torperf results.
    */
   public List<Descriptor> asTorperfResults() throws DescriptorParseException {
-    ParsedOnionPerfAnalysis parsedOnionPerfAnalysis;
+    ParsedOnionPerfAnalysis parsedOnionPerfAnalysis
+        = this.parseOnionPerfAnalysis();
+    this.verifyDocumentTypeAndVersion(parsedOnionPerfAnalysis);
+    StringBuilder formattedTorperfResults
+        = this.formatTorperfResults(parsedOnionPerfAnalysis);
+    this.parseFormattedTorperfResults(formattedTorperfResults);
+    return this.convertedTorperfResults;
+  }
+
+  /**
+   * Parse the OnionPerf analysis JSON document.
+   */
+  private ParsedOnionPerfAnalysis parseOnionPerfAnalysis()
+      throws DescriptorParseException {
     try {
       InputStream compressedInputStream = new ByteArrayInputStream(
           this.rawDescriptorBytes);
       InputStream decompressedInputStream = new XZCompressorInputStream(
           compressedInputStream);
       byte[] decompressedBytes = IOUtils.toByteArray(decompressedInputStream);
-      parsedOnionPerfAnalysis = ParsedOnionPerfAnalysis.fromBytes(
-          decompressedBytes);
+      return ParsedOnionPerfAnalysis.fromBytes(decompressedBytes);
     } catch (IOException ioException) {
       throw new DescriptorParseException("Ran into an I/O error while "
           + "attempting to parse an OnionPerf analysis document.",
           ioException);
     }
-    this.verifyDocumentTypeAndVersion(parsedOnionPerfAnalysis);
-    StringBuilder formattedTorperfResults
-        = this.formatTorperfResults(parsedOnionPerfAnalysis);
-    this.parseFormattedTorperfResults(formattedTorperfResults);
-    return this.convertedTorperfResults;
   }
 
   /**
@@ -109,9 +116,9 @@ public class OnionPerfAnalysisConverter {
       throw new DescriptorParseException("Parsed OnionPerf analysis file does "
           + "not contain version information.");
     } else if ((parsedOnionPerfAnalysis.version instanceof Double
-        && (double) parsedOnionPerfAnalysis.version > 2.999)
+        && (double) parsedOnionPerfAnalysis.version > 3.999)
         || (parsedOnionPerfAnalysis.version instanceof String
-        && ((String) parsedOnionPerfAnalysis.version).compareTo("3.") >= 0)) {
+        && ((String) parsedOnionPerfAnalysis.version).compareTo("4.") >= 0)) {
       throw new DescriptorParseException("Parsed OnionPerf analysis file "
           + "contains unsupported version " + parsedOnionPerfAnalysis.version
           + ".");
@@ -131,8 +138,7 @@ public class OnionPerfAnalysisConverter {
         : parsedOnionPerfAnalysis.data.entrySet()) {
       String nickname = data.getKey();
       ParsedOnionPerfAnalysis.MeasurementData measurements = data.getValue();
-      if (null == measurements.measurementIp || null == measurements.tgen
-          || null == measurements.tgen.transfers) {
+      if (null == measurements.tgen) {
         continue;
       }
       String measurementIp = measurements.measurementIp;
@@ -153,57 +159,69 @@ public class OnionPerfAnalysisConverter {
           }
         }
       }
-      for (ParsedOnionPerfAnalysis.Transfer transfer
-          : measurements.tgen.transfers.values()) {
-        if (null == transfer.endpointLocal) {
-          continue;
-        }
-        String[] endpointLocalParts = transfer.endpointLocal.split(":");
-        if (endpointLocalParts.length < 3) {
-          continue;
-        }
-        TorperfResultsBuilder torperfResultsBuilder
-            = new TorperfResultsBuilder();
-
-        torperfResultsBuilder.addString("SOURCE", nickname);
-        torperfResultsBuilder.addString("SOURCEADDRESS", measurementIp);
-        this.formatTransferParts(torperfResultsBuilder, transfer);
-        List<String> errorCodeParts = null;
-        if (transfer.isError) {
-          errorCodeParts = new ArrayList<>();
-          if ("PROXY".equals(transfer.errorCode)) {
-            errorCodeParts.add("TOR");
-          } else {
-            errorCodeParts.add("TGEN");
-            errorCodeParts.add(transfer.errorCode);
-          }
-        }
-        String sourcePort = endpointLocalParts[2];
-        if (streamsBySourcePort.containsKey(sourcePort)) {
-          for (ParsedOnionPerfAnalysis.Stream stream
-              : streamsBySourcePort.get(sourcePort)) {
-            if (Math.abs(transfer.unixTsEnd - stream.unixTsEnd) < 150.0) {
-              if (null != errorCodeParts && null != stream.failureReasonLocal) {
-                errorCodeParts.add(stream.failureReasonLocal);
-                if (null != stream.failureReasonRemote) {
-                  errorCodeParts.add(stream.failureReasonRemote);
+      if (null != measurements.tgen.transfers) {
+        for (ParsedOnionPerfAnalysis.Transfer transfer
+            : measurements.tgen.transfers.values()) {
+          TorperfResultsBuilder torperfResultsBuilder
+              = new TorperfResultsBuilder();
+          torperfResultsBuilder.addString("SOURCE", nickname);
+          torperfResultsBuilder.addString("SOURCEADDRESS", measurementIp);
+          this.formatTransferParts(torperfResultsBuilder, transfer);
+          if (null != transfer.endpointLocal) {
+            String[] endpointLocalParts = transfer.endpointLocal.split(":");
+            if (endpointLocalParts.length >= 3) {
+              String sourcePort = endpointLocalParts[2];
+              if (streamsBySourcePort.containsKey(sourcePort)) {
+                for (ParsedOnionPerfAnalysis.Stream stream
+                    : streamsBySourcePort.get(sourcePort)) {
+                  if (Math.abs(transfer.unixTsEnd - stream.unixTsEnd) < 150.0) {
+                    this.formatStreamParts(torperfResultsBuilder, stream);
+                    if (null != stream.circuitId
+                        && circuitsByCircuitId.containsKey(stream.circuitId)) {
+                      ParsedOnionPerfAnalysis.Circuit circuit
+                          = circuitsByCircuitId.get(stream.circuitId);
+                      this.formatCircuitParts(torperfResultsBuilder, circuit);
+                    }
+                  }
                 }
-              }
-              if (null != stream.circuitId
-                  && circuitsByCircuitId.containsKey(stream.circuitId)) {
-                ParsedOnionPerfAnalysis.Circuit circuit
-                    = circuitsByCircuitId.get(stream.circuitId);
-                this.formatStreamParts(torperfResultsBuilder, stream);
-                this.formatCircuitParts(torperfResultsBuilder, circuit);
               }
             }
           }
+          formattedTorperfResults.append(torperfResultsBuilder.build());
         }
-        if (null != errorCodeParts) {
-          String errorCode = String.join("/", errorCodeParts);
-          torperfResultsBuilder.addString("ERRORCODE", errorCode);
+      }
+      if (null != measurements.tgen.streams) {
+        for (ParsedOnionPerfAnalysis.TgenStream stream
+             : measurements.tgen.streams.values()) {
+          TorperfResultsBuilder torperfResultsBuilder
+              = new TorperfResultsBuilder();
+          torperfResultsBuilder.addString("SOURCE", nickname);
+          torperfResultsBuilder.addString("SOURCEADDRESS", measurementIp);
+          this.formatTgenStreamParts(torperfResultsBuilder, stream);
+          if (null != stream.transportInfo
+              && null != stream.transportInfo.local) {
+            String[] endpointLocalParts = stream.transportInfo.local.split(":");
+            if (endpointLocalParts.length >= 3) {
+              String sourcePort = endpointLocalParts[2];
+              if (streamsBySourcePort.containsKey(sourcePort)) {
+                for (ParsedOnionPerfAnalysis.Stream torStream
+                    : streamsBySourcePort.get(sourcePort)) {
+                  if (Math.abs(stream.unixTsEnd
+                      - torStream.unixTsEnd) < 150.0) {
+                    this.formatStreamParts(torperfResultsBuilder, torStream);
+                    if (null != torStream.circuitId && circuitsByCircuitId
+                        .containsKey(torStream.circuitId)) {
+                      ParsedOnionPerfAnalysis.Circuit circuit
+                          = circuitsByCircuitId.get(torStream.circuitId);
+                      this.formatCircuitParts(torperfResultsBuilder, circuit);
+                    }
+                  }
+                }
+              }
+            }
+          }
+          formattedTorperfResults.append(torperfResultsBuilder.build());
         }
-        formattedTorperfResults.append(torperfResultsBuilder.build());
       }
     }
     return formattedTorperfResults;
@@ -288,6 +306,105 @@ public class OnionPerfAnalysisConverter {
           transfer.elapsedSeconds.lastByte);
       if (transfer.isError) {
         torperfResultsBuilder.addInteger("DIDTIMEOUT", 1);
+        if ("PROXY".equals(transfer.errorCode)) {
+          torperfResultsBuilder.addErrorCodePart("TOR");
+        } else {
+          torperfResultsBuilder.addErrorCodePart("TGEN");
+          torperfResultsBuilder.addErrorCodePart(transfer.errorCode);
+        }
+      }
+    }
+  }
+
+  /**
+   * Format relevant tgen stream data as Torperf result key-value pairs.
+   *
+   * @param torperfResultsBuilder Torperf results builder to add key-value pairs
+   *     to.
+   * @param stream Stream data obtained from the parsed OnionPerf analysis file.
+   */
+  private void formatTgenStreamParts(
+      TorperfResultsBuilder torperfResultsBuilder,
+      ParsedOnionPerfAnalysis.TgenStream stream) {
+    torperfResultsBuilder.addString("READBYTES", "0");
+    torperfResultsBuilder.addString("WRITEBYTES", "0");
+    if (null != stream.byteInfo) {
+      torperfResultsBuilder.addString("READBYTES",
+          stream.byteInfo.totalBytesRecv);
+      torperfResultsBuilder.addString("WRITEBYTES",
+          stream.byteInfo.totalBytesSend);
+    }
+    if (null != stream.streamInfo) {
+      torperfResultsBuilder.addString("FILESIZE", stream.streamInfo.recvsize);
+      torperfResultsBuilder.addString("HOSTNAMELOCAL", stream.streamInfo.name);
+      torperfResultsBuilder.addString("HOSTNAMEREMOTE",
+          stream.streamInfo.peername);
+    }
+    if (null != stream.transportInfo) {
+      torperfResultsBuilder.addString("ENDPOINTLOCAL",
+          stream.transportInfo.local);
+      torperfResultsBuilder.addString("ENDPOINTPROXY",
+          stream.transportInfo.proxy);
+      torperfResultsBuilder.addString("ENDPOINTREMOTE",
+          stream.transportInfo.remote);
+    }
+    torperfResultsBuilder.addInteger("DIDTIMEOUT", 0);
+
+    for (String key : new String[] { "START", "SOCKET", "CONNECT", "NEGOTIATE",
+        "REQUEST", "RESPONSE", "DATAREQUEST", "DATARESPONSE",
+        "DATACOMPLETE" }) {
+      torperfResultsBuilder.addString(key, "0.0");
+    }
+    torperfResultsBuilder.addTimestamp("START", stream.unixTsStart, 0.0);
+    if (null != stream.unixTsStart) {
+      if (null != stream.timeInfo) {
+        torperfResultsBuilder.addTimestamp("SOCKET", stream.unixTsStart,
+            stream.timeInfo.usecsToSocketCreate);
+        torperfResultsBuilder.addTimestamp("CONNECT", stream.unixTsStart,
+            stream.timeInfo.usecsToSocketConnect);
+        torperfResultsBuilder.addTimestamp("NEGOTIATE", stream.unixTsStart,
+            stream.timeInfo.usecsToProxyChoice);
+        torperfResultsBuilder.addTimestamp("REQUEST", stream.unixTsStart,
+            stream.timeInfo.usecsToProxyRequest);
+        torperfResultsBuilder.addTimestamp("RESPONSE", stream.unixTsStart,
+            stream.timeInfo.usecsToProxyResponse);
+        torperfResultsBuilder.addTimestamp("DATAREQUEST", stream.unixTsStart,
+            stream.timeInfo.usecsToCommand);
+        torperfResultsBuilder.addTimestamp("DATARESPONSE", stream.unixTsStart,
+            stream.timeInfo.usecsToResponse);
+        torperfResultsBuilder.addTimestamp("DATACOMPLETE", stream.unixTsStart,
+            stream.timeInfo.usecsToLastByteRecv);
+      }
+      if (null != stream.elapsedSeconds) {
+        if (null != stream.elapsedSeconds.payloadBytesRecv) {
+          for (Map.Entry<String, Double> payloadBytesRecvEntry
+              : stream.elapsedSeconds.payloadBytesRecv.entrySet()) {
+            String key = String.format("PARTIAL%s",
+                payloadBytesRecvEntry.getKey());
+            Double elapsedSeconds = payloadBytesRecvEntry.getValue();
+            torperfResultsBuilder.addTimestamp(key, stream.unixTsStart,
+                elapsedSeconds);
+          }
+        }
+        if (null != stream.elapsedSeconds.payloadProgressRecv) {
+          for (Map.Entry<String, Double> payloadProgressRecvEntry
+              : stream.elapsedSeconds.payloadProgressRecv.entrySet()) {
+            String key = String.format("DATAPERC%.0f",
+                Double.parseDouble(payloadProgressRecvEntry.getKey()) * 100.0);
+            Double elapsedSeconds = payloadProgressRecvEntry.getValue();
+            torperfResultsBuilder.addTimestamp(key, stream.unixTsStart,
+                elapsedSeconds);
+          }
+        }
+      }
+      if (null != stream.isError && stream.isError) {
+        torperfResultsBuilder.addInteger("DIDTIMEOUT", 1);
+        if ("PROXY".equals(stream.streamInfo.error)) {
+          torperfResultsBuilder.addErrorCodePart("TOR");
+        } else {
+          torperfResultsBuilder.addErrorCodePart("TGEN");
+          torperfResultsBuilder.addErrorCodePart(stream.streamInfo.error);
+        }
       }
     }
   }
@@ -301,6 +418,12 @@ public class OnionPerfAnalysisConverter {
    */
   private void formatStreamParts(TorperfResultsBuilder torperfResultsBuilder,
       ParsedOnionPerfAnalysis.Stream stream) {
+    if (null != stream.failureReasonLocal) {
+      torperfResultsBuilder.addErrorCodePart(stream.failureReasonLocal);
+      if (null != stream.failureReasonRemote) {
+        torperfResultsBuilder.addErrorCodePart(stream.failureReasonRemote);
+      }
+    }
     torperfResultsBuilder.addTimestamp("USED_AT", stream.unixTsEnd, 0.0);
     torperfResultsBuilder.addInteger("USED_BY", stream.streamId);
   }

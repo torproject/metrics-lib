@@ -3,6 +3,7 @@
 
 package org.torproject.descriptor.onionperf;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -16,6 +17,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OnionPerfAnalysisConverterTest {
 
@@ -89,6 +92,10 @@ public class OnionPerfAnalysisConverterTest {
   @Test
   public void testAsTorperfResults() throws IOException,
       DescriptorParseException {
+    List<String> expectedTorperfResults = new ArrayList<>();
+    expectedTorperfResults.add(torperfResultTransfer1m1);
+    expectedTorperfResults.add(torperfResultTransfer1m3);
+    expectedTorperfResults.add(torperfResultTransfer50k2);
     URL resouce = getClass().getClassLoader().getResource(
         "onionperf/onionperf.analysis.json.xz");
     assertNotNull(resouce);
@@ -103,12 +110,75 @@ public class OnionPerfAnalysisConverterTest {
       String formattedTorperfResult
           = new String(descriptor.getRawDescriptorBytes()).trim();
       assertNotNull(formattedTorperfResult);
-      assertTrue(String.format("Unrecognized formatted Torperf result: %s",
-          formattedTorperfResult),
-          formattedTorperfResult.equals(torperfResultTransfer1m1)
-          || formattedTorperfResult.equals(torperfResultTransfer1m3)
-          || formattedTorperfResult.equals(torperfResultTransfer50k2));
+      String expectedTorperfResult = expectedTorperfResults.remove(0);
+      assertEquals(expectedTorperfResult, formattedTorperfResult);
     }
+    assertTrue(expectedTorperfResults.isEmpty());
+  }
+
+  private final String torperfResultStream155
+      = "BUILDTIMES=0.62,0.90,1.26 CIRC_ID=1008 CONNECT=1594633118.41 "
+      + "DATACOMPLETE=1594633145.46 DATAPERC0=1594633123.64 "
+      + "DATAPERC10=1594633125.57 DATAPERC100=1594633145.46 "
+      + "DATAPERC20=1594633127.56 DATAPERC30=1594633129.56 "
+      + "DATAPERC40=1594633132.20 DATAPERC50=1594633134.29 "
+      + "DATAPERC60=1594633136.41 DATAPERC70=1594633138.84 "
+      + "DATAPERC80=1594633140.76 DATAPERC90=1594633142.88 "
+      + "DATAREQUEST=1594633123.01 DATARESPONSE=1594633123.64 DIDTIMEOUT=0 "
+      + "ENDPOINTLOCAL=localhost:127.0.0.1:46222 "
+      + "ENDPOINTPROXY=localhost:127.0.0.1:29849 "
+      + "ENDPOINTREMOTE=jjsvldkkjd3lxy6gljy6xmhrn5mnirzgj2mrftrx2bf3n4bbx53fxza"
+      + "d.onion:0.0.0.0:8080 FILESIZE=5242880 HOSTNAMELOCAL=op-nl-test1 "
+      + "HOSTNAMEREMOTE=op-nl-test1 LAUNCH=1594633119.06 "
+      + "NEGOTIATE=1594633118.41 PARTIAL10240=1594633123.80 "
+      + "PARTIAL102400=1594633124.11 PARTIAL1048576=1594633127.56 "
+      + "PARTIAL20480=1594633123.85 PARTIAL204800=1594633124.26 "
+      + "PARTIAL2097152=1594633132.20 PARTIAL51200=1594633123.96 "
+      + "PARTIAL512000=1594633125.50 PARTIAL5242880=1594633145.46 "
+      + "PATH=$65888719E2F619E6198F1045A93AF0176C05354D,"
+      + "$3043C1A6DF23AFEDC8FD3C0671FADCEDFF6D3429,"
+      + "$8E5F4EE45E0631A60E59CAA42E1464FD7120459D QUANTILE=0.8 "
+      + "READBYTES=5242990 REQUEST=1594633118.42 RESPONSE=1594633123.01 "
+      + "SOCKET=1594633118.41 SOURCE=op-nl-test1 SOURCEADDRESS=unknown "
+      + "START=1594633118.41 TIMEOUT=1500 USED_AT=1594633145.46 USED_BY=1498 "
+      + "WRITEBYTES=2174";
+
+  private final String torperfResultStream156
+      = "CONNECT=1594633539.83 DATACOMPLETE=0.0 DATAREQUEST=0.0 "
+      + "DATARESPONSE=0.0 DIDTIMEOUT=1 ENDPOINTLOCAL=localhost:127.0.0.1:46246 "
+      + "ENDPOINTPROXY=localhost:127.0.0.1:29849 "
+      + "ENDPOINTREMOTE=jjsvldkkjd3lxy6gljy6xmhrn5mnirzgj2mrftrx2bf3n4bbx53fxza"
+      + "d.onion:0.0.0.0:8080 ERRORCODE=TOR/TIMEOUT FILESIZE=5242880 "
+      + "HOSTNAMELOCAL=op-nl-test1 HOSTNAMEREMOTE=(null) "
+      + "NEGOTIATE=1594633539.83 READBYTES=0 REQUEST=1594633539.83 "
+      + "RESPONSE=0.0 SOCKET=1594633539.83 SOURCE=op-nl-test1 "
+      + "SOURCEADDRESS=unknown START=1594633539.83 USED_AT=1594633539.83 "
+      + "USED_BY=1510 WRITEBYTES=0";
+
+  @Test
+  public void testAsTorperfResultsVersion3() throws IOException,
+      DescriptorParseException {
+    List<String> expectedTorperfResults = new ArrayList<>();
+    expectedTorperfResults.add(torperfResultStream155);
+    expectedTorperfResults.add(torperfResultStream156);
+    URL resouce = getClass().getClassLoader().getResource(
+        "onionperf/2020-07-13.op-nl-test1.onionperf.analysis.json.xz");
+    assertNotNull(resouce);
+    InputStream compressedInputStream = resouce.openStream();
+    assertNotNull(compressedInputStream);
+    byte[] rawDescriptorBytes = IOUtils.toByteArray(compressedInputStream);
+    OnionPerfAnalysisConverter onionPerfAnalysisConverter
+        = new OnionPerfAnalysisConverter(rawDescriptorBytes, null);
+    for (Descriptor descriptor
+        : onionPerfAnalysisConverter.asTorperfResults()) {
+      assertTrue(descriptor instanceof TorperfResult);
+      String formattedTorperfResult
+          = new String(descriptor.getRawDescriptorBytes()).trim();
+      assertNotNull(formattedTorperfResult);
+      String expectedTorperfResult = expectedTorperfResults.remove(0);
+      assertEquals(expectedTorperfResult, formattedTorperfResult);
+    }
+    assertTrue(expectedTorperfResults.isEmpty());
   }
 }
 

@@ -4,6 +4,7 @@
 package org.torproject.descriptor.onionperf;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -95,6 +96,11 @@ public class ParsedOnionPerfAnalysis {
      * Measurement data by transfer identifier.
      */
     Map<String, Transfer> transfers;
+
+    /**
+     * Measurement data by stream identifier.
+     */
+    Map<String, TgenStream> streams;
   }
 
   /**
@@ -238,6 +244,206 @@ public class ParsedOnionPerfAnalysis {
      * Time until the socket was created.
      */
     Double socketCreate;
+  }
+
+  /**
+   * Measurement data related to a single stream obtained from client-side
+   * {@code tgen} logs.
+   */
+  static class TgenStream {
+
+    /**
+     * Information on sent and received bytes.
+     */
+    ByteInfo byteInfo;
+
+    /**
+     * Elapsed seconds until a given number or fraction of payload bytes have
+     * been received or sent, obtained from {@code [stream-status]},
+     * {@code [stream-success]}, and {@code [stream-error]} log messages, only
+     * included if the measurement was a success.
+     */
+    ElapsedSecondsPayload elapsedSeconds;
+
+    /**
+     * Whether an error occurred.
+     */
+    Boolean isError;
+
+    /**
+     * Information about the TGen stream.
+     */
+    StreamInfo streamInfo;
+
+    /**
+     * Elapsed time until reaching given substeps in a measurement.
+     */
+    TimeInfo timeInfo;
+
+    /**
+     * Information about the TGen transport.
+     */
+    TransportInfo transportInfo;
+
+    /**
+     * Initial start time of the measurement, obtained by subtracting the
+     * largest number of elapsed microseconds in {@code time_info} from
+     * {@code unix_ts_end}, given in seconds since the epoch.
+     */
+    Double unixTsStart;
+
+    /**
+     * Final end time of the measurement, obtained from the log time of the
+     * {@code [stream-success]} or {@code [stream-error]} log message, given in
+     * seconds since the epoch.
+     */
+    Double unixTsEnd;
+  }
+
+  /**
+   * Information on sent and received bytes.
+   */
+  static class ByteInfo {
+
+    /**
+     * Total number of bytes received.
+     */
+    @JsonProperty("total-bytes-recv")
+    String totalBytesRecv;
+
+    /**
+     * Total number of bytes sent.
+     */
+    @JsonProperty("total-bytes-send")
+    String totalBytesSend;
+  }
+
+  /**
+   * Elapsed seconds until a given number or fraction of payload bytes have been
+   * received or sent, obtained from {@code [stream-status]},
+   * {@code [stream-success]}, and {@code [stream-error]} log messages, only
+   * included if the measurement was a success.
+   */
+  static class ElapsedSecondsPayload {
+
+    /**
+     * Number of received payload bytes.
+     */
+    Map<String, Double> payloadBytesRecv;
+
+    /**
+     * Fraction of received payload bytes.
+     */
+    Map<String, Double> payloadProgressRecv;
+  }
+
+  /**
+   * Information about the TGen stream.
+   */
+  static class StreamInfo {
+
+    /**
+     * Error code, or {@code NONE} if no error occurred.
+     */
+    String error;
+
+    /**
+     * Hostname of the TGen client.
+     */
+    String name;
+
+    /**
+     * Hostname of the TGen server.
+     */
+    String peername;
+
+    /**
+     * Number of expected payload bytes in the response.
+     */
+    String recvsize;
+  }
+
+  /**
+   * Elapsed time until reaching given substeps in a measurement.
+   */
+  static class TimeInfo {
+
+    /**
+     * Elapsed microseconds until the TGen client has sent the command to the
+     * TGen server, or -1 if missing (step 7).
+     */
+    @JsonProperty("usecs-to-command")
+    String usecsToCommand;
+
+    /**
+     * Elapsed microseconds until the TGen client has received the last payload
+     * byte, or -1 if missing (step 10).
+     */
+    @JsonProperty("usecs-to-last-byte-recv")
+    String usecsToLastByteRecv;
+
+    /**
+     * Elapsed microseconds until the TGen client has received the SOCKS choice
+     * from the Tor client, or -1 if missing (step 4).
+     */
+    @JsonProperty("usecs-to-proxy-choice")
+    String usecsToProxyChoice;
+
+    /**
+     * Elapsed microseconds until the TGen client has sent the SOCKS request to
+     * the Tor client, or -1 if missing (step 5).
+     */
+    @JsonProperty("usecs-to-proxy-request")
+    String usecsToProxyRequest;
+
+    /**
+     * Elapsed microseconds until the TGen client has received the SOCKS
+     * response from the Tor client, or -1 if missing (step 6).
+     */
+    @JsonProperty("usecs-to-proxy-response")
+    String usecsToProxyResponse;
+
+    /**
+     * Elapsed microseconds until the TGen client has received the command from
+     * the TGen server, or -1 if missing (step 8).
+     */
+    @JsonProperty("usecs-to-response")
+    String usecsToResponse;
+
+    /**
+     * Elapsed microseconds until the TGen client has connected to the Tor
+     * client's SOCKS port, or -1 if missing (step 2).
+     */
+    @JsonProperty("usecs-to-socket-connect")
+    String usecsToSocketConnect;
+
+    /**
+     * Elapsed microseconds until the TGen client has opened a TCP connection
+     * to the Tor client's SOCKS port, or -1 if missing (step 1).
+     */
+    @JsonProperty("usecs-to-socket-create")
+    String usecsToSocketCreate;
+  }
+
+  /**
+   * Information about the TGen transport.
+   */
+  static class TransportInfo {
+
+    /**
+     * Local host name, IP address, and TCP port.
+     */
+    String local;
+
+    /**
+     * Proxy host name, IP address, and TCP port.
+     */
+    String proxy;
+
+    /**
+     * Remote host name, IP address, and TCP port.
+     */
+    String remote;
   }
 
   /**
