@@ -75,6 +75,24 @@ public class ExtraInfoDescriptorImplTest {
       return db.buildDescriptor();
     }
 
+    private String ipv6WriteHistoryLine = null;
+
+    private static ExtraInfoDescriptor createWithIpv6WriteHistoryLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.ipv6WriteHistoryLine = line;
+      return db.buildDescriptor();
+    }
+
+    private String ipv6ReadHistoryLine = null;
+
+    private static ExtraInfoDescriptor createWithIpv6ReadHistoryLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.ipv6ReadHistoryLine = line;
+      return db.buildDescriptor();
+    }
+
     private String dirreqWriteHistoryLine = "dirreq-write-history "
         + "2012-02-11 09:03:39 (900 s) 81281024,64996352,60625920,"
         + "67922944";
@@ -157,6 +175,15 @@ public class ExtraInfoDescriptorImplTest {
         String line) throws DescriptorParseException {
       DescriptorBuilder db = new DescriptorBuilder();
       db.connBiDirectLine = line;
+      return db.buildDescriptor();
+    }
+
+    private String ipv6ConnBiDirectLine = null;
+
+    private static ExtraInfoDescriptor createWithIpv6ConnBiDirectLine(
+        String line) throws DescriptorParseException {
+      DescriptorBuilder db = new DescriptorBuilder();
+      db.ipv6ConnBiDirectLine = line;
       return db.buildDescriptor();
     }
 
@@ -266,6 +293,12 @@ public class ExtraInfoDescriptorImplTest {
       if (this.readHistoryLine != null) {
         sb.append(this.readHistoryLine).append("\n");
       }
+      if (this.ipv6WriteHistoryLine != null) {
+        sb.append(this.ipv6WriteHistoryLine).append("\n");
+      }
+      if (this.ipv6ReadHistoryLine != null) {
+        sb.append(this.ipv6ReadHistoryLine).append("\n");
+      }
       if (this.dirreqWriteHistoryLine != null) {
         sb.append(this.dirreqWriteHistoryLine).append("\n");
       }
@@ -292,6 +325,9 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.connBiDirectLine != null) {
         sb.append(this.connBiDirectLine).append("\n");
+      }
+      if (this.ipv6ConnBiDirectLine != null) {
+        sb.append(this.ipv6ConnBiDirectLine).append("\n");
       }
       if (this.exitStatsLines != null) {
         sb.append(this.exitStatsLines).append("\n");
@@ -1138,6 +1174,29 @@ public class ExtraInfoDescriptorImplTest {
   }
 
   @Test
+  public void testIpv6WriteHistory()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder
+        .createWithIpv6WriteHistoryLine("ipv6-write-history 2020-07-15 "
+        + "03:54:50 (86400 s) 1290676224,2538212352,6013477888");
+    assertNotNull(descriptor.getIpv6WriteHistory());
+    assertNull(descriptor.getIpv6ReadHistory());
+    assertEquals(86400L, descriptor.getIpv6WriteHistory().getIntervalLength());
+  }
+
+  @Test
+  public void testIpv6ReadHistory()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder
+        .createWithIpv6ReadHistoryLine("ipv6-read-history 2020-07-15 03:54:50 "
+        + "(86400 s) 55123875840,62352131072,69582769152");
+    assertNull(descriptor.getIpv6WriteHistory());
+    assertNotNull(descriptor.getIpv6ReadHistory());
+    assertEquals(3,
+        descriptor.getIpv6ReadHistory().getBandwidthValues().size());
+  }
+
+  @Test
   public void testDirreqWriteHistoryMissingBytesBegin()
       throws DescriptorParseException {
     this.thrown.expect(DescriptorParseException.class);
@@ -1722,6 +1781,21 @@ public class ExtraInfoDescriptorImplTest {
       throws DescriptorParseException {
     DescriptorBuilder.createWithConnBiDirectLine("conn-bi-direct "
         + "2012-02-11 01:59:39 (86400 s) 42173,1591,1310,1744 +1");
+  }
+
+  @Test
+  public void testIpv6ConnBiDirectValid()
+      throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = DescriptorBuilder
+        .createWithIpv6ConnBiDirectLine("ipv6-conn-bi-direct 2020-02-11 "
+            + "01:59:39 (86400 s) 42173,1591,1310,1744");
+    assertEquals(1581386379000L,
+        descriptor.getIpv6ConnBiDirectStatsEndMillis());
+    assertEquals(86400L, descriptor.getIpv6ConnBiDirectStatsIntervalLength());
+    assertEquals(42173, descriptor.getIpv6ConnBiDirectBelow());
+    assertEquals(1591, descriptor.getIpv6ConnBiDirectRead());
+    assertEquals(1310, descriptor.getIpv6ConnBiDirectWrite());
+    assertEquals(1744, descriptor.getIpv6ConnBiDirectBoth());
   }
 
   @Test

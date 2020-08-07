@@ -97,6 +97,12 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         case WRITE_HISTORY:
           this.parseWriteHistoryLine(line, partsNoOpt);
           break;
+        case IPV6_READ_HISTORY:
+          this.parseIpv6ReadHistoryLine(line, partsNoOpt);
+          break;
+        case IPV6_WRITE_HISTORY:
+          this.parseIpv6WriteHistoryLine(line, partsNoOpt);
+          break;
         case GEOIP_DB_DIGEST:
           this.parseGeoipDbDigestLine(line, partsNoOpt);
           break;
@@ -178,6 +184,9 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
           break;
         case CONN_BI_DIRECT:
           this.parseConnBiDirectLine(line, partsNoOpt);
+          break;
+        case IPV6_CONN_BI_DIRECT:
+          this.parseIpv6ConnBiDirectLine(line, partsNoOpt);
           break;
         case EXIT_STATS_END:
           this.parseExitStatsEndLine(line, partsNoOpt);
@@ -311,6 +320,18 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   private void parseWriteHistoryLine(String line,
       String[] partsNoOpt) throws DescriptorParseException {
     this.writeHistory = new BandwidthHistoryImpl(line,
+        partsNoOpt);
+  }
+
+  private void parseIpv6ReadHistoryLine(String line,
+      String[] partsNoOpt) throws DescriptorParseException {
+    this.ipv6ReadHistory = new BandwidthHistoryImpl(line,
+        partsNoOpt);
+  }
+
+  private void parseIpv6WriteHistoryLine(String line,
+      String[] partsNoOpt) throws DescriptorParseException {
+    this.ipv6WriteHistory = new BandwidthHistoryImpl(line,
         partsNoOpt);
   }
 
@@ -571,6 +592,24 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.connBiDirectRead = parsedConnBiDirectStats[1];
     this.connBiDirectWrite = parsedConnBiDirectStats[2];
     this.connBiDirectBoth = parsedConnBiDirectStats[3];
+  }
+
+  private void parseIpv6ConnBiDirectLine(String line,
+      String[] partsNoOpt) throws DescriptorParseException {
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        6);
+    this.ipv6ConnBiDirectStatsEndMillis = parsedStatsEndData[0];
+    this.ipv6ConnBiDirectStatsIntervalLength = parsedStatsEndData[1];
+    Integer[] parsedIpv6ConnBiDirectStats = ParseHelper
+        .parseCommaSeparatedIntegerValueList(line, partsNoOpt, 5);
+    if (parsedIpv6ConnBiDirectStats.length != 4) {
+      throw new DescriptorParseException("Illegal line '" + line + "' in "
+          + "extra-info descriptor.");
+    }
+    this.ipv6ConnBiDirectBelow = parsedIpv6ConnBiDirectStats[0];
+    this.ipv6ConnBiDirectRead = parsedIpv6ConnBiDirectStats[1];
+    this.ipv6ConnBiDirectWrite = parsedIpv6ConnBiDirectStats[2];
+    this.ipv6ConnBiDirectBoth = parsedIpv6ConnBiDirectStats[3];
   }
 
   private void parseExitStatsEndLine(String line,
@@ -837,6 +876,20 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     return this.writeHistory;
   }
 
+  private BandwidthHistory ipv6ReadHistory;
+
+  @Override
+  public BandwidthHistory getIpv6ReadHistory() {
+    return this.ipv6ReadHistory;
+  }
+
+  private BandwidthHistory ipv6WriteHistory;
+
+  @Override
+  public BandwidthHistory getIpv6WriteHistory() {
+    return this.ipv6WriteHistory;
+  }
+
   private String geoipDbDigest;
 
   @Override
@@ -1080,6 +1133,48 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   @Override
   public int getConnBiDirectBoth() {
     return this.connBiDirectBoth;
+  }
+
+  private long ipv6ConnBiDirectStatsEndMillis = -1L;
+
+  @Override
+  public long getIpv6ConnBiDirectStatsEndMillis() {
+    return this.ipv6ConnBiDirectStatsEndMillis;
+  }
+
+  private long ipv6ConnBiDirectStatsIntervalLength = -1L;
+
+  @Override
+  public long getIpv6ConnBiDirectStatsIntervalLength() {
+    return this.ipv6ConnBiDirectStatsIntervalLength;
+  }
+
+  private int ipv6ConnBiDirectBelow = -1;
+
+  @Override
+  public int getIpv6ConnBiDirectBelow() {
+    return this.ipv6ConnBiDirectBelow;
+  }
+
+  private int ipv6ConnBiDirectRead = -1;
+
+  @Override
+  public int getIpv6ConnBiDirectRead() {
+    return this.ipv6ConnBiDirectRead;
+  }
+
+  private int ipv6ConnBiDirectWrite = -1;
+
+  @Override
+  public int getIpv6ConnBiDirectWrite() {
+    return this.ipv6ConnBiDirectWrite;
+  }
+
+  private int ipv6ConnBiDirectBoth = -1;
+
+  @Override
+  public int getIpv6ConnBiDirectBoth() {
+    return this.ipv6ConnBiDirectBoth;
   }
 
   private long exitStatsEndMillis = -1L;

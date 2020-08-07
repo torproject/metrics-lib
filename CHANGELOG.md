@@ -3,6 +3,8 @@
  * Medium changes
    - Extend Torperf results to provide error codes.
    - Parse OnionPerf analysis results format version 3.0.
+   - Parse new ipv6-{write,read}-history and ipv6-conn-bi-direct
+     lines in extra-info descriptors.
 
 
 # Changes in version 2.13.0 - 2020-05-16

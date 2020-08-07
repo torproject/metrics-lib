@@ -107,6 +107,22 @@ public interface ExtraInfoDescriptor extends Descriptor {
   BandwidthHistory getWriteHistory();
 
   /**
+   * Return the server's history of written IPv6 bytes, or {@code null} if the
+   * descriptor does not contain a bandwidth history.
+   *
+   * @since 2.14.0
+   */
+  BandwidthHistory getIpv6WriteHistory();
+
+  /**
+   * Return the server's history of read IPv6 bytes, or {@code null} if the
+   * descriptor does not contain a bandwidth history.
+   *
+   * @since 2.14.0
+   */
+  BandwidthHistory getIpv6ReadHistory();
+
+  /**
    * Return a SHA-1 digest of the GeoIP database file used by this server
    * to resolve client IP addresses to country codes, encoded as 40
    * upper-case hexadecimal characters, or null if no GeoIP database
@@ -418,6 +434,62 @@ public interface ExtraInfoDescriptor extends Descriptor {
    * @since 1.0.0
    */
   int getConnBiDirectBoth();
+
+  /**
+   * Return the time in milliseconds since the epoch when the included
+   * statistics on bi-directional IPv6 connection usage ended, or -1 if no such
+   * statistics are included.
+   *
+   * @since 2.14.0
+   */
+  long getIpv6ConnBiDirectStatsEndMillis();
+
+  /**
+   * Return the interval length of the included statistics on
+   * bi-directional IPv6 connection usage in seconds, or -1 if no such
+   * statistics are included.
+   *
+   * @since 2.14.0
+   */
+  long getIpv6ConnBiDirectStatsIntervalLength();
+
+  /**
+   * Return the number of IPv6 connections on which this server read and wrote
+   * less than 2 KiB/s in a 10-second interval, or -1 if no such
+   * statistics are included.
+   *
+   * @since 2.14.0
+   */
+  int getIpv6ConnBiDirectBelow();
+
+  /**
+   * Return the number of IPv6 connections on which this server read and wrote
+   * at least 2 KiB/s in a 10-second interval and at least 10 times more
+   * in read direction than in write direction, or -1 if no such
+   * statistics are included.
+   *
+   * @since 2.14.0
+   */
+  int getIpv6ConnBiDirectRead();
+
+  /**
+   * Return the number of IPv6 connections on which this server read and wrote
+   * at least 2 KiB/s in a 10-second interval and at least 10 times more
+   * in write direction than in read direction, or -1 if no such
+   * statistics are included.
+   *
+   * @since 2.14.0
+   */
+  int getIpv6ConnBiDirectWrite();
+
+  /**
+   * Return the number of IPv6 connections on which this server read and wrote
+   * at least 2 KiB/s in a 10-second interval but not 10 times more in
+   * either direction, or -1 if no such statistics are included.
+   *
+   * @since 2.14.0
+   */
+  int getIpv6ConnBiDirectBoth();
 
   /**
    * Return the time in milliseconds since the epoch when the included
