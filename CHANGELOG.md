@@ -1,4 +1,8 @@
-# Changes in version 2.??.? - 2020-??-??
+# Changes in version 2.15.0 - 2020-??-??
+
+ * Medium changes
+   - Parse version 3 onion service statistics contained in extra-info
+     descriptors.
 
 
 # Changes in version 2.14.0 - 2020-08-07

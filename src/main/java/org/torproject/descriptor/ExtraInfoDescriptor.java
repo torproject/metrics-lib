@@ -675,6 +675,61 @@ public interface ExtraInfoDescriptor extends Descriptor {
   Map<String, Double> getHidservDirOnionsSeenParameters();
 
   /**
+   * Return the time in milliseconds since the epoch when the included version 3
+   * onion service statistics interval ended, or -1 if no such statistics are
+   * included.
+   *
+   * @since 2.15.0
+   */
+  long getHidservV3StatsEndMillis();
+
+  /**
+   * Return the interval length of the included version 3 onion service
+   * statistics in seconds, or -1 if no such statistics are included.
+   *
+   * @since 2.15.0
+   */
+  long getHidservV3StatsIntervalLength();
+
+  /**
+   * Return the approximate number of RELAY cells seen in either direction on a
+   * version 3 onion service circuit after receiving and successfully processing
+   * a RENDEZVOUS1 cell, or null if no such statistics are included.
+   *
+   * @since 2.15.0
+   */
+  Double getHidservRendV3RelayedCells();
+
+  /**
+   * Return the obfuscation parameters applied to the original measurement value
+   * of RELAY cells seen in either direction on a version 3 onion service
+   * circuit after receiving and successfully processing a RENDEZVOUS1 cell, or
+   * null if no such statistics are included.
+   *
+   * @since 2.15.0
+   */
+  Map<String, Double> getHidservRendV3RelayedCellsParameters();
+
+  /**
+   * Return the approximate number of unique version 3 onion service identities
+   * seen in descriptors published to and accepted by this onion service
+   * directory, or null if no such statistics are included.
+   *
+   * @since 2.15.0
+   */
+  Double getHidservDirV3OnionsSeen();
+
+  /**
+   * Return the obfuscation parameters applied to the original measurement value
+   * of unique version 3 onion service identities seen in descriptors published
+   * to and accepted by this onion service directory, or null if no such
+   * statistics are included.
+   *
+   * @since 2.15.0
+   */
+  Map<String, Double> getHidservDirV3OnionsSeenParameters();
+
+  /**
    * Return the time in milliseconds since the epoch when the included
    * padding-counts statistics ended, or -1 if no such statistics are included.
    *

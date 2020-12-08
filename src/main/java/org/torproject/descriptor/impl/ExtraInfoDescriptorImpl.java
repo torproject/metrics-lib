@@ -225,6 +225,15 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
         case HIDSERV_DIR_ONIONS_SEEN:
           this.parseHidservDirOnionsSeenLine(line, partsNoOpt);
           break;
+        case HIDSERV_V3_STATS_END:
+          this.parseHidservV3StatsEndLine(line, partsNoOpt);
+          break;
+        case HIDSERV_REND_V3_RELAYED_CELLS:
+          this.parseHidservRendV3RelayedCellsLine(line, partsNoOpt);
+          break;
+        case HIDSERV_DIR_V3_ONIONS_SEEN:
+          this.parseHidservDirV3OnionsSeenLine(line, partsNoOpt);
+          break;
         case PADDING_COUNTS:
           this.parsePaddingCountsLine(line, partsNoOpt);
           break;
@@ -762,6 +771,46 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
     this.hidservDirOnionsSeenParameters =
         ParseHelper.parseSpaceSeparatedStringKeyDoubleValueMap(line,
         partsNoOpt, 2);
+  }
+
+  private void parseHidservV3StatsEndLine(String line,
+      String[] partsNoOpt) throws DescriptorParseException {
+    long[] parsedStatsEndData = this.parseStatsEndLine(line, partsNoOpt,
+        5);
+    this.hidservV3StatsEndMillis = parsedStatsEndData[0];
+    this.hidservV3StatsIntervalLength = parsedStatsEndData[1];
+  }
+
+  private void parseHidservRendV3RelayedCellsLine(String line,
+      String[] partsNoOpt)
+      throws DescriptorParseException {
+    if (partsNoOpt.length < 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    try {
+      this.hidservRendV3RelayedCells = Double.parseDouble(partsNoOpt[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.hidservRendV3RelayedCellsParameters =
+        ParseHelper.parseSpaceSeparatedStringKeyDoubleValueMap(line,
+            partsNoOpt, 2);
+  }
+
+  private void parseHidservDirV3OnionsSeenLine(String line,
+      String[] partsNoOpt)
+      throws DescriptorParseException {
+    if (partsNoOpt.length < 2) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    try {
+      this.hidservDirV3OnionsSeen = Double.parseDouble(partsNoOpt[1]);
+    } catch (NumberFormatException e) {
+      throw new DescriptorParseException("Illegal line '" + line + "'.");
+    }
+    this.hidservDirV3OnionsSeenParameters =
+        ParseHelper.parseSpaceSeparatedStringKeyDoubleValueMap(line,
+            partsNoOpt, 2);
   }
 
   private void parsePaddingCountsLine(String line,
@@ -1317,6 +1366,50 @@ public abstract class ExtraInfoDescriptorImpl extends DescriptorImpl
   public Map<String, Double> getHidservDirOnionsSeenParameters() {
     return this.hidservDirOnionsSeenParameters == null ? null
         : new HashMap<>(this.hidservDirOnionsSeenParameters);
+  }
+
+  private long hidservV3StatsEndMillis = -1L;
+
+  @Override
+  public long getHidservV3StatsEndMillis() {
+    return this.hidservV3StatsEndMillis;
+  }
+
+  private long hidservV3StatsIntervalLength = -1L;
+
+  @Override
+  public long getHidservV3StatsIntervalLength() {
+    return this.hidservV3StatsIntervalLength;
+  }
+
+  private Double hidservRendV3RelayedCells;
+
+  @Override
+  public Double getHidservRendV3RelayedCells() {
+    return this.hidservRendV3RelayedCells;
+  }
+
+  private Map<String, Double> hidservRendV3RelayedCellsParameters;
+
+  @Override
+  public Map<String, Double> getHidservRendV3RelayedCellsParameters() {
+    return this.hidservRendV3RelayedCellsParameters == null ? null
+        : new HashMap<>(this.hidservRendV3RelayedCellsParameters);
+  }
+
+  private Double hidservDirV3OnionsSeen;
+
+  @Override
+  public Double getHidservDirV3OnionsSeen() {
+    return this.hidservDirV3OnionsSeen;
+  }
+
+  private Map<String, Double> hidservDirV3OnionsSeenParameters;
+
+  @Override
+  public Map<String, Double> getHidservDirV3OnionsSeenParameters() {
+    return this.hidservDirV3OnionsSeenParameters == null ? null
+        : new HashMap<>(this.hidservDirV3OnionsSeenParameters);
   }
 
   private long paddingCountsStatsEndMillis = -1L;

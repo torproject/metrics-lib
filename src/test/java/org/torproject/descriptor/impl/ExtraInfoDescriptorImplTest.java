@@ -960,6 +960,16 @@ public class ExtraInfoDescriptorImplTest {
           hsb.buildHidservStatsLines());
     }
 
+    private String hidservV3StatsEndLine = "hidserv-v3-stats-end 2020-11-30 "
+        + "12:00:00 (86400 s)";
+
+    private String hidservRendV3RelayedCellsLine
+        = "hidserv-rend-v3-relayed-cells 6920802 delta_f=2048 epsilon=0.30 "
+        + "bin_size=1024";
+
+    private String hidservDirV3OnionsSeenLine = "hidserv-dir-v3-onions-seen 28 "
+        + "delta_f=8 epsilon=0.30 bin_size=8";
+
     private static ExtraInfoDescriptor createWithDefaultLines()
         throws DescriptorParseException {
       return DescriptorBuilder.createWithHidservStatsLines(
@@ -976,6 +986,15 @@ public class ExtraInfoDescriptorImplTest {
       }
       if (this.hidservDirOnionsSeenLine != null) {
         sb.append(this.hidservDirOnionsSeenLine).append("\n");
+      }
+      if (this.hidservV3StatsEndLine != null) {
+        sb.append(this.hidservV3StatsEndLine).append("\n");
+      }
+      if (this.hidservRendV3RelayedCellsLine != null) {
+        sb.append(this.hidservRendV3RelayedCellsLine).append("\n");
+      }
+      if (this.hidservDirV3OnionsSeenLine != null) {
+        sb.append(this.hidservDirV3OnionsSeenLine).append("\n");
       }
       String lines = sb.toString();
       if (lines.endsWith("\n")) {
@@ -2161,6 +2180,33 @@ public class ExtraInfoDescriptorImplTest {
     assertTrue(params.isEmpty());
     assertEquals(-3.0, descriptor.getHidservDirOnionsSeen(), 0.0001);
     params = descriptor.getHidservDirOnionsSeenParameters();
+    assertTrue(params.containsKey("delta_f"));
+    assertEquals(8.0, params.remove("delta_f"), 0.0001);
+    assertTrue(params.containsKey("epsilon"));
+    assertEquals(0.3, params.remove("epsilon"), 0.0001);
+    assertTrue(params.containsKey("bin_size"));
+    assertEquals(8.0, params.remove("bin_size"), 0.0001);
+    assertTrue(params.isEmpty());
+  }
+
+  @Test
+  public void testHidservV3StatsValid() throws DescriptorParseException {
+    ExtraInfoDescriptor descriptor = HidservStatsBuilder
+        .createWithDefaultLines();
+    assertEquals(1606737600000L, descriptor.getHidservV3StatsEndMillis());
+    assertEquals(86400L, descriptor.getHidservV3StatsIntervalLength());
+    assertEquals(6920802.0, descriptor.getHidservRendV3RelayedCells(), 0.0001);
+    Map<String, Double> params =
+        descriptor.getHidservRendV3RelayedCellsParameters();
+    assertTrue(params.containsKey("delta_f"));
+    assertEquals(2048.0, params.remove("delta_f"), 0.0001);
+    assertTrue(params.containsKey("epsilon"));
+    assertEquals(0.3, params.remove("epsilon"), 0.0001);
+    assertTrue(params.containsKey("bin_size"));
+    assertEquals(1024.0, params.remove("bin_size"), 0.0001);
+    assertTrue(params.isEmpty());
+    assertEquals(28.0, descriptor.getHidservDirV3OnionsSeen(), 0.0001);
+    params = descriptor.getHidservDirV3OnionsSeenParameters();
     assertTrue(params.containsKey("delta_f"));
     assertEquals(8.0, params.remove("delta_f"), 0.0001);
     assertTrue(params.containsKey("epsilon"));
