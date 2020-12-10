@@ -181,16 +181,25 @@ public class DescriptorParserImpl implements DescriptorParser {
     String ascii = new String(rawDescriptorBytes, StandardCharsets.US_ASCII);
     boolean containsAnnotations = ascii.startsWith("@")
         || ascii.contains(NL + "@");
+    boolean containsKeywordSpace = ascii.startsWith(key.keyword + SP)
+        || ascii.contains(NL + key.keyword + SP);
+    boolean containsKeywordNewline = ascii.startsWith(key.keyword + NL)
+        || ascii.contains(NL + key.keyword + NL);
     while (startAnnotations < endAllDescriptors) {
-      int startDescriptor;
-      if (startAnnotations == ascii.indexOf(key.keyword + SP,
-          startAnnotations) || startAnnotations == ascii.indexOf(
-          key.keyword + NL)) {
+      int startDescriptor = -1;
+      if ((containsKeywordSpace
+          && startAnnotations == ascii.indexOf(key.keyword + SP,
+          startAnnotations))
+          || (containsKeywordNewline
+          && startAnnotations == ascii.indexOf(key.keyword + NL,
+          startAnnotations))) {
         startDescriptor = startAnnotations;
       } else {
-        startDescriptor = ascii.indexOf(NL + key.keyword + SP,
-            startAnnotations - 1);
-        if (startDescriptor < 0) {
+        if (containsKeywordSpace) {
+          startDescriptor = ascii.indexOf(NL + key.keyword + SP,
+              startAnnotations - 1);
+        }
+        if (startDescriptor < 0 && containsKeywordNewline) {
           startDescriptor = ascii.indexOf(NL + key.keyword + NL,
               startAnnotations - 1);
         }
@@ -204,10 +213,10 @@ public class DescriptorParserImpl implements DescriptorParser {
       if (containsAnnotations) {
         endDescriptor = ascii.indexOf(NL + "@", startDescriptor);
       }
-      if (endDescriptor < 0) {
+      if (endDescriptor < 0 && containsKeywordSpace) {
         endDescriptor = ascii.indexOf(NL + key.keyword + SP, startDescriptor);
       }
-      if (endDescriptor < 0) {
+      if (endDescriptor < 0 && containsKeywordNewline) {
         endDescriptor = ascii.indexOf(NL + key.keyword + NL, startDescriptor);
       }
       if (endDescriptor < 0) {
