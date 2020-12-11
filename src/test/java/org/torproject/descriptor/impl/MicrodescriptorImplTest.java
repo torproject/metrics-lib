@@ -74,6 +74,9 @@ public class MicrodescriptorImplTest {
     Microdescriptor micro = DescriptorBuilder.createWithDefaultLines();
     assertEquals("ER1AC4KqT//o3pJDrqlmej5G2qW1EQYEr/IrMQHNc6I",
         micro.getDigestSha256Base64());
+    assertEquals(
+        "111d400b82aa4fffe8de9243aea9667a3e46daa5b5110604aff22b3101cd73a2",
+        micro.getDigestSha256Hex());
   }
 
   @Test

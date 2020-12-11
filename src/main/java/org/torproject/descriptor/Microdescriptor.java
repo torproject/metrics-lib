@@ -33,6 +33,15 @@ public interface Microdescriptor extends Descriptor {
   String getDigestSha256Base64();
 
   /**
+   * Return the SHA-256 descriptor digest, encoded as 64 lower-case hexadecimal
+   * characters, that can be used as file name when writing this descriptor to
+   * disk.
+   *
+   * @since 2.15.0
+   */
+  String getDigestSha256Hex();
+
+  /**
    * Return the RSA-1024 public key in PEM format used to encrypt CREATE
    * cells for this server, or null if the descriptor doesn't contain an
    * onion key.

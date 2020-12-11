@@ -6,6 +6,9 @@ package org.torproject.descriptor.impl;
 import org.torproject.descriptor.DescriptorParseException;
 import org.torproject.descriptor.Microdescriptor;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +29,7 @@ public class MicrodescriptorImpl extends DescriptorImpl
     super(descriptorBytes, offsetAndLength, descriptorFile, false);
     this.parseDescriptorBytes();
     this.calculateDigestSha256Base64(Key.ONION_KEY.keyword + NL);
+    this.convertDigestSha256Base64ToHex();
     this.checkExactlyOnceKeys(EnumSet.of(Key.ONION_KEY));
     Set<Key> atMostOnceKeys = EnumSet.of(
         Key.NTOR_ONION_KEY, Key.FAMILY, Key.P, Key.P6, Key.ID);
@@ -210,6 +214,18 @@ public class MicrodescriptorImpl extends DescriptorImpl
               + "'.");
       }
     }
+  }
+
+  private void convertDigestSha256Base64ToHex() {
+    this.digestSha256Hex = Hex.encodeHexString(Base64.decodeBase64(
+        this.getDigestSha256Base64()));
+  }
+
+  private String digestSha256Hex;
+
+  @Override
+  public String getDigestSha256Hex() {
+    return this.digestSha256Hex;
   }
 
   private String onionKey;

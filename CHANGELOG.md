@@ -7,6 +7,9 @@
  * Medium changes
    - Optimize parsing of large files containing many descriptors.
 
+ * Minor changes
+   - Provide microdescriptor SHA-256 digest in hexadecimal encoding.
+
 
 # Changes in version 2.14.0 - 2020-08-07
 
