@@ -1,10 +1,8 @@
-# Changes in version 2.15.0 - 2020-??-??
+# Changes in version 2.15.0 - 2020-12-11
 
  * Medium changes
    - Parse version 3 onion service statistics contained in extra-info
      descriptors.
-
- * Medium changes
    - Optimize parsing of large files containing many descriptors.
 
  * Minor changes
