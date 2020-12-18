@@ -80,8 +80,23 @@ public class SnowflakeStatsImpl extends DescriptorImpl
         case CLIENT_DENIED_COUNT:
           this.parseClientDeniedCount(line, parts);
           break;
+        case CLIENT_RESTRICTED_DENIED_COUNT:
+          this.parseClientRestrictedDeniedCount(line, parts);
+          break;
+        case CLIENT_UNRESTRICTED_DENIED_COUNT:
+          this.parseClientUnrestrictedDeniedCount(line, parts);
+          break;
         case CLIENT_SNOWFLAKE_MATCH_COUNT:
           this.parseClientSnowflakeMatchCount(line, parts);
+          break;
+        case SNOWFLAKE_IPS_NAT_RESTRICTED:
+          this.parseSnowflakeIpsNatRestricted(line, parts);
+          break;
+        case SNOWFLAKE_IPS_NAT_UNRESTRICTED:
+          this.parseSnowflakeIpsNatUnrestricted(line, parts);
+          break;
+        case SNOWFLAKE_IPS_NAT_UNKNOWN:
+          this.parseSnowflakeIpsNatUnknown(line, parts);
           break;
         case INVALID:
         default:
@@ -142,9 +157,34 @@ public class SnowflakeStatsImpl extends DescriptorImpl
     this.clientDeniedCount = ParseHelper.parseLong(line, parts, 1);
   }
 
+  private void parseClientRestrictedDeniedCount(String line, String[] parts)
+      throws DescriptorParseException {
+    this.clientRestrictedDeniedCount = ParseHelper.parseLong(line, parts, 1);
+  }
+
+  private void parseClientUnrestrictedDeniedCount(String line, String[] parts)
+      throws DescriptorParseException {
+    this.clientUnrestrictedDeniedCount = ParseHelper.parseLong(line, parts, 1);
+  }
+
   private void parseClientSnowflakeMatchCount(String line, String[] parts)
       throws DescriptorParseException {
     this.clientSnowflakeMatchCount = ParseHelper.parseLong(line, parts, 1);
+  }
+
+  private void parseSnowflakeIpsNatRestricted(String line, String[] parts)
+      throws DescriptorParseException {
+    this.snowflakeIpsNatRestricted = ParseHelper.parseLong(line, parts, 1);
+  }
+
+  private void parseSnowflakeIpsNatUnrestricted(String line, String[] parts)
+      throws DescriptorParseException {
+    this.snowflakeIpsNatUnrestricted = ParseHelper.parseLong(line, parts, 1);
+  }
+
+  private void parseSnowflakeIpsNatUnknown(String line, String[] parts)
+      throws DescriptorParseException {
+    this.snowflakeIpsNatUnknown = ParseHelper.parseLong(line, parts, 1);
   }
 
   private LocalDateTime snowflakeStatsEnd;
@@ -210,11 +250,46 @@ public class SnowflakeStatsImpl extends DescriptorImpl
     return Optional.ofNullable(this.clientDeniedCount);
   }
 
+  private Long clientRestrictedDeniedCount;
+
+  @Override
+  public Optional<Long> clientRestrictedDeniedCount() {
+    return Optional.ofNullable(this.clientRestrictedDeniedCount);
+  }
+
+  private Long clientUnrestrictedDeniedCount;
+
+  @Override
+  public Optional<Long> clientUnrestrictedDeniedCount() {
+    return Optional.ofNullable(this.clientUnrestrictedDeniedCount);
+  }
+
   private Long clientSnowflakeMatchCount;
 
   @Override
   public Optional<Long> clientSnowflakeMatchCount() {
     return Optional.ofNullable(this.clientSnowflakeMatchCount);
+  }
+
+  private Long snowflakeIpsNatRestricted;
+
+  @Override
+  public Optional<Long> snowflakeIpsNatRestricted() {
+    return Optional.ofNullable(this.snowflakeIpsNatRestricted);
+  }
+
+  private Long snowflakeIpsNatUnrestricted;
+
+  @Override
+  public Optional<Long> snowflakeIpsNatUnrestricted() {
+    return Optional.ofNullable(this.snowflakeIpsNatUnrestricted);
+  }
+
+  private Long snowflakeIpsNatUnknown;
+
+  @Override
+  public Optional<Long> snowflakeIpsNatUnknown() {
+    return Optional.ofNullable(this.snowflakeIpsNatUnknown);
   }
 }
 
